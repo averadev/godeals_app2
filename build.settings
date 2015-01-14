@@ -1,23 +1,12 @@
---
--- For more information on build.settings see the Corona SDK Build Guide at:
--- http://docs.coronalabs.com/guide/distribution/buildSettings/index.html
---
-
 settings =
 {
 	
-	orientation =
-	{
-		-- Supported values for orientation:
-		-- portrait, portraitUpsideDown, landscapeLeft, landscapeRight
-
+	orientation = {
 		default = "portrait",
 		supported = { "portrait", }
 	},
 	
-	excludeFiles =
-	{
-		-- Include only the necessary icon files on each platform
+	excludeFiles = {
 		iphone = { "Icon-*dpi.png", },
 		android = { "Icon.png", "Icon-Small-*.png", "Icon*@2x.png", },
 	},
@@ -31,7 +20,6 @@ settings =
 		{
 			UIStatusBarHidden = false,
 			UIPrerenderedIcon = true, -- set to false for "shine" overlay
-			--UIApplicationExitsOnSuspend = true, -- uncomment to quit app on suspend
 
 			CFBundleIconFiles =
 			{
@@ -51,20 +39,7 @@ settings =
 				"Icon-Small-40@2x.png",
 				"Icon-Small-50.png",
 				"Icon-Small-50@2x.png",
-			},
-
-			--[[
-			-- iOS app URL schemes:
-			CFBundleURLTypes =
-			{
-				{
-					CFBundleURLSchemes =
-					{
-						"fbXXXXXXXXX",  -- replace XXXXXXXXX with your Facebook appId
-					}
-				}
 			}
-			--]]
 		}
 	},
 	

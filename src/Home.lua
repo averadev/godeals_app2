@@ -5,60 +5,236 @@
 ---------------------------------------------------------------------------------
 
 ---------------------------------------------------------------------------------
--- REQUIRE & VARIABLES
+-- OBJETOS Y VARIABLES
 ---------------------------------------------------------------------------------
-
+-- Includes
+require('src.BuildRow')
+local widget = require( "widget" )
 local storyboard = require( "storyboard" )
 local Globals = require('src.resources.Globals')
-local Sprites = require('src.resources.Sprites')
 local DBManager = require('src.resources.DBManager')
-local RestManager = require('src.resources.RestManager2')
-local widget = require( "widget" )
+local RestManager = require('src.resources.RestManager')
+
+-- Grupos y Contenedores
 local scene = storyboard.newScene()
-local toolbar, menu, textTitulo1, textTitulo2, textTitulo3, loading, mask
-local groupMenu, grupoScroll1, grupoScroll2, grupoScroll3 
-local scrollViewContent1, scrollViewContent2, scrollViewContent3
-local imageBusqueda
-local imageItems = {}
-local coupons = {}
-local events = {}
-local content1
-local noCallback = 0
-local noPackage = 1
-local noPackage2 = 1
-local loading, titleLoading
-local h = display.topStatusBarContentHeight
-local lastY = 175;
-local settings
-local modal, btnModalC, btnModal
-local contadorFecha = 0, tituloFecha
-local contadorMes = {0,0,0,0,0,0,0,0,0,0,0,0}
-local tipoConsulta
-local totalEventos = 0
-
-local intW = display.contentWidth
-local intH = display.contentHeight
-local midW = display.contentCenterX
-local midH = display.contentCenterY
-
---pantalla
-
 local homeScreen = display.newGroup()
 local grupoModal = display.newGroup()
+local groupMenu, scrViewMain, scrViewEventos, scrViewDeals
 
---- scrollView function
+-- Objetos
+local txtMenuInicio, txtMenuEventos, txtMenuDeals
+local toolbar, menu, settings, modal, btnModal
+
+-- Variables
+local intW = display.contentWidth
+local intH = display.contentHeight
+local h = display.topStatusBarContentHeight
+
+-- Arreglos
+local elements = {}
+local imageItems = {}
+
+-- Contadores
+local yMain = 220
+local noCallback = 0
+
+---------------------------------------------------------------------------------
+-- Setters
+---------------------------------------------------------------------------------
+function setElements(items)
+    elements = items
+end
+
+---------------------------------------------------------------------------------
+-- FUNCIONES
+---------------------------------------------------------------------------------
+
+-- Carga de la imagen del servidor o de TemporaryDirectory
+function loadImage(obj)    
+    -- Determinamos si la imagen existe
+    local path = system.pathForFile( elements[obj.posc].image, system.TemporaryDirectory )
+    local fhd = io.open( path )
+    if fhd then
+        fhd:close()
+        imageItems[obj.posc] = display.newImage( elements[obj.posc].image, system.TemporaryDirectory )
+        imageItems[obj.posc].alpha = 0
+        if obj.posc < #elements then
+            obj.posc = obj.posc + 1
+            loadImage(obj)
+        else
+            buildItems(obj.screen)
+        end
+    else
+        -- Listener de la carga de la imagen del servidor
+        local function loadImageListener( event )
+            if ( event.isError ) then
+                native.showAlert( "Go Deals", "Network error :(", { "OK"})
+            else
+                event.target.alpha = 0
+                imageItems[obj.posc] = event.target
+                if obj.posc < #Globals.ItemsEvents then
+                    obj.posc = obj.posc + 1
+                    loadImage(obj)
+                else
+                    buildItemsEvent()
+                end
+            end
+        end
+        
+        -- Descargamos de la nube
+        display.loadRemoteImage( settings.url..obj.path..elements[obj.posc].image, 
+        "GET", loadImageListener, elements[obj.posc].image, system.TemporaryDirectory ) 
+    end
+end
+
+-- Carga los paneles
+function buildItems(screen)    
+    
+    if screen == "MainEvent" then
+        
+        local separadorEventos = display.newImage( "img/btn/btnArrowBlack.png" )
+        separadorEventos:translate( 41, 190)
+        separadorEventos:setFillColor( 1 )
+        separadorEventos.isVisible = true
+        separadorEventos.height = 20
+        separadorEventos.width = 20
+        scrViewMain:insert(separadorEventos)
+
+        local textSeparadorEventos = display.newText( {
+            text = "Recomendaciones de eventos y actividades.",     
+            x = 300, y = 217, width = intW, height = 80,
+            font = "Chivo", fontSize = 19, align = "left"
+        })
+        textSeparadorEventos:setFillColor( 85/255, 85/255, 85/255 )
+        scrViewMain:insert(textSeparadorEventos)
+        
+        for y = 1, #elements, 1 do 
+            -- Create container
+            local evento = Event:new()
+            scrViewMain:insert(evento)
+            evento:build(elements[y], imageItems[y])
+            evento.y = yMain
+            yMain = yMain + 102 
+        end
+        -- Siguiente solicitud
+        RestManager.getCoupon()
+        
+    elseif screen == "MainDeal" then
+        
+        yMain = yMain + 50
+        local separadorEventos = display.newImage( "img/btn/btnArrowBlack.png" )
+        separadorEventos:translate( 41, yMain)
+        separadorEventos:setFillColor( 1 )
+        separadorEventos.isVisible = true
+        separadorEventos.height = 20
+        separadorEventos.width = 20
+        scrViewMain:insert(separadorEventos)
+
+        local textSeparadorEventos = display.newText( {
+            text = "Recomendaciones de promociones para ti.",     
+            x = 300, y = yMain + 27, width = intW, height = 80,
+            font = "Chivo", fontSize = 19, align = "left"
+        })
+        textSeparadorEventos:setFillColor( 85/255, 85/255, 85/255 )
+        scrViewMain:insert(textSeparadorEventos)
+        
+        yMain = yMain + 30
+        for y = 1, #elements, 1 do 
+            -- Create container
+            local deal = Deal:new()
+            scrViewMain:insert(deal)
+            deal:build(elements[y], imageItems[y])
+            deal.y = yMain
+            yMain = yMain + 102
+        end
+        -- Siguiente solicitud
+        RestManager.getAllEvent()
+        
+    elseif screen == "EventPanel" then
+        
+        local lastY = 0
+        local currentMonth = 0
+        for y = 1, #elements, 1 do 
+            -- Verify month
+            for k, v, u in string.gmatch(elements[y].date, "(%w+)-(%w+)-(%w+)") do
+                if not (currentMonth == tonumber(v)) then
+                    -- Create title month
+                    currentMonth = tonumber(v)
+                    local title = MonthTitle:new()
+                    scrViewEventos:insert(title)
+                    title:build(Globals.Months[currentMonth].." del "..k)
+                    title.y = lastY
+                    lastY = lastY + 70
+                end
+            end
+            
+            -- Create container
+            local evento = Event:new()
+            scrViewEventos:insert(evento)
+            evento:build(elements[y], imageItems[y])
+            evento.y = lastY
+            
+            lastY = lastY + 102
+        end
+        -- Siguiente solicitud
+        RestManager.getAllCoupon()
+        
+    elseif screen == "DealPanel" then
+        
+        local lastY = 0
+        local currentMonth = 0
+        for y = 1, #elements, 1 do 
+            -- Verify month
+            for k, v, u in string.gmatch(elements[y].iniDate, "(%w+)-(%w+)-(%w+)") do
+                if not (currentMonth == tonumber(v)) then
+                    -- Create title month
+                    currentMonth = tonumber(v)
+                    local title = MonthTitle:new()
+                    scrViewDeals:insert(title)
+                    title:build(Globals.Months[currentMonth].." del "..k)
+                    title.y = lastY
+                    lastY = lastY + 70
+                end
+            end
+            
+            -- Create container
+            local deal = Deal:new()
+            scrViewDeals:insert(deal)
+            deal:build(elements[y], imageItems[y])
+            deal.y = lastY
+            
+            lastY = lastY + 102
+        end
+    end
+end
+
+-- Genera la fecha en formato
+function getDate(strDate)
+    local fecha
+    for k, v, u in string.gmatch(strDate, "(%w+)-(%w+)-(%w+)") do
+        fecha = u .. " de "..Globals.Months[tonumber(v)].." de " .. k  
+    end
+    return fecha
+end
+
+
+---------------------------------------------------------------------------------
+-- LISTENERS
+---------------------------------------------------------------------------------
+
+--- scrollView functions
 
 local function scrollListenerContent1( event )
 	if event.phase == "began" then
 		
-		scrollViewContent1:setScrollWidth(  480 )
-		diferenciaX = event.x - scrollViewContent1.x
+		scrViewMain:setScrollWidth(  480 )
+		diferenciaX = event.x - scrViewMain.x
 		posicionMenu = groupMenu.x
     elseif event.phase == "moved" then
 		if  event.direction == "left"  or event.direction == "right" then
 		posicionNueva = event.x-diferenciaX
-		scrollViewContent1.x = posicionNueva
-		scrollViewContent2.x = 480+posicionNueva
+		scrViewMain.x = posicionNueva
+		scrViewEventos.x = 480+posicionNueva
 		--groupMenu.x = posicionNueva/3 + posicionMenu
 		groupMenu.x = ((posicionNueva - 240) / 3) + posicionMenu
 		end
@@ -71,23 +247,17 @@ local function scrollListenerContent1( event )
 		end
 		
     elseif event.phase == "ended" or event.phase == "cancelled" then
-		--scrollViewContent1:setScrollWidth(  480 )
 		if event.x <= 100 and movimiento == "i" then
-			transition.to( scrollViewContent1, { x = -240, time = 400, transition = easing.outExpo } )
+			transition.to( scrViewMain, { x = -240, time = 400, transition = easing.outExpo } )
 			transition.to( groupMenu, { x = display.contentWidth * - 0.35, time = 400, transition = easing.outExpo } )
-			transition.to( scrollViewContent2, { x = 240, time = 400, transition = easing.outExpo } )
-			textTitulo1:setFillColor( 161/255, 161/255, 161/255 )
-			textTitulo3:setFillColor( 161/255, 161/255, 161/255 )
-			textTitulo2:setFillColor( 0 )
-		--[[elseif event.x  >= 380 and movimiento == "d" then
-			transition.to( scrollViewContent1, { x = 240, time = 400, transition = easing.outExpo } )
-			transition.to( groupMenu, { x = display.contentWidth * 0.35, time = 400, transition = easing.outExpo } )
-			transition.to( scrollViewContent2, { x = 720, time = 400, transition = easing.outExpo } )]]
+			transition.to( scrViewEventos, { x = 240, time = 400, transition = easing.outExpo } )
+			txtMenuInicio:setFillColor( 161/255, 161/255, 161/255 )
+			txtMenuDeals:setFillColor( 161/255, 161/255, 161/255 )
+			txtMenuEventos:setFillColor( 0 )
 		else
-			transition.to( scrollViewContent1, { x = 240, time = 400, transition = easing.outExpo } )
-			--transition.to( grupoScroll1, { x = 480, time = 400, transition = easing.outExpo } )
+			transition.to( scrViewMain, { x = 240, time = 400, transition = easing.outExpo } )
 			transition.to( groupMenu, { x = 0, time = 400, transition = easing.outExpo } )
-			transition.to( scrollViewContent2, { x = 720, time = 400, transition = easing.outExpo } )
+			transition.to( scrViewEventos, { x = 720, time = 400, transition = easing.outExpo } )
 		end
     end
 end
@@ -95,7 +265,7 @@ end
 local function scrollListenerContent2( event )
     local phase = event.phase
     if ( phase == "began" ) then 
-		diferenciaX = event.x - scrollViewContent2.x
+		diferenciaX = event.x - scrViewEventos.x
 		diferenciaTextX =  groupMenu.x
     elseif ( phase == "moved" ) then
 	
@@ -103,10 +273,10 @@ local function scrollListenerContent2( event )
 		
 		diferenciaTextX = diferenciaTextX - 1
 		posicionNueva = event.x-diferenciaX
-		scrollViewContent2.x = posicionNueva
+		scrViewEventos.x = posicionNueva
 		groupMenu.x = (posicionNueva - 740) / 3
-		scrollViewContent3.x = 480+(posicionNueva)
-		scrollViewContent1.x = -480+posicionNueva
+		scrViewDeals.x = 480+(posicionNueva)
+		scrViewMain.x = -480+posicionNueva
 		end
 		movimiento = "c"
 		if(event.direction == "left") then
@@ -116,26 +286,26 @@ local function scrollListenerContent2( event )
 		end
     elseif ( phase == "ended" ) then
 		if event.x <= 100 and movimiento == "i" then
-			transition.to( scrollViewContent2, { x = -240, time = 400, transition = easing.outExpo } )
+			transition.to( scrViewEventos, { x = -240, time = 400, transition = easing.outExpo } )
 			transition.to( groupMenu, { x = display.contentWidth * - 0.70, time = 400, transition = easing.outExpo } )
-			transition.to( scrollViewContent3, { x = 240, time = 400, transition = easing.outExpo } )
-			transition.to( scrollViewContent1, { x = -240, time = 400, transition = easing.outExpo } )
-			textTitulo1:setFillColor( 161/255, 161/255, 161/255 )
-			textTitulo2:setFillColor( 161/255, 161/255, 161/255 )
-			textTitulo3:setFillColor( 0 )
+			transition.to( scrViewDeals, { x = 240, time = 400, transition = easing.outExpo } )
+			transition.to( scrViewMain, { x = -240, time = 400, transition = easing.outExpo } )
+			txtMenuInicio:setFillColor( 161/255, 161/255, 161/255 )
+			txtMenuEventos:setFillColor( 161/255, 161/255, 161/255 )
+			txtMenuDeals:setFillColor( 0 )
 		elseif event.x  >= 380 and movimiento == "d" then
-			transition.to( scrollViewContent2, { x = 720, time = 400, transition = easing.outExpo } )
+			transition.to( scrViewEventos, { x = 720, time = 400, transition = easing.outExpo } )
 			transition.to( groupMenu, { x = 0, time = 400, transition = easing.outExpo } )
-			transition.to( scrollViewContent3, { x = 720, time = 400, transition = easing.outExpo } )
-			transition.to( scrollViewContent1, { x = 240, time = 400, transition = easing.outExpo } )
-			textTitulo3:setFillColor( 161/255, 161/255, 161/255 )
-			textTitulo2:setFillColor( 161/255, 161/255, 161/255 )
-			textTitulo1:setFillColor( 0 )
+			transition.to( scrViewDeals, { x = 720, time = 400, transition = easing.outExpo } )
+			transition.to( scrViewMain, { x = 240, time = 400, transition = easing.outExpo } )
+			txtMenuDeals:setFillColor( 161/255, 161/255, 161/255 )
+			txtMenuEventos:setFillColor( 161/255, 161/255, 161/255 )
+			txtMenuInicio:setFillColor( 0 )
 		else
-			transition.to( scrollViewContent2, { x = 240, time = 400, transition = easing.outExpo } )
+			transition.to( scrViewEventos, { x = 240, time = 400, transition = easing.outExpo } )
 			transition.to( groupMenu, { x = display.contentWidth * - 0.35, time = 400, transition = easing.outExpo } )
-			transition.to( scrollViewContent3, { x = 720, time = 400, transition = easing.outExpo } )
-			transition.to( scrollViewContent1, { x = -240, time = 400, transition = easing.outExpo } )
+			transition.to( scrViewDeals, { x = 720, time = 400, transition = easing.outExpo } )
+			transition.to( scrViewMain, { x = -240, time = 400, transition = easing.outExpo } )
 		end
 			
 		
@@ -145,14 +315,13 @@ end
 
 local function scrollListenerContent3( event )
 	if event.phase == "began" then
-		diferenciaX = event.x - scrollViewContent3.x
+		diferenciaX = event.x - scrViewDeals.x
 		posicionMenu = groupMenu.x
     elseif event.phase == "moved" then
 		if  event.direction == "left"  or event.direction == "right" then
 		posicionNueva = event.x-diferenciaX
-		scrollViewContent3.x = posicionNueva
-		scrollViewContent2.x = -480+posicionNueva
-		--groupMenu.x = posicionNueva/3 - (-posicionMenu)
+		scrViewDeals.x = posicionNueva
+		scrViewEventos.x = -480+posicionNueva
 		groupMenu.x = ((posicionNueva - 240) / 3) + posicionMenu
 		end
 		
@@ -164,67 +333,64 @@ local function scrollListenerContent3( event )
 		end
 		
     elseif event.phase == "ended" or event.phase == "cancelled" then
-		--[[if event.x <= 100 and movimiento == "i" then
-			transition.to( scrollViewContent3, { x = 240, time = 400, transition = easing.outExpo } )
-			transition.to( groupMenu, { x = display.contentWidth * - 0.35, time = 400, transition = easing.outExpo } )
-			transition.to( scrollViewContent2, { x = -240, time = 400, transition = easing.outExpo } )]]
 		if event.x  >= 380 and movimiento == "d" then
-			transition.to( scrollViewContent3, { x = 720, time = 400, transition = easing.outExpo } )
+			transition.to( scrViewDeals, { x = 720, time = 400, transition = easing.outExpo } )
 			transition.to( groupMenu, { x = display.contentWidth * - 0.35, time = 400, transition = easing.outExpo } )
-			transition.to( scrollViewContent2, { x = 240, time = 400, transition = easing.outExpo } )
-			textTitulo1:setFillColor( 161/255, 161/255, 161/255 )
-			textTitulo3:setFillColor( 161/255, 161/255, 161/255 )
-			textTitulo2:setFillColor( 0 )
+			transition.to( scrViewEventos, { x = 240, time = 400, transition = easing.outExpo } )
+			txtMenuInicio:setFillColor( 161/255, 161/255, 161/255 )
+			txtMenuDeals:setFillColor( 161/255, 161/255, 161/255 )
+			txtMenuEventos:setFillColor( 0 )
 		else
-			transition.to( scrollViewContent3, { x = 240, time = 400, transition = easing.outExpo } )
+			transition.to( scrViewDeals, { x = 240, time = 400, transition = easing.outExpo } )
 			transition.to( groupMenu, { x = display.contentWidth * - 0.70, time = 400, transition = easing.outExpo } )
-			transition.to( scrollViewContent2, { x = -240, time = 400, transition = easing.outExpo } )
+			transition.to( scrViewEventos, { x = -240, time = 400, transition = easing.outExpo } )
 		end
     end
 end
 
 local function tapTitulo1(event)
-	scrollViewContent1:setScrollWidth(  480 )
-	transition.to( scrollViewContent2, { x = 720, time = 400, transition = easing.outExpo } )
+	scrViewMain:setScrollWidth(  480 )
+	transition.to( scrViewEventos, { x = 720, time = 400, transition = easing.outExpo } )
 	transition.to( groupMenu, { x = 0, time = 400, transition = easing.outExpo } )
-	transition.to( scrollViewContent3, { x = 720, time = 400, transition = easing.outExpo } )
-	transition.to( scrollViewContent1, { x = 240, time = 400, transition = easing.outExpo } )
-	textTitulo2:setFillColor( 161/255, 161/255, 161/255 )
-	textTitulo3:setFillColor( 161/255, 161/255, 161/255 )
-	textTitulo1:setFillColor( 0 )
+	transition.to( scrViewDeals, { x = 720, time = 400, transition = easing.outExpo } )
+	transition.to( scrViewMain, { x = 240, time = 400, transition = easing.outExpo } )
+	txtMenuEventos:setFillColor( 161/255, 161/255, 161/255 )
+	txtMenuDeals:setFillColor( 161/255, 161/255, 161/255 )
+	txtMenuInicio:setFillColor( 0 )
 end
 
 local function tapTitulo2(event)
-	transition.to( scrollViewContent2, { x = 240, time = 400, transition = easing.outExpo } )
+	transition.to( scrViewEventos, { x = 240, time = 400, transition = easing.outExpo } )
 	transition.to( groupMenu, { x = display.contentWidth * - 0.35, time = 400, transition = easing.outExpo } )
-	transition.to( scrollViewContent3, { x = 720, time = 400, transition = easing.outExpo } )
-	transition.to( scrollViewContent1, { x = -240, time = 400, transition = easing.outExpo } )
-	textTitulo1:setFillColor( 161/255, 161/255, 161/255 )
-	textTitulo3:setFillColor( 161/255, 161/255, 161/255 )
-	textTitulo2:setFillColor( 0 )
+	transition.to( scrViewDeals, { x = 720, time = 400, transition = easing.outExpo } )
+	transition.to( scrViewMain, { x = -240, time = 400, transition = easing.outExpo } )
+	txtMenuInicio:setFillColor( 161/255, 161/255, 161/255 )
+	txtMenuDeals:setFillColor( 161/255, 161/255, 161/255 )
+	txtMenuEventos:setFillColor( 0 )
 	
 end
 
 local function tapTitulo3(event)
-	transition.to( scrollViewContent3, { x = 240, time = 400, transition = easing.outExpo } )
+	transition.to( scrViewDeals, { x = 240, time = 400, transition = easing.outExpo } )
 	transition.to( groupMenu, { x = display.contentWidth * - 0.70, time = 400, transition = easing.outExpo } )
-	transition.to( scrollViewContent2, { x = -240, time = 400, transition = easing.outExpo } )
-	textTitulo1:setFillColor( 161/255, 161/255, 161/255 )
-	textTitulo2:setFillColor( 161/255, 161/255, 161/255 )
-	textTitulo3:setFillColor( 0 )
+	transition.to( scrViewEventos, { x = -240, time = 400, transition = easing.outExpo } )
+	txtMenuInicio:setFillColor( 161/255, 161/255, 161/255 )
+	txtMenuEventos:setFillColor( 161/255, 161/255, 161/255 )
+	txtMenuDeals:setFillColor( 0 )
 end
 
  function CloseModal( event )
-	--btnModalC:removeSelf()
 	rect1Modal:removeSelf()
 	rect2Modal:removeSelf()
 	rect3Modal:removeSelf()
 	rect4Modal:removeSelf()
 	modal:removeSelf()
 	bgModal:removeSelf()
-	scrollViewContent1:setIsLocked( false )
+	scrViewMain:setIsLocked( false )
 	return true
 end
+
+--- Modal Menu
 
 function modalFunction( event )
 	return true
@@ -239,21 +405,21 @@ end
 	grupoModal:insert(bgModal)
 	bgModal:addEventListener( "tap", CloseModal )
 	
-	modal = display.newRect(30,midH / 3,intW - 60,(intH / 2) * 1.5)
+	modal = display.newRect(30, display.contentCenterY / 3,intW - 60,(intH / 2) * 1.5)
 	modal.anchorX = 0
 	modal.anchorY = 0
 	modal:setFillColor( 0)
 	grupoModal:insert(modal)
 	modal:addEventListener( "tap", modalFunction )
 	
-	rect1Modal = display.newRect(50,midH / 3 + 30,modal.contentWidth /2 - 50,250)
+	rect1Modal = display.newRect(50, display.contentCenterY / 3 + 30,modal.contentWidth /2 - 50,250)
 	rect1Modal.anchorX = 0
 	rect1Modal.anchorY = 0
 	rect1Modal:setFillColor( .63,.85,.12)
 	grupoModal:insert(rect1Modal)
 	rect1Modal:addEventListener("tap", rectModal)
 	
-	rect2Modal = display.newRect(modal.contentWidth /2 + 60,midH / 3 + 30,modal.contentWidth /2 - 50,250)
+	rect2Modal = display.newRect(modal.contentWidth /2 + 60, display.contentCenterY / 3 + 30,modal.contentWidth /2 - 50,250)
 	rect2Modal.anchorX = 0
 	rect2Modal.anchorY = 0
 	rect2Modal:setFillColor( .63,.85,.12)
@@ -276,20 +442,10 @@ end
 	
 	local halfW = display.contentWidth * 0.5
 	local halfH = display.contentHeight * 0.5
-
-	--[[btnModalC = display.newImage( "img/btn/detailCity.png" )
-	btnModalC:translate( modal.contentWidth - 10,modal.contentHeight + (midH / 3) - 40)
-	btnModalC.isVisible = true
-	btnModalC.height = 80
-	btnModalC.width = 80
-	grupoModal:insert(btnModalC)
-	btnModalC:addEventListener( "tap", CloseModal )]]
 	
-	scrollViewContent1:setIsLocked( true )
+	scrViewMain:setIsLocked( true )
 	
-	--btnModal:setIsLocked( true )
 	return true
-	
 end
 
 function rectModal( event )
@@ -297,23 +453,77 @@ function rectModal( event )
 end
 
 function showCoupon(event)
-	
-	--storyboard.gotoScene("src.detail")
-	
 	storyboard.gotoScene( "src.detail", {
 		time = 400,
 		effect = "crossFade",
 		params = { index = event.target.index }
 	})
-
-    --[[if isHome and mask.alpha == 0 then
-        storyboard.gotoScene( "src.Coupon", {
-            time = 400,
-            effect = "crossFade",
-            params = { index = event.target.index }
-        })
-    end]]
 end
+
+function getFBData()
+		local sizeAvatar = 'width=130&height=100'
+        
+		contenerUser = display.newContainer( display.contentWidth * 2, 350 )
+		contenerUser.x = 0
+		contenerUser.y = 0
+		scrViewMain:insert( contenerUser )
+		
+		local bgFotoFacebook = display.newRect( 0, 0, display.contentWidth, 90 )
+		bgFotoFacebook.anchorX = 0
+		bgFotoFacebook.anchorY = 0
+		bgFotoFacebook:setFillColor( 1 )	-- red
+		contenerUser:insert(bgFotoFacebook)
+		
+        local path = system.pathForFile( "avatarFb"..settings.fbId, system.TemporaryDirectory )
+        local fhd = io.open( path )
+        if fhd then
+            fhd:close()
+			
+            local avatar = display.newImage("avatarFb"..settings.fbId, system.TemporaryDirectory )
+            avatar.x = 70
+            avatar.y = 90
+			avatar.height = 100
+			avatar.width = 130
+            contenerUser:insert(avatar)
+        else
+            local function networkListenerFB( event )
+                -- Verificamos el callback activo
+                if ( event.isError ) then
+                else
+                    event.target.x = 70
+                    event.target.y = 90
+                    contenerUser:insert( event.target )
+                end
+            end
+            display.loadRemoteImage( "http://graph.facebook.com/".. settings.fbId .."/picture?type=large&"..sizeAvatar, 
+                "GET", networkListenerFB, "avatarFb"..settings.fbId, system.TemporaryDirectory )
+				 
+        end
+		
+	local textNombre = display.newText( {
+		text = settings.name,     
+		x = 260, y = 40,
+		width = intW, height =60,
+		font = "Chivo-Black",  fontSize = 26, align = "left"
+	})
+	textNombre:setFillColor( 0 )
+	contenerUser:insert(textNombre)
+		
+	local textSaludo = display.newText( {
+		text = "Actualmente esta viendo eventos y cupones de Cancún",     
+		x =320, y = 80,
+		width = 350, height =60,
+		font = "Chivo",  fontSize = 18, align = "left"
+	})
+	textSaludo:setFillColor( 176/255, 176/255, 176/255 )
+	contenerUser:insert(textSaludo)
+	
+end
+
+
+---------------------------------------------------------------------------------
+-- DEFAULT METHODS
+---------------------------------------------------------------------------------
 
 function scene:createScene( event )
 	screen = self.view
@@ -324,13 +534,13 @@ function scene:createScene( event )
 	local bg = display.newRect( 0, 0, display.contentWidth, display.contentHeight )
 	bg.anchorX = 0
 	bg.anchorY = 0
-	bg:setFillColor( 1 )	-- white
+	bg:setFillColor( 1 )
 	homeScreen:insert(bg)
 	
 	toolbar = display.newRect( 0, h, display.contentWidth, 55 )
 	toolbar.anchorX = 0
 	toolbar.anchorY = 0
-	toolbar:setFillColor( 221/255, 236/255, 241/255 )	-- red
+	toolbar:setFillColor( 221/255, 236/255, 241/255 )
 	homeScreen:insert(toolbar)
 	
 	local grupoToolbar = display.newGroup()
@@ -380,7 +590,7 @@ function scene:createScene( event )
 	triangle.width = 24
 	homeScreen:insert(triangle)
 	
-	scrollViewContent1 = widget.newScrollView
+	scrViewMain = widget.newScrollView
 	{
 		top = h + 125,
 		left = 0,
@@ -391,9 +601,9 @@ function scene:createScene( event )
         verticalScrollDisabled = false,
 		backgroundColor = { 245/255, 245/255, 245/255 }
 	}
-	homeScreen:insert(scrollViewContent1)
+	homeScreen:insert(scrViewMain)
 	
-	scrollViewContent2 = widget.newScrollView
+	scrViewEventos = widget.newScrollView
 	{
 		top = h + 125,
 		left = 480,
@@ -402,9 +612,9 @@ function scene:createScene( event )
 		listener = scrollListenerContent2,
 		backgroundColor = { 245/255, 245/255, 245/255 }
 	}
-	homeScreen:insert(scrollViewContent2)
-	
-	scrollViewContent3 = widget.newScrollView
+	homeScreen:insert(scrViewEventos)
+    
+	scrViewDeals = widget.newScrollView
 	{
 		top = h + 125,
 		left = 480,
@@ -413,115 +623,46 @@ function scene:createScene( event )
 		listener = scrollListenerContent3,
 		backgroundColor = { 245/255, 245/255, 245/255 }
 	}
-	homeScreen:insert(scrollViewContent3)
+	homeScreen:insert(scrViewDeals)
+    
 	
 	groupMenu = display.newGroup()
 	homeScreen:insert(groupMenu)
 	
-	grupoScroll1 = display.newGroup()
-	scrollViewContent1:insert(grupoScroll1)
-	
-	grupoScroll2 = display.newGroup()
-	scrollViewContent2:insert(grupoScroll2)
-	
-	grupoScroll3 = display.newGroup()
-	scrollViewContent3:insert(grupoScroll3)
-	
-	textTitulo1 = display.newText( {
-    text = "Inicio",     
-    x = display.contentWidth * .5,
-    y = menu.y + 30,
-    font = "Chivo",
-    fontSize = 30,
+	txtMenuInicio = display.newText( {    
+        x = display.contentWidth * .5, y = menu.y + 30,
+        text = "Inicio",  font = "Chivo", fontSize = 30,
 	})
-	textTitulo1:setFillColor( 0 )	-- black
-	groupMenu:insert(textTitulo1)
-	textTitulo1:addEventListener( "tap", tapTitulo1 )
+	txtMenuInicio:setFillColor( 0 )	-- black
+	groupMenu:insert(txtMenuInicio)
+	txtMenuInicio:addEventListener( "tap", tapTitulo1 )
 	
-	textTitulo2 = display.newText( {
-    text = "Eventos",     
-    x = display.contentWidth * .85,
-    y = menu.y + 30,
-    font = "Chivo",
-    fontSize = 30,
+	txtMenuEventos = display.newText( {
+        x = display.contentWidth * .85, y = menu.y + 30,
+        text = "Eventos", font = "Chivo", fontSize = 30,
 	})
-	textTitulo2:setFillColor( 161/255, 161/255, 161/255 )	-- black
-	groupMenu:insert(textTitulo2)
-	textTitulo2:addEventListener( "tap", tapTitulo2 )
+	txtMenuEventos:setFillColor( 161/255, 161/255, 161/255 )	-- black
+	groupMenu:insert(txtMenuEventos)
+	txtMenuEventos:addEventListener( "tap", tapTitulo2 )
 	
-	textTitulo3 = display.newText( {
-    text = "Deals",     
-    x = display.contentWidth * 1.2,
-    y = menu.y + 30,
-    font = "Chivo",
-    fontSize = 30,
+	txtMenuDeals = display.newText( {
+        x = display.contentWidth * 1.2, y = menu.y + 30,
+        text = "Deals", font = "Chivo", fontSize = 30,
 	})
-	textTitulo3:setFillColor( 161/255, 161/255, 161/255 )	-- black
-	groupMenu:insert(textTitulo3)
-	textTitulo3:addEventListener( "tap", tapTitulo3 )
-	
-	--[[titleLoading = display.newText( "adios", 0, 0, native.systemFont, 20)
-	titleLoading:setFillColor( 0 )	-- black
-	titleLoading.x = display.contentWidth * 0.5
-	titleLoading.y = 300
-	scrollViewContent1:insert(titleLoading)]]
-	
-	 -- Loading
-     loadingGrp = display.newGroup()
-    scrollViewContent1:insert(loadingGrp)
-    local sheet = graphics.newImageSheet(Sprites.loading.source, Sprites.loading.frames)
-    loading = display.newSprite(sheet, Sprites.loading.sequences)
-    loading.x = midW
-    loading.y = midH 
-    loadingGrp:insert(loading)
-    titleLoading = display.newText( "", midW, midH+50, "Chivo", 20)
-    titleLoading:setFillColor( 0 )
-    loadingGrp:insert(titleLoading)
-	
-	cleanHome()
+	txtMenuDeals:setFillColor( 161/255, 161/255, 161/255 )	-- black
+	groupMenu:insert(txtMenuDeals)
+	txtMenuDeals:addEventListener( "tap", tapTitulo3 )
 	
 	local grupoSeparadorEventos = display.newGroup()
-	scrollViewContent1:insert(grupoSeparadorEventos)
+	scrViewMain:insert(grupoSeparadorEventos)
 	
-	local separadorEventos = display.newImage( "img/btn/btnArrowBlack.png" )
-	separadorEventos:translate( 41, lastY)
-	separadorEventos:setFillColor( 1 )
-	separadorEventos.isVisible = true
-	separadorEventos.height = 20
-	separadorEventos.width = 20
-	grupoSeparadorEventos:insert(separadorEventos)
-	
-	local textSeparadorEventos = display.newText( {
-        text = "Recomendaciones de eventos y actividades.",     
-        x = 300,
-        y = lastY + 27,
-        width = intW,
-        height =80,
-        font = "Chivo",
-        fontSize = 19,
-        align = "left"
-	})
-		textSeparadorEventos:setFillColor( 85/255, 85/255, 85/255 )
-		grupoSeparadorEventos:insert(textSeparadorEventos)
-	
-	
-	lastY = lastY + 5
-	
-	RestManager.getEvents()
-	--RestManager.getCoupon()
 	
 	navGrp = display.newGroup()
     homeScreen:insert(navGrp)
 	
 	settings = DBManager.getSettings()
 	
-	userData()
-	
-	--[[local btnFrame = display.newRect( intW - 100, intH - 100, 80, 80 )
-	btnFrame.anchorX = 0
-	btnFrame.anchorY = 0
-	btnFrame:setFillColor( 0 )
-	homeScreen:insert(btnFrame)]]
+	getFBData()
 	
 	btnModal = display.newImage( "img/btn/detailCity.png" )
 	btnModal:translate( intW - 62, intH - 62)
@@ -533,1039 +674,11 @@ function scene:createScene( event )
 	
 	btnModal:toFront()
 end
-
-function loadMenuCoupon(items,tipo)
-
-	contadorMes = {0,0,0,0,0,0,0,0,0,0,0,0}
 	
-	Globals.ItemsCoupon = items
-	
-	tipoConsulta = tipo
-    titleLoading.text = "Descargando imagenes..."
-    for y = 1, #Globals.ItemsCoupon, 1 do 
-        Globals.ItemsCoupon[y].callback = noCallback
-    end
-	
-	--[[local separadorCupones = display.newRect( 0, lastY - 40, display.contentWidth, 10 )
-	separadorCupones.anchorX = 0
-	separadorCupones.anchorY = 0
-	separadorCupones:setFillColor( 0 )	-- black
-	grupoScroll1:insert(separadorCupones)]]
-	
-    loadImageCoupon(1)
-	
-	return true
-end
-
-function loadImageCoupon(posc)
-    -- Listener loading
-    if not (Globals.ItemsCoupon[posc].image == nil) then
-        local function networkListener( event )
-            -- Verificamos el callback activo
-            if #Globals.ItemsCoupon <  posc then 
-                if not ( event.isError ) then
-                    destroyImage(event.target)
-                end
-            elseif Globals.ItemsCoupon[posc].callback == noCallback then
-			
-                if ( event.isError ) then
-                    native.showAlert( "Go Deals", "Network error :(", { "OK"})
-                else
-                    event.target.alpha = 0
-                    imageItems[posc] = event.target
-                    if posc < #Globals.ItemsCoupon and posc <= ( noPackage2 * 10) then
-                        loadImageCoupon(posc + 1)
-                    else
-                        buildItemsCoupon()
-                    end
-                end
-            elseif not ( event.isError ) then
-                destroyImage(event.target)
-            end
-        end
-        -- Do call image
-        Globals.ItemsCoupon[posc].idCupon = Globals.ItemsCoupon[posc].id
-        Globals.ItemsCoupon[posc].id = posc
-        local path = system.pathForFile( Globals.ItemsCoupon[posc].image, system.TemporaryDirectory )
-        local fhd = io.open( path )
-        -- Determine if file exists
-        if fhd then
-            fhd:close()
-            imageItems[posc] = display.newImage( Globals.ItemsCoupon[posc].image, system.TemporaryDirectory )
-			
-            if Globals.ItemsCoupon[posc].callback == noCallback then
-                imageItems[posc].alpha = 0
-                if posc < #Globals.ItemsCoupon and posc <= ( noPackage2 * 10) then
-                    loadImageCoupon(posc + 1)
-                else
-                    buildItemsCoupon()
-                end
-            else
-                destroyImage(imageItems[posc])
-            end
-        else
-           display.loadRemoteImage( 'http://localhost:8080/godeals/assets/img/app/coupon/app/'..Globals.ItemsCoupon[posc].image, 
-            "GET", networkListener, Globals.ItemsCoupon[posc].image, system.TemporaryDirectory ) 
-        end
-    else
-        loadImageCoupon(posc + 1)
-    end
-end
-
-function buildItemsCoupon()
-
-    -- Stop loading sprite
-    if  noPackage2 == 1 then
-        loading:setSequence("stop")
-        loadingGrp.alpha = 0
-    else
-        coupons[#coupons]:removeSelf()
-        coupons[#coupons] = nil
-    end
-    -- Build items
-	
-    local z = ( noPackage2 * 10) - 9
-	
-    while z <= #Globals.ItemsCoupon and z <= ( noPackage2 * 10) do
-        -- Armar cupones
-        if tipoConsulta == 1 then
-            setStdCoupon(Globals.ItemsCoupon[z]) 
-        elseif tipoConsulta == 2 then
-			setStdAllCoupon(Globals.ItemsCoupon[z])
-		end
-        z = z + 1
-    end
-    
-    -- Validate Loading
-    if  #Globals.ItemsCoupon > ( noPackage2 * 10) then
-        -- Create Loading
-        coupons[#coupons + 1] = display.newContainer( 444, 150 )
-        coupons[#coupons].x = midW
-        coupons[#coupons].y = lastY + 60
-        grupoScroll1:insert( coupons[#coupons] )
-        
-        -- Sprite and text
-        local sheet = graphics.newImageSheet(Sprites.loading.source, Sprites.loading.frames)
-        local loadingBottom = display.newSprite(sheet, Sprites.loading.sequences)
-        loadingBottom.y = -10
-        coupons[#coupons]:insert(loadingBottom)
-        loadingBottom:setSequence("play")
-        loadingBottom:play()
-        local title = display.newText( "Cargando, por favor espere...", 0, 30, "Chivo", 16)
-        title:setFillColor( .3, .3, .3 )
-        coupons[#coupons]:insert(title) 
-        
-        -- Call new images
-         noPackage2 =  noPackage2 + 1
-        loadImageCoupon(( noPackage2 * 10) - 9)
-    else
-        if navGrp.alpha == 1 then
-            lastY = lastY + 70
-        end
-        
-        -- Create Space
-        coupons[#coupons + 1] = display.newContainer( 444, 40 )
-        coupons[#coupons].x = midW
-        coupons[#coupons].y = lastY + 40
-        grupoScroll1:insert( coupons[#coupons] )
-    end
-end
-
--- Genera un cupon estandar
-function setStdCoupon(obj)
-
-	totalEventos = totalEventos + 1
-
-    -- Obtiene el total de cupones de la tabla y agrega uno
-    local lastC = #coupons + 1
-    -- Generamos contenedor
-    coupons[lastC] = display.newContainer( 450, 100 )
-    coupons[lastC].index = lastC
-    coupons[lastC].x = 255
-    coupons[lastC].type = 2
-    coupons[lastC].y = lastY + 70
-    grupoScroll1:insert( coupons[lastC] )
-    coupons[lastC]:addEventListener( "tap", showCoupon )
-    
-    -- Agregamos rectangulo alfa al pie
-    local maxShape = display.newRect( 0, 0, 480, 100 )
-    maxShape:setFillColor( 1 )
-    coupons[lastC]:insert( maxShape )
-    
-    -- Agregamos imagen
-    imageItems[obj.id].alpha = 1
-    imageItems[obj.id].index = lastC
-    imageItems[obj.id].x= -175
-    imageItems[obj.id].width = 80
-    imageItems[obj.id].height  = 55
-    coupons[lastC]:insert( imageItems[obj.id] )
-    
-    -- Agregamos textos
-    local txtTitle = display.newText( {
-        text = obj.description,     
-        x = 25,
-        y = -10,
-        width = 300,
-        height =60,
-        font = "Chivo",   
-        fontSize = 24,
-        align = "left"
-    })
-    txtTitle:setFillColor( 0 )
-    coupons[lastC]:insert(txtTitle)
-	
-	
-	---- sacamos la fecha 
-	
-	local fecha = ""
-	
-	s = obj.iniDate
-	for k, v, u in string.gmatch(s, "(%w+)-(%w+)-(%w+)") do
-		if v == "01" then
-			fecha = u .. " de Enero de " .. k  
-		elseif v == "02" then
-			fecha = u .. " de Febrero de " .. k  
-		elseif v == "03" then
-			fecha = u .. " de Marzo de " .. k  
-		elseif v == "04" then
-			fecha = u .. " de Abril de " .. k  
-		elseif v == "05" then
-			fecha = u .. " de Mayo de " .. k  
-		elseif v == "06" then
-			fecha = u .. " de Junio de " .. k  
-		elseif v == "07" then
-			fecha = u .. " de Julio de " .. k  
-		elseif v == "08" then
-			fecha = u .. " de Agosto de " .. k  
-		elseif v == "09" then
-			fecha = u .. " de Septiembre de " .. k  
-		elseif v == "10" then
-			fecha = u .. " de Octubre de " .. k  
-		elseif v == "11" then
-			fecha = u .. " de Noviembre de " .. k  
-		elseif v == "12" then
-			fecha = u .. " de Diciembre de " .. k  
-		end
-		
-	end
-   
-   -----
-	
-	local txtDate = display.newText( {
-        text = fecha,     
-        x = 25,
-        y = 20,
-        width = 300,
-        height =60,
-        font = "Chivo",   
-        fontSize = 18,
-        align = "left"
-    })
-    txtDate:setFillColor( 146/255, 146/255, 146/255)
-    coupons[lastC]:insert(txtDate)
-	
-	--[[local txtPlace = display.newText( {
-        text = obj.place,     
-        x = 25,
-        y = 40,
-        width = 300,
-        height =60,
-        font = "Chivo",   
-        fontSize = 18,
-        align = "left"
-    })
-    txtPlace:setFillColor( 146/255, 146/255, 146/255)
-    coupons[lastC]:insert(txtPlace)]]
-    
-    -- Agregamos linea negra al pie
-    grupoScroll1:insert( coupons[lastC] )
-    
-    -- Guardamos la ultima posicion
-    lastY = lastY + 102
-	
-	if totalEventos == 3 then
-	
-	scrollViewContent1:setScrollHeight(  lastY + 200 )
-	
-	totalEventos = 0
-	
-	local encabezadoEventos = display.newRect( 0, 0, display.contentWidth, 20 )
-	encabezadoEventos.anchorX = 0
-	encabezadoEventos.anchorY = 0
-	encabezadoEventos:setFillColor( 1 )	-- red
-	scrollViewContent2:insert(encabezadoEventos)
-	lastY = -70
-	
-	RestManager.getAllEvent()
-	
-	
-	end
-    
-end
-
--- generamos todos los eventos vigentes
-function setStdAllCoupon(obj)
-	
-	---- sacamos la fecha
-	
-	totalEventos = totalEventos + 1
-	
-	local fecha = ""
-	
-	s = obj.iniDate
-	for k, v, u in string.gmatch(s, "(%w+)-(%w+)-(%w+)") do
-		
-		if v == "01" then
-			fecha = u .. " de Enero de " .. k 
-			tituloFecha = "Enero " .. k
-			if contadorMes[1] == 0 then
-				contadorMes[1] = 1
-				contadorFecha = 1
-			end
-		elseif v == "02" then
-			fecha = u .. " de Febrero de " .. k 
-			tituloFecha = "Febrero " .. k
-			if contadorMes[2] == 0 then
-				contadorMes[2] = 1
-				contadorFecha = 1
-			end
-		elseif v == "03" then
-			fecha = u .. " de Marzo de " .. k  
-			tituloFecha = "Marzo " .. k
-			if contadorMes[3] == 0 then
-				contadorMes[3] = 1
-				contadorFecha = 1
-			end
-		elseif v == "04" then
-			fecha = u .. " de Abril de " .. k
-			tituloFecha = "Abril " .. k
-			if contadorMes[4] == 0 then
-				contadorMes[4] = 1
-				contadorFecha = 1
-			end
-		elseif v == "05" then
-			fecha = u .. " de Mayo de " .. k  
-			tituloFecha = "Mayo " .. k
-			if contadorMes[5] == 0 then
-				contadorMes[5] = 1
-				contadorFecha = 1
-			end
-		elseif v == "06" then
-			fecha = u .. " de Junio de " .. k
-			tituloFecha = "Junio " .. k
-			if contadorMes[6] == 0 then
-				contadorMes[6] = 1
-				contadorFecha = 1
-			end
-		elseif v == "07" then
-			fecha = u .. " de Julio de " .. k 
-			tituloFecha = "Julio " .. k
-			if contadorMes[7] == 0 then
-				contadorMes[7] = 1
-				contadorFecha = 1
-			end
-		elseif v == "08" then
-			fecha = u .. " de Agosto de " .. k
-			tituloFecha = "Agosto " .. k
-			if contadorMes[8] == 0 then
-				contadorMes[8] = 1
-				contadorFecha = 1
-			end
-		elseif v == "09" then
-			fecha = u .. " de Septiembre de " .. k 
-			tituloFecha = "Septiembre " .. k
-			if contadorMes[9] == 0 then
-				contadorMes[9] = 1
-				contadorFecha = 1
-			end
-		elseif v == "10" then
-			fecha = u .. " de Octubre de " .. k
-			tituloFecha = "Octubre " .. k
-			if contadorMes[10] == 0 then
-				contadorMes[10] = 1
-				contadorFecha = 1
-			end
-		elseif v == "11" then
-			fecha = u .. " de Noviembre de " .. k
-			tituloFecha = "Noviembre " .. k
-			if contadorMes[11] == 0 then
-				contadorMes[11] = 1
-				contadorFecha = 1
-			end
-		elseif v == "12" then
-			fecha = u .. " de Diciembre de " .. k
-			tituloFecha = "Diciembre " .. k
-			if contadorMes[12] == 0 then
-				contadorMes[12] = 1
-				contadorFecha = 1
-			end
-		end
-		
-	end
-   
-   -----
-	
-	if contadorFecha == 1 then
-		lastY = lastY + 70
-		local textTituloFecha = display.newText( {
-					text = tituloFecha,     
-					x = 270,
-					y = lastY,
-					width = intW,
-					height =60,
-					font = "Chivo-Black",   
-					fontSize = 25,
-					align = "left"
-		})
-		textTituloFecha:setFillColor( 0 )
-		grupoScroll3:insert(textTituloFecha)
-		contadorFecha = 0
-		
-   end
-
-    -- Obtiene el total de cupones de la tabla y agrega uno
-    local lastC = #coupons + 1
-    -- Generamos contenedor
-    coupons[lastC] = display.newContainer( 450, 100 )
-    coupons[lastC].index = lastC
-    coupons[lastC].x = 255
-    coupons[lastC].type = 2
-    coupons[lastC].y = lastY + 60
-    grupoScroll3:insert( coupons[lastC] )
-    coupons[lastC]:addEventListener( "tap", showCoupon )
-    
-    -- Agregamos rectangulo alfa al pie
-    local maxShape = display.newRect( 0, 0, 480, 100 )
-    maxShape:setFillColor( 1 )
-    coupons[lastC]:insert( maxShape )
-    
-    -- Agregamos imagen
-    imageItems[obj.id].alpha = 1
-    imageItems[obj.id].index = lastC
-    imageItems[obj.id].x= -175
-    imageItems[obj.id].width = 80
-    imageItems[obj.id].height  = 55
-    coupons[lastC]:insert( imageItems[obj.id] )
-    
-    -- Agregamos textos
-    local txtTitle = display.newText( {
-        text = obj.description,     
-        x = 25,
-        y = -10,
-        width = 300,
-        height =60,
-        font = "Chivo",   
-        fontSize = 24,
-        align = "left"
-    })
-    txtTitle:setFillColor( 0 )
-    coupons[lastC]:insert(txtTitle)
-	
-	local txtDate = display.newText( {
-        text = fecha,     
-        x = 25,
-        y = 20,
-        width = 300,
-        height =60,
-        font = "Chivo",   
-        fontSize = 18,
-        align = "left"
-    })
-    txtDate:setFillColor( 146/255, 146/255, 146/255)
-    coupons[lastC]:insert(txtDate)
-	
-	--[[local txtPlace = display.newText( {
-        text = obj.place,     
-        x = 25,
-        y = 40,
-        width = 300,
-        height =60,
-        font = "Chivo",   
-        fontSize = 18,
-        align = "left"
-    })
-    txtPlace:setFillColor( 146/255, 146/255, 146/255)
-    coupons[lastC]:insert(txtPlace)]]
-    
-    -- Agregamos linea negra al pie
-    grupoScroll3:insert( coupons[lastC] )
-    
-    -- Guardamos la ultima posicion
-    lastY = lastY + 102
-	
-	scrollViewContent3:setScrollHeight(  lastY + 150 )
-    
-end
-
----------- eventos -------------
-
-function loadMenuEvent(items,tipo)
-
-	Globals.ItemsEvents = items
-	tipoConsulta = tipo
-    titleLoading.text = "Descargando imagenes..."
-    for y = 1, #Globals.ItemsEvents, 1 do 
-        Globals.ItemsEvents[y].callback = noCallback
-    end
-	
-	loadImageEvent(1)
-	
-end
-
-function loadImageEvent(posc)
-    -- Listener loading
-    if not (Globals.ItemsEvents[posc].image == nil) then
-        local function networkListenerEvent( event )
-            -- Verificamos el callback activo
-            if #Globals.ItemsEvents <  posc then 
-                if not ( event.isError ) then
-                    destroyImage(event.target)
-                end
-            elseif Globals.ItemsEvents[posc].callback == noCallback then
-			
-                if ( event.isError ) then
-                    native.showAlert( "Go Deals", "Network error :(", { "OK"})
-                else
-                    event.target.alpha = 0
-                    imageItems[posc] = event.target
-                    if posc < #Globals.ItemsEvents and posc <= (noPackage * 10) then
-                        loadImageEvent(posc + 1)
-                    else
-                        buildItemsEvent()
-                    end
-                end
-            elseif not ( event.isError ) then
-                destroyImage(event.target)
-            end
-        end
-        -- Do call image
-        Globals.ItemsEvents[posc].idCupon = Globals.ItemsEvents[posc].id
-        Globals.ItemsEvents[posc].id = posc
-        local path = system.pathForFile( Globals.ItemsEvents[posc].image, system.TemporaryDirectory )
-        local fhd = io.open( path )
-        -- Determine if file exists
-        if fhd then
-            fhd:close()
-            imageItems[posc] = display.newImage( Globals.ItemsEvents[posc].image, system.TemporaryDirectory )
-			
-            if Globals.ItemsEvents[posc].callback == noCallback then
-                imageItems[posc].alpha = 0
-                if posc < #Globals.ItemsEvents and posc <= (noPackage * 10) then
-                    loadImageEvent(posc + 1)
-                else
-					buildItemsEvent()
-                end
-            else
-                destroyImage(imageItems[posc])
-            end
-        else
-           display.loadRemoteImage( 'http://localhost:8080/godeals/assets/img/app/event/app/'..Globals.ItemsEvents[posc].image, 
-            "GET", networkListenerEvent, Globals.ItemsEvents[posc].image, system.TemporaryDirectory ) 
-        end
-    else
-        loadImageEvent(posc + 1)
-    end
-end
-
-function buildItemsEvent()
-    -- Stop loading sprite
-    if noPackage == 1 then
-        loading:setSequence("stop")
-        loadingGrp.alpha = 0
-    else
-        coupons[#coupons]:removeSelf()
-        coupons[#coupons] = nil
-    end
-    -- Build items
-    local z = (noPackage * 10) - 9
-    while z <= #Globals.ItemsEvents and z <= (noPackage * 10) do 
-        
-        -- Armar cupones
-        if tipoConsulta == 1 then
-            setStdEvent(Globals.ItemsEvents[z]) 
-        elseif tipoConsulta == 2 then
-			setStdAllEvent(Globals.ItemsEvents[z])
-		end
-        z = z + 1
-    end
-    
-    -- Validate Loading
-    if  #Globals.ItemsEvents > (noPackage * 10) then
-        -- Create Loading
-        coupons[#coupons + 1] = display.newContainer( 444, 150 )
-        coupons[#coupons].x = midW
-        coupons[#coupons].y = lastY + 60
-        grupoScroll1:insert( coupons[#coupons] )
-        
-        -- Sprite and text
-        local sheet = graphics.newImageSheet(Sprites.loading.source, Sprites.loading.frames)
-        local loadingBottom = display.newSprite(sheet, Sprites.loading.sequences)
-        loadingBottom.y = -10
-        coupons[#coupons]:insert(loadingBottom)
-        loadingBottom:setSequence("play")
-        loadingBottom:play()
-        local title = display.newText( "Cargando, por favor espere...", 0, 30, "Chivo", 16)
-        title:setFillColor( .3, .3, .3 )
-        coupons[#coupons]:insert(title) 
-        
-        -- Call new images
-        noPackage = noPackage + 1
-        loadImageEvent((noPackage * 10) - 9)
-    else
-        if navGrp.alpha == 1 then
-            lastY = lastY + 70
-        end
-        
-        -- Create Space
-        coupons[#coupons + 1] = display.newContainer( 444, 40 )
-        coupons[#coupons].x = midW
-        coupons[#coupons].y = lastY + 40
-        grupoScroll1:insert( coupons[#coupons] )
-    end
-end
-
--- Genera un 3 eventos principales
-function setStdEvent(obj)
-
-	totalEventos = totalEventos + 1
-
-    -- Obtiene el total de cupones de la tabla y agrega uno
-    local lastC = #coupons + 1
-    -- Generamos contenedor
-    coupons[lastC] = display.newContainer( 450, 100 )
-    coupons[lastC].index = lastC
-    coupons[lastC].x = 255
-    coupons[lastC].type = 2
-    coupons[lastC].y = lastY + 70
-    grupoScroll1:insert( coupons[lastC] )
-    coupons[lastC]:addEventListener( "tap", showCoupon )
-    
-    -- Agregamos rectangulo alfa al pie
-    local maxShape = display.newRect( 0, 0, 480, 100 )
-    maxShape:setFillColor( 1 )
-    coupons[lastC]:insert( maxShape )
-    
-    -- Agregamos imagen
-    imageItems[obj.id].alpha = 1
-    imageItems[obj.id].index = lastC
-    imageItems[obj.id].x= -175
-    imageItems[obj.id].width = 80
-    imageItems[obj.id].height  = 55
-    coupons[lastC]:insert( imageItems[obj.id] )
-    
-    -- Agregamos textos
-    local txtTitle = display.newText( {
-        text = obj.name,     
-        x = 25,
-        y = -10,
-        width = 300,
-        height =60,
-        font = "Chivo",   
-        fontSize = 24,
-        align = "left"
-    })
-    txtTitle:setFillColor( 0 )
-    coupons[lastC]:insert(txtTitle)
-	
-	---- sacamos la fecha 
-	
-	local fecha = ""
-	
-	s = obj.date
-	for k, v, u in string.gmatch(s, "(%w+)-(%w+)-(%w+)") do
-		
-		if v == "1" then
-			fecha = u .. " de Enero de " .. k  
-		elseif v == "2" then
-			fecha = u .. " de Febrero de " .. k  
-		elseif v == "3" then
-			fecha = u .. " de Marzo de " .. k  
-		elseif v == "4" then
-			fecha = u .. " de Abril de " .. k  
-		elseif v == "5" then
-			fecha = u .. " de Mayo de " .. k  
-		elseif v == "6" then
-			fecha = u .. " de Junio de " .. k  
-		elseif v == "7" then
-			fecha = u .. " de Julio de " .. k  
-		elseif v == "8" then
-			fecha = u .. " de Agosto de " .. k  
-		elseif v == "9" then
-			fecha = u .. " de Septiembre de " .. k  
-		elseif v == "10" then
-			fecha = u .. " de Octubre de " .. k  
-		elseif v == "11" then
-			fecha = u .. " de Noviembre de " .. k  
-		elseif v == "12" then
-			fecha = u .. " de Diciembre de " .. k  
-		end
-		
-	end
-   
-   -----
-	
-	local txtDate = display.newText( {
-        text = fecha,     
-        x = 25,
-        y = 20,
-        width = 300,
-        height =60,
-        font = "Chivo",   
-        fontSize = 18,
-        align = "left"
-    })
-    txtDate:setFillColor( 146/255, 146/255, 146/255)
-    coupons[lastC]:insert(txtDate)
-	
-	local txtPlace = display.newText( {
-        text = obj.place,     
-        x = 25,
-        y = 40,
-        width = 300,
-        height =60,
-        font = "Chivo",   
-        fontSize = 18,
-        align = "left"
-    })
-    txtPlace:setFillColor( 146/255, 146/255, 146/255)
-    coupons[lastC]:insert(txtPlace)
-    
-    -- Agregamos linea negra al pie
-    grupoScroll1:insert( coupons[lastC] )
-    
-    -- Guardamos la ultima posicion
-    lastY = lastY + 102	
-	
-	if tipoConsulta == 1 and totalEventos == 3 then
-	
-	local grupoSeparadorCupones = display.newGroup()
-	scrollViewContent1:insert(grupoSeparadorCupones)
-	
-	local separadorCupones = display.newImage( "img/btn/btnArrowBlack.png" )
-	separadorCupones:translate( 41, lastY + 60)
-	separadorCupones:setFillColor( 1 )
-	separadorCupones.isVisible = true
-	separadorCupones.height = 20
-	separadorCupones.width = 20
-	grupoSeparadorCupones:insert(separadorCupones)
-	
-	local textSeparadorCupones = display.newText( {
-        text = "Recomendaciones de promociones para ti.",     
-        x = 300,
-        y = lastY + 90,
-        width = intW,
-        height =80,
-        font = "Chivo",
-        fontSize = 20,
-        align = "left"
-	})
-	textSeparadorCupones:setFillColor( 85/255, 85/255, 85/255 )
-	grupoSeparadorCupones:insert(textSeparadorCupones)
-	
-	RestManager.getCoupon()
-	
-	totalEventos = 0
-	
-	end
-	
-    
-end
-
--- generamos todos los eventos vigentes
-function setStdAllEvent(obj)
-	
-	---- sacamos la fecha
-	
-	totalEventos = totalEventos + 1
-	
-	local fecha = ""
-	
-	s = obj.date
-	for k, v, u in string.gmatch(s, "(%w+)-(%w+)-(%w+)") do
-		
-		if v == "01" then
-			fecha = u .. " de Enero de " .. k 
-			tituloFecha = "Enero " .. k
-			if contadorMes[1] == 0 then
-				contadorMes[1] = 1
-				contadorFecha = 1
-			end
-		elseif v == "02" then
-			fecha = u .. " de Febrero de " .. k 
-			tituloFecha = "Febrero " .. k
-			if contadorMes[2] == 0 then
-				contadorMes[2] = 1
-				contadorFecha = 1
-			end
-		elseif v == "03" then
-			fecha = u .. " de Marzo de " .. k  
-			tituloFecha = "Marzo " .. k
-			if contadorMes[3] == 0 then
-				contadorMes[3] = 1
-				contadorFecha = 1
-			end
-		elseif v == "04" then
-			fecha = u .. " de Abril de " .. k
-			tituloFecha = "Abril " .. k
-			if contadorMes[4] == 0 then
-				contadorMes[4] = 1
-				contadorFecha = 1
-			end
-		elseif v == "05" then
-			fecha = u .. " de Mayo de " .. k  
-			tituloFecha = "Mayo " .. k
-			if contadorMes[5] == 0 then
-				contadorMes[5] = 1
-				contadorFecha = 1
-			end
-		elseif v == "06" then
-			fecha = u .. " de Junio de " .. k
-			tituloFecha = "Junio " .. k
-			if contadorMes[6] == 0 then
-				contadorMes[6] = 1
-				contadorFecha = 1
-			end
-		elseif v == "07" then
-			fecha = u .. " de Julio de " .. k 
-			tituloFecha = "Julio " .. k
-			if contadorMes[7] == 0 then
-				contadorMes[7] = 1
-				contadorFecha = 1
-			end
-		elseif v == "08" then
-			fecha = u .. " de Agosto de " .. k
-			tituloFecha = "Agosto " .. k
-			if contadorMes[8] == 0 then
-				contadorMes[8] = 1
-				contadorFecha = 1
-			end
-		elseif v == "09" then
-			fecha = u .. " de Septiembre de " .. k 
-			tituloFecha = "Septiembre " .. k
-			if contadorMes[9] == 0 then
-				contadorMes[9] = 1
-				contadorFecha = 1
-			end
-		elseif v == "10" then
-			fecha = u .. " de Octubre de " .. k
-			tituloFecha = "Octubre " .. k
-			if contadorMes[10] == 0 then
-				contadorMes[10] = 1
-				contadorFecha = 1
-			end
-		elseif v == "11" then
-			fecha = u .. " de Noviembre de " .. k
-			tituloFecha = "Noviembre " .. k
-			if contadorMes[11] == 0 then
-				contadorMes[11] = 1
-				contadorFecha = 1
-			end
-		elseif v == "12" then
-			fecha = u .. " de Diciembre de " .. k
-			tituloFecha = "Diciembre " .. k
-			if contadorMes[12] == 0 then
-				contadorMes[12] = 1
-				contadorFecha = 1
-			end
-		end
-		
-	end
-   
-   -----
-	
-	if contadorFecha == 1 then
-	
-		lastY = lastY + 70
-		local textTituloFecha = display.newText( {
-					text = tituloFecha,     
-					x = 270,
-					y = lastY,
-					width = intW,
-					height =60,
-					font = "Chivo-Black",   
-					fontSize = 25,
-					align = "left"
-		})
-		textTituloFecha:setFillColor( 0 )
-		grupoScroll2:insert(textTituloFecha)
-		contadorFecha = 0
-		
-   end
-
-    -- Obtiene el total de cupones de la tabla y agrega uno
-    local lastC = #coupons + 1
-    -- Generamos contenedor
-    coupons[lastC] = display.newContainer( 450, 100 )
-    coupons[lastC].index = lastC
-    coupons[lastC].x = 255
-    coupons[lastC].type = 2
-    coupons[lastC].y = lastY + 60
-    grupoScroll2:insert( coupons[lastC] )
-    coupons[lastC]:addEventListener( "tap", showCoupon )
-    
-    -- Agregamos rectangulo alfa al pie
-    local maxShape = display.newRect( 0, 0, 480, 100 )
-    maxShape:setFillColor( 1 )
-    coupons[lastC]:insert( maxShape )
-    
-    -- Agregamos imagen
-    imageItems[obj.id].alpha = 1
-    imageItems[obj.id].index = lastC
-    imageItems[obj.id].x= -175
-    imageItems[obj.id].width = 80
-    imageItems[obj.id].height  = 55
-    coupons[lastC]:insert( imageItems[obj.id] )
-    
-    -- Agregamos textos
-    local txtTitle = display.newText( {
-        text = obj.name,     
-        x = 25,
-        y = -10,
-        width = 300,
-        height =60,
-        font = "Chivo",   
-        fontSize = 24,
-        align = "left"
-    })
-    txtTitle:setFillColor( 0 )
-    coupons[lastC]:insert(txtTitle)
-	
-	local txtDate = display.newText( {
-        text = fecha,     
-        x = 25,
-        y = 20,
-        width = 300,
-        height =60,
-        font = "Chivo",   
-        fontSize = 18,
-        align = "left"
-    })
-    txtDate:setFillColor( 146/255, 146/255, 146/255)
-    coupons[lastC]:insert(txtDate)
-	
-	local txtPlace = display.newText( {
-        text = obj.place,     
-        x = 25,
-        y = 40,
-        width = 300,
-        height =60,
-        font = "Chivo",   
-        fontSize = 18,
-        align = "left"
-    })
-    txtPlace:setFillColor( 146/255, 146/255, 146/255)
-    coupons[lastC]:insert(txtPlace)
-    
-    -- Agregamos linea negra al pie
-    grupoScroll2:insert( coupons[lastC] )
-    
-    -- Guardamos la ultima posicion
-    lastY = lastY + 102
-	
-	scrollViewContent2:setScrollHeight(  lastY + 150 )
-	
-	if totalEventos == #Globals.ItemsEvents then
-	
-		totalEventos = 0
-	
-		local encabezadoCupones = display.newRect( 0, 0, display.contentWidth, 20 )
-		encabezadoCupones.anchorX = 0
-		encabezadoCupones.anchorY = 0
-		encabezadoCupones:setFillColor( 1 )	-- red
-		scrollViewContent3:insert(encabezadoCupones)
-		
-		lastY = -70
-		
-		RestManager.getAllCoupon()
-	end
-    
-end
-	
----- user ----------	
-	
-	function userData()
-		local sizeAvatar = 'width=130&height=100'
-        local maskAvatar = ''
-		
-		contenerUser = display.newContainer( display.contentWidth * 2, 350 )
-		contenerUser.x = 0
-		contenerUser.y = 0
-		scrollViewContent1:insert( contenerUser )
-		
-		local bgFotoFacebook = display.newRect( 0, 0, display.contentWidth, 90 )
-		bgFotoFacebook.anchorX = 0
-		bgFotoFacebook.anchorY = 0
-		bgFotoFacebook:setFillColor( 1 )	-- red
-		contenerUser:insert(bgFotoFacebook)
-		
-        local path = system.pathForFile( "avatarFb"..settings.fbId, system.TemporaryDirectory )
-        local fhd = io.open( path )
-        if fhd then
-            fhd:close()
-			
-            local avatar = display.newImage("avatarFb"..settings.fbId, system.TemporaryDirectory )
-            avatar.x = 70
-            avatar.y = 90
-			avatar.height = 100
-			avatar.width = 130
-            contenerUser:insert(avatar)
-        else
-            local function networkListenerFB( event )
-                -- Verificamos el callback activo
-                if ( event.isError ) then
-                else
-                    --local mask = graphics.newMask( "img/bgk/maskAvatar"..maskAvatar..".jpg" )
-                    event.target.x = 70
-                    event.target.y = 90
-                    --event.target:setMask( mask )
-                    contenerUser:insert( event.target )
-                end
-            end
-            display.loadRemoteImage( "http://graph.facebook.com/".. settings.fbId .."/picture?type=large&"..sizeAvatar, 
-                "GET", networkListenerFB, "avatarFb"..settings.fbId, system.TemporaryDirectory )
-				 
-        end
-		
-	local textNombre = display.newText( {
-		text = settings.name .. " Chi Zum",     
-		x = 260,
-		y = 40,
-		width = intW,
-		height =60,
-		font = "Chivo-Black",   
-		fontSize = 26,
-		align = "left"
-	})
-	textNombre:setFillColor( 0 )
-	contenerUser:insert(textNombre)
-		
-	local textSaludo = display.newText( {
-		text = "Actualmente esta viendo eventos y cupones de Cancún",     
-		x =320,
-		y = 80,
-		width = 350,
-		height =60,
-		font = "Chivo",   
-		fontSize = 18,
-		align = "left"
-	})
-	textSaludo:setFillColor( 176/255, 176/255, 176/255 )
-	contenerUser:insert(textSaludo)
-	
-	end
-	
-	-- Limpiamos scrollview
-function cleanHome()
-    
-    -- Play loading
-    loadingGrp.alpha = 1
-    loading:setSequence("play")
-    loading:play()
-end
-
 -- Called immediately after scene has moved onscreen:
 function scene:enterScene( event )
     storyboard.removeAll()
+    RestManager.getEvents()
 end
 
 -- Remove Listener

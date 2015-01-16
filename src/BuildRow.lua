@@ -46,7 +46,9 @@ function Event:new()
         local container = display.newContainer( 450, 100 )
         container.x = 255
         container.y = 50
+		container.name = 2
         self:insert( container )
+		container:addEventListener( "tap", showCoupon )
 
         -- Agregamos rectangulo alfa al pie
         local maxShape = display.newRect( 0, 0, 480, 100 )
@@ -111,6 +113,7 @@ function Deal:new()
         local container = display.newContainer( 450, 100 )
         container.x = 255
         container.y = 50
+		container.name = 1
         self:insert( container )
 
         -- Agregamos rectangulo alfa al pie

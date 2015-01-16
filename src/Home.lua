@@ -233,7 +233,6 @@ function getDate(strDate)
     return fecha
 end
 
-
 ---------------------------------------------------------------------------------
 -- LISTENERS
 ---------------------------------------------------------------------------------
@@ -469,13 +468,12 @@ function rectModal( event )
 end
 
 function showCoupon(event)
-    print(event.target.item)
+    
 	storyboard.gotoScene( "src.detail", {
 		time = 400,
 		effect = "crossFade",
 		params = { item = event.target.item }
 	})
-end
 
 function getFBData()
 		local sizeAvatar = 'width=100&height=100'

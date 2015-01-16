@@ -217,7 +217,6 @@ function getDate(strDate)
     return fecha
 end
 
-
 ---------------------------------------------------------------------------------
 -- LISTENERS
 ---------------------------------------------------------------------------------
@@ -453,11 +452,14 @@ function rectModal( event )
 end
 
 function showCoupon(event)
-	storyboard.gotoScene( "src.detail", {
+
+	print(elements[1])
+
+	--[[storyboard.gotoScene( "src.detail", {
 		time = 400,
 		effect = "crossFade",
-		params = { index = event.target.index }
-	})
+		params = { index = event.target.index, tipo = event.target.name }
+	})]]
 end
 
 function getFBData()

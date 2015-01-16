@@ -24,7 +24,7 @@ local groupMenu, groupEvent, groupMenuEventText
 local  svCoupon, svInfo, svPromotions, svGallery
 local h = display.topStatusBarContentHeight
 local lastY = 200;
-local currentI,tipo
+local itemObj
 
 local info, promotions, gallery, MenuEventBar
 --pantalla
@@ -144,10 +144,10 @@ function ListenerChangeScroll( event )
 end
 
 function createItems()
-	if tipo == 1 then
+	if itemObj.type == "Event" then
 		buildCoupon()
 	else
-		buildEvent(Globals.ItemsEvents[currentI])
+		buildEvent(itemObj)
 	end
 end
 
@@ -181,7 +181,7 @@ function buildCoupon()
     imgBgCoupon.height  = 410
     svCoupon:insert( imgBgCoupon )
 	
-	local imgCoupon = display.newImage( Globals.ItemsCoupon[currentI].image, system.TemporaryDirectory )
+	local imgCoupon = display.newImage( itemObj.image, system.TemporaryDirectory )
 	imgCoupon.alpha = 1
     imgCoupon.x= 121
 	imgCoupon.y = 124
@@ -190,7 +190,7 @@ function buildCoupon()
     svCoupon:insert( imgCoupon )
 	
 	local txtPartner = display.newText( {
-        text = Globals.ItemsCoupon[currentI].namePartner,    
+        text = itemObj.namePartner,    
         x = 320,
         y = 105,
         width = 240,
@@ -203,7 +203,7 @@ function buildCoupon()
     svCoupon:insert( txtPartner )
 	
 	local txtAddressPartner = display.newText( {
-        text = Globals.ItemsCoupon[currentI].address,
+        text = itemObj.address,
         x = 320,
         y = 120,
         width = 240,
@@ -229,7 +229,7 @@ function buildCoupon()
     svCoupon:insert( txtSchedulePartner )
 	
 	local txtDescription = display.newText({
-		text = Globals.ItemsCoupon[currentI].description,
+		text = itemObj.description,
 		x = 240,
 		y = lastY,
 		width = 370,
@@ -306,7 +306,7 @@ function buildCoupon()
 	lastY = lastY + 10
 	
 	local txtDetail = display.newText({
-		text = Globals.ItemsCoupon[currentI].detail,
+		text = itemObj.detail,
 		--x = 123,
 		x = 240,
 		y = lastY,
@@ -363,7 +363,7 @@ function buildCoupon()
 	svCoupon:insert(imgBgDetail)
 	
 	local txtClauses = display.newText({
-		text = Globals.ItemsCoupon[currentI].clauses,
+		text = itemObj.clauses,
 		x = midW,
 		y = lastY,
 		width = 420,
@@ -425,7 +425,7 @@ function buildEvent(item)
 	groupEvent:insert( imgEvent )
 	
 	local txtPartner = display.newText({
-		text = Globals.ItemsEvents[currentI].partner,
+		text = "xxx", --itemObj.partner,
 		x = 320,
 		y =  225,
 		font = "Chivo",
@@ -438,7 +438,7 @@ function buildEvent(item)
 	groupEvent:insert( txtPartner )
 	
 	local txtAddress = display.newText({
-		text = Globals.ItemsEvents[currentI].address,
+		text = "xxx", --itemObj.address,
 		x = 320,
 		y =  275,
 		font = "Chivo",
@@ -572,7 +572,7 @@ function buildEventInfo(item)
 	svInfo:insert( txtGeneralInformacion )
 	
 	local txtInfo = display.newText({
-		text =  Globals.ItemsEvents[currentI].info,
+		text =  "xxx", --itemObj.info,
 		--x = 123,
 		x = 240,
 		y = lastY,
@@ -593,7 +593,7 @@ function buildEventInfo(item)
 	
 	lastY = lastY + bgGeneralInformacion.height + 150
 	
-	local imgEvent = display.newImage(  Globals.ItemsEvents[currentI].image, system.TemporaryDirectory )
+	local imgEvent = display.newImage(  itemObj.image, system.TemporaryDirectory )
 	imgEvent.alpha = 1
 	imgEvent.x = midW
 	imgEvent.y = lastY
@@ -608,7 +608,7 @@ function buildEventInfo(item)
 	svInfo:insert(bgLocation)
 	
 	local txtAdressEvent = display.newText({
-		text =  Globals.ItemsEvents[currentI].address,
+		text =  "xxx", --itemObj.address,
 		--x = 123,
 		x = 240,
 		y = lastY,
@@ -635,13 +635,8 @@ end
 
 function scene:createScene( event )
 	screen = self.view
-	
 	screen:insert(homeScreen)
-	
-	currentI = event.params.index
-	tipo = event.params.tipo
-	
-	
+	itemObj = event.params.item
 	
 	local bg = display.newRect( 0, h, display.contentWidth, display.contentHeight )
 	bg.anchorX = 0
@@ -659,28 +654,28 @@ function scene:createScene( event )
 	grupoToolbar.y = h + 5
 	homeScreen:insert(grupoToolbar)
 	
-	local logo = display.newImage( "img/btn/logoGo.png" )
+	local logo = display.newImage( "img/btn/logo.png" )
 	logo:translate( 80, 25 )
 	logo.isVisible = true
 	logo.height = 35
 	logo.width = 140
 	grupoToolbar:insert(logo)
 	
-	local btnSearch = display.newImage( "img/btn/btnMenuSearch.png" )
+	local btnSearch = display.newImage( "img/btn/btnMenuNotification.png" )
 	btnSearch:translate( display.contentWidth - 150, 25 )
 	btnSearch.isVisible = true
 	btnSearch.height = 60
 	btnSearch.width = 60
 	grupoToolbar:insert(btnSearch)
 	
-	local btnMensaje = display.newImage( "img/btn/btnMenuNotification.png" )
+	local btnMensaje = display.newImage( "img/btn/btnMenuSearch.png" )
 	btnMensaje:translate( display.contentWidth - 100, 25 )
 	btnMensaje.isVisible = true
 	btnMensaje.height = 40
 	btnMensaje.width = 40
 	grupoToolbar:insert(btnMensaje)
 	
-	local btnHerramienta = display.newImage( "img/btn/btnMenuuser.png" )
+	local btnHerramienta = display.newImage( "img/btn/btnMenuUser.png" )
 	btnHerramienta:translate( display.contentWidth - 50, 25 )
 	btnHerramienta:setFillColor( 1, 1, 1 )
 	btnHerramienta.isVisible = true
@@ -724,11 +719,6 @@ end
 
 -- Remove Listener
 function scene:exitScene( event )
-	
-   --[[ if storeBar then
-        storeBar:removeSelf()
-        storeBar = nil
-    end]]
 end
 
 scene:addEventListener("createScene", scene )

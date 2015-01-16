@@ -126,7 +126,10 @@ function Deal:new()
         image.x= -175
         image.width = 80
         image.height  = 55
+        image.item = item
+        image.type = "Coupon"
         container:insert( image )
+        image:addEventListener( "tap", showCoupon )
 
         -- Agregamos textos
         local txtTitle = display.newText( {

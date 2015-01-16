@@ -48,6 +48,22 @@ end
 ---------------------------------------------------------------------------------
 -- FUNCIONES
 ---------------------------------------------------------------------------------
+-- Limpiamos imagenes con 15 dias de descarga
+local function clearTempDir()
+    local lfs = require "lfs"
+    local doc_path = system.pathForFile( "", system.TemporaryDirectory )
+    local destDir = system.TemporaryDirectory  -- where the file is stored
+    local lastTwoWeeks = os.time() - 1209600
+
+    for file in lfs.dir(doc_path) do
+        -- file is the current file or directory name
+        local file_attr = lfs.attributes( system.pathForFile( file, destDir  ) )
+        -- Elimina despues de 2 semanas
+        if file_attr.modification < lastTwoWeeks then
+           os.remove( system.pathForFile( file, destDir  ) ) 
+        end
+    end
+end
 
 -- Carga de la imagen del servidor o de TemporaryDirectory
 function loadImage(obj)    
@@ -72,11 +88,11 @@ function loadImage(obj)
             else
                 event.target.alpha = 0
                 imageItems[obj.posc] = event.target
-                if obj.posc < #Globals.ItemsEvents then
+                if obj.posc < #elements then
                     obj.posc = obj.posc + 1
                     loadImage(obj)
                 else
-                    buildItemsEvent()
+                    buildItems(obj.screen)
                 end
             end
         end
@@ -453,15 +469,16 @@ function rectModal( event )
 end
 
 function showCoupon(event)
+    print(event.target.item)
 	storyboard.gotoScene( "src.detail", {
 		time = 400,
 		effect = "crossFade",
-		params = { index = event.target.index }
+		params = { item = event.target.item }
 	})
 end
 
 function getFBData()
-		local sizeAvatar = 'width=130&height=100'
+		local sizeAvatar = 'width=100&height=100'
         
 		contenerUser = display.newContainer( display.contentWidth * 2, 350 )
 		contenerUser.x = 0
@@ -480,17 +497,17 @@ function getFBData()
             fhd:close()
 			
             local avatar = display.newImage("avatarFb"..settings.fbId, system.TemporaryDirectory )
-            avatar.x = 70
+            avatar.x = 55
             avatar.y = 90
 			avatar.height = 100
-			avatar.width = 130
+			avatar.width = 100
             contenerUser:insert(avatar)
         else
             local function networkListenerFB( event )
                 -- Verificamos el callback activo
                 if ( event.isError ) then
                 else
-                    event.target.x = 70
+                    event.target.x = 55
                     event.target.y = 90
                     contenerUser:insert( event.target )
                 end
@@ -502,8 +519,8 @@ function getFBData()
 		
 	local textNombre = display.newText( {
 		text = settings.name,     
-		x = 260, y = 40,
-		width = intW, height =60,
+		x = 245, y = 25,
+		width = intW, height = 30,
 		font = "Chivo-Black",  fontSize = 26, align = "left"
 	})
 	textNombre:setFillColor( 0 )
@@ -511,9 +528,9 @@ function getFBData()
 		
 	local textSaludo = display.newText( {
 		text = "Actualmente esta viendo eventos y cupones de Cancún",     
-		x =320, y = 80,
-		width = 350, height =60,
-		font = "Chivo",  fontSize = 18, align = "left"
+		x = 310, y = 80,
+		width = 400, height =20,
+		font = "Chivo",  fontSize = 14, align = "left"
 	})
 	textSaludo:setFillColor( 176/255, 176/255, 176/255 )
 	contenerUser:insert(textSaludo)
@@ -547,33 +564,20 @@ function scene:createScene( event )
 	grupoToolbar.y = h + 5
 	homeScreen:insert(grupoToolbar)
 	
-	local logo = display.newImage( "img/btn/logoGo.png" )
-	logo:translate( 80, 25 )
-	logo.isVisible = true
-	logo.height = 35
-	logo.width = 140
+	local logo = display.newImage( "img/btn/logo.png" )
+	logo:translate( 40, 25 )
 	grupoToolbar:insert(logo)
 	
-	local btnSearch = display.newImage( "img/btn/btnSearch.png" )
-	btnSearch:translate( display.contentWidth - 150, 25 )
-	btnSearch.isVisible = true
-	btnSearch.height = 60
-	btnSearch.width = 60
+	local btnSearch = display.newImage( "img/btn/btnMenuNotification.png" )
+	btnSearch:translate( display.contentWidth - 160, 25 )
 	grupoToolbar:insert(btnSearch)
 	
-	local btnMensaje = display.newImage( "img/btn/btnMessage.png" )
-	btnMensaje:translate( display.contentWidth - 100, 25 )
-	btnMensaje.isVisible = true
-	btnMensaje.height = 40
-	btnMensaje.width = 40
+	local btnMensaje = display.newImage( "img/btn/btnMenuSearch.png" )
+	btnMensaje:translate( display.contentWidth - 95, 25 )
 	grupoToolbar:insert(btnMensaje)
 	
-	local btnHerramienta = display.newImage( "img/btn/tool.png" )
-	btnHerramienta:translate( display.contentWidth - 50, 25 )
-	btnHerramienta:setFillColor( 1, 1, 1 )
-	btnHerramienta.isVisible = true
-	btnHerramienta.height = 40
-	btnHerramienta.width = 40
+	local btnHerramienta = display.newImage( "img/btn/btnMenuUser.png" )
+	btnHerramienta:translate( display.contentWidth - 35, 25 )
 	grupoToolbar:insert(btnHerramienta)
 	
 	local menu = display.newRect( 0, h + 55, display.contentWidth, 70 )
@@ -673,6 +677,7 @@ function scene:createScene( event )
 	btnModal:addEventListener( "tap", openModal )
 	
 	btnModal:toFront()
+    clearTempDir()
 end
 	
 -- Called immediately after scene has moved onscreen:

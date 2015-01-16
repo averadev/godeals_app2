@@ -3,10 +3,10 @@ local RestManager = {}
 
 	local json = require("json")
     local DBManager = require('src.resources.DBManager')
+    local settings = DBManager.getSettings()
 	
 	RestManager.getEvents = function()
-		local url = "http://localhost/godeals/"
-        url = url.."api/getEvent/format/json"
+		local url = settings.url .. "api/getEvent/format/json"
 	   
 	   local function callback(event)
             if ( event.isError ) then
@@ -25,8 +25,7 @@ local RestManager = {}
 	end
 	
 	RestManager.getCoupon = function()
-		local url = "http://localhost/godeals/"
-        url = url.."api/getCoupon/format/json"
+		local url = settings.url .. "api/getCoupon/format/json"
 	   
 	   local function callback(event)
             if ( event.isError ) then
@@ -34,7 +33,7 @@ local RestManager = {}
 				local data = json.decode(event.response)
                 if data.success then
                     setElements(data.items)
-					loadImage({posc = 1, screen = 'MainDeal', path = 'assets/img/app/event/app/'})
+					loadImage({posc = 1, screen = 'MainDeal', path = 'assets/img/app/coupon/app/'})
                 end
             end
             return true
@@ -45,8 +44,7 @@ local RestManager = {}
 	end
 	
 	RestManager.getAllEvent = function()
-		local url = "http://localhost/godeals/"
-        url = url.."api/getAllEvent/format/json"
+		local url = settings.url .. "api/getAllEvent/format/json"
 	   
 	   local function callback(event)
             if ( event.isError ) then
@@ -65,8 +63,7 @@ local RestManager = {}
 	end
 	
 	RestManager.getAllCoupon = function()
-		local url = "http://localhost/godeals/"
-        url = url.."api/getAllCoupon/format/json"
+		local url = settings.url .. "api/getAllCoupon/format/json"
 	   
 	   local function callback(event)
             if ( event.isError ) then
@@ -74,7 +71,7 @@ local RestManager = {}
 				local data = json.decode(event.response)
                 if data.success then
                     setElements(data.items)
-					loadImage({posc = 1, screen = 'DealPanel', path = 'assets/img/app/event/app/'})
+					loadImage({posc = 1, screen = 'DealPanel', path = 'assets/img/app/coupon/app/'})
                 end
             end
             return true

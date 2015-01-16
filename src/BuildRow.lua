@@ -12,16 +12,16 @@ function MonthTitle:new()
     function self:build(desc)
         
         -- Generamos contenedor
-        local container = display.newContainer( 450, 70 )
+        local container = display.newContainer( 480, 70 )
         container.x = 0
         container.y = 35
         self:insert( container )
         
         local txtTitleDate = display.newText( {
-					text = desc,     
-					x = 130, y = 25,
-					width = intW, height = 60,
-					font = "Chivo-Black", fontSize = 25, align = "left"
+            text = desc,     
+            x = 245, y = 15,
+            width = 470, height = 35,
+            font = "Chivo-Black", fontSize = 24, align = "left"
 		})
 		txtTitleDate:setFillColor( 0 )
 		container:insert(txtTitleDate)
@@ -58,7 +58,10 @@ function Event:new()
         image.x= -175
         image.width = 80
         image.height  = 55
+        image.item = item
+        image.type = "Event"
         container:insert( image )
+        image:addEventListener( "tap", showCoupon )
 
         -- Agregamos textos
         local txtTitle = display.newText( {

@@ -4,6 +4,7 @@ local storyboard = require( "storyboard" )
 local Globals = require('src.resources.Globals')
 local widget = require( "widget" )
 local RestManager = require('src.resources.RestManager2')
+local DBManager = require('src.resources.DBManager')
 local scene = storyboard.newScene()
 
 -- Variables
@@ -18,6 +19,7 @@ local  svCoupon, svInfo, svPromotions, svGallery
 local h = display.topStatusBarContentHeight
 local lastY = 200;
 local idPartner
+local settings
 
 local info, promotions, gallery, MenuEventBar
 
@@ -122,14 +124,6 @@ function ListenerChangeScroll( event )
 	
 end
 
-function createItems()
-	if tipo == 1 then
-		buildCoupon()
-	else
-		buildEvent(Globals.ItemsEvents[currentI])
-	end
-end
-
 ---------------------------------------------------------
 ---------build Partner
 ---------------------------------------------------------
@@ -146,7 +140,17 @@ function loadPartner(item)
 	imgBgEvent.height = 165
 	groupEvent:insert( imgBgEvent )
 	
-	local imgEvent = display.newImage( "img/btn/tmpComer.jpg" )
+	--[[local imgEvent = display.newImage( "img/btn/tmpComer.jpg" )
+	imgEvent.alpha = 1
+	imgEvent.x = 110
+	imgEvent.y = 215
+	imgEvent.width = 86
+	imgEvent.height = 86
+	groupEvent:insert( imgEvent )]]
+	
+	--loadImagePartner(item)
+	
+	local imgEvent = display.newImage( item.logo, system.TemporaryDirectory )
 	imgEvent.alpha = 1
 	imgEvent.x = 110
 	imgEvent.y = 215
@@ -276,6 +280,32 @@ function loadPartner(item)
 	svGallery.name = "svGallery"
 	
 	buildEventInfo(item)
+	
+end
+
+function loadImagePartner(item)
+	local path = system.pathForFile( item.logo, system.TemporaryDirectory )
+    local fhd = io.open( path )
+    if fhd then
+        fhd:close()
+		
+		loadPartner(item)
+		
+    else
+        -- Listener de la carga de la imagen del servidor
+        local function loadImageListener( event )
+            if ( event.isError ) then
+                native.showAlert( "Go Deals", "Network error :(", { "OK"})
+            else
+				event.target.alpha = 0
+				loadPartner(item)
+            end
+        end
+        
+        -- Descargamos de la nube
+        display.loadRemoteImage( settings.url.."assets/img/app/logo/"..item.logo, 
+        "GET", loadImageListener, item.logo, system.TemporaryDirectory ) 
+    end
 	
 end
 
@@ -435,6 +465,7 @@ end
 
 -- Called immediately after scene has moved onscreen:
 function scene:enterScene( event )
+	settings = DBManager.getSettings()
 	RestManager.getPartner(idPartner)
 end
 

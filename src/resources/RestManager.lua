@@ -91,7 +91,7 @@ local RestManager = {}
             else
 				local data = json.decode(event.response)
                 if data.success then
-                    loadPartner(data.items[1])
+                    loadImagePartner(data.items[1])
 					
                 else
                 end

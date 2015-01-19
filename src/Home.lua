@@ -580,7 +580,9 @@ end
 
 function openModal( event )
 
-Modal(scrViewMain)
+	Modal(scrViewMain)
+	
+	return true
 	
 end	
 	

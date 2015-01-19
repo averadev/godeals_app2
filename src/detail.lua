@@ -41,6 +41,7 @@ function returnHome( event )
 end
 
 function showPartner( event )
+
 	storyboard.gotoScene( "src.partner", {
 		time = 400,
 		effect = "crossFade",
@@ -138,8 +139,6 @@ function ListenerChangeScroll( event )
 		end
 		
     end
-	
-	
 	
 end
 
@@ -396,7 +395,7 @@ function buildCoupon()
 	})
 	txtAdditionalInformation:setFillColor( 0 )
 	svCoupon:insert( txtAdditionalInformation )
-	--txtAdditionalInformation:addEventListener( "tap", showPartner )
+	txtAdditionalInformation:addEventListener( "tap", showPartner )
 	
 	svCoupon:setScrollHeight(lastY + 200)
 	

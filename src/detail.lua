@@ -44,7 +44,7 @@ function showPartner( event )
 	storyboard.gotoScene( "src.partner", {
 		time = 400,
 		effect = "crossFade",
-		params = { index = event.target.index, tipo = event.target.type }
+		params = { idPartner = itemObj.idPartner }
 	})
 end
 

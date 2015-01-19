@@ -144,17 +144,10 @@ function ListenerChangeScroll( event )
 end
 
 function createItems()
-<<<<<<< HEAD
 	if itemObj.tipo == "Coupon" then
-        print("Coupon")
-=======
-
-	if itemObj.type == "Event" then
->>>>>>> 10a7b2dc8e53f39a4db06f11250fbe8cddb27b1f
-		buildCoupon()
+        buildCoupon()
 	else
-        print("Evento")
-		buildEvent(itemObj)
+        buildEvent(itemObj)
 	end
 end
 

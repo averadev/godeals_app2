@@ -3,7 +3,7 @@
 local storyboard = require( "storyboard" )
 local Globals = require('src.resources.Globals')
 local widget = require( "widget" )
-local RestManager = require('src.resources.RestManager2')
+local RestManager = require('src.resources.RestManager')
 local DBManager = require('src.resources.DBManager')
 local scene = storyboard.newScene()
 

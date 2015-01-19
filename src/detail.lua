@@ -41,6 +41,7 @@ function returnHome( event )
 end
 
 function showPartner( event )
+
 	storyboard.gotoScene( "src.partner", {
 		time = 400,
 		effect = "crossFade",
@@ -138,8 +139,6 @@ function ListenerChangeScroll( event )
 		end
 		
     end
-	
-	
 	
 end
 

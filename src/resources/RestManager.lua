@@ -81,6 +81,26 @@ local RestManager = {}
 	   
 	end
 
-    
+	 RestManager.getPartner = function(idPartner)
+		local url = "http://localhost:8080/godeals/"
+        url = url.."api/getPartnertById/format/json"
+		url = url.."/idPartner/" .. idPartner
+	   
+	   local function callback(event)
+            if ( event.isError ) then
+            else
+				local data = json.decode(event.response)
+                if data.success then
+                    loadImagePartner(data.items[1])
+					
+                else
+                end
+            end
+            return true
+        end
+        -- Do request
+        network.request( url, "GET", callback )
+	   
+	end
 
 return RestManager

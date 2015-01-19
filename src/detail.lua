@@ -144,6 +144,7 @@ function ListenerChangeScroll( event )
 end
 
 function createItems()
+
 	if itemObj.type == "Event" then
 		buildCoupon()
 	else
@@ -636,6 +637,7 @@ end
 function scene:createScene( event )
 	screen = self.view
 	screen:insert(homeScreen)
+	
 	itemObj = event.params.item
 	
 	local bg = display.newRect( 0, h, display.contentWidth, display.contentHeight )

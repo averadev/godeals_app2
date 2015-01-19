@@ -677,12 +677,12 @@ function scene:createScene( event )
 	
 	btnModal:toFront()
     clearTempDir()
+    RestManager.getEvents()
 end
 	
 -- Called immediately after scene has moved onscreen:
 function scene:enterScene( event )
     storyboard.removeAll()
-    RestManager.getEvents()
 end
 
 -- Remove Listener

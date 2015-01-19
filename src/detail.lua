@@ -144,9 +144,11 @@ function ListenerChangeScroll( event )
 end
 
 function createItems()
-	if itemObj.type == "Event" then
+	if itemObj.tipo == "Coupon" then
+        print("Coupon")
 		buildCoupon()
 	else
+        print("Evento")
 		buildEvent(itemObj)
 	end
 end
@@ -396,7 +398,7 @@ function buildCoupon()
 	})
 	txtAdditionalInformation:setFillColor( 0 )
 	svCoupon:insert( txtAdditionalInformation )
-	txtAdditionalInformation:addEventListener( "tap", showPartner )
+	--txtAdditionalInformation:addEventListener( "tap", showPartner )
 	
 	svCoupon:setScrollHeight(lastY + 200)
 	
@@ -425,7 +427,7 @@ function buildEvent(item)
 	groupEvent:insert( imgEvent )
 	
 	local txtPartner = display.newText({
-		text = "xxx", --itemObj.partner,
+		text = itemObj.partner,
 		x = 320,
 		y =  225,
 		font = "Chivo",
@@ -438,7 +440,7 @@ function buildEvent(item)
 	groupEvent:insert( txtPartner )
 	
 	local txtAddress = display.newText({
-		text = "xxx", --itemObj.address,
+		text =itemObj.address,
 		x = 320,
 		y =  275,
 		font = "Chivo",
@@ -572,7 +574,7 @@ function buildEventInfo(item)
 	svInfo:insert( txtGeneralInformacion )
 	
 	local txtInfo = display.newText({
-		text =  "xxx", --itemObj.info,
+		text = itemObj.info,
 		--x = 123,
 		x = 240,
 		y = lastY,
@@ -608,7 +610,7 @@ function buildEventInfo(item)
 	svInfo:insert(bgLocation)
 	
 	local txtAdressEvent = display.newText({
-		text =  "xxx", --itemObj.address,
+		text = itemObj.address,
 		--x = 123,
 		x = 240,
 		y = lastY,
@@ -655,32 +657,19 @@ function scene:createScene( event )
 	homeScreen:insert(grupoToolbar)
 	
 	local logo = display.newImage( "img/btn/logo.png" )
-	logo:translate( 80, 25 )
-	logo.isVisible = true
-	logo.height = 35
-	logo.width = 140
+	logo:translate( 40, 25 )
 	grupoToolbar:insert(logo)
 	
 	local btnSearch = display.newImage( "img/btn/btnMenuNotification.png" )
-	btnSearch:translate( display.contentWidth - 150, 25 )
-	btnSearch.isVisible = true
-	btnSearch.height = 60
-	btnSearch.width = 60
+	btnSearch:translate( display.contentWidth - 160, 25 )
 	grupoToolbar:insert(btnSearch)
 	
 	local btnMensaje = display.newImage( "img/btn/btnMenuSearch.png" )
-	btnMensaje:translate( display.contentWidth - 100, 25 )
-	btnMensaje.isVisible = true
-	btnMensaje.height = 40
-	btnMensaje.width = 40
+	btnMensaje:translate( display.contentWidth - 95, 25 )
 	grupoToolbar:insert(btnMensaje)
 	
 	local btnHerramienta = display.newImage( "img/btn/btnMenuUser.png" )
-	btnHerramienta:translate( display.contentWidth - 50, 25 )
-	btnHerramienta:setFillColor( 1, 1, 1 )
-	btnHerramienta.isVisible = true
-	btnHerramienta.height = 40
-	btnHerramienta.width = 40
+	btnHerramienta:translate( display.contentWidth - 35, 25 )
 	grupoToolbar:insert(btnHerramienta)
 	
 	local menu = display.newRect( 0, h + 55, display.contentWidth, 75 )
@@ -694,20 +683,14 @@ function scene:createScene( event )
 	homeScreen:insert(groupMenu)
 	
 	local imgBtnBack = display.newImage( "img/btn/btnBackward.png" )
-	imgBtnBack.alpha = 1
-    imgBtnBack.x= 30
+	imgBtnBack.x= 30
 	imgBtnBack.y = 30
-    imgBtnBack.width = 30
-    imgBtnBack.height  = 50
     groupMenu:insert( imgBtnBack )
 	imgBtnBack:addEventListener( "tap", returnHome )
 	
 	local imgBtnUp = display.newImage( "img/btn/btnUp.png" )
-	imgBtnUp.alpha = 1
-    imgBtnUp.x= 420
+	imgBtnUp.x= 420
 	imgBtnUp.y = 30
-    imgBtnUp.width = 100
-    imgBtnUp.height  = 80
     groupMenu:insert( imgBtnUp )
 	
 end

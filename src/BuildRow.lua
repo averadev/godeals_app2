@@ -56,12 +56,12 @@ function Event:new()
         container:insert( maxShape )
 
         -- Agregamos imagen
+        item.tipo  = "Event"
         image.alpha = 1
         image.x= -175
         image.width = 80
         image.height  = 55
         image.item = item
-        image.type = "Event"
         container:insert( image )
         image:addEventListener( "tap", showCoupon )
 
@@ -122,12 +122,12 @@ function Deal:new()
         container:insert( maxShape )
 
         -- Agregamos imagen
+        item.tipo  = "Coupon"
         image.alpha = 1
         image.x= -175
         image.width = 80
         image.height  = 55
         image.item = item
-        image.type = "Coupon"
         container:insert( image )
         image:addEventListener( "tap", showCoupon )
 

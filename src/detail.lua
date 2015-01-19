@@ -396,7 +396,7 @@ function buildCoupon()
 	})
 	txtAdditionalInformation:setFillColor( 0 )
 	svCoupon:insert( txtAdditionalInformation )
-	--txtAdditionalInformation:addEventListener( "tap", showPartner )
+	txtAdditionalInformation:addEventListener( "tap", showPartner )
 	
 	svCoupon:setScrollHeight(lastY + 200)
 	

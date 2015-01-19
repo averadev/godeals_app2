@@ -144,8 +144,13 @@ function ListenerChangeScroll( event )
 end
 
 function createItems()
+<<<<<<< HEAD
 	if itemObj.tipo == "Coupon" then
         print("Coupon")
+=======
+
+	if itemObj.type == "Event" then
+>>>>>>> 10a7b2dc8e53f39a4db06f11250fbe8cddb27b1f
 		buildCoupon()
 	else
         print("Evento")
@@ -638,6 +643,7 @@ end
 function scene:createScene( event )
 	screen = self.view
 	screen:insert(homeScreen)
+	
 	itemObj = event.params.item
 	
 	local bg = display.newRect( 0, h, display.contentWidth, display.contentHeight )

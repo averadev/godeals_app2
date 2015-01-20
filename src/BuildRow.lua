@@ -158,6 +158,19 @@ function Deal:new()
             agotado:translate( 165, 0 )
             agotado.alpha = .8
             container:insert(agotado)
+        else
+            local dealBubble = display.newCircle( 180, -27, 15 )
+            dealBubble:setFillColor(.8, 1, .8)
+            dealBubble.strokeWidth = 2
+            dealBubble:setStrokeColor(.8)
+            container:insert(dealBubble)
+            
+            local txtBubble = display.newText( {
+                x = 182, y = -27,
+                text = item.stock, font = "Chivo", fontSize = 16,
+            })
+            txtBubble:setFillColor( .1 )
+            container:insert(txtBubble)
         end
         
     end

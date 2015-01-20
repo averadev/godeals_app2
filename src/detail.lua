@@ -21,7 +21,7 @@ local midH = display.contentCenterY
 
 local toolbar, menu
 local groupMenu, groupEvent, groupMenuEventText
-local  svCoupon, svInfo, svPromotions, svGallery
+local svCoupon, svInfo, svPromotions, svGallery
 local h = display.topStatusBarContentHeight
 local lastY = 200;
 local itemObj
@@ -45,7 +45,7 @@ function showPartner( event )
 	storyboard.gotoScene( "src.partner", {
 		time = 400,
 		effect = "crossFade",
-		params = { idPartner = itemObj.idPartner }
+		params = { idPartner = itemObj.partnerId }
 	})
 end
 
@@ -189,30 +189,35 @@ function buildCoupon()
     svCoupon:insert( imgCoupon )
 	
 	local txtPartner = display.newText( {
-        text = itemObj.namePartner,    
+        text = itemObj.partner,    
         x = 320,
-        y = 105,
+        y = 80,
         width = 240,
-        height =100,
+        height =0,
         font = "Chivo",   
         fontSize = 30,
         align = "left"
     })
     txtPartner:setFillColor( 0 )
     svCoupon:insert( txtPartner )
-	
+    
 	local txtAddressPartner = display.newText( {
         text = itemObj.address,
         x = 320,
-        y = 120,
+        y = 110,
         width = 240,
-        height =60,
+        height =25,
         font = "Chivo",   
         fontSize = 17,
         align = "left"
     })
     txtAddressPartner:setFillColor( 0 )
     svCoupon:insert( txtAddressPartner )
+    
+    -- Reasigna posicion en textos grandes
+    if txtPartner.contentHeight > 50 then
+        txtAddressPartner.y = 130
+    end
 	
 	local txtSchedulePartner = display.newText( {
         text = "Abierto de Lunes a Domingo de 11:00 am a 9:00 pm.",
@@ -228,7 +233,7 @@ function buildCoupon()
     svCoupon:insert( txtSchedulePartner )
 	
 	local txtDescription = display.newText({
-		text = itemObj.description,
+		text = itemObj.detail,
 		x = 240,
 		y = lastY,
 		width = 370,
@@ -251,7 +256,7 @@ function buildCoupon()
 	local remainingCoupons = CouponsReleased - 47
 	
 	local txtCouponsReleased = display.newText({
-		text = "Limitado a " .. CouponsReleased .. " Cupones",
+		text = "Limitado a " .. itemObj.total .. " Cupones",
 		--x = 123,
 		x = 240,
 		y = lastY,
@@ -271,7 +276,7 @@ function buildCoupon()
 	local withCouponsReleased =  (string.len( CouponsReleased ) * 8.3) / string.len( CouponsReleased ) -1
 	
 	local txtRemainingCoupons = display.newText({
-		text = remainingCoupons .. " cupones disponibles.",
+		text = itemObj.stock .. " cupones disponibles.",
 		--x = 123,
 		x = 240,
 		y = lastY,
@@ -322,13 +327,30 @@ function buildCoupon()
 	
 	lastY = lastY + txtDetail.height + 50
 	
-	local btnDownloadCoupon = display.newImage( "img/btn/btnDownloadCoupon.png" )
-	btnDownloadCoupon.alpha = 1
-    btnDownloadCoupon.x= 240
-	btnDownloadCoupon.y = lastY
-    btnDownloadCoupon.width = 376
-    btnDownloadCoupon.height  = 58
-    svCoupon:insert( btnDownloadCoupon )
+    print(itemObj.assigned)
+    if itemObj.stock == '0' then
+            local agotado = display.newImage( "img/btn/agotadoMax.png" )
+            agotado.x= 240
+            agotado.y = lastY - 5
+            agotado.alpha = .8
+            svCoupon:insert(agotado)
+    elseif itemObj.assigned == 1 or itemObj.assigned == '1' then 
+        local btnCanjearCoupon = display.newImage( "img/btn/btnCanjearCoupon.png" )
+        btnCanjearCoupon.alpha = 1
+        btnCanjearCoupon.x= 240
+        btnCanjearCoupon.y = lastY
+        btnCanjearCoupon.width = 376
+        btnCanjearCoupon.height  = 58
+        svCoupon:insert( btnCanjearCoupon )
+    else
+        local btnDownloadCoupon = display.newImage( "img/btn/btnDownloadCoupon.png" )
+        btnDownloadCoupon.alpha = 1
+        btnDownloadCoupon.x= 240
+        btnDownloadCoupon.y = lastY
+        btnDownloadCoupon.width = 376
+        btnDownloadCoupon.height  = 58
+        svCoupon:insert( btnDownloadCoupon )
+    end
 	
 	imgBgCoupon.height = lastY + 10
 	
@@ -383,19 +405,19 @@ function buildCoupon()
 	
 	local txtAdditionalInformation = display.newText({
 		text = "Consultar informacion del comercio",
-		--x = 123,
-		x = 230,
-		y = lastY,
-		height = 40,
-		--width = 122,
-		width = 400,
-		font = "Chivo",
-		fontSize = 22,
-		align = "center"
+		x = 230, y = lastY,
+		height = 40, width = 400,
+		font = "Chivo", fontSize = 22, align = "center"
 	})
 	txtAdditionalInformation:setFillColor( 0 )
 	svCoupon:insert( txtAdditionalInformation )
 	txtAdditionalInformation:addEventListener( "tap", showPartner )
+    
+    local lineLink = display.newRect( 50, lastY + 15, 360, 1 )
+	lineLink.anchorX = 0
+	lineLink.anchorY = 0
+	lineLink:setFillColor( .2 )
+	svCoupon:insert( lineLink )
 	
 	svCoupon:setScrollHeight(lastY + 200)
 	
@@ -407,46 +429,46 @@ function buildEvent(item)
 	groupEvent.y = h
 	homeScreen:insert( groupEvent )
 	
-	local imgBgEvent = display.newImage( "img/bgk/login.jpg" )
+	local imgBgEvent = display.newImage( "img/tmp/" .. item.placeBanner )
 	imgBgEvent.alpha = 1
 	imgBgEvent.x = 240
 	imgBgEvent.y = 215
-	imgBgEvent.width = intW
-	imgBgEvent.height = 165
 	groupEvent:insert( imgBgEvent )
 	
-	local imgEvent = display.newImage( "img/btn/tmpComer.jpg" )
+    local mask = graphics.newMask( "img/bgk/maskLogo.jpg" )
+	local imgEvent = display.newImage( "img/tmp/" .. item.placeImage )
 	imgEvent.alpha = 1
-	imgEvent.x = 110
+	imgEvent.x = 90
 	imgEvent.y = 215
-	imgEvent.width = 86
-	imgEvent.height = 86
+	imgEvent.width = 120
+	imgEvent.height = 120
+    imgEvent:setMask( mask )
 	groupEvent:insert( imgEvent )
 	
 	local txtPartner = display.newText({
-		text = itemObj.partner,
+		text = itemObj.place,
 		x = 320,
-		y =  225,
+		y =  235,
 		font = "Chivo",
 		height = 100,
 		width = 300,
-		fontSize = 20,
+		fontSize = 30,
 		align = "left"
 	})
-	txtPartner:setFillColor( 0 )
+	txtPartner:setFillColor( 1 )
 	groupEvent:insert( txtPartner )
 	
 	local txtAddress = display.newText({
 		text =itemObj.address,
 		x = 320,
-		y =  275,
+		y =  265,
 		font = "Chivo",
 		height = 100,
 		width = 300,
-		fontSize = 15,
+		fontSize = 18,
 		align = "left"
 	})
-	txtAddress:setFillColor( 0 )
+	txtAddress:setFillColor( 1 )
 	groupEvent:insert( txtAddress )
 	
 	local BgMenuEvent = display.newRect( midW, 343, intW, 76 )
@@ -571,7 +593,7 @@ function buildEventInfo(item)
 	svInfo:insert( txtGeneralInformacion )
 	
 	local txtInfo = display.newText({
-		text = itemObj.info,
+		text = itemObj.detail,
 		--x = 123,
 		x = 240,
 		y = lastY,
@@ -590,17 +612,15 @@ function buildEventInfo(item)
 	
 	bgGeneralInformacion.y = bgGeneralInformacion.height/2 + 70
 	
-	lastY = lastY + bgGeneralInformacion.height + 150
+	lastY = lastY + bgGeneralInformacion.height
 	
-	local imgEvent = display.newImage(  itemObj.image, system.TemporaryDirectory )
-	imgEvent.alpha = 1
+	local imgEvent = display.newImage(  "img/tmp/" .. itemObj.imageFull )
 	imgEvent.x = midW
-	imgEvent.y = lastY
-	imgEvent.width = intW
-	imgEvent.height = 290
 	svInfo:insert( imgEvent )
-	
-	lastY = lastY + 220
+    
+    imgEvent.y = lastY + (imgEvent.height / 2)
+    
+	lastY = lastY + imgEvent.height + 40
 	
 	local bgLocation = display.newRect( midW, 0, intW, 76 )
 	bgLocation:setFillColor( 1 )
@@ -620,15 +640,37 @@ function buildEventInfo(item)
 	txtAdressEvent:setFillColor( 0 )
 	svInfo:insert( txtAdressEvent )
 	
-	txtAdressEvent.y = txtAdressEvent.y + txtAdressEvent.height/2
-	
+	txtAdressEvent.y = txtAdressEvent.y + txtAdressEvent.height / 2
 	bgLocation.height = txtAdressEvent.height + 40
-	
-	bgLocation.y = bgLocation.height/2  + lastY -22
-	
-	lastY = lastY + bgLocation.height/2  + lastY
-	
-	svInfo:setScrollHeight(lastY)
+	bgLocation.y = bgLocation.height/2  + lastY - 22
+	lastY = lastY + bgLocation.height/2 + 10
+    
+    -- Cocinar el mapa
+    local myMap = native.newMapView( midW, lastY + 150, intW, 300 )
+    if myMap then
+        myMap:setCenter( tonumber(itemObj.latitude), tonumber(itemObj.longitude), 0.02, 0.02 )
+        svInfo:insert(myMap)
+        
+        -- Add Maker
+        timer.performWithDelay( 3000, function()
+            local options = { 
+                title = itemObj.name, 
+                subtitle = itemObj.address, 
+                listener = markerListener, 
+                imageFile = "img/btn/btnIconMap.png"
+            }
+            
+            myMap:addMarker( tonumber(itemObj.latitude), tonumber(itemObj.longitude), options )
+        end, 1 )
+    else
+        local bg = display.newRect( midW, lastY + 150, intW, 300 )
+        bg:setFillColor( .7 )
+        svInfo:insert(bg)
+    end
+    
+    local spc = display.newRect( 0, lastY + 750, 1, 1 )
+    spc:setFillColor( .9 )
+    svInfo:insert(spc)
 	
 end
 
@@ -655,12 +697,36 @@ function scene:createScene( event )
 	homeScreen:insert(grupoToolbar)
 	
 	local logo = display.newImage( "img/btn/logo.png" )
-	logo:translate( 40, 25 )
+	logo:translate( 45, 23 )
 	grupoToolbar:insert(logo)
+    
+    local txtCancun = display.newText( {
+        x = 130, y = 23,
+        text = "Cancun", font = "Chivo", fontSize = 25,
+	})
+	txtCancun:setFillColor( .1 )
+	grupoToolbar:insert(txtCancun)
+	
+	local btnWallet = display.newImage( "img/btn/btnMenuWallet.png" )
+	btnWallet:translate( display.contentWidth - 212, 23 )
+	grupoToolbar:insert(btnWallet)
+	btnWallet:addEventListener( "tap", showWallet )
 	
 	local btnSearch = display.newImage( "img/btn/btnMenuNotification.png" )
-	btnSearch:translate( display.contentWidth - 160, 25 )
+	btnSearch:translate( display.contentWidth - 150, 25 )
 	grupoToolbar:insert(btnSearch)
+    -- Temporal bubble
+    local notBubble = display.newCircle( display.contentWidth - 132, 10, 10 )
+    notBubble:setFillColor(128,128,128)
+    notBubble.strokeWidth = 2
+    notBubble:setStrokeColor(.8)
+	grupoToolbar:insert(notBubble)
+    local txtBubble = display.newText( {
+        x = display.contentWidth - 131, y = 10,
+        text = "3", font = "Chivo", fontSize = 12,
+	})
+	txtBubble:setFillColor( .1 )
+	grupoToolbar:insert(txtBubble)
 	
 	local btnMensaje = display.newImage( "img/btn/btnMenuSearch.png" )
 	btnMensaje:translate( display.contentWidth - 95, 25 )

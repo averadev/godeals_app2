@@ -48,7 +48,6 @@ function Event:new()
         container.y = 50
 		container.name = 2
         self:insert( container )
-		container:addEventListener( "tap", showCoupon )
 
         -- Agregamos rectangulo alfa al pie
         local maxShape = display.newRect( 0, 0, 480, 100 )
@@ -56,11 +55,13 @@ function Event:new()
         container:insert( maxShape )
 
         -- Agregamos imagen
+        local mask = graphics.newMask( "img/bgk/maskImgRow.jpg" )
+        image:setMask( mask )
         item.tipo  = "Event"
         image.alpha = 1
         image.x= -175
         image.width = 80
-        image.height  = 55
+        image.height  = 80
         image.item = item
         container:insert( image )
         image:addEventListener( "tap", showCoupon )
@@ -68,7 +69,7 @@ function Event:new()
         -- Agregamos textos
         local txtTitle = display.newText( {
             text = item.name,     
-            x = 25, y = -10,
+            x = 30, y = -5,
             width = 300, height =60,
             font = "Chivo", fontSize = 24, align = "left"
         })
@@ -76,8 +77,8 @@ function Event:new()
         container:insert(txtTitle)
 
         local txtDate = display.newText( {
-            text = getDate(item.date),     
-            x = 25, y = 20,
+            text = getDate(item.iniDate),     
+            x = 30, y = 25,
             width = 300, height =60,
             font = "Chivo", fontSize = 18, align = "left"
         })
@@ -85,8 +86,8 @@ function Event:new()
         container:insert(txtDate)
 
         local txtPlace = display.newText( {
-            text = item.place,     
-            x = 25, y = 40,
+            text = item.address,     
+            x = 30, y = 45,
             width = 300, height =60,
             font = "Chivo", fontSize = 18, align = "left"
         })
@@ -122,33 +123,43 @@ function Deal:new()
         container:insert( maxShape )
 
         -- Agregamos imagen
+        local mask = graphics.newMask( "img/bgk/maskImgRow.jpg" )
+        image:setMask( mask )
         item.tipo  = "Coupon"
         image.alpha = 1
         image.x= -175
         image.width = 80
-        image.height  = 55
+        image.height  = 80
         image.item = item
         container:insert( image )
         image:addEventListener( "tap", showCoupon )
 
         -- Agregamos textos
         local txtTitle = display.newText( {
-            text = item.description,     
-            x = 25, y = -10,
-            width = 300, height =60,
+            text = item.name ,     
+            x = 30, y = 5,
+            width = 300, height = 60,
             font = "Chivo", fontSize = 24, align = "left"
         })
         txtTitle:setFillColor( 0 )
         container:insert(txtTitle)
 
         local txtDate = display.newText( {
-            text = getDate(item.iniDate),     
-            x = 25, y = 20,
+            text = item.validity,     
+            x = 30, y = 35,
             width = 300, height =60,
             font = "Chivo", fontSize = 18, align = "left"
         })
         txtDate:setFillColor( 146/255, 146/255, 146/255)
         container:insert(txtDate)
+        
+        if item.stock == '0' then
+            local agotado = display.newImage( "img/btn/agotado.png" )
+            agotado:translate( 165, 0 )
+            agotado.alpha = .8
+            container:insert(agotado)
+        end
+        
     end
 
     return self

@@ -132,30 +132,20 @@ function loadPartner(item)
 	groupEvent = display.newGroup()
 	homeScreen:insert( groupEvent )
 	
-	local imgBgEvent = display.newImage( "img/bgk/login.jpg" )
+	local imgBgEvent = display.newImage( "img/tmp/" .. item.banner )
 	imgBgEvent.alpha = 1
 	imgBgEvent.x = 240
 	imgBgEvent.y = 215
-	imgBgEvent.width = intW
-	imgBgEvent.height = 165
 	groupEvent:insert( imgBgEvent )
 	
-	--[[local imgEvent = display.newImage( "img/btn/tmpComer.jpg" )
+    local mask = graphics.newMask( "img/bgk/maskLogo.jpg" )
+	local imgEvent = display.newImage( "img/tmp/" .. item.image )
 	imgEvent.alpha = 1
-	imgEvent.x = 110
+	imgEvent.x = 90
 	imgEvent.y = 215
-	imgEvent.width = 86
-	imgEvent.height = 86
-	groupEvent:insert( imgEvent )]]
-	
-	--loadImagePartner(item)
-	
-	local imgEvent = display.newImage( item.logo, system.TemporaryDirectory )
-	imgEvent.alpha = 1
-	imgEvent.x = 110
-	imgEvent.y = 215
-	imgEvent.width = 86
-	imgEvent.height = 86
+	imgEvent.width = 120
+	imgEvent.height = 120
+    imgEvent:setMask( mask )
 	groupEvent:insert( imgEvent )
 	
 	local txtPartner = display.newText({
@@ -165,23 +155,23 @@ function loadPartner(item)
 		font = "Chivo",
 		height = 100,
 		width = 300,
-		fontSize = 20,
+		fontSize = 30,
 		align = "left"
 	})
-	txtPartner:setFillColor( 0 )
+	txtPartner:setFillColor( 1 )
 	groupEvent:insert( txtPartner )
 	
 	local txtAddress = display.newText({
 		text = item.address,
 		x = 320,
-		y =  275,
+		y =  265,
 		font = "Chivo",
 		height = 100,
 		width = 300,
-		fontSize = 15,
+		fontSize = 18,
 		align = "left"
 	})
-	txtAddress:setFillColor( 0 )
+	txtAddress:setFillColor( 1 )
 	groupEvent:insert( txtAddress )
 	
 	local BgMenuEvent = display.newRect( midW, 343, intW, 76 )
@@ -283,32 +273,6 @@ function loadPartner(item)
 	
 end
 
-function loadImagePartner(item)
-	local path = system.pathForFile( item.logo, system.TemporaryDirectory )
-    local fhd = io.open( path )
-    if fhd then
-        fhd:close()
-		
-		loadPartner(item)
-		
-    else
-        -- Listener de la carga de la imagen del servidor
-        local function loadImageListener( event )
-            if ( event.isError ) then
-                native.showAlert( "Go Deals", "Network error :(", { "OK"})
-            else
-				event.target.alpha = 0
-				loadPartner(item)
-            end
-        end
-        
-        -- Descargamos de la nube
-        display.loadRemoteImage( settings.url.."assets/img/app/logo/"..item.logo, 
-        "GET", loadImageListener, item.logo, system.TemporaryDirectory ) 
-    end
-	
-end
-
 function buildEventInfo(item)
 
 	lastY = 90
@@ -391,9 +355,34 @@ function buildEventInfo(item)
 	
 	bgLocation.y = bgLocation.height/2  + lastY -22
 	
-	lastY = lastY + bgLocation.height/2  + lastY
+	lastY = lastY + bgLocation.height/2  + 10
+    
+     -- Cocinar el mapa
+    local myMap = native.newMapView( midW, lastY + 150, intW, 300 )
+    if myMap then
+        myMap:setCenter( tonumber(item.latitude), tonumber(item.longitude), 0.02, 0.02 )
+        svInfo:insert(myMap)
+        
+        -- Add Maker
+        timer.performWithDelay( 3000, function()
+            local options = { 
+                title = item.name, 
+                subtitle = item.address, 
+                listener = markerListener, 
+                imageFile = "img/btn/btnIconMap.png"
+            }
+            
+            myMap:addMarker( tonumber(item.latitude), tonumber(item.longitude), options )
+        end, 1 )
+    else
+        local bg = display.newRect( midW, lastY + 150, intW, 300 )
+        bg:setFillColor( .7 )
+        svInfo:insert(bg)
+    end
 	
-	svInfo:setScrollHeight(lastY)
+	local spc = display.newRect( 0, lastY + 750, 1, 1 )
+    spc:setFillColor( .9 )
+    svInfo:insert(spc)
 	
 end
 
@@ -421,12 +410,36 @@ function scene:createScene( event )
 	homeScreen:insert(grupoToolbar)
 	
 	local logo = display.newImage( "img/btn/logo.png" )
-	logo:translate( 40, 25 )
+	logo:translate( 45, 23 )
 	grupoToolbar:insert(logo)
+    
+    local txtCancun = display.newText( {
+        x = 130, y = 23,
+        text = "Cancun", font = "Chivo", fontSize = 25,
+	})
+	txtCancun:setFillColor( .1 )
+	grupoToolbar:insert(txtCancun)
+	
+	local btnWallet = display.newImage( "img/btn/btnMenuWallet.png" )
+	btnWallet:translate( display.contentWidth - 212, 23 )
+	grupoToolbar:insert(btnWallet)
+	btnWallet:addEventListener( "tap", showWallet )
 	
 	local btnSearch = display.newImage( "img/btn/btnMenuNotification.png" )
-	btnSearch:translate( display.contentWidth - 160, 25 )
+	btnSearch:translate( display.contentWidth - 150, 25 )
 	grupoToolbar:insert(btnSearch)
+    -- Temporal bubble
+    local notBubble = display.newCircle( display.contentWidth - 132, 10, 10 )
+    notBubble:setFillColor(128,128,128)
+    notBubble.strokeWidth = 2
+    notBubble:setStrokeColor(.8)
+	grupoToolbar:insert(notBubble)
+    local txtBubble = display.newText( {
+        x = display.contentWidth - 131, y = 10,
+        text = "3", font = "Chivo", fontSize = 12,
+	})
+	txtBubble:setFillColor( .1 )
+	grupoToolbar:insert(txtBubble)
 	
 	local btnMensaje = display.newImage( "img/btn/btnMenuSearch.png" )
 	btnMensaje:translate( display.contentWidth - 95, 25 )
@@ -455,11 +468,6 @@ function scene:createScene( event )
     groupMenu:insert( imgBtnBack )
 	imgBtnBack:addEventListener( "tap", returnHome )
 	
-	local imgBtnBack = display.newImage( "img/btn/btnUp.png" )
-	imgBtnBack.alpha = 1
-    imgBtnBack.x= 440
-	imgBtnBack.y = 30
-    groupMenu:insert( imgBtnBack )
 	
 end
 

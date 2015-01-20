@@ -24,7 +24,7 @@ local groupMenu, scrViewMain, scrViewEventos, scrViewDeals
 
 -- Objetos
 local txtMenuInicio, txtMenuEventos, txtMenuDeals
-local toolbar, menu, settings
+local toolbar, menu, settings, btnModal
 
 -- Variables
 local intW = display.contentWidth
@@ -110,11 +110,8 @@ function buildItems(screen)
     if screen == "MainEvent" then
         
         local separadorEventos = display.newImage( "img/btn/btnArrowBlack.png" )
-        separadorEventos:translate( 41, 190)
-        separadorEventos:setFillColor( 1 )
+        separadorEventos:translate( 41, 190 -3)
         separadorEventos.isVisible = true
-        separadorEventos.height = 20
-        separadorEventos.width = 20
         scrViewMain:insert(separadorEventos)
 
         local textSeparadorEventos = display.newText( {
@@ -134,17 +131,14 @@ function buildItems(screen)
             yMain = yMain + 102 
         end
         -- Siguiente solicitud
-        RestManager.getCoupon()
+        RestManager.getTodayDeal()
         
     elseif screen == "MainDeal" then
         
         yMain = yMain + 50
         local separadorEventos = display.newImage( "img/btn/btnArrowBlack.png" )
-        separadorEventos:translate( 41, yMain)
-        separadorEventos:setFillColor( 1 )
+        separadorEventos:translate( 41, yMain -3)
         separadorEventos.isVisible = true
-        separadorEventos.height = 20
-        separadorEventos.width = 20
         scrViewMain:insert(separadorEventos)
 
         local textSeparadorEventos = display.newText( {
@@ -173,7 +167,7 @@ function buildItems(screen)
         local currentMonth = 0
         for y = 1, #elements, 1 do 
             -- Verify month
-            for k, v, u in string.gmatch(elements[y].date, "(%w+)-(%w+)-(%w+)") do
+            for k, v, u in string.gmatch(elements[y].iniDate, "(%w+)-(%w+)-(%w+)") do
                 if not (currentMonth == tonumber(v)) then
                     -- Create title month
                     currentMonth = tonumber(v)
@@ -201,18 +195,6 @@ function buildItems(screen)
         local lastY = 0
         local currentMonth = 0
         for y = 1, #elements, 1 do 
-            -- Verify month
-            for k, v, u in string.gmatch(elements[y].iniDate, "(%w+)-(%w+)-(%w+)") do
-                if not (currentMonth == tonumber(v)) then
-                    -- Create title month
-                    currentMonth = tonumber(v)
-                    local title = MonthTitle:new()
-                    scrViewDeals:insert(title)
-                    title:build(Globals.Months[currentMonth].." del "..k)
-                    title.y = lastY
-                    lastY = lastY + 70
-                end
-            end
             
             -- Create container
             local deal = Deal:new()
@@ -309,6 +291,7 @@ function ListenerChangeScroll( event )
 			else
 				nextTxt:setFillColor( 0 )
 			end
+            showFilter(true)
 		elseif event.x  >= 380 and movimiento == "d" then
 			transition.to( event.target, { x = 720, time = 400, transition = easing.outExpo } )
 			transition.to( nextSv, { x = 720, time = 400, transition = easing.outExpo } )
@@ -321,6 +304,9 @@ function ListenerChangeScroll( event )
 			else
 				previousTxt:setFillColor( 0 )
 			end
+            if event.target.name == "scrViewEventos" then
+                showFilter(false)
+            end
 		else
 			transition.to( event.target, { x = 240, time = 400, transition = easing.outExpo } )
 			transition.to( nextSv, { x = 720, time = 400, transition = easing.outExpo } )
@@ -344,6 +330,7 @@ function tapMenu( event )
 		txtMenuEventos:setFillColor( 161/255, 161/255, 161/255 )
 		txtMenuDeals:setFillColor( 161/255, 161/255, 161/255 )
 		txtMenuInicio:setFillColor( 0 )
+        showFilter(false)
 	elseif event.target.name == "eventos" then
 		transition.to( scrViewEventos, { x = 240, time = 400, transition = easing.outExpo } )
 		transition.to( groupMenu, { x = display.contentWidth * - 0.35, time = 400, transition = easing.outExpo } )
@@ -352,6 +339,7 @@ function tapMenu( event )
 		txtMenuInicio:setFillColor( 161/255, 161/255, 161/255 )
 		txtMenuDeals:setFillColor( 161/255, 161/255, 161/255 )
 		txtMenuEventos:setFillColor( 0 )
+        showFilter(true)
 	elseif event.target.name == "deals" then
 		transition.to( scrViewDeals, { x = 240, time = 400, transition = easing.outExpo } )
 		transition.to( groupMenu, { x = display.contentWidth * - 0.70, time = 400, transition = easing.outExpo } )
@@ -362,6 +350,15 @@ function tapMenu( event )
 	end
 end
 
+-- Ocultamos o Mostramos filtro
+function showFilter(boolShow)
+    if boolShow and btnModal.alpha == 0 then
+        transition.to( btnModal, { alpha = 1, time = 400 } )
+    elseif not (boolShow) and btnModal.alpha == 1 then
+        transition.to( btnModal, { alpha = 0, time = 400 } )
+    end
+end
+
 --- Modal Menu
 
 function showCoupon(event)
@@ -370,6 +367,14 @@ function showCoupon(event)
 		time = 400,
 		effect = "crossFade",
 		params = { item = event.target.item }
+	})
+end
+
+function showWallet(event)
+    print(event.target.item)
+	storyboard.gotoScene( "src.Wallet", {
+		time = 400,
+		effect = "crossFade"
 	})
 end
 
@@ -461,15 +466,39 @@ function scene:createScene( event )
 	homeScreen:insert(grupoToolbar)
 	
 	local logo = display.newImage( "img/btn/logo.png" )
-	logo:translate( 40, 25 )
+	logo:translate( 45, 23 )
 	grupoToolbar:insert(logo)
+    
+    local txtCancun = display.newText( {
+        x = 130, y = 23,
+        text = "Cancun", font = "Chivo", fontSize = 25,
+	})
+	txtCancun:setFillColor( .1 )
+	grupoToolbar:insert(txtCancun)
+	
+	local btnWallet = display.newImage( "img/btn/btnMenuWallet.png" )
+	btnWallet:translate( display.contentWidth - 212, 23 )
+	btnWallet:addEventListener( "tap", showWallet )
+	grupoToolbar:insert(btnWallet)
 	
 	local btnSearch = display.newImage( "img/btn/btnMenuNotification.png" )
-	btnSearch:translate( display.contentWidth - 160, 25 )
+	btnSearch:translate( display.contentWidth - 150, 25 )
 	grupoToolbar:insert(btnSearch)
-	
+    -- Temporal bubble
+    local notBubble = display.newCircle( display.contentWidth - 132, 10, 10 )
+    notBubble:setFillColor(128,128,128)
+    notBubble.strokeWidth = 2
+    notBubble:setStrokeColor(.8)
+	grupoToolbar:insert(notBubble)
+    local txtBubble = display.newText( {
+        x = display.contentWidth - 131, y = 10,
+        text = "3", font = "Chivo", fontSize = 12,
+	})
+	txtBubble:setFillColor( .1 )
+	grupoToolbar:insert(txtBubble)
+    
 	local btnMensaje = display.newImage( "img/btn/btnMenuSearch.png" )
-	btnMensaje:translate( display.contentWidth - 95, 25 )
+	btnMensaje:translate( display.contentWidth - 90, 25 )
 	grupoToolbar:insert(btnMensaje)
 	
 	local btnHerramienta = display.newImage( "img/btn/btnMenuUser.png" )
@@ -565,17 +594,15 @@ function scene:createScene( event )
 	
 	getFBData()
 	
-	btnModal = display.newImage( "img/btn/detailCity.png" )
-	btnModal:translate( intW - 62, intH - 62)
-	btnModal.isVisible = true
-	btnModal.height = 80
-	btnModal.width = 80
+	btnModal = display.newImage( "img/btn/btnFilter.png" )
+	btnModal:translate( intW - 50, intH - 50)
+	btnModal.alpha = 0
 	homeScreen:insert(btnModal)
 	btnModal:addEventListener( "tap", openModal )
 	
 	btnModal:toFront()
     clearTempDir()
-    RestManager.getEvents()
+    RestManager.getTodayEvent()
 end
 
 

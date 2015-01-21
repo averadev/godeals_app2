@@ -9,7 +9,7 @@
 ---------------------------------------------------------------------------------
 -- Includes
 require('src.BuildRow')
-require('src.modal')
+require('src.Modal')
 local widget = require( "widget" )
 local storyboard = require( "storyboard" )
 local Globals = require('src.resources.Globals')
@@ -20,7 +20,8 @@ local RestManager = require('src.resources.RestManager')
 local scene = storyboard.newScene()
 local homeScreen = display.newGroup()
 grupoModal = display.newGroup()
-local groupMenu, scrViewMain, scrViewEventos, scrViewDeals
+local groupMenu, scrViewMain, scrViewEventos, scrViewDeals,svMenuTxt
+local currentSv
 
 -- Objetos
 local txtMenuInicio, txtMenuEventos, txtMenuDeals
@@ -222,6 +223,99 @@ end
 
 --- scrollView functions
 
+function ListenerChangeMenu( event )
+	
+	local nextSv
+	local previousSv
+	local currentTxt, nextTxt, previousTxt
+	
+	if currentSv.name == "scrViewMain" then
+		nextSv = scrViewEventos
+		currentTxt = txtMenuInicio
+		nextTxt = txtMenuEventos
+	elseif currentSv.name == "scrViewEventos" then
+		nextSv = scrViewDeals
+		previousSv = scrViewMain
+		currentTxt = txtMenuEventos
+		nextTxt = txtMenuDeals
+		previousTxt = txtMenuInicio
+	elseif currentSv.name == "scrViewDeals" then
+		previousSv = scrViewEventos
+		currentTxt = txtMenuDeals
+		previousTxt = txtMenuEventos
+	end
+	
+	if event.phase == "began" then
+		svMenuTxt:setScrollWidth(  480 )
+		diferenciaX = event.x - event.target.x
+		posicionMenu = groupMenu.x
+		
+		event.target:setScrollWidth(480)
+		
+    elseif event.phase == "moved" then
+		if  event.direction == "left"  or event.direction == "right" then
+			
+			posicionNueva = event.x-diferenciaX 
+			
+			currentSv.x = ((posicionNueva - 240) / .7 ) + posicionNueva
+			
+			if nextSv ~= nil then
+				nextSv.x = 480 + ((posicionNueva - 240) / .7 ) + posicionNueva
+			end
+			
+			if previousSv ~= nil then
+				previousSv.x = -480 + ((posicionNueva - 240) / .7 ) + posicionNueva
+			end
+			
+			groupMenu.x = (( posicionNueva - 240) / 3) + posicionMenu
+			
+		end
+		
+    elseif event.phase == "ended" or event.phase == "cancelled" then
+	
+		txtMenuInicio:setFillColor( 161/255, 161/255, 161/255 )
+		txtMenuDeals:setFillColor( 161/255, 161/255, 161/255 )
+		txtMenuEventos:setFillColor( 161/255, 161/255, 161/255 )
+	
+		if diferenciaX - event.x >= -100 then
+			if nextSv == nil then
+				transition.to( currentSv, { x = 240, time = 400, transition = easing.outExpo } )
+				transition.to( groupMenu, { x = posicionMenu, time = 400, transition = easing.outExpo } )
+				currentTxt:setFillColor( 0 )
+			else
+				transition.to( currentSv, { x = -240, time = 400, transition = easing.outExpo } )
+				transition.to( nextSv, { x = 240, time = 400, transition = easing.outExpo } )
+				transition.to( groupMenu, { x = posicionMenu - 166, time = 400, transition = easing.outExpo } )
+				currentSv = nextSv
+				nextTxt:setFillColor( 0 )
+			end
+		elseif diferenciaX - event.x  <= -380 then
+			
+			if previousSv == nil then 
+				transition.to( currentSv, { x = 240, time = 400, transition = easing.outExpo } )
+				transition.to( groupMenu, { x = posicionMenu, time = 400, transition = easing.outExpo } )
+				currentTxt:setFillColor( 0 )
+			else
+				transition.to( currentSv, { x = 720, time = 400, transition = easing.outExpo } )
+				transition.to( nextSv, { x = 720, time = 400, transition = easing.outExpo } )
+				transition.to( previousSv, { x = 240, time = 400, transition = easing.outExpo } )
+				transition.to( groupMenu, { x = posicionMenu + 166, time = 400, transition = easing.outExpo } )
+				currentSv = previousSv
+				previousTxt:setFillColor( 0 )
+			end
+		else
+			transition.to( currentSv, { x = 240, time = 400, transition = easing.outExpo } )
+			transition.to( nextSv, { x = 720, time = 400, transition = easing.outExpo } )
+			transition.to( previousSv, { x = -240, time = 400, transition = easing.outExpo } )
+			transition.to( groupMenu, { x = posicionMenu, time = 400, transition = easing.outExpo } )
+			currentTxt:setFillColor( 0 )
+		end
+    end
+	
+end
+
+--- scrollView functions
+
 function ListenerChangeScroll( event )
 
 	local nextSv
@@ -284,6 +378,7 @@ function ListenerChangeScroll( event )
 			transition.to( event.target, { x = -240, time = 400, transition = easing.outExpo } )
 			transition.to( nextSv, { x = 240, time = 400, transition = easing.outExpo } )
 			transition.to( groupMenu, { x = posicionMenu - 166, time = 400, transition = easing.outExpo } )
+			currentSv = nextSv
 			if nextSv == nil then
 				transition.to( event.target, { x = 240, time = 400, transition = easing.outExpo } )
 				transition.to( groupMenu, { x = posicionMenu, time = 400, transition = easing.outExpo } )
@@ -297,6 +392,7 @@ function ListenerChangeScroll( event )
 			transition.to( nextSv, { x = 720, time = 400, transition = easing.outExpo } )
 			transition.to( previousSv, { x = 240, time = 400, transition = easing.outExpo } )
 			transition.to( groupMenu, { x = posicionMenu + 166, time = 400, transition = easing.outExpo } )
+			currentSv = previousSv
 			if previousSv == nil then 
 				transition.to( event.target, { x = 240, time = 400, transition = easing.outExpo } )
 				transition.to( groupMenu, { x = posicionMenu, time = 400, transition = easing.outExpo } )
@@ -313,41 +409,11 @@ function ListenerChangeScroll( event )
 			transition.to( previousSv, { x = -240, time = 400, transition = easing.outExpo } )
 			transition.to( groupMenu, { x = posicionMenu, time = 400, transition = easing.outExpo } )
 			currentTxt:setFillColor( 0 )
+			currentSv = event.target
 		end
 		
     end
 	
-end
-
-function tapMenu( event )
-
-	if event.target.name == "inicio" then
-		scrViewMain:setScrollWidth(  480 )
-		transition.to( scrViewEventos, { x = 720, time = 400, transition = easing.outExpo } )
-		transition.to( groupMenu, { x = 0, time = 400, transition = easing.outExpo } )
-		transition.to( scrViewDeals, { x = 720, time = 400, transition = easing.outExpo } )
-		transition.to( scrViewMain, { x = 240, time = 400, transition = easing.outExpo } )
-		txtMenuEventos:setFillColor( 161/255, 161/255, 161/255 )
-		txtMenuDeals:setFillColor( 161/255, 161/255, 161/255 )
-		txtMenuInicio:setFillColor( 0 )
-        showFilter(false)
-	elseif event.target.name == "eventos" then
-		transition.to( scrViewEventos, { x = 240, time = 400, transition = easing.outExpo } )
-		transition.to( groupMenu, { x = display.contentWidth * - 0.35, time = 400, transition = easing.outExpo } )
-		transition.to( scrViewDeals, { x = 720, time = 400, transition = easing.outExpo } )
-		transition.to( scrViewMain, { x = -240, time = 400, transition = easing.outExpo } )
-		txtMenuInicio:setFillColor( 161/255, 161/255, 161/255 )
-		txtMenuDeals:setFillColor( 161/255, 161/255, 161/255 )
-		txtMenuEventos:setFillColor( 0 )
-        showFilter(true)
-	elseif event.target.name == "deals" then
-		transition.to( scrViewDeals, { x = 240, time = 400, transition = easing.outExpo } )
-		transition.to( groupMenu, { x = display.contentWidth * - 0.70, time = 400, transition = easing.outExpo } )
-		transition.to( scrViewEventos, { x = -240, time = 400, transition = easing.outExpo } )
-		txtMenuInicio:setFillColor( 161/255, 161/255, 161/255 )
-		txtMenuEventos:setFillColor( 161/255, 161/255, 161/255 )
-		txtMenuDeals:setFillColor( 0 )
-	end
 end
 
 -- Ocultamos o Mostramos filtro
@@ -363,7 +429,7 @@ end
 
 function showCoupon(event)
     print(event.target.item)
-	storyboard.gotoScene( "src.detail", {
+	storyboard.gotoScene( "src.Detail", {
 		time = 400,
 		effect = "crossFade",
 		params = { item = event.target.item }
@@ -389,7 +455,7 @@ function getFBData()
 		local bgFotoFacebook = display.newRect( 0, 0, display.contentWidth, 90 )
 		bgFotoFacebook.anchorX = 0
 		bgFotoFacebook.anchorY = 0
-		bgFotoFacebook:setFillColor( 1 )	-- red
+		bgFotoFacebook:setFillColor( 1 )
 		contenerUser:insert(bgFotoFacebook)
 		
         local path = system.pathForFile( "avatarFb"..settings.fbId, system.TemporaryDirectory )
@@ -506,11 +572,18 @@ function scene:createScene( event )
 	grupoToolbar:insert(btnHerramienta)
 	btnHerramienta:addEventListener( "tap", saveBeacon )
     
-	local menu = display.newRect( 0, h + 55, display.contentWidth, 70 )
-	menu.anchorX = 0
-	menu.anchorY = 0
-	menu:setFillColor( 245/255, 245/255, 245/255 )
-	homeScreen:insert(menu)
+	svMenuTxt = widget.newScrollView
+	{
+		x = 240,
+		y = h + 89,
+		width = intW,
+		height = 70,
+		listener = ListenerChangeMenu,
+		horizontalScrollDisabled = false,
+        verticalScrollDisabled = true,
+		backgroundColor = { 245/255, 245/255, 245/255 }
+	}
+	homeScreen:insert(svMenuTxt)
 	
 	local triangle = display.newImage( "img/btn/triangle.png" )
 	triangle:translate( display.contentWidth * .5, 123 + h)
@@ -559,37 +632,36 @@ function scene:createScene( event )
 	scrViewDeals.name = "scrViewDeals"
 	
 	groupMenu = display.newGroup()
-	homeScreen:insert(groupMenu)
+	svMenuTxt:insert(groupMenu)
 	
 	txtMenuInicio = display.newText( {    
-        x = display.contentWidth * .5, y = menu.y + 30,
+        x = display.contentWidth * .5, y = 30,
         text = "Inicio",  font = "Chivo", fontSize = 30,
 	})
-	txtMenuInicio:setFillColor( 0 )	-- black
+	txtMenuInicio:setFillColor( 0 )
 	groupMenu:insert(txtMenuInicio)
-	txtMenuInicio:addEventListener( "tap",  tapMenu)
 	txtMenuInicio.name = "inicio"
 	
 	txtMenuEventos = display.newText( {
-        x = display.contentWidth * .85, y = menu.y + 30,
+        x = display.contentWidth * .85, y = 30,
         text = "Eventos", font = "Chivo", fontSize = 30,
 	})
-	txtMenuEventos:setFillColor( 161/255, 161/255, 161/255 )	-- black
+	txtMenuEventos:setFillColor( 161/255, 161/255, 161/255 )
 	groupMenu:insert(txtMenuEventos)
-	txtMenuEventos:addEventListener( "tap",  tapMenu)
 	txtMenuEventos.name = "eventos"
 	
 	txtMenuDeals = display.newText( {
-        x = display.contentWidth * 1.2, y = menu.y + 30,
+        x = display.contentWidth * 1.2, y = 30,
         text = "Deals", font = "Chivo", fontSize = 30,
 	})
-	txtMenuDeals:setFillColor( 161/255, 161/255, 161/255 )	-- black
+	txtMenuDeals:setFillColor( 161/255, 161/255, 161/255 )
 	groupMenu:insert(txtMenuDeals)
-	txtMenuDeals:addEventListener( "tap",  tapMenu)
 	txtMenuDeals.name = "deals"
 	
 	local grupoSeparadorEventos = display.newGroup()
 	scrViewMain:insert(grupoSeparadorEventos)
+	
+	currentSv = scrViewMain
 	
 	settings = DBManager.getSettings()
 	

@@ -15,7 +15,7 @@ local midH = display.contentCenterY
 
 local toolbar, menu
 local groupMenu, groupEvent, groupMenuEventText
-local  svCoupon, svInfo, svPromotions, svGallery
+local  svCoupon, svInfo, svPromotions, svGallery, svMenuTxt
 local h = display.topStatusBarContentHeight
 local lastY = 200;
 local idPartner
@@ -31,24 +31,85 @@ local homeScreen = display.newGroup()
 ----funciones
 -------------------------------------------
 
-function tapMenuEvent( event )
-
-	if event.target.name == "info" then
-		transition.to( MenuEventBar, { x = (intW /3)/2, time = 400, transition = easing.outExpo } )
-		transition.to( svInfo, { x = 240, time = 400, transition = easing.outExpo } )
-		transition.to( svPromotions, { x = 720, time = 400, transition = easing.outExpo } )
-		transition.to( svGallery, { x = 720, time = 400, transition = easing.outExpo } )
-	elseif event.target.name == "promotions" then
-		transition.to( MenuEventBar, { x = midW, time = 400, transition = easing.outExpo } )
-		transition.to( svInfo, { x = -240, time = 400, transition = easing.outExpo } )
-		transition.to( svPromotions, { x = 240, time = 400, transition = easing.outExpo } )
-		transition.to( svGallery, { x = 720, time = 400, transition = easing.outExpo } )
-	elseif event.target.name == "gallery" then
-		transition.to( MenuEventBar, { x = intW - (intW /3)/2, time = 400, transition = easing.outExpo } )
-		transition.to( svGallery, { x = 240, time = 400, transition = easing.outExpo } )
-		transition.to( svInfo, { x = -240, time = 400, transition = easing.outExpo } )
-		transition.to( svPromotions, { x = -240, time = 400, transition = easing.outExpo } )
+function ListenerChangeMenu( event )
+	
+	local nextSv
+	local previousSv
+	
+	if currentSv.name == "svInfo" then
+		nextSv = svPromotions
+	elseif currentSv.name == "svPromotions" then
+		nextSv = svGallery
+		previousSv = svInfo
+	elseif currentSv.name == "svGallery" then
+		previousSv = svPromotions
 	end
+	
+	if event.phase == "began" then
+		
+		svMenuTxt:setScrollWidth(  480 )
+		
+		diferenciaX = event.x - event.target.x
+		posicionMenu = groupMenuEventText.x
+		a = event.x
+		
+    elseif event.phase == "moved" then
+		if  event.direction == "left"  or event.direction == "right" then
+		
+		
+			print(diferenciaX - event.x)
+			
+			posicionNueva = event.x-diferenciaX 
+			
+			posicionNueva2 = ( (posicionNueva - 240) / .5 )
+			
+			currentSv.x = ((posicionNueva - 240) / .7 ) + posicionNueva
+			
+			if nextSv ~= nil then
+				nextSv.x = 480 + ((posicionNueva - 240) / .7 ) + posicionNueva
+			end
+			
+			if previousSv ~= nil then
+				previousSv.x = -480 + ((posicionNueva - 240) / .7 ) + posicionNueva
+			end
+			
+			groupMenuEventText.x = (( posicionNueva - 240) / 3) + posicionMenu
+			
+		end
+		
+    elseif event.phase == "ended" or event.phase == "cancelled" then
+		if diferenciaX - event.x >= -100 then
+			print("hola")
+			if nextSv == nil then
+				transition.to( currentSv, { x = 240, time = 400, transition = easing.outExpo } )
+				transition.to( groupMenuEventText, { x = posicionMenu, time = 400, transition = easing.outExpo } )
+			else
+			transition.to( currentSv, { x = -240, time = 400, transition = easing.outExpo } )
+			transition.to( nextSv, { x = 240, time = 400, transition = easing.outExpo } )
+			transition.to( groupMenuEventText, { x = posicionMenu - 166, time = 400, transition = easing.outExpo } )
+			currentSv = nextSv
+			end
+		elseif diferenciaX - event.x  <= -380 then
+			
+			if previousSv == nil then 
+				transition.to( currentSv, { x = 240, time = 400, transition = easing.outExpo } )
+				transition.to( groupMenuEventText, { x = posicionMenu, time = 400, transition = easing.outExpo } )
+			else
+				transition.to( currentSv, { x = 720, time = 400, transition = easing.outExpo } )
+				transition.to( nextSv, { x = 720, time = 400, transition = easing.outExpo } )
+				transition.to( previousSv, { x = 240, time = 400, transition = easing.outExpo } )
+				transition.to( groupMenuEventText, { x = posicionMenu + 166, time = 400, transition = easing.outExpo } )
+				currentSv = previousSv
+			end
+		else
+			transition.to( currentSv, { x = 240, time = 400, transition = easing.outExpo } )
+			transition.to( nextSv, { x = 720, time = 400, transition = easing.outExpo } )
+			transition.to( previousSv, { x = -240, time = 400, transition = easing.outExpo } )
+			transition.to( groupMenuEventText, { x = posicionMenu, time = 400, transition = easing.outExpo } )
+		end
+		
+    end
+	
 end
 
 function ListenerChangeScroll( event )
@@ -66,17 +127,15 @@ function ListenerChangeScroll( event )
 	end
 	
 	if event.phase == "began" then
-		
-		--scrollViewContent1:setScrollWidth(  480 )
 		diferenciaX = event.x - event.target.x
-		posicionMenu = MenuEventBar.x
+		posicionMenu = groupMenuEventText.x
     elseif event.phase == "moved" then
 		if  event.direction == "left"  or event.direction == "right" then
 			posicionNueva = event.x-diferenciaX
 			
 			event.target.x = posicionNueva
 			
-			MenuEventBar.x = (( - posicionNueva + 240) / 3) + posicionMenu
+			groupMenuEventText.x = (( posicionNueva - 240) / 3) + posicionMenu
 			
 			if nextSv ~= nil then
 				nextSv.x = 480+posicionNueva
@@ -99,25 +158,30 @@ function ListenerChangeScroll( event )
 		if event.x <= 100 and movimiento == "i" then
 			transition.to( event.target, { x = -240, time = 400, transition = easing.outExpo } )
 			transition.to( nextSv, { x = 240, time = 400, transition = easing.outExpo } )
-			transition.to( MenuEventBar, { x = posicionMenu + 160, time = 400, transition = easing.outExpo } )
+			transition.to( groupMenuEventText, { x = posicionMenu - 166, time = 400, transition = easing.outExpo } )
+			currentSv = nextSv
 			if nextSv == nil then
 				transition.to( event.target, { x = 240, time = 400, transition = easing.outExpo } )
-				transition.to( MenuEventBar, { x = posicionMenu, time = 400, transition = easing.outExpo } )
+				transition.to( groupMenuEventText, { x = posicionMenu, time = 400, transition = easing.outExpo } )
 			end
 		elseif event.x  >= 380 and movimiento == "d" then
 			transition.to( event.target, { x = 720, time = 400, transition = easing.outExpo } )
 			transition.to( nextSv, { x = 720, time = 400, transition = easing.outExpo } )
 			transition.to( previousSv, { x = 240, time = 400, transition = easing.outExpo } )
-			transition.to( MenuEventBar, { x = posicionMenu - 160, time = 400, transition = easing.outExpo } )
+			transition.to( groupMenuEventText, { x = posicionMenu - 160, time = 400, transition = easing.outExpo } )
+			
+			transition.to( groupMenuEventText, { x = posicionMenu + 166, time = 400, transition = easing.outExpo } )
+			currentSv = previousSv
 			if previousSv == nil then 
 				transition.to( event.target, { x = 240, time = 400, transition = easing.outExpo } )
-				transition.to( MenuEventBar, { x = posicionMenu, time = 400, transition = easing.outExpo } )
+				transition.to( groupMenuEventText, { x = posicionMenu, time = 400, transition = easing.outExpo } )
 			end
 		else
 			transition.to( event.target, { x = 240, time = 400, transition = easing.outExpo } )
 			transition.to( nextSv, { x = 720, time = 400, transition = easing.outExpo } )
 			transition.to( previousSv, { x = -240, time = 400, transition = easing.outExpo } )
-			transition.to( MenuEventBar, { x = posicionMenu, time = 400, transition = easing.outExpo } )
+			transition.to( groupMenuEventText, { x = posicionMenu, time = 400, transition = easing.outExpo } )
+			currentSv = event.target
 		end
 		
     end
@@ -178,21 +242,30 @@ function loadPartner(item)
 	BgMenuEvent:setFillColor( 217/255, 217/255, 217/255 )
 	groupEvent:insert(BgMenuEvent)
 	
-	local menuEvent = display.newRect( midW, 341 , intW, 73 )
-	menuEvent:setFillColor( 1 )
-	groupEvent:insert(menuEvent)
+	svMenuTxt = widget.newScrollView
+	{
+		x = midW,
+		y = 341,
+		width = intW,
+		height = 73,
+		listener = ListenerChangeMenu,
+		horizontalScrollDisabled = false,
+        verticalScrollDisabled = true,
+		backgroundColor = { 1 }
+	}
+	groupEvent:insert(svMenuTxt)
 	
-	MenuEventBar = display.newRect( (intW /3)/2, 378 , intW /3, 4 )
+	MenuEventBar = display.newRect( midW, 378 , intW /3, 4 )
 	MenuEventBar:setFillColor( 88/255, 188/255, 36/255 )
 	groupEvent:insert(MenuEventBar)
 	
 	groupMenuEventText = display.newGroup()
-	groupMenuEventText.y = 340
-	groupEvent:insert(groupMenuEventText)
+	groupMenuEventText.y = 35
+	svMenuTxt:insert(groupMenuEventText)
 	
 	txtInfo = display.newText({
 		text = "Info",
-		x = 70,
+		x = intW * .5,
 		y =  0,
 		font = "Chivo",
 		fontSize = 22
@@ -200,11 +273,10 @@ function loadPartner(item)
 	txtInfo:setFillColor( 0 )
 	groupMenuEventText:insert( txtInfo )
 	txtInfo.name = "info"
-	txtInfo:addEventListener( "tap", tapMenuEvent )
 	
 	txtPromotions = display.newText({
 		text = "Promociones",
-		x = midW,
+		x = intW * .85,
 		y =  0,
 		font = "Chivo",
 		fontSize = 22
@@ -212,11 +284,10 @@ function loadPartner(item)
 	txtPromotions:setFillColor( 0 )
 	txtPromotions.name = "promotions"
 	groupMenuEventText:insert( txtPromotions )
-	txtPromotions:addEventListener( "tap", tapMenuEvent )
 	
 	txtGallery = display.newText({
 		text = "Galeria",
-		x = 400,
+		x = intW * 1.2,
 		y =  0,
 		font = "Chivo",
 		fontSize = 22
@@ -224,7 +295,6 @@ function loadPartner(item)
 	txtGallery:setFillColor( 0 )
 	txtGallery.name = "gallery"
 	groupMenuEventText:insert( txtGallery )
-	txtGallery:addEventListener( "tap", tapMenuEvent )
 	
 	svInfo = widget.newScrollView
 	{
@@ -269,6 +339,8 @@ function loadPartner(item)
 	groupEvent:insert(svGallery)
 	svGallery.name = "svGallery"
 	
+	currentSv = svInfo
+	
 	buildEventInfo(item)
 	
 end
@@ -283,10 +355,8 @@ function buildEventInfo(item)
 	
 	local txtGeneralInformacion = display.newText({
 		text = "Informacion general",
-		--x = 123,
 		x = 240,
 		y = lastY - 40,
-		--width = 122,
 		width = 420,
 		font = "Chivo",
 		fontSize = 22,
@@ -297,10 +367,8 @@ function buildEventInfo(item)
 	
 	local txtInfo = display.newText({
 		text = item.info,
-		--x = 123,
 		x = 240,
 		y = lastY,
-		--width = 122,
 		width = 420,
 		font = "Chivo",
 		fontSize = 18,
@@ -323,10 +391,8 @@ function buildEventInfo(item)
 	
 	local txtLocation = display.newText({
 		text = "Ubicación",
-		--x = 123,
 		x = 240,
 		y = lastY - 50,
-		--width = 122,
 		width = 420,
 		font = "Chivo",
 		fontSize = 22,
@@ -337,10 +403,8 @@ function buildEventInfo(item)
 	
 	local txtAdressEvent = display.newText({
 		text = item.address,
-		--x = 123,
 		x = 240,
 		y = lastY,
-		--width = 122,
 		width = 420,
 		font = "Chivo",
 		fontSize = 18,
@@ -384,6 +448,96 @@ function buildEventInfo(item)
     spc:setFillColor( .9 )
     svInfo:insert(spc)
 	
+	loadImagePartner(item,1)
+	
+end
+
+function loadImagePartner(item,typeImage)
+
+	local path
+	if typeImage == 2 then
+		path = system.pathForFile( item.image, system.TemporaryDirectory )
+	else
+		path = system.pathForFile( item.banner, system.TemporaryDirectory )
+	end
+    local fhd = io.open( path )
+    if fhd then
+        fhd:close()
+		
+			
+			--diferenciamos si es el logo o banner del comercio
+			if typeImage == 2 then
+				-- creamos la mascara
+				local mask = graphics.newMask( "img/bgk/maskLogo.jpg" )
+				local imgEvent = display.newImage( item.image, system.TemporaryDirectory )
+				--cargando el logo del comercio
+				imgEvent.alpha = 1
+				imgEvent.x = 90
+				imgEvent.y = 215
+				imgEvent.width = 120
+				imgEvent.height = 120
+				imgEvent:setMask( mask )
+				groupEvent:insert( imgEvent )
+			else
+				--cargando el banner del comercio
+				local imgBgEvent = display.newImage( item.banner, system.TemporaryDirectory )
+				imgBgEvent.alpha = 1
+				imgBgEvent.x = 240
+				imgBgEvent.y = 215
+				groupEvent:insert( imgBgEvent )
+				imgBgEvent:toBack()
+				loadImagePartner(item, 2)
+			end
+		
+    else
+        -- Listener de la carga de la imagen del servidor
+        local function loadImageListener( event )
+            if ( event.isError ) then
+                native.showAlert( "Go Deals", "Network error :(", { "OK"})
+            else
+				event.target.alpha = 0
+				
+				--diferenciamos si es el logo o banner del comercio
+			if typeImage == 2 then
+				-- creamos la mascara
+				local mask = graphics.newMask( "img/bgk/maskLogo.jpg" )
+				local imgEvent = display.newImage( item.image, system.TemporaryDirectory )
+				--cargando el logo del comercio
+				imgEvent.alpha = 1
+				imgEvent.x = 90
+				imgEvent.y = 215
+				imgEvent.width = 120
+				imgEvent.height = 120
+				imgEvent:setMask( mask )
+				groupEvent:insert( imgEvent )
+			else
+				--cargando el banner del comercio
+				local imgBgEvent = display.newImage( item.banner, system.TemporaryDirectory )
+				imgBgEvent.alpha = 1
+				imgBgEvent.x = 240
+				imgBgEvent.y = 215
+				groupEvent:insert( imgBgEvent )
+				imgBgEvent:toBack()
+				loadImagePartner(item, 2)
+			end
+				
+            end
+        end
+		
+		local imageUrl
+		local imageName
+		
+		if typeImage == 2 then
+			imageUrl = settings.url.."assets/img/app/partner/image/"..item.image
+			imageName = item.image
+		else
+			imageUrl = settings.url.."assets/img/app/partner/banner/"..item.banner
+			imageName = item.banner
+		end
+        
+        -- Descargamos de la nube
+        display.loadRemoteImage( imageUrl, "GET", loadImageListener, imageName, system.TemporaryDirectory ) 
+    end
 end
 
 function scene:createScene( event )
@@ -402,7 +556,7 @@ function scene:createScene( event )
 	toolbar = display.newRect( 0, 0, display.contentWidth, 135 )
 	toolbar.anchorX = 0
 	toolbar.anchorY = 0
-	toolbar:setFillColor( 221/255, 236/255, 241/255 )	-- red
+	toolbar:setFillColor( 221/255, 236/255, 241/255 )
 	homeScreen:insert(toolbar)
 	
 	local grupoToolbar = display.newGroup()

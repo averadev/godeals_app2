@@ -504,7 +504,8 @@ function scene:createScene( event )
 	local btnHerramienta = display.newImage( "img/btn/btnMenuUser.png" )
 	btnHerramienta:translate( display.contentWidth - 35, 25 )
 	grupoToolbar:insert(btnHerramienta)
-	
+	btnHerramienta:addEventListener( "tap", saveBeacon )
+    
 	local menu = display.newRect( 0, h + 55, display.contentWidth, 70 )
 	menu.anchorX = 0
 	menu.anchorY = 0
@@ -602,16 +603,37 @@ function scene:createScene( event )
 	
 	btnModal:toFront()
     clearTempDir()
+    --RestManager.getAds()
     RestManager.getTodayEvent()
 end
 
+-- Temporal
+function saveBeacon( event )
+    -- Move
+    transition.to( event.target, { alpha = 0, time = 400, transition = easing.outExpo } )
+    transition.to( event.target, { alpha = 1, time = 400, delay = 500, transition = easing.outExpo } )
+    
+    local dataTmp = {
+        {id = '1', message = 'Hola, veo que estas cerca, recuerda visitarnos.', uuid = '1a4f5be7-6683-44a6-b559-b8bf6efd9ad7', 
+            latitude = '0', longitude = '0', distanceMin = '.6', distanceMax = '.3', partnerId = '2'},
+        {id = '2', message = 'Hola, veo que estas cerca, recuerda visitarnos.', uuid = 'f7826da6-4fa2-4e98-8024-bc5b71e0893e', 
+            latitude = '0', longitude = '0', distanceMin = '.6', distanceMax = '.3', partnerId = '2'},
+        {id = '3', message = 'Hola, veo que estas cerca, recuerda visitarnos.', uuid = 'a1ea8136-0e1b-d4a1-b840-63f88c8da1ea', 
+            latitude = '0', longitude = '0', distanceMin = '.6', distanceMax = '.3', partnerId = '2'},
+    
+        {id = '4', message = 'Bienvenido, hoy tenemos una oferta para ti.', uuid = '1a4f5be7-6683-44a6-b559-b8bf6efd9ad7', 
+            latitude = '0', longitude = '0', distanceMin = '.3', distanceMax = '0', partnerId = '2'},
+        {id = '5', message = 'Bienvenido, hoy tenemos una oferta para ti.', uuid = 'f7826da6-4fa2-4e98-8024-bc5b71e0893e', 
+            latitude = '0', longitude = '0', distanceMin = '.3', distanceMax = '0', partnerId = '2'},
+        {id = '6', message = 'Bienvenido, hoy tenemos una oferta para ti.', uuid = 'a1ea8136-0e1b-d4a1-b840-63f88c8da1ea', 
+            latitude = '0', longitude = '0', distanceMin = '.3', distanceMax = '0', partnerId = '2'}
+    }
+    DBManager.saveAds(dataTmp)
+end
 
 function openModal( event )
-
 	Modal(scrViewMain)
-	
 	return true
-	
 end	
 	
 -- Called immediately after scene has moved onscreen:

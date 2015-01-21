@@ -55,14 +55,6 @@ local dbManager = {}
 		return 1
 	end
 	
-	dbManager.getA = function()
-		openConnection( )
-		
-		closeConnection( )
-		
-		return 1
-	end
-
 	dbManager.getIdComer = function()
 		local result = {}
 		openConnection( )
@@ -131,7 +123,8 @@ local dbManager = {}
                         ..items[z].uuid.."','"
                         ..items[z].latitude.."','"
                         ..items[z].longitude.."',"
-                        ..items[z].distance..","
+                        ..items[z].distanceMin..","
+                        ..items[z].distanceMax..","
                         ..items[z].partnerId..", 1);"
                 db:exec( query )
             end
@@ -148,7 +141,7 @@ local dbManager = {}
 		local query = "CREATE TABLE IF NOT EXISTS config (id INTEGER PRIMARY KEY, idApp INTEGER, email TEXT, password TEXT, name TEXT, fbId TEXT, idComer TEXT, url TEXT);"
 		db:exec( query )
     
-        local query = "CREATE TABLE IF NOT EXISTS ads (id INTEGER PRIMARY KEY, message TEXT, uuid TEXT, latitude TEXT, longitude TEXT, distance REAL, partnerId INTEGER, status INTEGER);"
+        local query = "CREATE TABLE IF NOT EXISTS ads (id INTEGER PRIMARY KEY, message TEXT, uuid TEXT, latitude TEXT, longitude TEXT, distanceMin REAL, distanceMax REAL, partnerId INTEGER, status INTEGER);"
 		db:exec( query )
 
         -- Return if have connection

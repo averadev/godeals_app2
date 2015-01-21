@@ -76,7 +76,6 @@ local RestManager = {}
         end
         -- Do request
         network.request( url, "GET", callback )
-	   
 	end
 	
 	RestManager.getAllCoupon = function()
@@ -95,7 +94,6 @@ local RestManager = {}
         end
         -- Do request
         network.request( url, "GET", callback )
-	   
 	end
 
 	 RestManager.getPartner = function(idPartner)
@@ -114,7 +112,21 @@ local RestManager = {}
         end
         -- Do request
         network.request( url, "GET", callback )
-	   
+	end
+
+    RestManager.getAds = function()
+        local url = settings.url .. "api/getAds/format/json"
+
+        local function callback(event)
+            if ( event.isError ) then
+            else
+                local data = json.decode(event.response)
+                DBManager.saveAds(data.items)
+            end
+            return true
+        end
+        -- Do request
+        network.request( url, "GET", callback )
 	end
 
 return RestManager

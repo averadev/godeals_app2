@@ -1,12 +1,18 @@
+---------------------------------------------------------------------------------
+-- Godeals App
+-- Alfredo Chi
+-- GeekBucket Software Factory
+---------------------------------------------------------------------------------
 
-require('src.Home')
-require('src.Detail')
-local widget = require( "widget" )
+---------------------------------------------------------------------------------
+-- REQUIRE & VARIABLES
+---------------------------------------------------------------------------------
+
 local storyboard = require( "storyboard" )
 local Globals = require('src.resources.Globals')
-local DBManager = require('src.resources.DBManager')
-local RestManager = require('src.resources.RestManager')
+local widget = require( "widget" )
 local scene = storyboard.newScene()
+local DBManager = require('src.resources.DBManager')
 
 -- Variables
 local intW = display.contentWidth
@@ -15,24 +21,29 @@ local midW = display.contentCenterX
 local midH = display.contentCenterY
 
 local toolbar, menu
-local groupMenu, groupPartner, groupMenuPartnerText
-local  svCoupon, svInfo, svPromotions, svGallery, svMenuTxt
+local groupMenu, groupEvent, groupMenuEventText
+local svCoupon, svInfo, svPromotions, svGallery
 local h = display.topStatusBarContentHeight
 local lastY = 200;
-local idPartner
+local itemObj
+local currentSv
 local settings
 
-local info, promotions, gallery, MenuPartnerBar
-
----- grupos ----
+local info, promotions, gallery, MenuEventBar
+--pantalla
 
 local homeScreen = display.newGroup()
 
--------------------------------------------
-----funciones
--------------------------------------------
+-- funciones
 
-function ListenerChangeMenuPartner( event )
+function returnHome( event )
+	storyboard.gotoScene( "src.Home", {
+        time = 400,
+        effect = "crossFade"
+    })
+end
+
+function ListenerChangeMenuEvent( event )
 	
 	local nextSv
 	local previousSv
@@ -51,14 +62,11 @@ function ListenerChangeMenuPartner( event )
 		svMenuTxt:setScrollWidth(  480 )
 		
 		diferenciaX = event.x - event.target.x
-		posicionMenu = groupMenuPartnerText.x
+		posicionMenu = groupMenuEventText.x
 		a = event.x
 		
     elseif event.phase == "moved" then
 		if  event.direction == "left"  or event.direction == "right" then
-		
-		
-			print(diferenciaX - event.x)
 			
 			posicionNueva = event.x-diferenciaX 
 			
@@ -74,46 +82,45 @@ function ListenerChangeMenuPartner( event )
 				previousSv.x = -480 + ((posicionNueva - 240) / .7 ) + posicionNueva
 			end
 			
-			groupMenuPartnerText.x = (( posicionNueva - 240) / 3) + posicionMenu
+			groupMenuEventText.x = (( posicionNueva - 240) / 3) + posicionMenu
 			
 		end
 		
     elseif event.phase == "ended" or event.phase == "cancelled" then
 		if diferenciaX - event.x >= -100 then
-			print("hola")
 			if nextSv == nil then
 				transition.to( currentSv, { x = 240, time = 400, transition = easing.outExpo } )
-				transition.to( groupMenuPartnerText, { x = posicionMenu, time = 400, transition = easing.outExpo } )
+				transition.to( groupMenuEventText, { x = posicionMenu, time = 400, transition = easing.outExpo } )
 			else
 			transition.to( currentSv, { x = -240, time = 400, transition = easing.outExpo } )
 			transition.to( nextSv, { x = 240, time = 400, transition = easing.outExpo } )
-			transition.to( groupMenuPartnerText, { x = posicionMenu - 166, time = 400, transition = easing.outExpo } )
+			transition.to( groupMenuEventText, { x = posicionMenu - 166, time = 400, transition = easing.outExpo } )
 			currentSv = nextSv
 			end
 		elseif diferenciaX - event.x  <= -380 then
 			
 			if previousSv == nil then 
 				transition.to( currentSv, { x = 240, time = 400, transition = easing.outExpo } )
-				transition.to( groupMenuPartnerText, { x = posicionMenu, time = 400, transition = easing.outExpo } )
+				transition.to( groupMenuEventText, { x = posicionMenu, time = 400, transition = easing.outExpo } )
 			else
 				transition.to( currentSv, { x = 720, time = 400, transition = easing.outExpo } )
 				transition.to( nextSv, { x = 720, time = 400, transition = easing.outExpo } )
 				transition.to( previousSv, { x = 240, time = 400, transition = easing.outExpo } )
-				transition.to( groupMenuPartnerText, { x = posicionMenu + 166, time = 400, transition = easing.outExpo } )
+				transition.to( groupMenuEventText, { x = posicionMenu + 166, time = 400, transition = easing.outExpo } )
 				currentSv = previousSv
 			end
 		else
 			transition.to( currentSv, { x = 240, time = 400, transition = easing.outExpo } )
 			transition.to( nextSv, { x = 720, time = 400, transition = easing.outExpo } )
 			transition.to( previousSv, { x = -240, time = 400, transition = easing.outExpo } )
-			transition.to( groupMenuPartnerText, { x = posicionMenu, time = 400, transition = easing.outExpo } )
+			transition.to( groupMenuEventText, { x = posicionMenu, time = 400, transition = easing.outExpo } )
 		end
 		
     end
 	
 end
 
-function ListenerChangeScrollPartner( event )
+function ListenerChangeScrollEvent( event )
 
 	local nextSv
 	local previousSv
@@ -128,15 +135,16 @@ function ListenerChangeScrollPartner( event )
 	end
 	
 	if event.phase == "began" then
+		
 		diferenciaX = event.x - event.target.x
-		posicionMenu = groupMenuPartnerText.x
+		posicionMenu = groupMenuEventText.x
     elseif event.phase == "moved" then
 		if  event.direction == "left"  or event.direction == "right" then
 			posicionNueva = event.x-diferenciaX
 			
 			event.target.x = posicionNueva
 			
-			groupMenuPartnerText.x = (( posicionNueva - 240) / 3) + posicionMenu
+			groupMenuEventText.x = (( posicionNueva - 240) / 3) + posicionMenu
 			
 			if nextSv ~= nil then
 				nextSv.x = 480+posicionNueva
@@ -159,29 +167,29 @@ function ListenerChangeScrollPartner( event )
 		if event.x <= 100 and movimiento == "i" then
 			transition.to( event.target, { x = -240, time = 400, transition = easing.outExpo } )
 			transition.to( nextSv, { x = 240, time = 400, transition = easing.outExpo } )
-			transition.to( groupMenuPartnerText, { x = posicionMenu - 166, time = 400, transition = easing.outExpo } )
+			transition.to( groupMenuEventText, { x = posicionMenu - 166, time = 400, transition = easing.outExpo } )
 			currentSv = nextSv
 			if nextSv == nil then
 				transition.to( event.target, { x = 240, time = 400, transition = easing.outExpo } )
-				transition.to( groupMenuPartnerText, { x = posicionMenu, time = 400, transition = easing.outExpo } )
+				transition.to( groupMenuEventText, { x = posicionMenu, time = 400, transition = easing.outExpo } )
 			end
 		elseif event.x  >= 380 and movimiento == "d" then
 			transition.to( event.target, { x = 720, time = 400, transition = easing.outExpo } )
 			transition.to( nextSv, { x = 720, time = 400, transition = easing.outExpo } )
 			transition.to( previousSv, { x = 240, time = 400, transition = easing.outExpo } )
-			transition.to( groupMenuPartnerText, { x = posicionMenu - 160, time = 400, transition = easing.outExpo } )
+			transition.to( groupMenuEventText, { x = posicionMenu - 160, time = 400, transition = easing.outExpo } )
 			
-			transition.to( groupMenuPartnerText, { x = posicionMenu + 166, time = 400, transition = easing.outExpo } )
+			transition.to( groupMenuEventText, { x = posicionMenu + 166, time = 400, transition = easing.outExpo } )
 			currentSv = previousSv
 			if previousSv == nil then 
 				transition.to( event.target, { x = 240, time = 400, transition = easing.outExpo } )
-				transition.to( groupMenuPartnerText, { x = posicionMenu, time = 400, transition = easing.outExpo } )
+				transition.to( groupMenuEventText, { x = posicionMenu, time = 400, transition = easing.outExpo } )
 			end
 		else
 			transition.to( event.target, { x = 240, time = 400, transition = easing.outExpo } )
 			transition.to( nextSv, { x = 720, time = 400, transition = easing.outExpo } )
 			transition.to( previousSv, { x = -240, time = 400, transition = easing.outExpo } )
-			transition.to( groupMenuPartnerText, { x = posicionMenu, time = 400, transition = easing.outExpo } )
+			transition.to( groupMenuEventText, { x = posicionMenu, time = 400, transition = easing.outExpo } )
 			currentSv = event.target
 		end
 		
@@ -189,18 +197,32 @@ function ListenerChangeScrollPartner( event )
 	
 end
 
----------------------------------------------------------
----------build Partner
----------------------------------------------------------
-function loadPartner(item)
+function buildEvent(item)
+
+	groupEvent = display.newGroup()
+	groupEvent.y = h
+	homeScreen:insert( groupEvent )
 	
-	groupPartner = display.newGroup()
-	homeScreen:insert( groupPartner )
+	local imgBgEvent = display.newImage( "img/tmp/" .. item.placeBanner )
+	imgBgEvent.alpha = 1
+	imgBgEvent.x = 240
+	imgBgEvent.y = 215
+	groupEvent:insert( imgBgEvent )
+	
+    local mask = graphics.newMask( "img/bgk/maskLogo.jpg" )
+	local imgEvent = display.newImage( "img/tmp/" .. item.placeImage )
+	imgEvent.alpha = 1
+	imgEvent.x = 90
+	imgEvent.y = 215
+	imgEvent.width = 120
+	imgEvent.height = 120
+    imgEvent:setMask( mask )
+	groupEvent:insert( imgEvent )
 	
 	local txtPartner = display.newText({
-		text = item.name,
+		text = itemObj.place,
 		x = 320,
-		y =  225,
+		y =  235,
 		font = "Chivo",
 		height = 100,
 		width = 300,
@@ -208,10 +230,10 @@ function loadPartner(item)
 		align = "left"
 	})
 	txtPartner:setFillColor( 1 )
-	groupPartner:insert( txtPartner )
+	groupEvent:insert( txtPartner )
 	
 	local txtAddress = display.newText({
-		text = item.address,
+		text =itemObj.address,
 		x = 320,
 		y =  265,
 		font = "Chivo",
@@ -221,11 +243,11 @@ function loadPartner(item)
 		align = "left"
 	})
 	txtAddress:setFillColor( 1 )
-	groupPartner:insert( txtAddress )
+	groupEvent:insert( txtAddress )
 	
-	local imgBgPartner = display.newRect( midW, 343, intW, 76 )
-	imgBgPartner:setFillColor( 217/255, 217/255, 217/255 )
-	groupPartner:insert(imgBgPartner)
+	local BgMenuEvent = display.newRect( midW, 343, intW, 76 )
+	BgMenuEvent:setFillColor( 217/255, 217/255, 217/255 )
+	groupEvent:insert(BgMenuEvent)
 	
 	svMenuTxt = widget.newScrollView
 	{
@@ -233,20 +255,20 @@ function loadPartner(item)
 		y = 341,
 		width = intW,
 		height = 73,
-		listener = ListenerChangeMenuPartner,
+		listener = ListenerChangeMenuEvent,
 		horizontalScrollDisabled = false,
         verticalScrollDisabled = true,
 		backgroundColor = { 1 }
 	}
-	groupPartner:insert(svMenuTxt)
+	groupEvent:insert(svMenuTxt)
 	
-	MenuPartnerBar = display.newRect( midW, 378 , intW /3, 4 )
-	MenuPartnerBar:setFillColor( 88/255, 188/255, 36/255 )
-	groupPartner:insert(MenuPartnerBar)
+	MenuEventBar = display.newRect( midW, 378 , intW /3, 4 )
+	MenuEventBar:setFillColor( 88/255, 188/255, 36/255 )
+	groupEvent:insert(MenuEventBar)
 	
-	groupMenuPartnerText = display.newGroup()
-	groupMenuPartnerText.y = 35
-	svMenuTxt:insert(groupMenuPartnerText)
+	groupMenuEventText = display.newGroup()
+	groupMenuEventText.y = 35
+	svMenuTxt:insert(groupMenuEventText)
 	
 	txtInfo = display.newText({
 		text = "Info",
@@ -256,7 +278,7 @@ function loadPartner(item)
 		fontSize = 22
 	})
 	txtInfo:setFillColor( 0 )
-	groupMenuPartnerText:insert( txtInfo )
+	groupMenuEventText:insert( txtInfo )
 	txtInfo.name = "info"
 	
 	txtPromotions = display.newText({
@@ -268,7 +290,7 @@ function loadPartner(item)
 	})
 	txtPromotions:setFillColor( 0 )
 	txtPromotions.name = "promotions"
-	groupMenuPartnerText:insert( txtPromotions )
+	groupMenuEventText:insert( txtPromotions )
 	
 	txtGallery = display.newText({
 		text = "Galeria",
@@ -279,7 +301,7 @@ function loadPartner(item)
 	})
 	txtGallery:setFillColor( 0 )
 	txtGallery.name = "gallery"
-	groupMenuPartnerText:insert( txtGallery )
+	groupMenuEventText:insert( txtGallery )
 	
 	svInfo = widget.newScrollView
 	{
@@ -287,12 +309,12 @@ function loadPartner(item)
 		left = 0,
 		width = intW,
 		height = intH,
-		listener = ListenerChangeScrollPartner,
+		listener = ListenerChangeScrollEvent,
 		horizontalScrollDisabled = false,
         verticalScrollDisabled = false,
 		backgroundColor = { 245/255, 245/255, 245/255 }
 	}
-	groupPartner:insert(svInfo)
+	groupEvent:insert(svInfo)
 	svInfo.name = "svInfo"
 	
 	svPromotions = widget.newScrollView
@@ -301,12 +323,12 @@ function loadPartner(item)
 		left = intW,
 		width = intW,
 		height = intH,
-		listener = ListenerChangeScrollPartner,
+		listener = ListenerChangeScrollEvent,
 		horizontalScrollDisabled = false,
         verticalScrollDisabled = false,
 		backgroundColor = { 245/255, 245/255, 245/255 }
 	}
-	groupPartner:insert(svPromotions)
+	groupEvent:insert(svPromotions)
 	svPromotions.name = "svPromotions"
 	
 	svGallery = widget.newScrollView
@@ -315,22 +337,22 @@ function loadPartner(item)
 		left = intW,
 		width = intW,
 		height = intH,
-		listener = ListenerChangeScrollPartner,
+		listener = ListenerChangeScrollEvent,
 		horizontalScrollDisabled = false,
         verticalScrollDisabled = false,
 		backgroundColor = { 245/255, 245/255, 245/255 }
 	}
 	
-	groupPartner:insert(svGallery)
+	groupEvent:insert(svGallery)
 	svGallery.name = "svGallery"
 	
 	currentSv = svInfo
 	
-	buildPartnerInfo(item)
+	buildEventInfo(item)
 	
 end
 
-function buildPartnerInfo(item)
+function buildEventInfo(item)
 
 	lastY = 90
 	
@@ -351,7 +373,7 @@ function buildPartnerInfo(item)
 	svInfo:insert( txtGeneralInformacion )
 	
 	local txtInfo = display.newText({
-		text = item.info,
+		text = itemObj.detail,
 		x = 240,
 		y = lastY,
 		width = 420,
@@ -368,26 +390,22 @@ function buildPartnerInfo(item)
 	
 	bgGeneralInformacion.y = bgGeneralInformacion.height/2 + 70
 	
-	lastY = lastY + bgGeneralInformacion.height + 85
+	lastY = lastY + bgGeneralInformacion.height
+	
+	local imgEvent = display.newImage(  "img/tmp/" .. itemObj.imageFull )
+	imgEvent.x = midW
+	svInfo:insert( imgEvent )
+    
+    imgEvent.y = lastY + (imgEvent.height / 2)
+    
+	lastY = lastY + imgEvent.height + 40
 	
 	local bgLocation = display.newRect( midW, 0, intW, 76 )
 	bgLocation:setFillColor( 1 )
 	svInfo:insert(bgLocation)
 	
-	local txtLocation = display.newText({
-		text = "Ubicación",
-		x = 240,
-		y = lastY - 50,
-		width = 420,
-		font = "Chivo",
-		fontSize = 22,
-		align = "left"
-	})
-	txtLocation:setFillColor( 0 )
-	svInfo:insert( txtLocation )
-	
-	local txtAdressPartner = display.newText({
-		text = item.address,
+	local txtAdressEvent = display.newText({
+		text = itemObj.address,
 		x = 240,
 		y = lastY,
 		width = 420,
@@ -395,88 +413,83 @@ function buildPartnerInfo(item)
 		fontSize = 18,
 		align = "left"
 	})
-	txtAdressPartner:setFillColor( 0 )
-	svInfo:insert( txtAdressPartner )
+	txtAdressEvent:setFillColor( 0 )
+	svInfo:insert( txtAdressEvent )
 	
-	txtAdressPartner.y = txtAdressPartner.y + txtAdressPartner.height/2
-	
-	bgLocation.height = txtAdressPartner.height + 40
-	
-	bgLocation.y = bgLocation.height/2  + lastY -22
-	
-	lastY = lastY + bgLocation.height/2  + 10
+	txtAdressEvent.y = txtAdressEvent.y + txtAdressEvent.height / 2
+	bgLocation.height = txtAdressEvent.height + 40
+	bgLocation.y = bgLocation.height/2  + lastY - 22
+	lastY = lastY + bgLocation.height/2 + 10
     
-     -- Cocinar el mapa
+    -- Cocinar el mapa
     local myMap = native.newMapView( midW, lastY + 150, intW, 300 )
     if myMap then
-        myMap:setCenter( tonumber(item.latitude), tonumber(item.longitude), 0.02, 0.02 )
+        myMap:setCenter( tonumber(itemObj.latitude), tonumber(itemObj.longitude), 0.02, 0.02 )
         svInfo:insert(myMap)
         
         -- Add Maker
         timer.performWithDelay( 3000, function()
             local options = { 
-                title = item.name, 
-                subtitle = item.address, 
+                title = itemObj.name, 
+                subtitle = itemObj.address, 
                 listener = markerListener, 
                 imageFile = "img/btn/btnIconMap.png"
             }
             
-            myMap:addMarker( tonumber(item.latitude), tonumber(item.longitude), options )
+            myMap:addMarker( tonumber(itemObj.latitude), tonumber(itemObj.longitude), options )
         end, 1 )
     else
         local bg = display.newRect( midW, lastY + 150, intW, 300 )
         bg:setFillColor( .7 )
         svInfo:insert(bg)
     end
-	
-	local spc = display.newRect( 0, lastY + 750, 1, 1 )
+    
+    local spc = display.newRect( 0, lastY + 750, 1, 1 )
     spc:setFillColor( .9 )
     svInfo:insert(spc)
 	
-	loadImagePartner(item,1)
+	loadImageOfPartner(1)
 	
 end
 
-function loadImagePartner(item,typeImage)
+function loadImageOfPartner(typeImage)
 
 	local path
 	if typeImage == 2 then
-		path = system.pathForFile( item.image, system.TemporaryDirectory )
+		path = system.pathForFile( itemObj.placeImage, system.TemporaryDirectory )
 	else
-		path = system.pathForFile( item.banner, system.TemporaryDirectory )
+		path = system.pathForFile( itemObj.placeBanner, system.TemporaryDirectory )
 	end
     local fhd = io.open( path )
     if fhd then
         fhd:close()
-		
-			
 			--diferenciamos si es el logo o banner del comercio
 			if typeImage == 2 then
 				-- creamos la mascara
 				local mask = graphics.newMask( "img/bgk/maskLogo.jpg" )
-				local imgPartner = display.newImage( item.image, system.TemporaryDirectory )
+				local imgEvent = display.newImage( itemObj.placeImage, system.TemporaryDirectory )
 				--cargando el logo del comercio
-				imgPartner.alpha = 1
-				imgPartner.x = 90
-				imgPartner.y = 215
-				imgPartner.width = 120
-				imgPartner.height = 120
-				imgPartner:setMask( mask )
-				groupPartner:insert( imgPartner )
+				imgEvent.alpha = 1
+				imgEvent.x = 90
+				imgEvent.y = 215
+				imgEvent.width = 120
+				imgEvent.height = 120
+				imgEvent:setMask( mask )
+				groupEvent:insert( imgEvent )
 			else
 				--cargando el banner del comercio
-				local imgBgPartner = display.newImage( item.banner, system.TemporaryDirectory )
-				imgBgPartner.alpha = 1
-				imgBgPartner.x = 240
-				imgBgPartner.y = 215
-				groupPartner:insert( imgBgPartner )
-				imgBgPartner:toBack()
-				loadImagePartner(item, 2)
+				local imgBgEvent = display.newImage( itemObj.placeBanner, system.TemporaryDirectory )
+				imgBgEvent.alpha = 1
+				imgBgEvent.x = 240
+				imgBgEvent.y = 215
+				groupEvent:insert( imgBgEvent )
+				imgBgEvent:toBack()
+				loadImageOfPartner(2)
 			end
 		
     else
         -- Listener de la carga de la imagen del servidor
-        local function loadImagePartnerListener( event )
+        local function loadImageOfPartnerListener( event )
             if ( event.isError ) then
                 native.showAlert( "Go Deals", "Network error :(", { "OK"})
             else
@@ -486,24 +499,24 @@ function loadImagePartner(item,typeImage)
 			if typeImage == 2 then
 				-- creamos la mascara
 				local mask = graphics.newMask( "img/bgk/maskLogo.jpg" )
-				local imgPartner = display.newImage( item.image, system.TemporaryDirectory )
+				local imgEvent = display.newImage( itemObj.placeImage, system.TemporaryDirectory )
 				--cargando el logo del comercio
-				imgPartner.alpha = 1
-				imgPartner.x = 90
-				imgPartner.y = 215
-				imgPartner.width = 120
-				imgPartner.height = 120
-				imgPartner:setMask( mask )
-				groupPartner:insert( imgPartner )
+				imgEvent.alpha = 1
+				imgEvent.x = 90
+				imgEvent.y = 215
+				imgEvent.width = 120
+				imgEvent.height = 120
+				imgEvent:setMask( mask )
+				groupEvent:insert( imgEvent )
 			else
 				--cargando el banner del comercio
-				local imgBgPartner = display.newImage( item.banner, system.TemporaryDirectory )
-				imgBgPartner.alpha = 1
-				imgBgPartner.x = 240
-				imgBgPartner.y = 215
-				groupPartner:insert( imgBgPartner )
-				imgBgPartner:toBack()
-				loadImagePartner(item, 2)
+				local imgBgEvent = display.newImage( itemObj.placeBanner, system.TemporaryDirectory )
+				imgBgEvent.alpha = 1
+				imgBgEvent.x = 240
+				imgBgEvent.y = 215
+				groupEvent:insert( imgBgEvent )
+				imgBgEvent:toBack()
+				loadImageOfPartner(2)
 			end
 				
             end
@@ -512,40 +525,50 @@ function loadImagePartner(item,typeImage)
 		local imageUrl
 		local imageName
 		
+		
 		if typeImage == 2 then
-			imageUrl = settings.url.."assets/img/app/partner/image/"..item.image
-			imageName = item.image
+			if itemObj.type == "partner" then
+				imageUrl = settings.url.."assets/img/app/partner/image/"
+			else
+				imageUrl = settings.url.."assets/img/app/place/image/"
+			end
+			imageUrl = imageUrl..itemObj.placeImage
+			imageName = itemObj.placeImage
 		else
-			imageUrl = settings.url.."assets/img/app/partner/banner/"..item.banner
-			imageName = item.banner
+			if itemObj.type == "partner" then
+				imageUrl = settings.url.."assets/img/app/partner/banner/"
+			else
+				imageUrl = settings.url.."assets/img/app/place/banner/"
+			end
+			imageUrl = imageUrl..itemObj.placeBanner
+			imageName = itemObj.placeBanner
 		end
         
         -- Descargamos de la nube
-        display.loadRemoteImage( imageUrl, "GET", loadImagePartnerListener, imageName, system.TemporaryDirectory ) 
+        display.loadRemoteImage( imageUrl, "GET", loadImageOfPartnerListener, imageName, system.TemporaryDirectory ) 
     end
 end
 
 function scene:createScene( event )
 	screen = self.view
-	idPartner = event.params.idPartner
 	screen:insert(homeScreen)
 	
-	homeScreen.y = h
+	itemObj = event.params.item
 	
-	local bg = display.newRect( 0, 0, display.contentWidth, display.contentHeight )
+	local bg = display.newRect( 0, h, display.contentWidth, display.contentHeight )
 	bg.anchorX = 0
 	bg.anchorY = 0
 	bg:setFillColor( 245/255, 245/255, 245/255 )
 	homeScreen:insert(bg)
 	
-	toolbar = display.newRect( 0, 0, display.contentWidth, 135 )
+	toolbar = display.newRect( 0, h, display.contentWidth, 135 )
 	toolbar.anchorX = 0
 	toolbar.anchorY = 0
 	toolbar:setFillColor( 221/255, 236/255, 241/255 )
 	homeScreen:insert(toolbar)
 	
 	local grupoToolbar = display.newGroup()
-	grupoToolbar.y = 5
+	grupoToolbar.y = h + 5
 	homeScreen:insert(grupoToolbar)
 	
 	local logo = display.newImage( "img/btn/logo.png" )
@@ -588,41 +611,37 @@ function scene:createScene( event )
 	btnHerramienta:translate( display.contentWidth - 35, 25 )
 	grupoToolbar:insert(btnHerramienta)
 	
-	local menu = display.newRect( 0, 55, display.contentWidth, 75 )
+	local menu = display.newRect( 0, h + 55, display.contentWidth, 75 )
 	menu.anchorX = 0
 	menu.anchorY = 0
 	menu:setFillColor( 189/255, 203/255, 206/255 )
 	homeScreen:insert(menu)
 	
 	groupMenu = display.newGroup()
-	groupMenu.y =  60
+	groupMenu.y = h + 60
 	homeScreen:insert(groupMenu)
 	
 	local imgBtnBack = display.newImage( "img/btn/btnBackward.png" )
-	imgBtnBack.alpha = 1
-    imgBtnBack.x= 30
+	imgBtnBack.x= 30
 	imgBtnBack.y = 30
-    imgBtnBack.width = 30
-    imgBtnBack.height  = 50
     groupMenu:insert( imgBtnBack )
 	imgBtnBack:addEventListener( "tap", returnHome )
 	
+	local imgBtnUp = display.newImage( "img/btn/btnUp.png" )
+	imgBtnUp.x= 420
+	imgBtnUp.y = 30
+    groupMenu:insert( imgBtnUp )
 	
 end
 
 -- Called immediately after scene has moved onscreen:
 function scene:enterScene( event )
 	settings = DBManager.getSettings()
-	RestManager.getPartner(idPartner)
+	buildEvent(itemObj)
 end
 
 -- Remove Listener
 function scene:exitScene( event )
-	
-   --[[ if storeBar then
-        storeBar:removeSelf()
-        storeBar = nil
-    end]]
 end
 
 scene:addEventListener("createScene", scene )

@@ -223,7 +223,7 @@ end
 
 --- scrollView functions
 
-function ListenerChangeMenu( event )
+function ListenerChangeMenuHome( event )
 	
 	local nextSv
 	local previousSv
@@ -316,7 +316,7 @@ end
 
 --- scrollView functions
 
-function ListenerChangeScroll( event )
+function ListenerChangeScrollHome( event )
 
 	local nextSv
 	local previousSv
@@ -429,7 +429,16 @@ end
 
 function showCoupon(event)
     print(event.target.item)
-	storyboard.gotoScene( "src.Detail", {
+	storyboard.gotoScene( "src.Coupon", {
+		time = 400,
+		effect = "crossFade",
+		params = { item = event.target.item }
+	})
+end
+
+function showEvent(event)
+    print(event.target.item)
+	storyboard.gotoScene( "src.Event", {
 		time = 400,
 		effect = "crossFade",
 		params = { item = event.target.item }
@@ -578,7 +587,7 @@ function scene:createScene( event )
 		y = h + 89,
 		width = intW,
 		height = 70,
-		listener = ListenerChangeMenu,
+		listener = ListenerChangeMenuHome,
 		horizontalScrollDisabled = false,
         verticalScrollDisabled = true,
 		backgroundColor = { 245/255, 245/255, 245/255 }
@@ -599,7 +608,7 @@ function scene:createScene( event )
 		left = 0,
 		width = intW,
 		height = intH,
-		listener = ListenerChangeScroll,
+		listener = ListenerChangeScrollHome,
 		horizontalScrollDisabled = false,
         verticalScrollDisabled = false,
 		backgroundColor = { 245/255, 245/255, 245/255 }
@@ -613,7 +622,7 @@ function scene:createScene( event )
 		left = 480,
 		width = display.contentWidth,
 		height = display.contentHeight,
-		listener = ListenerChangeScroll,
+		listener = ListenerChangeScrollHome,
 		backgroundColor = { 245/255, 245/255, 245/255 }
 	}
 	homeScreen:insert(scrViewEventos)
@@ -625,7 +634,7 @@ function scene:createScene( event )
 		left = 480,
 		width = display.contentWidth,
 		height = display.contentHeight,
-		listener = ListenerChangeScroll,
+		listener = ListenerChangeScrollHome,
 		backgroundColor = { 245/255, 245/255, 245/255 }
 	}
 	homeScreen:insert(scrViewDeals)

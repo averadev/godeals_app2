@@ -64,7 +64,7 @@ function Event:new()
         image.height  = 80
         image.item = item
         container:insert( image )
-        image:addEventListener( "tap", showCoupon )
+        image:addEventListener( "tap", showEvent )
 
         -- Agregamos textos
         local txtTitle = display.newText( {

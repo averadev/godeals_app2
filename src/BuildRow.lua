@@ -109,7 +109,6 @@ function Deal:new()
     
     -- Creamos la pantalla del menu
     function self:build(item, image)
-        
         -- Generamos contenedor
         local container = display.newContainer( 450, 100 )
         container.x = 255
@@ -172,6 +171,37 @@ function Deal:new()
             txtBubble:setFillColor( .1 )
             container:insert(txtBubble)
         end
+        
+    end
+
+    return self
+end
+
+---------------------------------------------------------------------------------
+-- Gallery
+---------------------------------------------------------------------------------
+Gallery = {}
+function Gallery:new()
+    -- Variables
+    local self = display.newGroup()
+    
+    -- Creamos la pantalla del menu
+    function self:build(item, image)
+        -- Generamos contenedor
+        local container = display.newContainer( 480, 200 )
+        container.x = 240
+        container.y = 50
+		container.name = 1
+        self:insert( container )
+
+        -- Agregamos imagen
+        item.tipo  = "Gallery"
+        image.alpha = 1
+        image.x= 0
+        image.width = 460
+        image.height  = 200
+        image.item = item
+        container:insert( image )
         
     end
 

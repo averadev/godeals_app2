@@ -1,6 +1,5 @@
 
 require('src.Home')
-require('src.Detail')
 local widget = require( "widget" )
 local storyboard = require( "storyboard" )
 local Globals = require('src.resources.Globals')
@@ -16,13 +15,22 @@ local midH = display.contentCenterY
 
 local toolbar, menu
 local groupMenu, groupPartner, groupMenuPartnerText
-local  svCoupon, svInfo, svPromotions, svGallery, svMenuTxt
+local  svCoupon, svMenuTxt
 local h = display.topStatusBarContentHeight
 local lastY = 200;
 local idPartner
 local settings
 
 local info, promotions, gallery, MenuPartnerBar
+
+-- tablas
+
+local srvPartner = {}
+local txtMenuPartner = {}
+local imagePartnerDeals = {}
+local imagePartnerGallery = {}
+local itemGallery = {}
+local itemPartner = {}
 
 ---- grupos ----
 
@@ -32,18 +40,25 @@ local homeScreen = display.newGroup()
 ----funciones
 -------------------------------------------
 
+--------listener scroll
+
 function ListenerChangeMenuPartner( event )
 	
+	local positionScroll
 	local nextSv
 	local previousSv
 	
-	if currentSv.name == "svInfo" then
-		nextSv = svPromotions
-	elseif currentSv.name == "svPromotions" then
-		nextSv = svGallery
-		previousSv = svInfo
-	elseif currentSv.name == "svGallery" then
-		previousSv = svPromotions
+	positionScroll = currentSv.name
+	
+	if positionScroll ~= nil then
+		if positionScroll == 1 then
+			nextSv = srvPartner[2]
+		elseif positionScroll == #srvPartner then
+			previousSv = srvPartner[positionScroll - 1]
+		else
+			nextSv = srvPartner[positionScroll + 1]
+			previousSv = srvPartner[positionScroll - 1]
+		end
 	end
 	
 	if event.phase == "began" then
@@ -52,13 +67,9 @@ function ListenerChangeMenuPartner( event )
 		
 		diferenciaX = event.x - event.target.x
 		posicionMenu = groupMenuPartnerText.x
-		a = event.x
 		
     elseif event.phase == "moved" then
 		if  event.direction == "left"  or event.direction == "right" then
-		
-		
-			print(diferenciaX - event.x)
 			
 			posicionNueva = event.x-diferenciaX 
 			
@@ -115,16 +126,23 @@ end
 
 function ListenerChangeScrollPartner( event )
 
+	local positionScroll 
 	local nextSv
 	local previousSv
 	
-	if event.target.name == "svInfo" then
-		nextSv = svPromotions
-	elseif event.target.name == "svPromotions" then
-		nextSv = svGallery
-		previousSv = svInfo
-	elseif event.target.name == "svGallery" then
-		previousSv = svPromotions
+	positionScroll = event.target.name
+	
+	if positionScroll ~= nil then
+			
+		if positionScroll == 1 then
+			nextSv = srvPartner[2]
+		elseif positionScroll == #srvPartner then
+			previousSv = srvPartner[positionScroll - 1]
+		else
+			nextSv = srvPartner[positionScroll + 1]
+			previousSv = srvPartner[positionScroll - 1]
+		end
+		
 	end
 	
 	if event.phase == "began" then
@@ -194,6 +212,8 @@ end
 ---------------------------------------------------------
 function loadPartner(item)
 	
+	itemPartner = item
+	
 	groupPartner = display.newGroup()
 	homeScreen:insert( groupPartner )
 	
@@ -248,83 +268,12 @@ function loadPartner(item)
 	groupMenuPartnerText.y = 35
 	svMenuTxt:insert(groupMenuPartnerText)
 	
-	txtInfo = display.newText({
-		text = "Info",
-		x = intW * .5,
-		y =  0,
-		font = "Chivo",
-		fontSize = 22
-	})
-	txtInfo:setFillColor( 0 )
-	groupMenuPartnerText:insert( txtInfo )
-	txtInfo.name = "info"
+	createScrollViewPartner("Info")
 	
-	txtPromotions = display.newText({
-		text = "Promociones",
-		x = intW * .85,
-		y =  0,
-		font = "Chivo",
-		fontSize = 22
-	})
-	txtPromotions:setFillColor( 0 )
-	txtPromotions.name = "promotions"
-	groupMenuPartnerText:insert( txtPromotions )
+	srvPartner[#srvPartner]:setIsLocked( true, "horizontal" )
+	svMenuTxt:setIsLocked( true, "horizontal" )
 	
-	txtGallery = display.newText({
-		text = "Galeria",
-		x = intW * 1.2,
-		y =  0,
-		font = "Chivo",
-		fontSize = 22
-	})
-	txtGallery:setFillColor( 0 )
-	txtGallery.name = "gallery"
-	groupMenuPartnerText:insert( txtGallery )
-	
-	svInfo = widget.newScrollView
-	{
-		top = 383,
-		left = 0,
-		width = intW,
-		height = intH,
-		listener = ListenerChangeScrollPartner,
-		horizontalScrollDisabled = false,
-        verticalScrollDisabled = false,
-		backgroundColor = { 245/255, 245/255, 245/255 }
-	}
-	groupPartner:insert(svInfo)
-	svInfo.name = "svInfo"
-	
-	svPromotions = widget.newScrollView
-	{
-		top = 383,
-		left = intW,
-		width = intW,
-		height = intH,
-		listener = ListenerChangeScrollPartner,
-		horizontalScrollDisabled = false,
-        verticalScrollDisabled = false,
-		backgroundColor = { 245/255, 245/255, 245/255 }
-	}
-	groupPartner:insert(svPromotions)
-	svPromotions.name = "svPromotions"
-	
-	svGallery = widget.newScrollView
-	{
-		top = 383,
-		left = intW,
-		width = intW,
-		height = intH,
-		listener = ListenerChangeScrollPartner,
-		horizontalScrollDisabled = false,
-        verticalScrollDisabled = false,
-		backgroundColor = { 245/255, 245/255, 245/255 }
-	}
-	
-	groupPartner:insert(svGallery)
-	svGallery.name = "svGallery"
-	
-	currentSv = svInfo
+	currentSv = srvPartner[#srvPartner]
 	
 	buildPartnerInfo(item)
 	
@@ -336,7 +285,7 @@ function buildPartnerInfo(item)
 	
 	local bgGeneralInformacion = display.newRect( midW, 0, 480, 76 )
 	bgGeneralInformacion:setFillColor( 1 )
-	svInfo:insert(bgGeneralInformacion)
+	srvPartner[#srvPartner]:insert(bgGeneralInformacion)
 	
 	local txtGeneralInformacion = display.newText({
 		text = "Informacion general",
@@ -348,7 +297,7 @@ function buildPartnerInfo(item)
 		align = "left"
 	})
 	txtGeneralInformacion:setFillColor( 0 )
-	svInfo:insert( txtGeneralInformacion )
+	srvPartner[#srvPartner]:insert( txtGeneralInformacion )
 	
 	local txtInfo = display.newText({
 		text = item.info,
@@ -360,7 +309,7 @@ function buildPartnerInfo(item)
 		align = "left"
 	})
 	txtInfo:setFillColor( 0 )
-	svInfo:insert( txtInfo )
+	srvPartner[#srvPartner]:insert( txtInfo )
 	
 	txtInfo.y = txtInfo.y + txtInfo.height/2
 	
@@ -372,7 +321,7 @@ function buildPartnerInfo(item)
 	
 	local bgLocation = display.newRect( midW, 0, intW, 76 )
 	bgLocation:setFillColor( 1 )
-	svInfo:insert(bgLocation)
+	srvPartner[#srvPartner]:insert(bgLocation)
 	
 	local txtLocation = display.newText({
 		text = "Ubicación",
@@ -384,7 +333,7 @@ function buildPartnerInfo(item)
 		align = "left"
 	})
 	txtLocation:setFillColor( 0 )
-	svInfo:insert( txtLocation )
+	srvPartner[#srvPartner]:insert( txtLocation )
 	
 	local txtAdressPartner = display.newText({
 		text = item.address,
@@ -396,7 +345,7 @@ function buildPartnerInfo(item)
 		align = "left"
 	})
 	txtAdressPartner:setFillColor( 0 )
-	svInfo:insert( txtAdressPartner )
+	srvPartner[#srvPartner]:insert( txtAdressPartner )
 	
 	txtAdressPartner.y = txtAdressPartner.y + txtAdressPartner.height/2
 	
@@ -410,7 +359,7 @@ function buildPartnerInfo(item)
     local myMap = native.newMapView( midW, lastY + 150, intW, 300 )
     if myMap then
         myMap:setCenter( tonumber(item.latitude), tonumber(item.longitude), 0.02, 0.02 )
-        svInfo:insert(myMap)
+        srvPartner[#srvPartner]:insert(myMap)
         
         -- Add Maker
         timer.performWithDelay( 3000, function()
@@ -426,24 +375,135 @@ function buildPartnerInfo(item)
     else
         local bg = display.newRect( midW, lastY + 150, intW, 300 )
         bg:setFillColor( .7 )
-        svInfo:insert(bg)
+        srvPartner[#srvPartner]:insert(bg)
     end
 	
 	local spc = display.newRect( 0, lastY + 750, 1, 1 )
     spc:setFillColor( .9 )
-    svInfo:insert(spc)
+    srvPartner[#srvPartner]:insert(spc)
 	
-	loadImagePartner(item,1)
+	RestManager.getDealsByPartner(idPartner,"partner")
 	
 end
 
-function loadImagePartner(item,typeImage)
+--mostramos los deals del comercio
+function buildPartnerPromociones(items)
+
+	if #items > 0 then
+	
+	srvPartner[1]:setIsLocked( false, "horizontal" )
+	svMenuTxt:setIsLocked( false, "horizontal" )
+	
+	createScrollViewPartner("Promociones")
+	
+		lastY = 25
+	
+		for y = 1, #items, 1 do 
+            -- Create container
+			
+			imagePartnerDeals[y] = display.newImage( items[y].image, system.TemporaryDirectory )
+			imagePartnerDeals[y].alpha = 1
+			
+            local deal = Deal:new()
+            srvPartner[#srvPartner]:insert(deal)
+            deal:build(items[y], imagePartnerDeals[y])
+            deal.y = lastY
+			lastY = lastY + 102
+        end
+	
+	end
+	
+	--llamamos a la galeria
+	RestManager.getGallery(idPartner,1,"partner")
+	
+end
+
+--mostramos la galeria
+function buildPartnerGaleria(items)
+	
+		lastY = 75
+	
+		srvPartner[1]:setIsLocked( false, "horizontal" )
+		svMenuTxt:setIsLocked( false, "horizontal" )
+	
+		createScrollViewPartner("Galeria")
+	
+		for y = 1, #items, 1 do 
+            -- Create container
+			
+			imagePartnerGallery[y] = display.newImage( items[y].image, system.TemporaryDirectory )
+			imagePartnerGallery[y].alpha = 1
+			
+            local gallery = Gallery:new()
+            srvPartner[#srvPartner]:insert(gallery)
+            gallery:build(items[y], imagePartnerGallery[y])
+            gallery.y = lastY
+			lastY = lastY + 210
+        end
+		
+		srvPartner[#srvPartner]:setScrollHeight(lastY)
+
+end
+
+--llamas al metodo para cargar las imagenes
+function GalleryPartner(items)
+	if #items > 0 then
+		loadGalleryPartner(items,1)
+	end
+	
+	--cargamos la imagen del partner del encabezado
+	loadImagePartner( 1 )
+end
+
+--creamos los crollview dinamicos
+
+function createScrollViewPartner(nameTxt)
+	
+	local positionCurrent = #srvPartner + 1
+
+		local positionTxtMenu = midW + (#srvPartner * 166)
+
+	txtMenuPartner[positionCurrent] = display.newText({
+			text = nameTxt,
+			x = positionTxtMenu,
+			y =  0,
+			font = "Chivo",
+			fontSize = 22
+	})
+	txtMenuPartner[positionCurrent]:setFillColor( 0 )
+	groupMenuPartnerText:insert( txtMenuPartner[positionCurrent] )
+	txtMenuPartner[positionCurrent].name = positionCurrent
+	
+	local positionScrollPartner
+	if #srvPartner == 0 then
+		positionScrollPartner = 0
+	else
+		positionScrollPartner = intW
+	end
+	
+	srvPartner[positionCurrent] = widget.newScrollView
+	{
+		top = 383,
+		left = positionScrollPartner,
+		width = intW,
+		height = intH,
+		listener = ListenerChangeScrollPartner,
+		horizontalScrollDisabled = false,
+		verticalScrollDisabled = false,
+		backgroundColor = { 245/255, 245/255, 245/255 }
+	}
+	groupPartner:insert(srvPartner[positionCurrent])
+	srvPartner[positionCurrent].name = positionCurrent
+	
+end
+
+function loadImagePartner(typeImage)
 
 	local path
 	if typeImage == 2 then
-		path = system.pathForFile( item.image, system.TemporaryDirectory )
+		path = system.pathForFile( itemPartner.image, system.TemporaryDirectory )
 	else
-		path = system.pathForFile( item.banner, system.TemporaryDirectory )
+		path = system.pathForFile( itemPartner.banner, system.TemporaryDirectory )
 	end
     local fhd = io.open( path )
     if fhd then
@@ -454,7 +514,7 @@ function loadImagePartner(item,typeImage)
 			if typeImage == 2 then
 				-- creamos la mascara
 				local mask = graphics.newMask( "img/bgk/maskLogo.jpg" )
-				local imgPartner = display.newImage( item.image, system.TemporaryDirectory )
+				local imgPartner = display.newImage( itemPartner.image, system.TemporaryDirectory )
 				--cargando el logo del comercio
 				imgPartner.alpha = 1
 				imgPartner.x = 90
@@ -465,13 +525,13 @@ function loadImagePartner(item,typeImage)
 				groupPartner:insert( imgPartner )
 			else
 				--cargando el banner del comercio
-				local imgBgPartner = display.newImage( item.banner, system.TemporaryDirectory )
+				local imgBgPartner = display.newImage( itemPartner.banner, system.TemporaryDirectory )
 				imgBgPartner.alpha = 1
 				imgBgPartner.x = 240
 				imgBgPartner.y = 215
 				groupPartner:insert( imgBgPartner )
 				imgBgPartner:toBack()
-				loadImagePartner(item, 2)
+				loadImagePartner( 2 )
 			end
 		
     else
@@ -486,7 +546,7 @@ function loadImagePartner(item,typeImage)
 			if typeImage == 2 then
 				-- creamos la mascara
 				local mask = graphics.newMask( "img/bgk/maskLogo.jpg" )
-				local imgPartner = display.newImage( item.image, system.TemporaryDirectory )
+				local imgPartner = display.newImage( itemPartner.image, system.TemporaryDirectory )
 				--cargando el logo del comercio
 				imgPartner.alpha = 1
 				imgPartner.x = 90
@@ -497,13 +557,13 @@ function loadImagePartner(item,typeImage)
 				groupPartner:insert( imgPartner )
 			else
 				--cargando el banner del comercio
-				local imgBgPartner = display.newImage( item.banner, system.TemporaryDirectory )
+				local imgBgPartner = display.newImage( itemPartner.banner, system.TemporaryDirectory )
 				imgBgPartner.alpha = 1
 				imgBgPartner.x = 240
 				imgBgPartner.y = 215
 				groupPartner:insert( imgBgPartner )
 				imgBgPartner:toBack()
-				loadImagePartner(item, 2)
+				loadImagePartner( 2 )
 			end
 				
             end
@@ -513,15 +573,50 @@ function loadImagePartner(item,typeImage)
 		local imageName
 		
 		if typeImage == 2 then
-			imageUrl = settings.url.."assets/img/app/partner/image/"..item.image
-			imageName = item.image
+			imageUrl = settings.url.."assets/img/app/partner/image/"..itemPartner.image
+			imageName = itemPartner.image
 		else
-			imageUrl = settings.url.."assets/img/app/partner/banner/"..item.banner
-			imageName = item.banner
+			imageUrl = settings.url.."assets/img/app/partner/banner/"..itemPartner.banner
+			imageName = itemPartner.banner
 		end
         
         -- Descargamos de la nube
         display.loadRemoteImage( imageUrl, "GET", loadImagePartnerListener, imageName, system.TemporaryDirectory ) 
+    end
+end
+
+function loadGalleryPartner(items,posc)    
+    -- Determinamos si la imagen existe
+    local path = system.pathForFile( items[posc].image, system.TemporaryDirectory )
+    local fhd = io.open( path )
+    if fhd then
+        fhd:close()
+        --[[imageItems[obj.posc] = display.newImage( elements[obj.posc].image, system.TemporaryDirectory )
+        imageItems[obj.posc].alpha = 0]]
+        if posc < #items then
+            loadGalleryPartner(items,posc+1)
+        else
+            buildPartnerGaleria(items)
+        end
+    else
+        -- Listener de la carga de la imagen del servidor
+        local function loadGalleryPartnerListener( event )
+            if ( event.isError ) then
+                native.showAlert( "Go Deals", "Network error :(", { "OK"})
+            else
+                event.target.alpha = 0
+               -- imageItems[obj.posc] = event.target
+                if posc < #items then
+                    loadGalleryPartner(items,posc+1)
+                else
+                    buildPartnerGaleria(items)
+                end
+            end
+        end
+        
+        -- Descargamos de la nube
+        display.loadRemoteImage( settings.url.."assets/img/app/partner/gallery/"..items[posc].image, 
+        "GET", loadGalleryPartnerListener, items[posc].image, system.TemporaryDirectory ) 
     end
 end
 

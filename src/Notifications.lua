@@ -98,7 +98,7 @@ function buildWalletItems()
     svContent:insert(separadorEventos)
 
     local textSeparadorEventos = display.newText( {
-        text = "Estos son los Deals disponibles en tu cartera.",     
+        text = "Estas son tus notificaciones.",     
         x = 300, y = yMain + 27, width = intW, height = 80,
         font = "Chivo", fontSize = 19, align = "left"
     })
@@ -156,8 +156,8 @@ function scene:createScene( event )
 	grupoToolbar:insert(btnWallet)
 	btnWallet:addEventListener( "tap", showWallet )
 	
-	local btnSearch = display.newImage( "img/btn/btnMenuSearch.png" )
-	btnSearch:translate( display.contentWidth - 90, 25 )
+	local btnSearch = display.newImage( "img/btn/btnMenuNotification.png" )
+	btnSearch:translate( display.contentWidth - 150, 25 )
 	grupoToolbar:insert(btnSearch)
     -- Temporal bubble
     local notBubble = display.newCircle( display.contentWidth - 132, 10, 10 )
@@ -171,11 +171,10 @@ function scene:createScene( event )
 	})
 	txtBubble:setFillColor( .1 )
 	grupoToolbar:insert(txtBubble)
-    
-	local btnMensaje = display.newImage( "img/btn/btnMenuNotification.png" )
-	btnMensaje:translate( display.contentWidth - 150, 25 )
+	
+	local btnMensaje = display.newImage( "img/btn/btnMenuSearch.png" )
+	btnMensaje:translate( display.contentWidth - 95, 25 )
 	grupoToolbar:insert(btnMensaje)
-	btnMensaje:addEventListener( "tap", showNotifications )
 	
 	local btnHerramienta = display.newImage( "img/btn/btnMenuUser.png" )
 	btnHerramienta:translate( display.contentWidth - 35, 25 )

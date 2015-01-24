@@ -128,5 +128,49 @@ local RestManager = {}
         -- Do request
         network.request( url, "GET", callback )
 	end
+	
+	RestManager.getDealsByPartner = function(idPartner,typeInfo)
+		local url = settings.url .. "api/getDealsByPartner/format/json/idPartner/" .. idPartner
+	   
+	   local function callback(event)
+            if ( event.isError ) then
+            else
+				local data = json.decode(event.response)
+                if data.success then
+					if typeInfo == "event" then
+						buildEventPromociones(data.items)
+					else
+						buildPartnerPromociones(data.items)
+					end
+                else
+                end
+            end
+            return true
+        end
+        -- Do request
+        network.request( url, "GET", callback )
+	end
+	
+	RestManager.getGallery = function(idPartner,typeGallery,typeInfo)
+		local url = settings.url .. "api/getGallery/format/json/idPartner/" .. idPartner .. "/type/" .. typeGallery
+	   
+	   local function callback(event)
+            if ( event.isError ) then
+            else
+				local data = json.decode(event.response)
+                if data.success then
+					if typeInfo == "partner" then
+						GalleryPartner(data.items)
+					else
+						GalleryEvent(data.items)
+					end
+                else
+                end
+            end
+            return true
+        end
+        -- Do request
+        network.request( url, "GET", callback )
+	end
 
 return RestManager

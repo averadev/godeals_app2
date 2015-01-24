@@ -428,7 +428,6 @@ end
 --- Modal Menu
 
 function showCoupon(event)
-    print(event.target.item)
 	storyboard.gotoScene( "src.Coupon", {
 		time = 400,
 		effect = "crossFade",
@@ -437,7 +436,6 @@ function showCoupon(event)
 end
 
 function showEvent(event)
-    print(event.target.item)
 	storyboard.gotoScene( "src.Event", {
 		time = 400,
 		effect = "crossFade",
@@ -446,8 +444,14 @@ function showEvent(event)
 end
 
 function showWallet(event)
-    print(event.target.item)
 	storyboard.gotoScene( "src.Wallet", {
+		time = 400,
+		effect = "crossFade"
+	})
+end
+
+function showNotifications(event)
+	storyboard.gotoScene( "src.Notifications", {
 		time = 400,
 		effect = "crossFade"
 	})
@@ -556,8 +560,8 @@ function scene:createScene( event )
 	btnWallet:addEventListener( "tap", showWallet )
 	grupoToolbar:insert(btnWallet)
 	
-	local btnSearch = display.newImage( "img/btn/btnMenuNotification.png" )
-	btnSearch:translate( display.contentWidth - 150, 25 )
+	local btnSearch = display.newImage( "img/btn/btnMenuSearch.png" )
+	btnSearch:translate( display.contentWidth - 90, 25 )
 	grupoToolbar:insert(btnSearch)
     -- Temporal bubble
     local notBubble = display.newCircle( display.contentWidth - 132, 10, 10 )
@@ -572,9 +576,10 @@ function scene:createScene( event )
 	txtBubble:setFillColor( .1 )
 	grupoToolbar:insert(txtBubble)
     
-	local btnMensaje = display.newImage( "img/btn/btnMenuSearch.png" )
-	btnMensaje:translate( display.contentWidth - 90, 25 )
+	local btnMensaje = display.newImage( "img/btn/btnMenuNotification.png" )
+	btnMensaje:translate( display.contentWidth - 150, 25 )
 	grupoToolbar:insert(btnMensaje)
+	btnMensaje:addEventListener( "tap", showNotifications )
 	
 	local btnHerramienta = display.newImage( "img/btn/btnMenuUser.png" )
 	btnHerramienta:translate( display.contentWidth - 35, 25 )

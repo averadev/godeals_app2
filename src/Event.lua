@@ -8,11 +8,13 @@
 -- REQUIRE & VARIABLES
 ---------------------------------------------------------------------------------
 
+require('src.BuildRow')
 local storyboard = require( "storyboard" )
 local Globals = require('src.resources.Globals')
 local widget = require( "widget" )
 local scene = storyboard.newScene()
 local DBManager = require('src.resources.DBManager')
+local RestManager = require('src.resources.RestManager')
 
 -- Variables
 local intW = display.contentWidth
@@ -28,11 +30,19 @@ local lastY = 200;
 local itemObj
 local currentSv
 local settings
+local dealsPartner = {}
 
 local info, promotions, gallery, MenuEventBar
 --pantalla
 
 local homeScreen = display.newGroup()
+
+-- tablas
+
+local srvEventos = {}
+local txtMenuEvent = {}
+local imageEventDeals = {}
+local imageEventGallery = {}
 
 -- funciones
 
@@ -45,27 +55,30 @@ end
 
 function ListenerChangeMenuEvent( event )
 	
+	local positionScroll
 	local nextSv
 	local previousSv
 	
-	if currentSv.name == "svInfo" then
-		nextSv = svPromotions
-	elseif currentSv.name == "svPromotions" then
-		nextSv = svGallery
-		previousSv = svInfo
-	elseif currentSv.name == "svGallery" then
-		previousSv = svPromotions
+	positionScroll = currentSv.name
+	
+	if positionScroll ~= nil then
+		if positionScroll == 1 then
+			nextSv = srvEventos[2]
+		elseif positionScroll == #srvEventos then
+			previousSv = srvEventos[positionScroll - 1]
+		else
+			nextSv = srvEventos[positionScroll + 1]
+			previousSv = srvEventos[positionScroll - 1]
+		end
 	end
 	
 	if event.phase == "began" then
-		
 		svMenuTxt:setScrollWidth(  480 )
-		
 		diferenciaX = event.x - event.target.x
 		posicionMenu = groupMenuEventText.x
-		a = event.x
 		
     elseif event.phase == "moved" then
+	
 		if  event.direction == "left"  or event.direction == "right" then
 			
 			posicionNueva = event.x-diferenciaX 
@@ -94,7 +107,7 @@ function ListenerChangeMenuEvent( event )
 			else
 			transition.to( currentSv, { x = -240, time = 400, transition = easing.outExpo } )
 			transition.to( nextSv, { x = 240, time = 400, transition = easing.outExpo } )
-			transition.to( groupMenuEventText, { x = posicionMenu - 166, time = 400, transition = easing.outExpo } )
+			transition.to( groupMenuEventText, { x = posicionMenu - 168, time = 400, transition = easing.outExpo } )
 			currentSv = nextSv
 			end
 		elseif diferenciaX - event.x  <= -380 then
@@ -106,7 +119,7 @@ function ListenerChangeMenuEvent( event )
 				transition.to( currentSv, { x = 720, time = 400, transition = easing.outExpo } )
 				transition.to( nextSv, { x = 720, time = 400, transition = easing.outExpo } )
 				transition.to( previousSv, { x = 240, time = 400, transition = easing.outExpo } )
-				transition.to( groupMenuEventText, { x = posicionMenu + 166, time = 400, transition = easing.outExpo } )
+				transition.to( groupMenuEventText, { x = posicionMenu + 168, time = 400, transition = easing.outExpo } )
 				currentSv = previousSv
 			end
 		else
@@ -122,22 +135,32 @@ end
 
 function ListenerChangeScrollEvent( event )
 
+	local positionScroll 
 	local nextSv
 	local previousSv
 	
-	if event.target.name == "svInfo" then
-		nextSv = svPromotions
-	elseif event.target.name == "svPromotions" then
-		nextSv = svGallery
-		previousSv = svInfo
-	elseif event.target.name == "svGallery" then
-		previousSv = svPromotions
-	end
+	positionScroll = event.target.name
+	
+		if positionScroll ~= nil then
+		
+			--[[nextSv = srvEventos[positionScroll + 1]
+			previousSv = srvEventos[positionScroll - 1]]
+			
+			if positionScroll == 1 then
+				nextSv = srvEventos[2]
+			elseif positionScroll == #srvEventos then
+				previousSv = srvEventos[positionScroll - 1]
+			else
+				nextSv = srvEventos[positionScroll + 1]
+				previousSv = srvEventos[positionScroll - 1]
+			end
+		end
 	
 	if event.phase == "began" then
 		
 		diferenciaX = event.x - event.target.x
 		posicionMenu = groupMenuEventText.x
+		
     elseif event.phase == "moved" then
 		if  event.direction == "left"  or event.direction == "right" then
 			posicionNueva = event.x-diferenciaX
@@ -167,11 +190,12 @@ function ListenerChangeScrollEvent( event )
 		if event.x <= 100 and movimiento == "i" then
 			transition.to( event.target, { x = -240, time = 400, transition = easing.outExpo } )
 			transition.to( nextSv, { x = 240, time = 400, transition = easing.outExpo } )
-			transition.to( groupMenuEventText, { x = posicionMenu - 166, time = 400, transition = easing.outExpo } )
+			transition.to( groupMenuEventText, { x = posicionMenu - 168, time = 400, transition = easing.outExpo } )
 			currentSv = nextSv
 			if nextSv == nil then
 				transition.to( event.target, { x = 240, time = 400, transition = easing.outExpo } )
 				transition.to( groupMenuEventText, { x = posicionMenu, time = 400, transition = easing.outExpo } )
+				currentSv = event.target
 			end
 		elseif event.x  >= 380 and movimiento == "d" then
 			transition.to( event.target, { x = 720, time = 400, transition = easing.outExpo } )
@@ -179,11 +203,12 @@ function ListenerChangeScrollEvent( event )
 			transition.to( previousSv, { x = 240, time = 400, transition = easing.outExpo } )
 			transition.to( groupMenuEventText, { x = posicionMenu - 160, time = 400, transition = easing.outExpo } )
 			
-			transition.to( groupMenuEventText, { x = posicionMenu + 166, time = 400, transition = easing.outExpo } )
+			transition.to( groupMenuEventText, { x = posicionMenu + 168, time = 400, transition = easing.outExpo } )
 			currentSv = previousSv
 			if previousSv == nil then 
 				transition.to( event.target, { x = 240, time = 400, transition = easing.outExpo } )
 				transition.to( groupMenuEventText, { x = posicionMenu, time = 400, transition = easing.outExpo } )
+				currentSv = event.target
 			end
 		else
 			transition.to( event.target, { x = 240, time = 400, transition = easing.outExpo } )
@@ -195,29 +220,15 @@ function ListenerChangeScrollEvent( event )
 		
     end
 	
+	
 end
 
+--creamos el evento
 function buildEvent(item)
 
 	groupEvent = display.newGroup()
 	groupEvent.y = h
 	homeScreen:insert( groupEvent )
-	
-	local imgBgEvent = display.newImage( "img/tmp/" .. item.placeBanner )
-	imgBgEvent.alpha = 1
-	imgBgEvent.x = 240
-	imgBgEvent.y = 215
-	groupEvent:insert( imgBgEvent )
-	
-    local mask = graphics.newMask( "img/bgk/maskLogo.jpg" )
-	local imgEvent = display.newImage( "img/tmp/" .. item.placeImage )
-	imgEvent.alpha = 1
-	imgEvent.x = 90
-	imgEvent.y = 215
-	imgEvent.width = 120
-	imgEvent.height = 120
-    imgEvent:setMask( mask )
-	groupEvent:insert( imgEvent )
 	
 	local txtPartner = display.newText({
 		text = itemObj.place,
@@ -256,7 +267,7 @@ function buildEvent(item)
 		width = intW,
 		height = 73,
 		listener = ListenerChangeMenuEvent,
-		horizontalScrollDisabled = false,
+		horizontalScrollDisabled = true,
         verticalScrollDisabled = true,
 		backgroundColor = { 1 }
 	}
@@ -269,96 +280,26 @@ function buildEvent(item)
 	groupMenuEventText = display.newGroup()
 	groupMenuEventText.y = 35
 	svMenuTxt:insert(groupMenuEventText)
+		
+	createScrollViewEvent("Info")
 	
-	txtInfo = display.newText({
-		text = "Info",
-		x = intW * .5,
-		y =  0,
-		font = "Chivo",
-		fontSize = 22
-	})
-	txtInfo:setFillColor( 0 )
-	groupMenuEventText:insert( txtInfo )
-	txtInfo.name = "info"
+	srvEventos[#srvEventos]:setIsLocked( true, "horizontal" )
+	svMenuTxt:setIsLocked( true, "horizontal" )
 	
-	txtPromotions = display.newText({
-		text = "Promociones",
-		x = intW * .85,
-		y =  0,
-		font = "Chivo",
-		fontSize = 22
-	})
-	txtPromotions:setFillColor( 0 )
-	txtPromotions.name = "promotions"
-	groupMenuEventText:insert( txtPromotions )
-	
-	txtGallery = display.newText({
-		text = "Galeria",
-		x = intW * 1.2,
-		y =  0,
-		font = "Chivo",
-		fontSize = 22
-	})
-	txtGallery:setFillColor( 0 )
-	txtGallery.name = "gallery"
-	groupMenuEventText:insert( txtGallery )
-	
-	svInfo = widget.newScrollView
-	{
-		top = 383,
-		left = 0,
-		width = intW,
-		height = intH,
-		listener = ListenerChangeScrollEvent,
-		horizontalScrollDisabled = false,
-        verticalScrollDisabled = false,
-		backgroundColor = { 245/255, 245/255, 245/255 }
-	}
-	groupEvent:insert(svInfo)
-	svInfo.name = "svInfo"
-	
-	svPromotions = widget.newScrollView
-	{
-		top = 383,
-		left = intW,
-		width = intW,
-		height = intH,
-		listener = ListenerChangeScrollEvent,
-		horizontalScrollDisabled = false,
-        verticalScrollDisabled = false,
-		backgroundColor = { 245/255, 245/255, 245/255 }
-	}
-	groupEvent:insert(svPromotions)
-	svPromotions.name = "svPromotions"
-	
-	svGallery = widget.newScrollView
-	{
-		top = 383,
-		left = intW,
-		width = intW,
-		height = intH,
-		listener = ListenerChangeScrollEvent,
-		horizontalScrollDisabled = false,
-        verticalScrollDisabled = false,
-		backgroundColor = { 245/255, 245/255, 245/255 }
-	}
-	
-	groupEvent:insert(svGallery)
-	svGallery.name = "svGallery"
-	
-	currentSv = svInfo
+	currentSv = srvEventos[1]
 	
 	buildEventInfo(item)
 	
 end
 
+--creamos la primera seccion del evento
 function buildEventInfo(item)
 
 	lastY = 90
 	
 	local bgGeneralInformacion = display.newRect( midW, 0, 480, 76 )
 	bgGeneralInformacion:setFillColor( 1 )
-	svInfo:insert(bgGeneralInformacion)
+	srvEventos[1]:insert(bgGeneralInformacion)
 	
 	local txtGeneralInformacion = display.newText({
 		text = "Informacion general",
@@ -370,7 +311,7 @@ function buildEventInfo(item)
 		align = "left"
 	})
 	txtGeneralInformacion:setFillColor( 0 )
-	svInfo:insert( txtGeneralInformacion )
+	srvEventos[1]:insert( txtGeneralInformacion )
 	
 	local txtInfo = display.newText({
 		text = itemObj.detail,
@@ -382,7 +323,7 @@ function buildEventInfo(item)
 		align = "left"
 	})
 	txtInfo:setFillColor( 0 )
-	svInfo:insert( txtInfo )
+	srvEventos[1]:insert( txtInfo )
 	
 	txtInfo.y = txtInfo.y + txtInfo.height/2
 	
@@ -394,7 +335,7 @@ function buildEventInfo(item)
 	
 	local imgEvent = display.newImage(  "img/tmp/" .. itemObj.imageFull )
 	imgEvent.x = midW
-	svInfo:insert( imgEvent )
+	srvEventos[1]:insert( imgEvent )
     
     imgEvent.y = lastY + (imgEvent.height / 2)
     
@@ -402,7 +343,7 @@ function buildEventInfo(item)
 	
 	local bgLocation = display.newRect( midW, 0, intW, 76 )
 	bgLocation:setFillColor( 1 )
-	svInfo:insert(bgLocation)
+	srvEventos[1]:insert(bgLocation)
 	
 	local txtAdressEvent = display.newText({
 		text = itemObj.address,
@@ -414,7 +355,7 @@ function buildEventInfo(item)
 		align = "left"
 	})
 	txtAdressEvent:setFillColor( 0 )
-	svInfo:insert( txtAdressEvent )
+	srvEventos[1]:insert( txtAdressEvent )
 	
 	txtAdressEvent.y = txtAdressEvent.y + txtAdressEvent.height / 2
 	bgLocation.height = txtAdressEvent.height + 40
@@ -425,7 +366,7 @@ function buildEventInfo(item)
     local myMap = native.newMapView( midW, lastY + 150, intW, 300 )
     if myMap then
         myMap:setCenter( tonumber(itemObj.latitude), tonumber(itemObj.longitude), 0.02, 0.02 )
-        svInfo:insert(myMap)
+        srvEventos[1]:insert(myMap)
         
         -- Add Maker
         timer.performWithDelay( 3000, function()
@@ -441,16 +382,133 @@ function buildEventInfo(item)
     else
         local bg = display.newRect( midW, lastY + 150, intW, 300 )
         bg:setFillColor( .7 )
-        svInfo:insert(bg)
+        srvEventos[1]:insert(bg)
     end
     
     local spc = display.newRect( 0, lastY + 750, 1, 1 )
     spc:setFillColor( .9 )
-    svInfo:insert(spc)
+    srvEventos[1]:insert(spc)
 	
-	loadImageOfPartner(1)
+	--decidimos si el evento es por un comercio o por un lugar
+	if itemObj.type == "partner" then
+		RestManager.getDealsByPartner(itemObj.typeId,"event")
+	else
+		RestManager.getGallery(itemObj.typeId,2,"event")
+	end
+end
+
+--mostramos los deals del comercio
+function buildEventPromociones(items)
+
+	if #items > 0 then
+	
+	srvEventos[1]:setIsLocked( false, "horizontal" )
+	svMenuTxt:setIsLocked( false, "horizontal" )
+	
+	createScrollViewEvent("promociones")
+	
+		lastY = 25
+	
+		for y = 1, #items, 1 do 
+            -- Create container
+			
+			imageEventDeals[y] = display.newImage( items[y].image, system.TemporaryDirectory )
+			imageEventDeals[y].alpha = 1
+			
+            local deal = Deal:new()
+            srvEventos[#srvEventos]:insert(deal)
+            deal:build(items[y], imageEventDeals[y])
+            deal.y = lastY
+			lastY = lastY + 102
+        end
+	
+	end
+	
+	--llamamos a la galeria
+	RestManager.getGallery(itemObj.typeId,1,"event")
 	
 end
+
+--mostramos la galeria
+function buildEventGaleria(items)
+	
+		lastY = 75
+	
+		srvEventos[1]:setIsLocked( false, "horizontal" )
+		svMenuTxt:setIsLocked( false, "horizontal" )
+	
+		createScrollViewEvent("Galeria")
+	
+		for y = 1, #items, 1 do 
+            -- Create container
+			
+			imageEventGallery[y] = display.newImage( items[y].image, system.TemporaryDirectory )
+			imageEventGallery[y].alpha = 1
+			
+            local gallery = Gallery:new()
+            srvEventos[#srvEventos]:insert(gallery)
+            gallery:build(items[y], imageEventGallery[y])
+            gallery.y = lastY
+			lastY = lastY + 210
+        end
+		
+		srvEventos[#srvEventos]:setScrollHeight(lastY)
+
+end
+
+--llamas al metodo para cargar las imagenes
+function GalleryEvent(items)
+	if #items > 0 then
+		loadGalleryEvent(items,1)
+	end
+	
+	--cargamos la imagen del partner del encabezado
+	loadImageOfPartner(1)
+end
+
+--creamos los crollview dinamicos
+
+function createScrollViewEvent(nameTxt)
+	
+	local positionCurrent = #srvEventos + 1
+
+		local positionTxtMenu = midW + (#srvEventos * 166)
+
+	txtMenuEvent[positionCurrent] = display.newText({
+			text = nameTxt,
+			x = positionTxtMenu,
+			y =  0,
+			font = "Chivo",
+			fontSize = 22
+	})
+	txtMenuEvent[positionCurrent]:setFillColor( 0 )
+	groupMenuEventText:insert( txtMenuEvent[positionCurrent] )
+	txtMenuEvent[positionCurrent].name = positionCurrent
+	
+	local positionScrollEvent
+	if #srvEventos == 0 then
+		positionScrollEvent = 0
+	else
+		positionScrollEvent = intW
+	end
+	
+	srvEventos[positionCurrent] = widget.newScrollView
+	{
+		top = 383,
+		left = positionScrollEvent,
+		width = intW,
+		height = intH,
+		listener = ListenerChangeScrollEvent,
+		horizontalScrollDisabled = false,
+		verticalScrollDisabled = false,
+		backgroundColor = { 245/255, 245/255, 245/255 }
+	}
+	groupEvent:insert(srvEventos[positionCurrent])
+	srvEventos[positionCurrent].name = positionCurrent
+	
+end
+
+------cargamos las imagenes del partner
 
 function loadImageOfPartner(typeImage)
 
@@ -549,6 +607,41 @@ function loadImageOfPartner(typeImage)
     end
 end
 
+function loadGalleryEvent(items,posc)    
+    -- Determinamos si la imagen existe
+    local path = system.pathForFile( items[posc].image, system.TemporaryDirectory )
+    local fhd = io.open( path )
+    if fhd then
+        fhd:close()
+        --[[imageItems[obj.posc] = display.newImage( elements[obj.posc].image, system.TemporaryDirectory )
+        imageItems[obj.posc].alpha = 0]]
+        if posc < #items then
+            loadGalleryEvent(items,posc+1)
+        else
+            buildEventGaleria(items)
+        end
+    else
+        -- Listener de la carga de la imagen del servidor
+        local function loadGalleryEventListener( event )
+            if ( event.isError ) then
+                native.showAlert( "Go Deals", "Network error :(", { "OK"})
+            else
+                event.target.alpha = 0
+               -- imageItems[obj.posc] = event.target
+                if posc < #items then
+                    loadGalleryEvent(items,posc+1)
+                else
+                    buildEventGaleria(items)
+                end
+            end
+        end
+        
+        -- Descargamos de la nube
+        display.loadRemoteImage( settings.url.."assets/img/app/partner/gallery/"..items[posc].image, 
+        "GET", loadGalleryEventListener, items[posc].image, system.TemporaryDirectory ) 
+    end
+end
+
 function scene:createScene( event )
 	screen = self.view
 	screen:insert(homeScreen)
@@ -636,6 +729,7 @@ end
 
 -- Called immediately after scene has moved onscreen:
 function scene:enterScene( event )
+	storyboard.removeAll()
 	settings = DBManager.getSettings()
 	buildEvent(itemObj)
 end

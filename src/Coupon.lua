@@ -401,6 +401,7 @@ end
 
 -- Called immediately after scene has moved onscreen:
 function scene:enterScene( event )
+	storyboard.removeAll()
 	settings = DBManager.getSettings()
 	buildCoupon()
 end

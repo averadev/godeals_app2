@@ -369,15 +369,16 @@ function buildEventInfo(item)
         srvEventos[1]:insert(myMap)
         
         -- Add Maker
-        timer.performWithDelay( 3000, function()
+        timer.performWithDelay( 2000, function()
             local options = { 
                 title = itemObj.name, 
                 subtitle = itemObj.address, 
                 listener = markerListener, 
                 imageFile = "img/btn/btnIconMap.png"
             }
-            
-            myMap:addMarker( tonumber(itemObj.latitude), tonumber(itemObj.longitude), options )
+            if myMap then
+                myMap:addMarker( tonumber(itemObj.latitude), tonumber(itemObj.longitude), options )
+            end
         end, 1 )
     else
         local bg = display.newRect( midW, lastY + 150, intW, 300 )

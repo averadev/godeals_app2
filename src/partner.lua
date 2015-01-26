@@ -654,13 +654,8 @@ function scene:createScene( event )
 	txtCancun:setFillColor( .1 )
 	grupoToolbar:insert(txtCancun)
 	
-	local btnWallet = display.newImage( "img/btn/btnMenuWallet.png" )
-	btnWallet:translate( display.contentWidth - 212, 23 )
-	grupoToolbar:insert(btnWallet)
-	btnWallet:addEventListener( "tap", showWallet )
-	
-	local btnSearch = display.newImage( "img/btn/btnMenuNotification.png" )
-	btnSearch:translate( display.contentWidth - 150, 25 )
+	local btnSearch = display.newImage( "img/btn/btnMenuSearch.png" )
+	btnSearch:translate( display.contentWidth - 90, 25 )
 	grupoToolbar:insert(btnSearch)
     -- Temporal bubble
     local notBubble = display.newCircle( display.contentWidth - 132, 10, 10 )
@@ -674,10 +669,11 @@ function scene:createScene( event )
 	})
 	txtBubble:setFillColor( .1 )
 	grupoToolbar:insert(txtBubble)
-	
-	local btnMensaje = display.newImage( "img/btn/btnMenuSearch.png" )
-	btnMensaje:translate( display.contentWidth - 95, 25 )
+    
+	local btnMensaje = display.newImage( "img/btn/btnMenuNotification.png" )
+	btnMensaje:translate( display.contentWidth - 150, 25 )
 	grupoToolbar:insert(btnMensaje)
+	btnMensaje:addEventListener( "tap", showNotifications )
 	
 	local btnHerramienta = display.newImage( "img/btn/btnMenuUser.png" )
 	btnHerramienta:translate( display.contentWidth - 35, 25 )

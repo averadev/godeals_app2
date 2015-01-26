@@ -172,5 +172,27 @@ local RestManager = {}
         -- Do request
         network.request( url, "GET", callback )
 	end
+	
+	-- obtenemos cupon por id
+	
+	RestManager.getCouponById = function(idCoupon)
+		local url = settings.url .. "api/getCouponById/format/json/idCoupon/" .. idCoupon
+	   
+	   local function callback(event)
+            if ( event.isError ) then
+            else
+				local data = json.decode(event.response)
+                if data.success then
+					if #data.items then
+						setCouponId(data.items[1])
+					end
+                else
+                end
+            end
+            return true
+        end
+        -- Do request
+        network.request( url, "GET", callback )
+	end
 
 return RestManager

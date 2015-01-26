@@ -13,6 +13,7 @@ local Globals = require('src.resources.Globals')
 local widget = require( "widget" )
 local scene = storyboard.newScene()
 local DBManager = require('src.resources.DBManager')
+local RestManager = require('src.resources.RestManager')
 
 -- Variables
 local intW = display.contentWidth
@@ -50,6 +51,15 @@ function showPartner( event )
 		effect = "crossFade",
 		params = { idPartner = itemObj.partnerId }
 	})
+end
+
+function setCouponId( item )
+	itemObj = item
+	buildCoupon()
+end
+
+function createCoupon()
+	buildCoupon()
 end
 
 function buildCoupon()
@@ -318,8 +328,6 @@ function scene:createScene( event )
 	screen = self.view
 	screen:insert(homeScreen)
 	
-	itemObj = event.params.item
-	
 	local bg = display.newRect( 0, h, display.contentWidth, display.contentHeight )
 	bg.anchorX = 0
 	bg.anchorY = 0
@@ -352,8 +360,8 @@ function scene:createScene( event )
 	grupoToolbar:insert(btnWallet)
 	btnWallet:addEventListener( "tap", showWallet )
 	
-	local btnSearch = display.newImage( "img/btn/btnMenuNotification.png" )
-	btnSearch:translate( display.contentWidth - 150, 25 )
+	local btnSearch = display.newImage( "img/btn/btnMenuSearch.png" )
+	btnSearch:translate( display.contentWidth - 90, 25 )
 	grupoToolbar:insert(btnSearch)
     -- Temporal bubble
     local notBubble = display.newCircle( display.contentWidth - 132, 10, 10 )
@@ -367,10 +375,11 @@ function scene:createScene( event )
 	})
 	txtBubble:setFillColor( .1 )
 	grupoToolbar:insert(txtBubble)
-	
-	local btnMensaje = display.newImage( "img/btn/btnMenuSearch.png" )
-	btnMensaje:translate( display.contentWidth - 95, 25 )
+    
+	local btnMensaje = display.newImage( "img/btn/btnMenuNotification.png" )
+	btnMensaje:translate( display.contentWidth - 150, 25 )
 	grupoToolbar:insert(btnMensaje)
+	btnMensaje:addEventListener( "tap", showNotifications )
 	
 	local btnHerramienta = display.newImage( "img/btn/btnMenuUser.png" )
 	btnHerramienta:translate( display.contentWidth - 35, 25 )
@@ -397,13 +406,20 @@ function scene:createScene( event )
 	imgBtnUp.y = 30
     groupMenu:insert( imgBtnUp )
 	
+	----obtenemos los parametros del cupon
+	if event.params.item == nil then
+		RestManager.getCouponById(1)
+	else
+		itemObj = event.params.item
+		createCoupon()
+	end
+	
 end
 
 -- Called immediately after scene has moved onscreen:
 function scene:enterScene( event )
 	storyboard.removeAll()
 	settings = DBManager.getSettings()
-	buildCoupon()
 end
 
 -- Remove Listener

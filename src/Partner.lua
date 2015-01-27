@@ -20,6 +20,7 @@ local h = display.topStatusBarContentHeight
 local lastY = 200;
 local idPartner
 local settings
+local timeMarker
 
 local info, promotions, gallery, MenuPartnerBar
 
@@ -372,7 +373,7 @@ function buildPartnerInfo(item)
         srvPartner[#srvPartner]:insert(myMap)
         
         -- Add Maker
-        timer.performWithDelay( 3000, function()
+        timeMarker = timer.performWithDelay( 3000, function()
             local options = { 
                 title = item.name, 
                 subtitle = item.address, 
@@ -729,11 +730,10 @@ end
 
 -- Remove Listener
 function scene:exitScene( event )
-	
-   --[[ if storeBar then
-        storeBar:removeSelf()
-        storeBar = nil
-    end]]
+    if timeMarker then
+        timer.cancel(timeMarker)
+        print("cancel Marker")
+    end
 end
 
 scene:addEventListener("createScene", scene )

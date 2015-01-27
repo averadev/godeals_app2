@@ -754,7 +754,6 @@ end
 function scene:exitScene( event )
     if timeMarker then
         timer.cancel(timeMarker)
-        print("cancel Marker")
     end
 end
 

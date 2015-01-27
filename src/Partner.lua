@@ -39,6 +39,12 @@ local homeScreen = display.newGroup()
 -------------------------------------------
 ----funciones
 -------------------------------------------
+function returnHome( event )
+	storyboard.gotoScene( "src.Home", {
+        time = 400,
+        effect = "crossFade"
+    })
+end
 
 --------listener scroll
 
@@ -91,7 +97,7 @@ function ListenerChangeMenuPartner( event )
 		
     elseif event.phase == "ended" or event.phase == "cancelled" then
 		if diferenciaX - event.x >= -100 then
-			print("hola")
+			
 			if nextSv == nil then
 				transition.to( currentSv, { x = 240, time = 400, transition = easing.outExpo } )
 				transition.to( groupMenuPartnerText, { x = posicionMenu, time = 400, transition = easing.outExpo } )

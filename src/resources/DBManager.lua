@@ -102,7 +102,7 @@ local dbManager = {}
 		openConnection( )
     
         -- Delete all
-        query = "DELETE FROM ads WHERE status = 1;"
+        query = "DELETE FROM ads;"
         db:exec( query )
     
         for row in db:nrows("SELECT id FROM ads;") do

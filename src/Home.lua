@@ -39,12 +39,20 @@ local imageItems = {}
 -- Contadores
 local yMain = 220
 local noCallback = 0
+local callbackCurrent = 0
 
 ---------------------------------------------------------------------------------
 -- Setters
 ---------------------------------------------------------------------------------
 function setElements(items)
+
     elements = items
+	
+		
+	for y = 1, #items, 1 do 
+        elements[y].callback = callbackCurrent
+    end
+	
 end
 
 ---------------------------------------------------------------------------------
@@ -68,20 +76,24 @@ local function clearTempDir()
 end
 
 -- Carga de la imagen del servidor o de TemporaryDirectory
-function loadImage(obj)    
+function loadImage(obj)
+
     -- Determinamos si la imagen existe
     local path = system.pathForFile( elements[obj.posc].image, system.TemporaryDirectory )
     local fhd = io.open( path )
     if fhd then
         fhd:close()
-        imageItems[obj.posc] = display.newImage( elements[obj.posc].image, system.TemporaryDirectory )
-        imageItems[obj.posc].alpha = 0
-        if obj.posc < #elements then
-            obj.posc = obj.posc + 1
-            loadImage(obj)
-        else
-            buildItems(obj.screen)
-        end
+		
+		if elements[obj.posc].callback == Globals.noCallbackGlobal then
+			imageItems[obj.posc] = display.newImage( elements[obj.posc].image, system.TemporaryDirectory )
+			imageItems[obj.posc].alpha = 0
+			if obj.posc < #elements then
+				obj.posc = obj.posc + 1
+				loadImage(obj)
+			else
+				buildItems(obj.screen)
+			end
+		end
     else
         -- Listener de la carga de la imagen del servidor
         local function loadImageListener( event )
@@ -89,13 +101,17 @@ function loadImage(obj)
                 native.showAlert( "Go Deals", "Network error :(", { "OK"})
             else
                 event.target.alpha = 0
-                imageItems[obj.posc] = event.target
-                if obj.posc < #elements then
-                    obj.posc = obj.posc + 1
-                    loadImage(obj)
-                else
-                    buildItems(obj.screen)
-                end
+				
+				if elements[obj.posc].callback == Globals.noCallbackGlobal then
+				
+					imageItems[obj.posc] = event.target
+					if obj.posc < #elements then
+						obj.posc = obj.posc + 1
+						loadImage(obj)
+					else
+						buildItems(obj.screen)
+					end
+				end
             end
         end
         
@@ -180,7 +196,7 @@ function buildItems(screen)
                 end
             end
             
-            -- Create container
+            -- Create noCallback = noCallback + 1
             local evento = Event:new()
             scrViewEventos:insert(evento)
             evento:build(elements[y], imageItems[y])
@@ -428,6 +444,9 @@ end
 --- Modal Menu
 
 function showCoupon(event)
+	
+	Globals.noCallbackGlobal = Globals.noCallbackGlobal + 1
+
 	storyboard.gotoScene( "src.Coupon", {
 		time = 400,
 		effect = "crossFade",
@@ -436,6 +455,9 @@ function showCoupon(event)
 end
 
 function showEvent(event)
+
+	Globals.noCallbackGlobal = Globals.noCallbackGlobal + 1
+	
 	storyboard.gotoScene( "src.Event", {
 		time = 400,
 		effect = "crossFade",
@@ -444,6 +466,9 @@ function showEvent(event)
 end
 
 function showWallet(event)
+
+	Globals.noCallbackGlobal = Globals.noCallbackGlobal + 1
+
 	storyboard.gotoScene( "src.Wallet", {
 		time = 400,
 		effect = "crossFade"
@@ -451,6 +476,9 @@ function showWallet(event)
 end
 
 function showNotifications(event)
+
+	Globals.noCallbackGlobal = Globals.noCallbackGlobal + 1
+	
 	storyboard.gotoScene( "src.Notifications", {
 		time = 400,
 		effect = "crossFade"
@@ -523,6 +551,7 @@ end
 ---------------------------------------------------------------------------------
 
 function scene:createScene( event )
+	
 	screen = self.view
 	
 	screen:insert(homeScreen)
@@ -691,6 +720,11 @@ function scene:createScene( event )
     clearTempDir()
     --RestManager.getAds()
     RestManager.getTodayEvent()
+	
+	Globals.noCallbackGlobal = Globals.noCallbackGlobal + 1
+	
+	callbackCurrent = Globals.noCallbackGlobal
+	
 end
 
 -- Temporal

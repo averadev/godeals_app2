@@ -32,6 +32,7 @@ local currentSv
 local settings
 local dealsPartner = {}
 local timeMarker
+local callbackCurrent = 0
 
 local info, promotions, gallery, MenuEventBar
 --pantalla
@@ -289,7 +290,9 @@ function buildEvent(item)
 	
 	currentSv = srvEventos[1]
 	
-	buildEventInfo(item)
+	if callbackCurrent == Globals.noCallbackGlobal then
+		buildEventInfo(item)
+	end
 	
 end
 
@@ -390,10 +393,12 @@ function buildEventInfo(item)
     srvEventos[1]:insert(spc)
 	
 	--decidimos si el evento es por un comercio o por un lugar
-	if itemObj.type == "partner" then
-		RestManager.getDealsByPartner(itemObj.typeId,"event")
-	else
-		RestManager.getGallery(itemObj.typeId,2,"event")
+	if callbackCurrent == Globals.noCallbackGlobal then
+		if itemObj.type == "partner" then
+			RestManager.getDealsByPartner(itemObj.typeId,"event")
+		else
+			RestManager.getGallery(itemObj.typeId,2,"event")
+		end
 	end
 end
 
@@ -521,6 +526,7 @@ function loadImageOfPartner(typeImage)
     local fhd = io.open( path )
     if fhd then
         fhd:close()
+			if callbackCurrent == Globals.noCallbackGlobal then
 			--diferenciamos si es el logo o banner del comercio
 			if typeImage == 2 then
 				-- creamos la mascara
@@ -544,6 +550,7 @@ function loadImageOfPartner(typeImage)
 				imgBgEvent:toBack()
 				loadImageOfPartner(2)
 			end
+			end
 		
     else
         -- Listener de la carga de la imagen del servidor
@@ -552,7 +559,7 @@ function loadImageOfPartner(typeImage)
                 native.showAlert( "Go Deals", "Network error :(", { "OK"})
             else
 				event.target.alpha = 0
-				
+			if callbackCurrent == Globals.noCallbackGlobal then
 				--diferenciamos si es el logo o banner del comercio
 			if typeImage == 2 then
 				-- creamos la mascara
@@ -576,7 +583,7 @@ function loadImageOfPartner(typeImage)
 				imgBgEvent:toBack()
 				loadImageOfPartner(2)
 			end
-				
+			end
             end
         end
 		
@@ -615,11 +622,13 @@ function loadGalleryEvent(items,posc)
         fhd:close()
         --[[imageItems[obj.posc] = display.newImage( elements[obj.posc].image, system.TemporaryDirectory )
         imageItems[obj.posc].alpha = 0]]
-        if posc < #items then
-            loadGalleryEvent(items,posc+1)
-        else
-            buildEventGaleria(items)
-        end
+		if callbackCurrent == Globals.noCallbackGlobal then
+			if posc < #items then
+				loadGalleryEvent(items,posc+1)
+			else
+				buildEventGaleria(items)
+			end
+		end
     else
         -- Listener de la carga de la imagen del servidor
         local function loadGalleryEventListener( event )
@@ -627,12 +636,14 @@ function loadGalleryEvent(items,posc)
                 native.showAlert( "Go Deals", "Network error :(", { "OK"})
             else
                 event.target.alpha = 0
-               -- imageItems[obj.posc] = event.target
-                if posc < #items then
-                    loadGalleryEvent(items,posc+1)
-                else
-                    buildEventGaleria(items)
-                end
+				if callbackCurrent == Globals.noCallbackGlobal then
+					-- imageItems[obj.posc] = event.target
+					if posc < #items then
+						loadGalleryEvent(items,posc+1)
+					else
+						buildEventGaleria(items)
+					end
+				end
             end
         end
         
@@ -725,6 +736,10 @@ function scene:createScene( event )
 	imgBtnUp.x= 420
 	imgBtnUp.y = 30
     groupMenu:insert( imgBtnUp )
+	
+	Globals.noCallbackGlobal = Globals.noCallbackGlobal + 1
+	
+	callbackCurrent = Globals.noCallbackGlobal
 	
 end
 

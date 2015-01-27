@@ -23,6 +23,8 @@ local settings
 
 local info, promotions, gallery, MenuPartnerBar
 
+local callbackCurrent = 0
+
 -- tablas
 
 local srvPartner = {}
@@ -281,7 +283,9 @@ function loadPartner(item)
 	
 	currentSv = srvPartner[#srvPartner]
 	
-	buildPartnerInfo(item)
+	if callbackCurrent == Globals.noCallbackGlobal then
+		buildPartnerInfo(item)
+	end
 	
 end
 
@@ -388,8 +392,9 @@ function buildPartnerInfo(item)
     spc:setFillColor( .9 )
     srvPartner[#srvPartner]:insert(spc)
 	
-	RestManager.getDealsByPartner(idPartner,"partner")
-	
+	if callbackCurrent == Globals.noCallbackGlobal then
+		RestManager.getDealsByPartner(idPartner,"partner")
+	end
 end
 
 --mostramos los deals del comercio
@@ -515,31 +520,31 @@ function loadImagePartner(typeImage)
     if fhd then
         fhd:close()
 		
-			
 			--diferenciamos si es el logo o banner del comercio
-			if typeImage == 2 then
-				-- creamos la mascara
-				local mask = graphics.newMask( "img/bgk/maskLogo.jpg" )
-				local imgPartner = display.newImage( itemPartner.image, system.TemporaryDirectory )
-				--cargando el logo del comercio
-				imgPartner.alpha = 1
-				imgPartner.x = 90
-				imgPartner.y = 215
-				imgPartner.width = 120
-				imgPartner.height = 120
-				imgPartner:setMask( mask )
-				groupPartner:insert( imgPartner )
-			else
-				--cargando el banner del comercio
-				local imgBgPartner = display.newImage( itemPartner.banner, system.TemporaryDirectory )
-				imgBgPartner.alpha = 1
-				imgBgPartner.x = 240
-				imgBgPartner.y = 215
-				groupPartner:insert( imgBgPartner )
-				imgBgPartner:toBack()
-				loadImagePartner( 2 )
+			if callbackCurrent == Globals.noCallbackGlobal then
+				if typeImage == 2 then
+					-- creamos la mascara
+					local mask = graphics.newMask( "img/bgk/maskLogo.jpg" )
+					local imgPartner = display.newImage( itemPartner.image, system.TemporaryDirectory )
+					--cargando el logo del comercio
+					imgPartner.alpha = 1
+					imgPartner.x = 90
+					imgPartner.y = 215
+					imgPartner.width = 120
+					imgPartner.height = 120
+					imgPartner:setMask( mask )
+					groupPartner:insert( imgPartner )
+				else
+					--cargando el banner del comercio
+					local imgBgPartner = display.newImage( itemPartner.banner, system.TemporaryDirectory )
+					imgBgPartner.alpha = 1
+					imgBgPartner.x = 240
+					imgBgPartner.y = 215
+					groupPartner:insert( imgBgPartner )
+					imgBgPartner:toBack()
+					loadImagePartner( 2 )
+				end
 			end
-		
     else
         -- Listener de la carga de la imagen del servidor
         local function loadImagePartnerListener( event )
@@ -549,29 +554,30 @@ function loadImagePartner(typeImage)
 				event.target.alpha = 0
 				
 				--diferenciamos si es el logo o banner del comercio
-			if typeImage == 2 then
-				-- creamos la mascara
-				local mask = graphics.newMask( "img/bgk/maskLogo.jpg" )
-				local imgPartner = display.newImage( itemPartner.image, system.TemporaryDirectory )
-				--cargando el logo del comercio
-				imgPartner.alpha = 1
-				imgPartner.x = 90
-				imgPartner.y = 215
-				imgPartner.width = 120
-				imgPartner.height = 120
-				imgPartner:setMask( mask )
-				groupPartner:insert( imgPartner )
-			else
-				--cargando el banner del comercio
-				local imgBgPartner = display.newImage( itemPartner.banner, system.TemporaryDirectory )
-				imgBgPartner.alpha = 1
-				imgBgPartner.x = 240
-				imgBgPartner.y = 215
-				groupPartner:insert( imgBgPartner )
-				imgBgPartner:toBack()
-				loadImagePartner( 2 )
+			if callbackCurrent == Globals.noCallbackGlobal then
+				if typeImage == 2 then
+					-- creamos la mascara
+					local mask = graphics.newMask( "img/bgk/maskLogo.jpg" )
+					local imgPartner = display.newImage( itemPartner.image, system.TemporaryDirectory )
+					--cargando el logo del comercio
+					imgPartner.alpha = 1
+					imgPartner.x = 90
+					imgPartner.y = 215
+					imgPartner.width = 120
+					imgPartner.height = 120
+					imgPartner:setMask( mask )
+					groupPartner:insert( imgPartner )
+				else
+					--cargando el banner del comercio
+					local imgBgPartner = display.newImage( itemPartner.banner, system.TemporaryDirectory )
+					imgBgPartner.alpha = 1
+					imgBgPartner.x = 240
+					imgBgPartner.y = 215
+					groupPartner:insert( imgBgPartner )
+					imgBgPartner:toBack()
+					loadImagePartner( 2 )
+				end
 			end
-				
             end
         end
 		
@@ -599,11 +605,13 @@ function loadGalleryPartner(items,posc)
         fhd:close()
         --[[imageItems[obj.posc] = display.newImage( elements[obj.posc].image, system.TemporaryDirectory )
         imageItems[obj.posc].alpha = 0]]
-        if posc < #items then
-            loadGalleryPartner(items,posc+1)
-        else
-            buildPartnerGaleria(items)
-        end
+		if callbackCurrent == Globals.noCallbackGlobal then
+			if posc < #items then
+				loadGalleryPartner(items,posc+1)
+			else
+				buildPartnerGaleria(items)
+			end
+		end
     else
         -- Listener de la carga de la imagen del servidor
         local function loadGalleryPartnerListener( event )
@@ -612,11 +620,14 @@ function loadGalleryPartner(items,posc)
             else
                 event.target.alpha = 0
                -- imageItems[obj.posc] = event.target
-                if posc < #items then
-                    loadGalleryPartner(items,posc+1)
-                else
-                    buildPartnerGaleria(items)
-                end
+				if callbackCurrent == Globals.noCallbackGlobal then
+			   
+					if posc < #items then
+						loadGalleryPartner(items,posc+1)
+					else
+						buildPartnerGaleria(items)
+					end
+				end
             end
         end
         
@@ -704,6 +715,9 @@ function scene:createScene( event )
     groupMenu:insert( imgBtnBack )
 	imgBtnBack:addEventListener( "tap", returnHome )
 	
+	Globals.noCallbackGlobal = Globals.noCallbackGlobal + 1
+	
+	callbackCurrent = Globals.noCallbackGlobal
 	
 end
 

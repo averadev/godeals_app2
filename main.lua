@@ -4,9 +4,11 @@
 -- GeekBucket Software Factory
 ---------------------------------------------------------------------------------
 local launchArgs = ...      -- at the top of your program code
+
+display.setStatusBar( display.DarkStatusBar )
+
 local storyboard = require "storyboard"
 local DBManager = require('src.resources.DBManager')
-
 local idUser = DBManager.setupSquema()
 DBManager.updateUser(1, "mrfeto@gmail.com", '', 'Alberto Vera', '10152713865899218', '') -- Temporal
 

@@ -31,6 +31,7 @@ local itemObj
 local currentSv
 local settings
 local dealsPartner = {}
+local timeMarker
 
 local info, promotions, gallery, MenuEventBar
 --pantalla
@@ -363,22 +364,20 @@ function buildEventInfo(item)
 	lastY = lastY + bgLocation.height/2 + 10
     
     -- Cocinar el mapa
-    local myMap = native.newMapView( midW, lastY + 150, intW, 300 )
+    myMap = native.newMapView( midW, lastY + 150, intW, 300 )
     if myMap then
         myMap:setCenter( tonumber(itemObj.latitude), tonumber(itemObj.longitude), 0.02, 0.02 )
         srvEventos[1]:insert(myMap)
         
         -- Add Maker
-        timer.performWithDelay( 2000, function()
+        timeMarker = timer.performWithDelay( 2000, function()
             local options = { 
                 title = itemObj.name, 
                 subtitle = itemObj.address, 
                 listener = markerListener, 
                 imageFile = "img/btn/btnIconMap.png"
             }
-            if myMap then
-                myMap:addMarker( tonumber(itemObj.latitude), tonumber(itemObj.longitude), options )
-            end
+            myMap:addMarker( tonumber(itemObj.latitude), tonumber(itemObj.longitude), options )
         end, 1 )
     else
         local bg = display.newRect( midW, lastY + 150, intW, 300 )
@@ -738,6 +737,10 @@ end
 
 -- Remove Listener
 function scene:exitScene( event )
+    if timeMarker then
+        timer.cancel(timeMarker)
+        print("cancel Marker")
+    end
 end
 
 scene:addEventListener("createScene", scene )

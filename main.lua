@@ -21,6 +21,17 @@ if launchArgs then
     end
 end
 
+
+-- Read from local notification
+local function notificationListener( event )
+    if ( event.type == "local" ) then
+        -- Handle the local notification
+        print("On local notif")
+        partnerId = native.getProperty( "partnerId" )
+    end
+end
+Runtime:addEventListener( "notification", notificationListener )
+
 if partnerId > 0 then
     storyboard.gotoScene("src.Partner", {params = { idPartner = partnerId }})
 else

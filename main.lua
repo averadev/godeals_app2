@@ -4,7 +4,6 @@
 -- GeekBucket Software Factory
 ---------------------------------------------------------------------------------
 local launchArgs = ...      -- at the top of your program code
-
 display.setStatusBar( display.DarkStatusBar )
 
 local storyboard = require "storyboard"

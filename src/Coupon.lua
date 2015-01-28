@@ -29,6 +29,7 @@ local lastY = 200;
 local itemObj
 local currentSv
 local settings
+local tmpRedimir
 
 local info, promotions, gallery, MenuEventBar
 --pantalla
@@ -51,6 +52,18 @@ function showPartner( event )
 		effect = "crossFade",
 		params = { idPartner = itemObj.partnerId }
 	})
+end
+
+function showRedimir( event )
+    if tmpRedimir then
+        tmpRedimir:removeSelf()
+        tmpRedimir = nil
+    else
+        tmpRedimir = display.newImage( "img/bgk/tmpRedimir.png" )
+        tmpRedimir.x = midW
+        tmpRedimir.y = midH
+        tmpRedimir:addEventListener( "tap", showRedimir )
+    end
 end
 
 function setCouponId( item )
@@ -245,6 +258,7 @@ function buildCoupon()
         btnCanjearCoupon.width = 376
         btnCanjearCoupon.height  = 58
         svCoupon:insert( btnCanjearCoupon )
+        btnCanjearCoupon:addEventListener( "tap", showRedimir )
     else
         local btnDownloadCoupon = display.newImage( "img/btn/btnDownloadCoupon.png" )
         btnDownloadCoupon.alpha = 1

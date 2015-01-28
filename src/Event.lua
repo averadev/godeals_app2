@@ -470,7 +470,7 @@ function createScrollViewEvent(nameTxt)
 	
 	local positionCurrent = #srvEventos + 1
 
-		local positionTxtMenu = midW + (#srvEventos * 166)
+    local positionTxtMenu = midW + (#srvEventos * 166)
 
 	txtMenuEvent[positionCurrent] = display.newText({
 			text = nameTxt,
@@ -675,9 +675,7 @@ function scene:enterScene( event )
     Globals.scene[#Globals.scene + 1] = storyboard.getCurrentSceneName()
 	storyboard.removeAll()
 	settings = DBManager.getSettings()
-	if noCallbackGlobal == callbackCurrent then
-		buildEvent(itemObj)
-	end
+	buildEvent(itemObj)
 end
 
 -- Remove Listener

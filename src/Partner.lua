@@ -1,5 +1,5 @@
 
-require('src.Home')
+require('src.Header')
 local widget = require( "widget" )
 local storyboard = require( "storyboard" )
 local Globals = require('src.resources.Globals')
@@ -39,15 +39,6 @@ local itemPartner = {}
 
 local homeScreen = display.newGroup()
 
--------------------------------------------
-----funciones
--------------------------------------------
-function returnHome( event )
-	storyboard.gotoScene( "src.Home", {
-        time = 400,
-        effect = "crossFade"
-    })
-end
 
 --------listener scroll
 
@@ -645,85 +636,20 @@ function scene:createScene( event )
 	
 	homeScreen.y = h
 	
-	local bg = display.newRect( 0, 0, display.contentWidth, display.contentHeight )
-	bg.anchorX = 0
-	bg.anchorY = 0
-	bg:setFillColor( 245/255, 245/255, 245/255 )
-	homeScreen:insert(bg)
-	
-	toolbar = display.newRect( 0, 0, display.contentWidth, 135 )
-	toolbar.anchorX = 0
-	toolbar.anchorY = 0
-	toolbar:setFillColor( 221/255, 236/255, 241/255 )
-	homeScreen:insert(toolbar)
-	
-	local grupoToolbar = display.newGroup()
-	grupoToolbar.y = 5
-	homeScreen:insert(grupoToolbar)
-	
-	local logo = display.newImage( "img/btn/logo.png" )
-	logo:translate( 45, 23 )
-	grupoToolbar:insert(logo)
-    
-    local txtCancun = display.newText( {
-        x = 130, y = 23,
-        text = "Cancun", font = "Chivo", fontSize = 25,
-	})
-	txtCancun:setFillColor( .1 )
-	grupoToolbar:insert(txtCancun)
-	
-	local btnSearch = display.newImage( "img/btn/btnMenuSearch.png" )
-	btnSearch:translate( display.contentWidth - 90, 25 )
-	grupoToolbar:insert(btnSearch)
-    -- Temporal bubble
-    local notBubble = display.newCircle( display.contentWidth - 132, 10, 10 )
-    notBubble:setFillColor(128,128,128)
-    notBubble.strokeWidth = 2
-    notBubble:setStrokeColor(.8)
-	grupoToolbar:insert(notBubble)
-    local txtBubble = display.newText( {
-        x = display.contentWidth - 131, y = 10,
-        text = "3", font = "Chivo", fontSize = 12,
-	})
-	txtBubble:setFillColor( .1 )
-	grupoToolbar:insert(txtBubble)
-    
-	local btnMensaje = display.newImage( "img/btn/btnMenuNotification.png" )
-	btnMensaje:translate( display.contentWidth - 150, 25 )
-	grupoToolbar:insert(btnMensaje)
-	btnMensaje:addEventListener( "tap", showNotifications )
-	
-	local btnHerramienta = display.newImage( "img/btn/btnMenuUser.png" )
-	btnHerramienta:translate( display.contentWidth - 35, 25 )
-	grupoToolbar:insert(btnHerramienta)
-	
-	local menu = display.newRect( 0, 55, display.contentWidth, 75 )
-	menu.anchorX = 0
-	menu.anchorY = 0
-	menu:setFillColor( 189/255, 203/255, 206/255 )
-	homeScreen:insert(menu)
-	
-	groupMenu = display.newGroup()
-	groupMenu.y =  60
-	homeScreen:insert(groupMenu)
-	
-	local imgBtnBack = display.newImage( "img/btn/btnBackward.png" )
-	imgBtnBack.alpha = 1
-    imgBtnBack.x= 30
-	imgBtnBack.y = 30
-    imgBtnBack.width = 30
-    imgBtnBack.height  = 50
-    groupMenu:insert( imgBtnBack )
-	imgBtnBack:addEventListener( "tap", returnHome )
+	-- Build Component Header
+	local header = Header:new()
+    homeScreen:insert(header)
+    header:buildToolbar()
+    header:buildNavBar()
 	
 	Globals.noCallbackGlobal = Globals.noCallbackGlobal + 1
-	
 	callbackCurrent = Globals.noCallbackGlobal
 	
 end
 
 -- Called immediately after scene has moved onscreen:
 function scene:enterScene( event )
+    Globals.scene[#Globals.scene + 1] = storyboard.getCurrentSceneName()
 	settings = DBManager.getSettings()
 	RestManager.getPartner(idPartner)
 end

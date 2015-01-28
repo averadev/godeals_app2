@@ -8,8 +8,9 @@
 -- OBJETOS Y VARIABLES
 ---------------------------------------------------------------------------------
 -- Includes
-require('src.BuildRow')
 require('src.Modal')
+require('src.Header')
+require('src.BuildRow')
 local widget = require( "widget" )
 local storyboard = require( "storyboard" )
 local Globals = require('src.resources.Globals')
@@ -45,14 +46,10 @@ local callbackCurrent = 0
 -- Setters
 ---------------------------------------------------------------------------------
 function setElements(items)
-
     elements = items
-	
-		
 	for y = 1, #items, 1 do 
         elements[y].callback = callbackCurrent
     end
-	
 end
 
 ---------------------------------------------------------------------------------
@@ -447,12 +444,8 @@ function showFilter(boolShow)
     end
 end
 
---- Modal Menu
-
 function showCoupon(event)
-	
 	Globals.noCallbackGlobal = Globals.noCallbackGlobal + 1
-
 	storyboard.gotoScene( "src.Coupon", {
 		time = 400,
 		effect = "crossFade",
@@ -461,33 +454,11 @@ function showCoupon(event)
 end
 
 function showEvent(event)
-
 	Globals.noCallbackGlobal = Globals.noCallbackGlobal + 1
-	
 	storyboard.gotoScene( "src.Event", {
 		time = 400,
 		effect = "crossFade",
 		params = { item = event.target.item }
-	})
-end
-
-function showWallet(event)
-
-	Globals.noCallbackGlobal = Globals.noCallbackGlobal + 1
-
-	storyboard.gotoScene( "src.Wallet", {
-		time = 400,
-		effect = "crossFade"
-	})
-end
-
-function showNotifications(event)
-
-	Globals.noCallbackGlobal = Globals.noCallbackGlobal + 1
-	
-	storyboard.gotoScene( "src.Notifications", {
-		time = 400,
-		effect = "crossFade"
 	})
 end
 
@@ -551,6 +522,11 @@ function getFBData()
 	
 end
 
+function openModal( event )
+	Modal(scrViewMain)
+	return true
+end	
+
 
 ---------------------------------------------------------------------------------
 -- DEFAULT METHODS
@@ -569,58 +545,12 @@ function scene:createScene( event )
 	bg:setFillColor( 1 )
 	homeScreen:insert(bg)
 	
-	toolbar = display.newRect( 0, h, display.contentWidth, 55 )
-	toolbar.anchorX = 0
-	toolbar.anchorY = 0
-	toolbar:setFillColor( 221/255, 236/255, 241/255 )
-	homeScreen:insert(toolbar)
-	
-	local grupoToolbar = display.newGroup()
-	grupoToolbar.y = h + 5
-	homeScreen:insert(grupoToolbar)
-	
-	local logo = display.newImage( "img/btn/logo.png" )
-	logo:translate( 45, 23 )
-	grupoToolbar:insert(logo)
-    
-    local txtCancun = display.newText( {
-        x = 130, y = 23,
-        text = "Cancun", font = "Chivo", fontSize = 25,
-	})
-	txtCancun:setFillColor( .1 )
-	grupoToolbar:insert(txtCancun)
-	
-	local btnWallet = display.newImage( "img/btn/btnMenuWallet.png" )
-	btnWallet:translate( display.contentWidth - 212, 23 )
-	btnWallet:addEventListener( "tap", showWallet )
-	grupoToolbar:insert(btnWallet)
-	
-	local btnSearch = display.newImage( "img/btn/btnMenuSearch.png" )
-	btnSearch:translate( display.contentWidth - 90, 25 )
-	grupoToolbar:insert(btnSearch)
-    -- Temporal bubble
-    local notBubble = display.newCircle( display.contentWidth - 132, 10, 10 )
-    notBubble:setFillColor(128,128,128)
-    notBubble.strokeWidth = 2
-    notBubble:setStrokeColor(.8)
-	grupoToolbar:insert(notBubble)
-    local txtBubble = display.newText( {
-        x = display.contentWidth - 131, y = 10,
-        text = "3", font = "Chivo", fontSize = 12,
-	})
-	txtBubble:setFillColor( .1 )
-	grupoToolbar:insert(txtBubble)
-    
-	local btnMensaje = display.newImage( "img/btn/btnMenuNotification.png" )
-	btnMensaje:translate( display.contentWidth - 150, 25 )
-	grupoToolbar:insert(btnMensaje)
-	btnMensaje:addEventListener( "tap", showNotifications )
-	
-	local btnHerramienta = display.newImage( "img/btn/btnMenuUser.png" )
-	btnHerramienta:translate( display.contentWidth - 35, 25 )
-	grupoToolbar:insert(btnHerramienta)
-	btnHerramienta:addEventListener( "tap", saveBeacon )
-    
+    -- Build Component Header
+	local header = Header:new()
+    homeScreen:insert(header)
+    header.y = h
+    header:buildToolbar()
+        
 	svMenuTxt = widget.newScrollView
 	{
 		x = 240,
@@ -728,42 +658,13 @@ function scene:createScene( event )
     RestManager.getTodayEvent()
 	
 	Globals.noCallbackGlobal = Globals.noCallbackGlobal + 1
-	
 	callbackCurrent = Globals.noCallbackGlobal
 	
 end
-
--- Temporal
-function saveBeacon( event )
-    -- Move
-    transition.to( event.target, { alpha = 0, time = 400, transition = easing.outExpo } )
-    transition.to( event.target, { alpha = 1, time = 400, delay = 500, transition = easing.outExpo } )
-    
-    local dataTmp = {
-        {id = '1', message = 'Hola, veo que estas cerca, recuerda visitarnos.', uuid = '1a4f5be7-6683-44a6-b559-b8bf6efd9ad7', 
-            latitude = '0', longitude = '0', distanceMin = '.6', distanceMax = '.3', partnerId = '2'},
-        {id = '2', message = 'Hola, veo que estas cerca, recuerda visitarnos.', uuid = 'f7826da6-4fa2-4e98-8024-bc5b71e0893e', 
-            latitude = '0', longitude = '0', distanceMin = '.6', distanceMax = '.3', partnerId = '2'},
-        {id = '3', message = 'Hola, veo que estas cerca, recuerda visitarnos.', uuid = 'a1ea8136-0e1b-d4a1-b840-63f88c8da1ea', 
-            latitude = '0', longitude = '0', distanceMin = '.6', distanceMax = '.3', partnerId = '2'},
-    
-        {id = '4', message = 'Bienvenido, hoy tenemos una oferta para ti.', uuid = '1a4f5be7-6683-44a6-b559-b8bf6efd9ad7', 
-            latitude = '0', longitude = '0', distanceMin = '.3', distanceMax = '0', partnerId = '2'},
-        {id = '5', message = 'Bienvenido, hoy tenemos una oferta para ti.', uuid = 'f7826da6-4fa2-4e98-8024-bc5b71e0893e', 
-            latitude = '0', longitude = '0', distanceMin = '.3', distanceMax = '0', partnerId = '2'},
-        {id = '6', message = 'Bienvenido, hoy tenemos una oferta para ti.', uuid = 'a1ea8136-0e1b-d4a1-b840-63f88c8da1ea', 
-            latitude = '0', longitude = '0', distanceMin = '.3', distanceMax = '0', partnerId = '2'}
-    }
-    DBManager.saveAds(dataTmp)
-end
-
-function openModal( event )
-	Modal(scrViewMain)
-	return true
-end	
 	
 -- Called immediately after scene has moved onscreen:
 function scene:enterScene( event )
+    Globals.scene[1] = storyboard.getCurrentSceneName()
     storyboard.removeAll()
 end
 

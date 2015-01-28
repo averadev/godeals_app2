@@ -675,7 +675,9 @@ function scene:enterScene( event )
     Globals.scene[#Globals.scene + 1] = storyboard.getCurrentSceneName()
 	storyboard.removeAll()
 	settings = DBManager.getSettings()
-	buildEvent(itemObj)
+	if noCallbackGlobal == callbackCurrent then
+		buildEvent(itemObj)
+	end
 end
 
 -- Remove Listener

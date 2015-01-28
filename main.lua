@@ -8,8 +8,8 @@ display.setStatusBar( display.DarkStatusBar )
 
 local storyboard = require "storyboard"
 local DBManager = require('src.resources.DBManager')
-local idUser = DBManager.setupSquema()
-DBManager.updateUser(1, "mrfeto@gmail.com", '', 'Alberto Vera', '10152713865899218', '') -- Temporal
+local isUser = DBManager.setupSquema()
+--DBManager.updateUser(1, "alfredo@hotmail.com", '', 'Alfredo Chi Zum', '100001525033547', '') -- Temporal
 
 local partnerId = 0
 if launchArgs then
@@ -36,5 +36,10 @@ Runtime:addEventListener( "notification", notificationListener )
 if partnerId > 0 then
     storyboard.gotoScene("src.Partner", {params = { idPartner = partnerId }})
 else
-    storyboard.gotoScene("src.Home")
+    if isUser then
+		storyboard.gotoScene("src.Home")
+	else
+		print("hola")
+		storyboard.gotoScene("src.Login")
+	end
 end

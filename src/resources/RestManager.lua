@@ -1,9 +1,22 @@
 --Include sqlite
 local RestManager = {}
 
+	local mime = require("mime")
 	local json = require("json")
-    local DBManager = require('src.resources.DBManager')
-    local settings = DBManager.getSettings()
+	local crypto = require("crypto")
+	local DBManager = require('src.resources.DBManager')
+    local Globals = require('src.resources.Globals')
+	local settings = DBManager.getSettings()
+	
+	function urlencode(str)
+          if (str) then
+              str = string.gsub (str, "\n", "\r\n")
+              str = string.gsub (str, "([^%w ])",
+              function ( c ) return string.format ("%%%02X", string.byte( c )) end)
+              str = string.gsub (str, " ", "%%20")
+          end
+          return str    
+    end
 	
 	RestManager.getTodayEvent = function()
 		local url = settings.url .. "api/getTodayEvent/format/json"
@@ -194,5 +207,65 @@ local RestManager = {}
         -- Do request
         network.request( url, "GET", callback )
 	end
+	
+	--crear usuarios
+	
+	RestManager.createUser = function(email, password, name, fbId)
+        --local settings = DBManager.getSettings()
+        -- Set url
+		
+        password = crypto.digest(crypto.md5, password)
+        local url = settings.url
+        url = url.."api/createUser/format/json"
+        url = url.."/email/"..urlencode(email)
+        url = url.."/password/"..password
+        url = url.."/name/"..urlencode(name)
+        url = url.."/fbId/"..fbId
+        
+        local function callback(event)
+            if ( event.isError ) then
+            else
+                --hideLoadLogin()
+                local data = json.decode(event.response)
+                if data.success then
+				
+                    DBManager.updateUser(data.idApp, email, password, name, fbId)
+                    gotoHome()
+                else
+                    native.showAlert( "Go Deals", data.message, { "OK"})
+                end
+            end
+            return true
+        end
+        -- Do request
+        network.request( url, "GET", callback ) 
+    end
+	
+	RestManager.validateUser = function(email, password)
+        local settings = DBManager.getSettings()
+        -- Set url
+        password = crypto.digest(crypto.md5, password)
+        local url = settings.url
+        url = url.."api/validateUser/format/json"
+        url = url.."/idApp/"..settings.idApp
+        url = url.."/email/"..urlencode(email)
+        url = url.."/password/"..password
+    
+        local function callback(event)
+            if ( event.isError ) then
+            else
+                --hideLoadLogin()
+                local data = json.decode(event.response)
+                if data.success then
+                    gotoHome()
+                else
+                    native.showAlert( "Go Deals", data.message, { "OK"})
+                end
+            end
+            return true
+        end
+        -- Do request
+        network.request( url, "GET", callback ) 
+    end
 
 return RestManager

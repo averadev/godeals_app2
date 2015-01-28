@@ -47,7 +47,9 @@ function Event:new()
         container.x = 255
         container.y = 50
 		container.name = 2
+		container.item = item
         self:insert( container )
+		container:addEventListener( "tap", showEvent )
 
         -- Agregamos rectangulo alfa al pie
         local maxShape = display.newRect( 0, 0, 480, 100 )
@@ -64,7 +66,6 @@ function Event:new()
         image.height  = 80
         image.item = item
         container:insert( image )
-        image:addEventListener( "tap", showEvent )
 
         -- Agregamos textos
         local txtTitle = display.newText( {
@@ -114,7 +115,9 @@ function Deal:new()
         container.x = 255
         container.y = 50
 		container.name = 1
+		container.item = item
         self:insert( container )
+		container:addEventListener( "tap", showCoupon )
 
         -- Agregamos rectangulo alfa al pie
         local maxShape = display.newRect( 0, 0, 480, 100 )
@@ -131,7 +134,6 @@ function Deal:new()
         image.height  = 80
         image.item = item
         container:insert( image )
-        image:addEventListener( "tap", showCoupon )
 
         -- Agregamos textos
         local txtTitle = display.newText( {

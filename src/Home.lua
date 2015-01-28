@@ -305,6 +305,8 @@ function ListenerChangeMenuHome( event )
 				currentSv = nextSv
 				nextTxt:setFillColor( 0 )
 			end
+			
+			showFilter(true)
 		elseif diferenciaX - event.x  <= -380 then
 			
 			if previousSv == nil then 
@@ -319,6 +321,10 @@ function ListenerChangeMenuHome( event )
 				currentSv = previousSv
 				previousTxt:setFillColor( 0 )
 			end
+			
+			if currentSv.name == "scrViewMain" then
+                showFilter(false)
+            end
 		else
 			transition.to( currentSv, { x = 240, time = 400, transition = easing.outExpo } )
 			transition.to( nextSv, { x = 720, time = 400, transition = easing.outExpo } )

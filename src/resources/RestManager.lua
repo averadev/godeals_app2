@@ -38,7 +38,7 @@ local RestManager = {}
 	end
 	
 	RestManager.getTodayDeal = function()
-		local url = settings.url .. "api/getTodayDeal/format/json"
+		local url = settings.url .. "api/getTodayDeal/format/json/idApp/" .. settings.idApp
 	   
 	   local function callback(event)
             if ( event.isError ) then
@@ -56,7 +56,8 @@ local RestManager = {}
 	end
 
     RestManager.getMyDeals = function()
-		local url = settings.url .. "api/getMyDeals/format/json"
+		
+		local url = settings.url .. "api/getMyDeals/format/json/idApp/" .. settings.idApp
 	   
 	   local function callback(event)
             if ( event.isError ) then
@@ -92,7 +93,7 @@ local RestManager = {}
 	end
 	
 	RestManager.getAllCoupon = function()
-		local url = settings.url .. "api/getAllDeal/format/json"
+		local url = settings.url .. "api/getAllDeal/format/json/idApp/" .. settings.idApp
 	   
 	   local function callback(event)
             if ( event.isError ) then
@@ -267,5 +268,59 @@ local RestManager = {}
         -- Do request
         network.request( url, "GET", callback ) 
     end
+	
+	--pensar en un nombre para el metodo
+	RestManager.couponDowload = function(email, password)
+        local settings = DBManager.getSettings()
+        -- Set url
+        password = crypto.digest(crypto.md5, password)
+        local url = settings.url
+        url = url.."api/validateUser/format/json"
+        url = url.."/idApp/"..settings.idApp
+        url = url.."/email/"..urlencode(email)
+        url = url.."/password/"..password
+    
+        local function callback(event)
+            if ( event.isError ) then
+            else
+                --hideLoadLogin()
+                local data = json.decode(event.response)
+                if data.success then
+                    gotoHome()
+                else
+                    native.showAlert( "Go Deals", data.message, { "OK"})
+                end
+            end
+            return true
+        end
+        -- Do request
+        network.request( url, "GET", callback ) 
+    end
+	
+	RestManager.discountCoupon = function(idCoupon)
+	
+		local settings = DBManager.getSettings()
+        local url = settings.url
+        url = url.."api/discountCoupon/format/json"
+        url = url.."/idApp/"..settings.idApp
+        url = url.."/idCoupon/"..idCoupon
+    
+        local function callback(event)
+            if ( event.isError ) then
+            else
+                --hideLoadLogin()
+                local data = json.decode(event.response)
+                if data.success then
+					changeButtonCoupon()
+                else
+                    native.showAlert( "Go Deals", data.message, { "OK"})
+                end
+            end
+            return true
+        end
+        -- Do request
+        network.request( url, "GET", callback )
+		
+	end
 
 return RestManager

@@ -471,36 +471,48 @@ function getFBData()
 		scrViewMain:insert( contenerUser )
 		
 		local bgFotoFacebook = display.newRect( 0, 0, display.contentWidth, 90 )
-		bgFotoFacebook.anchorX = 0
-		bgFotoFacebook.anchorY = 0
-		bgFotoFacebook:setFillColor( 1 )
-		contenerUser:insert(bgFotoFacebook)
+			bgFotoFacebook.anchorX = 0
+			bgFotoFacebook.anchorY = 0
+			bgFotoFacebook:setFillColor( 1 )
+			contenerUser:insert(bgFotoFacebook)
 		
-        local path = system.pathForFile( "avatarFb"..settings.fbId, system.TemporaryDirectory )
-        local fhd = io.open( path )
-        if fhd then
-            fhd:close()
-			
-            local avatar = display.newImage("avatarFb"..settings.fbId, system.TemporaryDirectory )
-            avatar.x = 55
-            avatar.y = 90
+		if settings.fbId == "" then
+		
+			local avatar = display.newImage( "img/bgk/user.png" )
+			avatar.x = 55
+			avatar.y = 90
 			avatar.height = 100
 			avatar.width = 100
-            contenerUser:insert(avatar)
-        else
-            local function networkListenerFB( event )
-                -- Verificamos el callback activo
-                if ( event.isError ) then
-                else
-                    event.target.x = 55
-                    event.target.y = 90
-                    contenerUser:insert( event.target )
-                end
-            end
-            display.loadRemoteImage( "http://graph.facebook.com/".. settings.fbId .."/picture?type=large&"..sizeAvatar, 
-                "GET", networkListenerFB, "avatarFb"..settings.fbId, system.TemporaryDirectory )
+			contenerUser:insert(avatar)
+			
+		else
+		
+			local path = system.pathForFile( "avatarFb"..settings.fbId, system.TemporaryDirectory )
+			local fhd = io.open( path )
+			if fhd then
+				fhd:close()
+			
+				local avatar = display.newImage("avatarFb"..settings.fbId, system.TemporaryDirectory )
+				avatar.x = 55
+				avatar.y = 90
+				avatar.height = 100
+				avatar.width = 100
+				contenerUser:insert(avatar)
+			else
+				local function networkListenerFB( event )
+					-- Verificamos el callback activo
+					if ( event.isError ) then
+					else
+						event.target.x = 55
+						event.target.y = 90
+						contenerUser:insert( event.target )
+					end
+				end
+				display.loadRemoteImage( "http://graph.facebook.com/".. settings.fbId .."/picture?type=large&"..sizeAvatar, 
+					"GET", networkListenerFB, "avatarFb"..settings.fbId, system.TemporaryDirectory )
 				 
-        end
+			end
+		end
 		
 	local textNombre = display.newText( {
 		text = settings.name,     
@@ -510,6 +522,12 @@ function getFBData()
 	})
 	textNombre:setFillColor( 0 )
 	contenerUser:insert(textNombre)
+	
+	print(settings.fbId .. "a")
+	
+	if settings.fbId == "" then
+		textNombre.text = settings.email
+	end
 		
 	local textSaludo = display.newText( {
 		text = "Actualmente esta viendo eventos y cupones de Cancún",     
@@ -645,7 +663,7 @@ function scene:createScene( event )
 	settings = DBManager.getSettings()
 	
 	getFBData()
-	
+		
 	btnModal = display.newImage( "img/btn/btnFilter.png" )
 	btnModal:translate( intW - 50, intH - 50)
 	btnModal.alpha = 0

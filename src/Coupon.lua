@@ -26,13 +26,17 @@ local toolbar, menu
 local groupMenu, groupEvent, groupMenuEventText
 local svCoupon, svInfo, svPromotions, svGallery
 local h = display.topStatusBarContentHeight
-local lastY = 200;
+local lastY = 200
+local lastYCoupon = 0
 local itemObj
 local currentSv
 local settings
 local tmpRedimir
 
 local info, promotions, gallery, MenuEventBar
+
+local btnDownloadCoupon
+
 --pantalla
 
 local homeScreen = display.newGroup()
@@ -58,6 +62,25 @@ function showRedimir( event )
         tmpRedimir.y = midH
         tmpRedimir:addEventListener( "tap", showRedimir )
     end
+end
+
+function DownloadCoupon( event )
+
+	RestManager.discountCoupon(event.target.idCoipon)
+	
+end
+
+function changeButtonCoupon()
+	btnDownloadCoupon:removeSelf();
+	
+	local btnCanjearCoupon = display.newImage( "img/btn/btnCanjearCoupon.png" )
+        btnCanjearCoupon.alpha = 1
+        btnCanjearCoupon.x= 240
+        btnCanjearCoupon.y = lastYCoupon
+        btnCanjearCoupon.width = 376
+        btnCanjearCoupon.height  = 58
+        svCoupon:insert( btnCanjearCoupon )
+        btnCanjearCoupon:addEventListener( "tap", showRedimir )
 end
 
 function setCouponId( item )
@@ -254,14 +277,18 @@ function buildCoupon()
         svCoupon:insert( btnCanjearCoupon )
         btnCanjearCoupon:addEventListener( "tap", showRedimir )
     else
-        local btnDownloadCoupon = display.newImage( "img/btn/btnDownloadCoupon.png" )
+        btnDownloadCoupon = display.newImage( "img/btn/btnDownloadCoupon.png" )
         btnDownloadCoupon.alpha = 1
         btnDownloadCoupon.x= 240
         btnDownloadCoupon.y = lastY
         btnDownloadCoupon.width = 376
         btnDownloadCoupon.height  = 58
+		btnDownloadCoupon.idCoipon = itemObj.id
         svCoupon:insert( btnDownloadCoupon )
+		btnDownloadCoupon:addEventListener( "tap", DownloadCoupon )
     end
+	
+	lastYCoupon = lastY
 	
 	imgBgCoupon.height = lastY + 10
 	

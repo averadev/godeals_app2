@@ -28,6 +28,7 @@ local groupMenu, groupEvent, groupMenuEventText
 local svCoupon, svInfo, svPromotions, svGallery
 local h = display.topStatusBarContentHeight
 local lastY = 200;
+local lastYImage = lastY;
 local itemObj
 local currentSv
 local settings
@@ -225,40 +226,14 @@ function buildEvent(item)
 	groupEvent.y = h
 	homeScreen:insert( groupEvent )
 	
-	local txtPartner = display.newText({
-		text = itemObj.place,
-		x = 320,
-		y =  235,
-		font = "Chivo",
-		height = 100,
-		width = 300,
-		fontSize = 30,
-		align = "left"
-	})
-	txtPartner:setFillColor( 1 )
-	groupEvent:insert( txtPartner )
-	
-	local txtAddress = display.newText({
-		text =itemObj.address,
-		x = 320,
-		y =  265,
-		font = "Chivo",
-		height = 100,
-		width = 300,
-		fontSize = 18,
-		align = "left"
-	})
-	txtAddress:setFillColor( 1 )
-	groupEvent:insert( txtAddress )
-	
-	local BgMenuEvent = display.newRect( midW, 343, intW, 76 )
+	local BgMenuEvent = display.newRect( midW, 170, intW, 76 )
 	BgMenuEvent:setFillColor( 217/255, 217/255, 217/255 )
 	groupEvent:insert(BgMenuEvent)
 	
 	svMenuTxt = widget.newScrollView
 	{
 		x = midW,
-		y = 341,
+		y = 168,
 		width = intW,
 		height = 73,
 		listener = ListenerChangeMenuEvent,
@@ -268,7 +243,7 @@ function buildEvent(item)
 	}
 	groupEvent:insert(svMenuTxt)
 	
-	MenuEventBar = display.newRect( midW, 378 , intW /3, 4 )
+	MenuEventBar = display.newRect( midW, 205 , intW /3, 4 )
 	MenuEventBar:setFillColor( 88/255, 188/255, 36/255 )
 	groupEvent:insert(MenuEventBar)
 	
@@ -292,7 +267,57 @@ end
 --creamos la primera seccion del evento
 function buildEventInfo(item)
 
-	lastY = 90
+	lastY = 40
+	
+	local imgEvent = display.newImage(  "img/tmp/" .. itemObj.imageFull )
+	imgEvent.x = midW
+	srvEventos[1]:insert( imgEvent )
+    
+    imgEvent.y = lastY + (imgEvent.height / 2)
+    
+	lastY = lastY + imgEvent.height + 75
+	
+	local bgPartnerInfo = display.newRect( midW, 0, 480, 76 )
+	bgPartnerInfo:setFillColor( 1 )
+	srvEventos[1]:insert(bgPartnerInfo)
+	
+	local txtPartner = display.newText({
+		text = itemObj.place,
+		x = 320,
+		y =  lastY,
+		font = "Chivo",
+		width = 300,
+		fontSize = 30,
+		align = "left"
+	})
+	txtPartner:setFillColor( 0 )
+	srvEventos[1]:insert( txtPartner )
+	
+	txtPartner.y = txtPartner.y + txtPartner.height/2
+	
+	lastY = lastY + txtPartner.height + 10
+	
+	local txtAddress = display.newText({
+		text =itemObj.address,
+		x = 320,
+		y =  lastY,
+		font = "Chivo",
+		width = 300,
+		fontSize = 18,
+		align = "left"
+	})
+	txtAddress:setFillColor( 0 )
+	srvEventos[1]:insert( txtAddress )
+	
+	txtAddress.y = txtAddress.y + txtAddress.height/2
+	
+	bgPartnerInfo.height = txtPartner.height + txtAddress.height + 40
+	
+	bgPartnerInfo.y = bgPartnerInfo.height/2 + lastY - txtPartner.height - 20
+	
+	lastYImage = bgPartnerInfo.y
+	
+	lastY = lastY + 150
 	
 	local bgGeneralInformacion = display.newRect( midW, 0, 480, 76 )
 	bgGeneralInformacion:setFillColor( 1 )
@@ -326,17 +351,9 @@ function buildEventInfo(item)
 	
 	bgGeneralInformacion.height = txtInfo.height + 40
 	
-	bgGeneralInformacion.y = bgGeneralInformacion.height/2 + 70
+	bgGeneralInformacion.y = bgGeneralInformacion.height/2 + lastY - 15
 	
-	lastY = lastY + bgGeneralInformacion.height
-	
-	local imgEvent = display.newImage(  "img/tmp/" .. itemObj.imageFull )
-	imgEvent.x = midW
-	srvEventos[1]:insert( imgEvent )
-    
-    imgEvent.y = lastY + (imgEvent.height / 2)
-    
-	lastY = lastY + imgEvent.height + 40
+	lastY = lastY + bgGeneralInformacion.height + 75
 	
 	local bgLocation = display.newRect( midW, 0, intW, 76 )
 	bgLocation:setFillColor( 1 )
@@ -360,7 +377,7 @@ function buildEventInfo(item)
 	lastY = lastY + bgLocation.height/2 + 10
     
     -- Cocinar el mapa
-    myMap = native.newMapView( midW, lastY + 150, intW, 300 )
+    myMap = native.newMapView( midW, lastY, intW, 300 )
     if myMap then
         myMap:setCenter( tonumber(itemObj.latitude), tonumber(itemObj.longitude), 0.02, 0.02 )
         srvEventos[1]:insert(myMap)
@@ -385,6 +402,8 @@ function buildEventInfo(item)
     spc:setFillColor( .9 )
     srvEventos[1]:insert(spc)
 	
+	lastY = lastY + 600
+	
 	--decidimos si el evento es por un comercio o por un lugar
 	if callbackCurrent == Globals.noCallbackGlobal then
 		if itemObj.type == "partner" then
@@ -393,6 +412,13 @@ function buildEventInfo(item)
 			RestManager.getGallery(itemObj.typeId,2,"event")
 		end
 	end
+	
+	loadImageOfPartner()
+	
+	--lastY = lastY + 300
+	
+	srvEventos[#srvEventos]:setScrollHeight(lastY)
+	
 end
 
 --mostramos los deals del comercio
@@ -461,7 +487,7 @@ function GalleryEvent(items)
 	end
 	
 	--cargamos la imagen del partner del encabezado
-	loadImageOfPartner(1)
+	--loadImageOfPartner(1)
 end
 
 --creamos los crollview dinamicos
@@ -492,7 +518,7 @@ function createScrollViewEvent(nameTxt)
 	
 	srvEventos[positionCurrent] = widget.newScrollView
 	{
-		top = 383,
+		top = 210,
 		left = positionScrollEvent,
 		width = intW,
 		height = intH,
@@ -511,38 +537,23 @@ end
 function loadImageOfPartner(typeImage)
 
 	local path
-	if typeImage == 2 then
 		path = system.pathForFile( itemObj.placeImage, system.TemporaryDirectory )
-	else
-		path = system.pathForFile( itemObj.placeBanner, system.TemporaryDirectory )
-	end
     local fhd = io.open( path )
     if fhd then
         fhd:close()
 			if callbackCurrent == Globals.noCallbackGlobal then
 			--diferenciamos si es el logo o banner del comercio
-			if typeImage == 2 then
 				-- creamos la mascara
 				local mask = graphics.newMask( "img/bgk/maskLogo.jpg" )
 				local imgEvent = display.newImage( itemObj.placeImage, system.TemporaryDirectory )
 				--cargando el logo del comercio
 				imgEvent.alpha = 1
 				imgEvent.x = 90
-				imgEvent.y = 215
+				imgEvent.y = lastYImage
 				imgEvent.width = 120
 				imgEvent.height = 120
 				imgEvent:setMask( mask )
-				groupEvent:insert( imgEvent )
-			else
-				--cargando el banner del comercio
-				local imgBgEvent = display.newImage( itemObj.placeBanner, system.TemporaryDirectory )
-				imgBgEvent.alpha = 1
-				imgBgEvent.x = 240
-				imgBgEvent.y = 215
-				groupEvent:insert( imgBgEvent )
-				imgBgEvent:toBack()
-				loadImageOfPartner(2)
-			end
+				srvEventos[1]:insert( imgEvent )
 			end
 		
     else
@@ -554,28 +565,17 @@ function loadImageOfPartner(typeImage)
 				event.target.alpha = 0
 			if callbackCurrent == Globals.noCallbackGlobal then
 				--diferenciamos si es el logo o banner del comercio
-			if typeImage == 2 then
 				-- creamos la mascara
 				local mask = graphics.newMask( "img/bgk/maskLogo.jpg" )
 				local imgEvent = display.newImage( itemObj.placeImage, system.TemporaryDirectory )
 				--cargando el logo del comercio
 				imgEvent.alpha = 1
 				imgEvent.x = 90
-				imgEvent.y = 215
+				imgEvent.y = lastYImage
 				imgEvent.width = 120
 				imgEvent.height = 120
 				imgEvent:setMask( mask )
-				groupEvent:insert( imgEvent )
-			else
-				--cargando el banner del comercio
-				local imgBgEvent = display.newImage( itemObj.placeBanner, system.TemporaryDirectory )
-				imgBgEvent.alpha = 1
-				imgBgEvent.x = 240
-				imgBgEvent.y = 215
-				groupEvent:insert( imgBgEvent )
-				imgBgEvent:toBack()
-				loadImageOfPartner(2)
-			end
+				srvEventos[1]:insert( imgEvent )
 			end
             end
         end
@@ -583,8 +583,6 @@ function loadImageOfPartner(typeImage)
 		local imageUrl
 		local imageName
 		
-		
-		if typeImage == 2 then
 			if itemObj.type == "partner" then
 				imageUrl = settings.url.."assets/img/app/partner/image/"
 			else
@@ -592,15 +590,6 @@ function loadImageOfPartner(typeImage)
 			end
 			imageUrl = imageUrl..itemObj.placeImage
 			imageName = itemObj.placeImage
-		else
-			if itemObj.type == "partner" then
-				imageUrl = settings.url.."assets/img/app/partner/banner/"
-			else
-				imageUrl = settings.url.."assets/img/app/place/banner/"
-			end
-			imageUrl = imageUrl..itemObj.placeBanner
-			imageName = itemObj.placeBanner
-		end
         
         -- Descargamos de la nube
         display.loadRemoteImage( imageUrl, "GET", loadImageOfPartnerListener, imageName, system.TemporaryDirectory ) 

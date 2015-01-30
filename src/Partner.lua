@@ -267,11 +267,9 @@ end
 
 function buildPartnerInfo(item)
 
-	lastY = 80
-
-	local bgPartnerInfo = display.newRect( midW, 0, 480, 76 )
-	bgPartnerInfo:setFillColor( 1 )
-	srvPartner[#srvPartner]:insert(bgPartnerInfo)
+	lastY = 35
+	
+	lastYImage = 166/2
 
 	local txtPartner = display.newText({
 		text = item.name,
@@ -282,7 +280,7 @@ function buildPartnerInfo(item)
 		fontSize = 30,
 		align = "left"
 	})
-	txtPartner:setFillColor( 0 )
+	txtPartner:setFillColor( 1 )
 	srvPartner[#srvPartner]:insert( txtPartner )
 	
 	txtPartner.y = txtPartner.y + txtPartner.height/2
@@ -297,18 +295,12 @@ function buildPartnerInfo(item)
 		fontSize = 18,
 		align = "left"
 	})
-	txtAddress:setFillColor( 0 )
+	txtAddress:setFillColor( 1 )
 	srvPartner[#srvPartner]:insert( txtAddress )
 	
 	txtAddress.y = txtAddress.y + txtAddress.height/2
 	
-	bgPartnerInfo.height = txtPartner.height + txtAddress.height + 40
-	
-	bgPartnerInfo.y = bgPartnerInfo.height/2 + lastY - txtPartner.height - 20
-	
-	lastYImage = bgPartnerInfo.y
-	
-	lastY = lastY + 150
+	lastY = lastY + 180
 	
 	local bgGeneralInformacion = display.newRect( midW, 0, 480, 76 )
 	bgGeneralInformacion:setFillColor( 1 )
@@ -370,8 +362,6 @@ function buildPartnerInfo(item)
 	if callbackCurrent == Globals.noCallbackGlobal then
 		RestManager.getDealsByPartner(idPartner,"partner")
 	end
-	
-	loadImagePartner()
 	
 	lastY = lastY + 600
 	
@@ -445,7 +435,7 @@ function GalleryPartner(items)
 	end
 	
 	--cargamos la imagen del partner del encabezado
-	--loadImagePartner( 1 )
+	loadImagePartner( 1 )
 end
 
 --creamos los crollview dinamicos
@@ -490,16 +480,21 @@ function createScrollViewPartner(nameTxt)
 	
 end
 
-function loadImagePartner()
+function loadImagePartner(typeImage)
 
 	local path
+	if typeImage == 2 then
 		path = system.pathForFile( itemPartner.image, system.TemporaryDirectory )
+	else
+		path = system.pathForFile( itemPartner.banner, system.TemporaryDirectory )
+	end
     local fhd = io.open( path )
     if fhd then
         fhd:close()
 		
 			--diferenciamos si es el logo o banner del comercio
 			if callbackCurrent == Globals.noCallbackGlobal then
+				if typeImage == 2 then
 					-- creamos la mascara
 					local mask = graphics.newMask( "img/bgk/maskLogo.jpg" )
 					local imgPartner = display.newImage( itemPartner.image, system.TemporaryDirectory )
@@ -511,6 +506,17 @@ function loadImagePartner()
 					imgPartner.height = 120
 					imgPartner:setMask( mask )
 					srvPartner[1]:insert( imgPartner )
+				else
+					--cargando el banner del comercio
+					local imgBgPartner = display.newImage( itemPartner.banner, system.TemporaryDirectory )
+					imgBgPartner.alpha = 1
+					imgBgPartner.x = 240
+					imgBgPartner.y = lastYImage
+					imgBgPartner.height = 165
+					srvPartner[1]:insert( imgBgPartner )
+					imgBgPartner:toBack()
+					loadImagePartner( 2 )
+				end
 			end
     else
         -- Listener de la carga de la imagen del servidor
@@ -521,7 +527,8 @@ function loadImagePartner()
 				event.target.alpha = 0
 				
 				--diferenciamos si es el logo o banner del comercio
-				if callbackCurrent == Globals.noCallbackGlobal then
+			if callbackCurrent == Globals.noCallbackGlobal then
+				if typeImage == 2 then
 					-- creamos la mascara
 					local mask = graphics.newMask( "img/bgk/maskLogo.jpg" )
 					local imgPartner = display.newImage( itemPartner.image, system.TemporaryDirectory )
@@ -533,14 +540,31 @@ function loadImagePartner()
 					imgPartner.height = 120
 					imgPartner:setMask( mask )
 					srvPartner[1]:insert( imgPartner )
+				else
+					--cargando el banner del comercio
+					local imgBgPartner = display.newImage( itemPartner.banner, system.TemporaryDirectory )
+					imgBgPartner.alpha = 1
+					imgBgPartner.x = 240
+					imgBgPartner.y = lastYImage
+					imgBgPartner.height = 165
+					srvPartner[1]:insert( imgBgPartner )
+					imgBgPartner:toBack()
+					loadImagePartner( 2 )
 				end
+			end
             end
         end
 		
 		local imageUrl
 		local imageName
+		
+		if typeImage == 2 then
 			imageUrl = settings.url.."assets/img/app/partner/image/"..itemPartner.image
 			imageName = itemPartner.image
+		else
+			imageUrl = settings.url.."assets/img/app/partner/banner/"..itemPartner.banner
+			imageName = itemPartner.banner
+		end
         
         -- Descargamos de la nube
         display.loadRemoteImage( imageUrl, "GET", loadImagePartnerListener, imageName, system.TemporaryDirectory ) 

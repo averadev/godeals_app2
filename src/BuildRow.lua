@@ -38,6 +38,17 @@ Event = {}
 function Event:new()
     -- Variables
     local self = display.newGroup()
+
+    function showEvent(event)
+        local Globals = require('src.resources.Globals')
+        local storyboard = require( "storyboard" )
+        Globals.noCallbackGlobal = Globals.noCallbackGlobal + 1
+        storyboard.gotoScene( "src.Event", {
+            time = 400,
+            effect = "crossFade",
+            params = { item = event.target.item }
+        })
+    end
     
     -- Creamos la pantalla del menu
     function self:build(item, image)
@@ -107,6 +118,17 @@ Deal = {}
 function Deal:new()
     -- Variables
     local self = display.newGroup()
+    
+    function showCoupon(event)
+        local Globals = require('src.resources.Globals')
+        local storyboard = require( "storyboard" )
+        Globals.noCallbackGlobal = Globals.noCallbackGlobal + 1
+        storyboard.gotoScene( "src.Coupon", {
+            time = 400,
+            effect = "crossFade",
+            params = { item = event.target.item }
+        })
+    end
     
     -- Creamos la pantalla del menu
     function self:build(item, image)

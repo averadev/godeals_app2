@@ -147,7 +147,6 @@ end
 -- Called immediately after scene has moved onscreen:
 function scene:enterScene( event )
     Globals.scene[#Globals.scene + 1] = storyboard.getCurrentSceneName()
-    storyboard.removeAll()
 end
 
 -- Remove Listener

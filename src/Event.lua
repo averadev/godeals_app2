@@ -48,6 +48,15 @@ local imageEventDeals = {}
 local imageEventGallery = {}
 
 -- funciones
+
+function showMapa( event )
+	storyboard.gotoScene( "src.Mapa", {
+		time = 400,
+		effect = "crossFade",
+		params = { itemObj = itemObj }
+	})
+end
+
 function ListenerChangeMenuEvent( event )
 	
 	local positionScroll
@@ -357,31 +366,26 @@ function buildEventInfo(item)
 	txtAdressEvent.y = txtAdressEvent.y + txtAdressEvent.height / 2
 	bgLocation.height = txtAdressEvent.height + 40
 	bgLocation.y = bgLocation.height/2  + lastY - 22
-	lastY = lastY + bgLocation.height/2 + 10
+	lastY = lastY + bgLocation.height/2 + 50
     
-    -- Cocinar el mapa
-    myMap = native.newMapView( midW, lastY + 150, intW, 300 )
-    if myMap then
-        myMap:setCenter( tonumber(itemObj.latitude), tonumber(itemObj.longitude), 0.02, 0.02 )
-        srvEventos[1]:insert(myMap)
-        
-        -- Add Maker
-        timeMarker = timer.performWithDelay( 2000, function()
-            local options = { 
-                title = itemObj.name, 
-                subtitle = itemObj.address, 
-                listener = markerListener, 
-                imageFile = "img/btn/btnIconMap.png"
-            }
-            myMap:addMarker( tonumber(itemObj.latitude), tonumber(itemObj.longitude), options )
-        end, 1 )
-    else
-        local bg = display.newRect( midW, lastY + 150, intW, 300 )
-        bg:setFillColor( .7 )
-        srvEventos[1]:insert(bg)
-    end
+    local txtAdditionalInformation = display.newText({
+		text = "Consultar ubicación del evento",
+		x = 230, y = lastY,
+		height = 40, width = 400,
+		font = "Chivo", fontSize = 22, align = "center"
+	})
+    txtAdditionalInformation.itemObj = itemObj
+	txtAdditionalInformation:setFillColor( 0 )
+	srvEventos[1]:insert( txtAdditionalInformation )
+	txtAdditionalInformation:addEventListener( "tap", showMapa )
     
-    local spc = display.newRect( 0, lastY + 750, 1, 1 )
+    local lineLink = display.newRect( 50, lastY + 15, 360, 1 )
+	lineLink.anchorX = 0
+	lineLink.anchorY = 0
+	lineLink:setFillColor( .2 )
+	srvEventos[1]:insert( lineLink )
+    
+    local spc = display.newRect( 0, lastY + 500, 1, 1 )
     spc:setFillColor( .9 )
     srvEventos[1]:insert(spc)
 	

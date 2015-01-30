@@ -444,24 +444,6 @@ function showFilter(boolShow)
     end
 end
 
-function showCoupon(event)
-	Globals.noCallbackGlobal = Globals.noCallbackGlobal + 1
-	storyboard.gotoScene( "src.Coupon", {
-		time = 400,
-		effect = "crossFade",
-		params = { item = event.target.item }
-	})
-end
-
-function showEvent(event)
-	Globals.noCallbackGlobal = Globals.noCallbackGlobal + 1
-	storyboard.gotoScene( "src.Event", {
-		time = 400,
-		effect = "crossFade",
-		params = { item = event.target.item }
-	})
-end
-
 function getFBData()
 		local sizeAvatar = 'width=100&height=100'
         
@@ -683,7 +665,6 @@ end
 -- Called immediately after scene has moved onscreen:
 function scene:enterScene( event )
     Globals.scene[1] = storyboard.getCurrentSceneName()
-    storyboard.removeAll()
 end
 
 -- Remove Listener

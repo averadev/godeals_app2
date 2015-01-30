@@ -207,6 +207,15 @@ function ListenerChangeScrollPartner( event )
 	
 end
 
+
+function showMapa( event )
+	storyboard.gotoScene( "src.Mapa", {
+		time = 400,
+		effect = "crossFade",
+		params = { itemObj = itemObj }
+	})
+end
+
 ---------------------------------------------------------
 ---------build Partner
 ---------------------------------------------------------
@@ -319,68 +328,26 @@ function buildPartnerInfo(item)
 	
 	bgGeneralInformacion.y = bgGeneralInformacion.height/2 + 70
 	
-	lastY = lastY + bgGeneralInformacion.height + 85
-	
-	local bgLocation = display.newRect( midW, 0, intW, 76 )
-	bgLocation:setFillColor( 1 )
-	srvPartner[#srvPartner]:insert(bgLocation)
-	
-	local txtLocation = display.newText({
-		text = "Ubicación",
-		x = 240,
-		y = lastY - 50,
-		width = 420,
-		font = "Chivo",
-		fontSize = 22,
-		align = "left"
+	lastY = lastY + bgGeneralInformacion.height + 30
+		
+	local txtAdditionalInformation = display.newText({
+		text = "Consultar ubicación del evento",
+		x = 230, y = lastY,
+		height = 40, width = 400,
+		font = "Chivo", fontSize = 22, align = "center"
 	})
-	txtLocation:setFillColor( 0 )
-	srvPartner[#srvPartner]:insert( txtLocation )
-	
-	local txtAdressPartner = display.newText({
-		text = item.address,
-		x = 240,
-		y = lastY,
-		width = 420,
-		font = "Chivo",
-		fontSize = 18,
-		align = "left"
-	})
-	txtAdressPartner:setFillColor( 0 )
-	srvPartner[#srvPartner]:insert( txtAdressPartner )
-	
-	txtAdressPartner.y = txtAdressPartner.y + txtAdressPartner.height/2
-	
-	bgLocation.height = txtAdressPartner.height + 40
-	
-	bgLocation.y = bgLocation.height/2  + lastY -22
-	
-	lastY = lastY + bgLocation.height/2  + 10
+    txtAdditionalInformation.itemObj = item
+	txtAdditionalInformation:setFillColor( 0 )
+	srvPartner[#srvPartner]:insert( txtAdditionalInformation )
+	txtAdditionalInformation:addEventListener( "tap", showMapa )
     
-     -- Cocinar el mapa
-    local myMap = native.newMapView( midW, lastY + 150, intW, 300 )
-    if myMap then
-        myMap:setCenter( tonumber(item.latitude), tonumber(item.longitude), 0.02, 0.02 )
-        srvPartner[#srvPartner]:insert(myMap)
-        
-        -- Add Maker
-        timeMarker = timer.performWithDelay( 3000, function()
-            local options = { 
-                title = item.name, 
-                subtitle = item.address, 
-                listener = markerListener, 
-                imageFile = "img/btn/btnIconMap.png"
-            }
-            
-            myMap:addMarker( tonumber(item.latitude), tonumber(item.longitude), options )
-        end, 1 )
-    else
-        local bg = display.newRect( midW, lastY + 150, intW, 300 )
-        bg:setFillColor( .7 )
-        srvPartner[#srvPartner]:insert(bg)
-    end
+    local lineLink = display.newRect( 50, lastY + 15, 360, 1 )
+	lineLink.anchorX = 0
+	lineLink.anchorY = 0
+	lineLink:setFillColor( .2 )
+	srvPartner[#srvPartner]:insert( lineLink )
 	
-	local spc = display.newRect( 0, lastY + 750, 1, 1 )
+	local spc = display.newRect( 0, lastY + 550, 1, 1 )
     spc:setFillColor( .9 )
     srvPartner[#srvPartner]:insert(spc)
 	

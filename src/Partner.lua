@@ -17,7 +17,8 @@ local toolbar, menu
 local groupMenu, groupPartner, groupMenuPartnerText
 local  svCoupon, svMenuTxt
 local h = display.topStatusBarContentHeight
-local lastY = 200;
+local lastY = 200
+local lastYImage
 local idPartner
 local settings
 local timeMarker
@@ -226,40 +227,14 @@ function loadPartner(item)
 	groupPartner = display.newGroup()
 	homeScreen:insert( groupPartner )
 	
-	local txtPartner = display.newText({
-		text = item.name,
-		x = 320,
-		y =  225,
-		font = "Chivo",
-		height = 100,
-		width = 300,
-		fontSize = 30,
-		align = "left"
-	})
-	txtPartner:setFillColor( 1 )
-	groupPartner:insert( txtPartner )
-	
-	local txtAddress = display.newText({
-		text = item.address,
-		x = 320,
-		y =  265,
-		font = "Chivo",
-		height = 100,
-		width = 300,
-		fontSize = 18,
-		align = "left"
-	})
-	txtAddress:setFillColor( 1 )
-	groupPartner:insert( txtAddress )
-	
-	local imgBgPartner = display.newRect( midW, 343, intW, 76 )
+	local imgBgPartner = display.newRect( midW, 170, intW, 76 )
 	imgBgPartner:setFillColor( 217/255, 217/255, 217/255 )
 	groupPartner:insert(imgBgPartner)
 	
 	svMenuTxt = widget.newScrollView
 	{
 		x = midW,
-		y = 341,
+		y = 168,
 		width = intW,
 		height = 73,
 		listener = ListenerChangeMenuPartner,
@@ -269,7 +244,7 @@ function loadPartner(item)
 	}
 	groupPartner:insert(svMenuTxt)
 	
-	MenuPartnerBar = display.newRect( midW, 378 , intW /3, 4 )
+	MenuPartnerBar = display.newRect( midW, 205 , intW /3, 4 )
 	MenuPartnerBar:setFillColor( 88/255, 188/255, 36/255 )
 	groupPartner:insert(MenuPartnerBar)
 	
@@ -292,7 +267,48 @@ end
 
 function buildPartnerInfo(item)
 
-	lastY = 90
+	lastY = 80
+
+	local bgPartnerInfo = display.newRect( midW, 0, 480, 76 )
+	bgPartnerInfo:setFillColor( 1 )
+	srvPartner[#srvPartner]:insert(bgPartnerInfo)
+
+	local txtPartner = display.newText({
+		text = item.name,
+		x = 320,
+		y =  lastY,
+		font = "Chivo",
+		width = 300,
+		fontSize = 30,
+		align = "left"
+	})
+	txtPartner:setFillColor( 0 )
+	srvPartner[#srvPartner]:insert( txtPartner )
+	
+	txtPartner.y = txtPartner.y + txtPartner.height/2
+	lastY = lastY + txtPartner.height + 10
+	
+	local txtAddress = display.newText({
+		text = item.address,
+		x = 320,
+		y =  lastY,
+		font = "Chivo",
+		width = 300,
+		fontSize = 18,
+		align = "left"
+	})
+	txtAddress:setFillColor( 0 )
+	srvPartner[#srvPartner]:insert( txtAddress )
+	
+	txtAddress.y = txtAddress.y + txtAddress.height/2
+	
+	bgPartnerInfo.height = txtPartner.height + txtAddress.height + 40
+	
+	bgPartnerInfo.y = bgPartnerInfo.height/2 + lastY - txtPartner.height - 20
+	
+	lastYImage = bgPartnerInfo.y
+	
+	lastY = lastY + 150
 	
 	local bgGeneralInformacion = display.newRect( midW, 0, 480, 76 )
 	bgGeneralInformacion:setFillColor( 1 )
@@ -326,7 +342,7 @@ function buildPartnerInfo(item)
 	
 	bgGeneralInformacion.height = txtInfo.height + 40
 	
-	bgGeneralInformacion.y = bgGeneralInformacion.height/2 + 70
+	bgGeneralInformacion.y = bgGeneralInformacion.height/2 + lastY - 15
 	
 	lastY = lastY + bgGeneralInformacion.height + 30
 		
@@ -354,6 +370,13 @@ function buildPartnerInfo(item)
 	if callbackCurrent == Globals.noCallbackGlobal then
 		RestManager.getDealsByPartner(idPartner,"partner")
 	end
+	
+	loadImagePartner()
+	
+	lastY = lastY + 600
+	
+	srvPartner[1]:setScrollHeight( lastY )
+	
 end
 
 --mostramos los deals del comercio
@@ -422,7 +445,7 @@ function GalleryPartner(items)
 	end
 	
 	--cargamos la imagen del partner del encabezado
-	loadImagePartner( 1 )
+	--loadImagePartner( 1 )
 end
 
 --creamos los crollview dinamicos
@@ -431,7 +454,7 @@ function createScrollViewPartner(nameTxt)
 	
 	local positionCurrent = #srvPartner + 1
 
-		local positionTxtMenu = midW + (#srvPartner * 166)
+	local positionTxtMenu = midW + (#srvPartner * 166)
 
 	txtMenuPartner[positionCurrent] = display.newText({
 			text = nameTxt,
@@ -453,7 +476,7 @@ function createScrollViewPartner(nameTxt)
 	
 	srvPartner[positionCurrent] = widget.newScrollView
 	{
-		top = 383,
+		top = 210,
 		left = positionScrollPartner,
 		width = intW,
 		height = intH,
@@ -467,42 +490,27 @@ function createScrollViewPartner(nameTxt)
 	
 end
 
-function loadImagePartner(typeImage)
+function loadImagePartner()
 
 	local path
-	if typeImage == 2 then
 		path = system.pathForFile( itemPartner.image, system.TemporaryDirectory )
-	else
-		path = system.pathForFile( itemPartner.banner, system.TemporaryDirectory )
-	end
     local fhd = io.open( path )
     if fhd then
         fhd:close()
 		
 			--diferenciamos si es el logo o banner del comercio
 			if callbackCurrent == Globals.noCallbackGlobal then
-				if typeImage == 2 then
 					-- creamos la mascara
 					local mask = graphics.newMask( "img/bgk/maskLogo.jpg" )
 					local imgPartner = display.newImage( itemPartner.image, system.TemporaryDirectory )
 					--cargando el logo del comercio
 					imgPartner.alpha = 1
 					imgPartner.x = 90
-					imgPartner.y = 215
+					imgPartner.y = lastYImage
 					imgPartner.width = 120
 					imgPartner.height = 120
 					imgPartner:setMask( mask )
-					groupPartner:insert( imgPartner )
-				else
-					--cargando el banner del comercio
-					local imgBgPartner = display.newImage( itemPartner.banner, system.TemporaryDirectory )
-					imgBgPartner.alpha = 1
-					imgBgPartner.x = 240
-					imgBgPartner.y = 215
-					groupPartner:insert( imgBgPartner )
-					imgBgPartner:toBack()
-					loadImagePartner( 2 )
-				end
+					srvPartner[1]:insert( imgPartner )
 			end
     else
         -- Listener de la carga de la imagen del servidor
@@ -513,43 +521,26 @@ function loadImagePartner(typeImage)
 				event.target.alpha = 0
 				
 				--diferenciamos si es el logo o banner del comercio
-			if callbackCurrent == Globals.noCallbackGlobal then
-				if typeImage == 2 then
+				if callbackCurrent == Globals.noCallbackGlobal then
 					-- creamos la mascara
 					local mask = graphics.newMask( "img/bgk/maskLogo.jpg" )
 					local imgPartner = display.newImage( itemPartner.image, system.TemporaryDirectory )
 					--cargando el logo del comercio
 					imgPartner.alpha = 1
 					imgPartner.x = 90
-					imgPartner.y = 215
+					imgPartner.y = lastYImage
 					imgPartner.width = 120
 					imgPartner.height = 120
 					imgPartner:setMask( mask )
-					groupPartner:insert( imgPartner )
-				else
-					--cargando el banner del comercio
-					local imgBgPartner = display.newImage( itemPartner.banner, system.TemporaryDirectory )
-					imgBgPartner.alpha = 1
-					imgBgPartner.x = 240
-					imgBgPartner.y = 215
-					groupPartner:insert( imgBgPartner )
-					imgBgPartner:toBack()
-					loadImagePartner( 2 )
+					srvPartner[1]:insert( imgPartner )
 				end
-			end
             end
         end
 		
 		local imageUrl
 		local imageName
-		
-		if typeImage == 2 then
 			imageUrl = settings.url.."assets/img/app/partner/image/"..itemPartner.image
 			imageName = itemPartner.image
-		else
-			imageUrl = settings.url.."assets/img/app/partner/banner/"..itemPartner.banner
-			imageName = itemPartner.banner
-		end
         
         -- Descargamos de la nube
         display.loadRemoteImage( imageUrl, "GET", loadImagePartnerListener, imageName, system.TemporaryDirectory ) 
@@ -602,6 +593,12 @@ function scene:createScene( event )
 	screen:insert(homeScreen)
 	
 	homeScreen.y = h
+	
+	local bg = display.newRect( 0, h, display.contentWidth, display.contentHeight )
+	bg.anchorX = 0
+	bg.anchorY = 0
+	bg:setFillColor( 245/255, 245/255, 245/255 )
+	homeScreen:insert(bg)
 	
 	-- Build Component Header
 	local header = Header:new()

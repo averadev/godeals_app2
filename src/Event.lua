@@ -362,30 +362,9 @@ function buildEventInfo(item)
 	
 	bgGeneralInformacion.y = bgGeneralInformacion.height/2 + lastY - 15
 	
-	lastY = lastY + bgGeneralInformacion.height + 75
+	lastY = lastY + bgGeneralInformacion.height + 30
 	
-	local bgLocation = display.newRect( midW, 0, intW, 76 )
-	bgLocation:setFillColor( 1 )
-	srvEventos[1]:insert(bgLocation)
-	
-	local txtAdressEvent = display.newText({
-		text = itemObj.address,
-		x = 240,
-		y = lastY,
-		width = 420,
-		font = "Chivo",
-		fontSize = 18,
-		align = "left"
-	})
-	txtAdressEvent:setFillColor( 0 )
-	srvEventos[1]:insert( txtAdressEvent )
-	
-	txtAdressEvent.y = txtAdressEvent.y + txtAdressEvent.height / 2
-	bgLocation.height = txtAdressEvent.height + 40
-	bgLocation.y = bgLocation.height/2  + lastY - 22
-	lastY = lastY + bgLocation.height/2 + 50
-    
-    local txtAdditionalInformation = display.newText({
+	local txtAdditionalInformation = display.newText({
 		text = "Consultar ubicación del evento",
 		x = 230, y = lastY,
 		height = 40, width = 400,
@@ -406,7 +385,7 @@ function buildEventInfo(item)
     spc:setFillColor( .9 )
     srvEventos[1]:insert(spc)
 	
-	lastY = lastY + 600
+	lastY = lastY + 280
 	
 	--decidimos si el evento es por un comercio o por un lugar
 	if callbackCurrent == Globals.noCallbackGlobal then

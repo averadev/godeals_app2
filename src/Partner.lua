@@ -213,7 +213,7 @@ function showMapa( event )
 	storyboard.gotoScene( "src.Mapa", {
 		time = 400,
 		effect = "crossFade",
-		params = { itemObj = itemObj }
+		params = { itemObj = itemPartner }
 	})
 end
 

@@ -43,6 +43,7 @@ function Event:new()
         local Globals = require('src.resources.Globals')
         local storyboard = require( "storyboard" )
         Globals.noCallbackGlobal = Globals.noCallbackGlobal + 1
+        storyboard.removeScene( "src.Event" )
         storyboard.gotoScene( "src.Event", {
             time = 400,
             effect = "crossFade",
@@ -123,6 +124,7 @@ function Deal:new()
         local Globals = require('src.resources.Globals')
         local storyboard = require( "storyboard" )
         Globals.noCallbackGlobal = Globals.noCallbackGlobal + 1
+        storyboard.removeScene( "src.Coupon" )
         storyboard.gotoScene( "src.Coupon", {
             time = 400,
             effect = "crossFade",

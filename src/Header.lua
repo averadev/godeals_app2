@@ -44,11 +44,13 @@ function Header:new()
     -- Return to last scene
     function returnScene( event )
         -- Obtenemos escena anterior y eliminamos del arreglo
-        local previousScene = Globals.scene[#Globals.scene - 1]
-        table.remove(Globals.scene, #Globals.scene)
-        table.remove(Globals.scene, #Globals.scene)
-        -- Movemos a la escena anterior
-        storyboard.gotoScene( previousScene, { time = 400, effect = "slideRight" })
+        if #Globals.scene > 1 then
+            local previousScene = Globals.scene[#Globals.scene - 1]
+            table.remove(Globals.scene, #Globals.scene)
+            table.remove(Globals.scene, #Globals.scene)
+            -- Movemos a la escena anterior
+            storyboard.gotoScene( previousScene, { time = 400, effect = "slideRight" })
+        end
     end
     
     -- Envia elemento a la cartera

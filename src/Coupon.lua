@@ -360,6 +360,7 @@ function buildCoupon()
 end
 
 function scene:createScene( event )
+
 	screen = self.view
 	screen:insert(homeScreen)
 	

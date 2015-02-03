@@ -72,7 +72,7 @@ function loadWalletImage(obj)
                     obj.posc = obj.posc + 1
                     loadWalletImage(obj)
                 else
-                    buildItems(obj.screen)
+                    buildWalletItems(obj.screen)
                 end
             end
         end
@@ -107,8 +107,6 @@ function buildWalletItems()
         deal.y = yMain
         yMain = yMain + 102
     end
-    -- Siguiente solicitud
-    RestManager.getAllEvent()
 end
 
 

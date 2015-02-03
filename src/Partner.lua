@@ -210,6 +210,7 @@ end
 
 
 function showMapa( event )
+    storyboard.removeScene( "src.Mapa" )
 	storyboard.gotoScene( "src.Mapa", {
 		time = 400,
 		effect = "crossFade",

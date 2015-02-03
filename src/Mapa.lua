@@ -21,7 +21,7 @@ local midH = display.contentCenterY
 
 local h = display.topStatusBarContentHeight
 local lastY = 0;
-
+local myMap
 local homeScreen = display.newGroup()
 
 -- Arreglos
@@ -94,6 +94,10 @@ end
 
 -- Remove Listener
 function scene:exitScene( event )
+    if myMap then
+        myMap:removeSelf()
+        myMap = nil
+    end
 end
 
 scene:addEventListener("createScene", scene )

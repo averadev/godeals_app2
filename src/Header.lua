@@ -35,6 +35,10 @@ function Header:new()
         end
     end
     
+    function showSearch( event )
+        
+    end
+    
     -- Temporal
     function saveBeacon( event )
         -- Move
@@ -60,6 +64,7 @@ function Header:new()
     
     -- Creamos la el toolbar
     function self:buildToolbar(desc)
+        -- Incluye botones que de se ocultaran en la bus
         
         local toolbar = display.newRect( 0, 0, display.contentWidth, 55 )
         toolbar.anchorX = 0
@@ -85,6 +90,7 @@ function Header:new()
 
         local btnSearch = display.newImage( "img/btn/btnMenuSearch.png" )
         btnSearch:translate( display.contentWidth - 90, 25 )
+        btnSearch:addEventListener( "tap", showSearch )
         self:insert(btnSearch)
         -- Temporal bubble
         local notBubble = display.newCircle( display.contentWidth - 132, 10, 10 )

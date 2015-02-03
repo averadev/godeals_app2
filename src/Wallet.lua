@@ -129,7 +129,7 @@ function scene:createScene( event )
     homeScreen:insert(header)
     header.y = h
     header:buildToolbar()
-    header:buildNavBar()
+    header:buildNavBar("Deals Descargados")
 	
     svContent = widget.newScrollView
 	{

@@ -126,7 +126,7 @@ function scene:createScene( event )
     homeScreen:insert(header)
     header.y = h
     header:buildToolbar()
-    header:buildNavBar()
+    header:buildNavBar("Notificaciones")
 	
     svContent = widget.newScrollView
 	{

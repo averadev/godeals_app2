@@ -48,7 +48,7 @@ function showPartner( event )
 	storyboard.gotoScene( "src.Partner", {
 		time = 400,
 		effect = "crossFade",
-		params = { idPartner = itemObj.partnerId }
+		params = { idPartner = itemObj.partnerId, name = itemObj.partner }
 	})
 end
 
@@ -368,7 +368,7 @@ function scene:createScene( event )
     homeScreen:insert(header)
     header.y = h
     header:buildToolbar()
-    header:buildNavBar(event.params.item.id)
+    header:buildNavBar(event.params.item.name, event.params.item.id)
 	
 	----obtenemos los parametros del cupon
 	if event.params.item == nil then

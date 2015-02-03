@@ -635,19 +635,18 @@ function scene:createScene( event )
     homeScreen:insert(header)
     header.y = h
     header:buildToolbar()
-    header:buildNavBar(itemObj.id)
+    header:buildNavBar(itemObj.name, itemObj.id)
 	
 	Globals.noCallbackGlobal = Globals.noCallbackGlobal + 1
 	callbackCurrent = Globals.noCallbackGlobal
 	
+    settings = DBManager.getSettings()
+	buildEvent(itemObj)
 end
 
 -- Called immediately after scene has moved onscreen:
 function scene:enterScene( event )
     Globals.scene[#Globals.scene + 1] = storyboard.getCurrentSceneName()
-	storyboard.removeAll()
-	settings = DBManager.getSettings()
-	buildEvent(itemObj)
 end
 
 -- Remove Listener

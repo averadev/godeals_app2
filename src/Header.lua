@@ -111,13 +111,20 @@ function Header:new()
     end
     
     -- Creamos la pantalla del menu
-    function self:buildNavBar(idElement)
+    function self:buildNavBar(texto, idElement)
         
         local menu = display.newRect( 0, 55, display.contentWidth, 75 )
         menu.anchorX = 0
         menu.anchorY = 0
         menu:setFillColor( 189/255, 203/255, 206/255 )
         self:insert(menu)
+        
+        txtTitle = display.newText( {
+            x = (display.contentWidth/2), y = 95,
+            text = texto, font = "Chivo", fontSize = 22,
+        })
+        txtTitle:setFillColor( .2 )
+        self:insert(txtTitle)
 
         local imgBtnBack = display.newImage( "img/btn/btnBackward.png" )
         imgBtnBack.x= 30
@@ -134,7 +141,7 @@ function Header:new()
             self:insert( imgToWallet )
         end
     end
-
+    
     return self
 end
 

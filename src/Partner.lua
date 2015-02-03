@@ -612,9 +612,12 @@ function loadGalleryPartner(items,posc)
 end
 
 function scene:createScene( event )
-	screen = self.view
+	screen = self.view   
 	idPartner = event.params.idPartner
 	screen:insert(homeScreen)
+     
+    local title = ''
+    if event.params.name then title = event.params.name end
 	
 	homeScreen.y = h
 	
@@ -628,18 +631,18 @@ function scene:createScene( event )
 	local header = Header:new()
     homeScreen:insert(header)
     header:buildToolbar()
-    header:buildNavBar()
+    header:buildNavBar(title)
 	
 	Globals.noCallbackGlobal = Globals.noCallbackGlobal + 1
 	callbackCurrent = Globals.noCallbackGlobal
 	
+    settings = DBManager.getSettings()
+	RestManager.getPartner(idPartner)
 end
 
 -- Called immediately after scene has moved onscreen:
 function scene:enterScene( event )
     Globals.scene[#Globals.scene + 1] = storyboard.getCurrentSceneName()
-	settings = DBManager.getSettings()
-	RestManager.getPartner(idPartner)
 end
 
 -- Remove Listener

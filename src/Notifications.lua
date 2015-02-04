@@ -37,7 +37,7 @@ local imageItems = {}
 ---------------------------------------------------------------------------------
 -- Setters
 ---------------------------------------------------------------------------------
-function setWalletElements(items)
+function setNotificationsElements(items)
     elements = items
 end
 
@@ -45,8 +45,21 @@ end
 -- FUNCIONES
 ---------------------------------------------------------------------------------
 
+------marca como leido la notificaciones
+
+function markRead( event )
+
+	RestManager.notificationRead( event.target.id )
+
+end
+
+---------------------------------------------
+-----mostrar las notificaciones
+---------------------------------------------
+
 -- Carga de la imagen del servidor o de TemporaryDirectory
-function loadWalletImage(obj)    
+function loadNotificationsImage(obj)
+
     -- Determinamos si la imagen existe
     local path = system.pathForFile( elements[obj.posc].image, system.TemporaryDirectory )
     local fhd = io.open( path )
@@ -56,9 +69,9 @@ function loadWalletImage(obj)
         imageItems[obj.posc].alpha = 0
         if obj.posc < #elements then
             obj.posc = obj.posc + 1
-            loadWalletImage(obj)
+            loadNotificationsImage(obj)
         else
-            buildWalletItems(obj.screen)
+            buildNotificationsItems(obj.screen)
         end
     else
         -- Listener de la carga de la imagen del servidor
@@ -70,20 +83,21 @@ function loadWalletImage(obj)
                 imageItems[obj.posc] = event.target
                 if obj.posc < #elements then
                     obj.posc = obj.posc + 1
-                    loadWalletImage(obj)
+                    loadNotificationsImage(obj)
                 else
-                    buildItems(obj.screen)
+                    buildNotificationsItems(obj.screen)
                 end
             end
         end
         
         -- Descargamos de la nube
-        display.loadRemoteImage( settings.url..obj.path..elements[obj.posc].image, 
+        display.loadRemoteImage( settings.url..elements[obj.posc].path..elements[obj.posc].image, 
         "GET", loadImageListener, elements[obj.posc].image, system.TemporaryDirectory ) 
     end
 end
 
-function buildWalletItems()
+function buildNotificationsItems(objScreen)
+
     yMain = 50
     local separadorEventos = display.newImage( "img/btn/btnArrowBlack.png" )
     separadorEventos:translate( 41, yMain -3)
@@ -97,18 +111,42 @@ function buildWalletItems()
     })
     textSeparadorEventos:setFillColor( 85/255, 85/255, 85/255 )
     svContent:insert(textSeparadorEventos)
-
+	
     yMain = yMain + 30
-    for y = 1, #elements, 1 do 
+    for y = 1, #elements, 1 do
+	
         -- Create container
-        local deal = Deal:new()
-        svContent:insert(deal)
-        deal:build(elements[y], imageItems[y])
-        deal.y = yMain
-        yMain = yMain + 102
+		if elements[y].tipo == "1" then
+		
+			local evento = Event:new()
+            svContent:insert(evento)
+            evento:build(elements[y], imageItems[y])
+            evento.y = yMain
+			evento.id = elements[y].idRelacional
+			evento:addEventListener('tap', markRead)
+			yMain = yMain + 102
+		
+		elseif elements[y].tipo == "2" then
+		
+			local deal = Deal:new()
+			svContent:insert(deal)
+			deal:build(elements[y], imageItems[y])
+			deal.y = yMain
+			deal.id = elements[y].idRelacional
+			deal:addEventListener('tap', markRead)
+			yMain = yMain + 102
+		
+		end
+		
+		if elements[y].leido == "1" then
+				local noLeido = display.newRect( 0, h, 5, 100 )
+				noLeido.x = 33
+				noLeido.y = yMain - 52
+				noLeido:setFillColor( 0 )
+				svContent:insert(noLeido)
+		end
+		
     end
-    -- Siguiente solicitud
-    RestManager.getAllEvent()
 end
 
 function scene:createScene( event )
@@ -138,7 +176,7 @@ function scene:createScene( event )
 		backgroundColor = { 245/255, 245/255, 245/255 }
 	}
 	homeScreen:insert(svContent)
-	RestManager.getMyDeals()
+	RestManager.getNotifications()
 end
 
 -- Called immediately after scene has moved onscreen:

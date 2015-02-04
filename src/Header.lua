@@ -5,6 +5,8 @@
 ---------------------------------------------------------------------------------
 local Globals = require('src.resources.Globals')
 local storyboard = require( "storyboard" )
+local RestManager = require('src.resources.RestManager')
+
 Header = {}
 
 function Header:new()
@@ -63,6 +65,20 @@ function Header:new()
         -- Move
         
     end
+	
+	function createNotBubble(totalBubble)
+		local notBubble = display.newCircle( display.contentWidth - 132, 10, 10 )
+        notBubble:setFillColor(1,.1,.1)
+        notBubble.strokeWidth = 2
+        notBubble:setStrokeColor(.8)
+        self:insert(notBubble)
+        local txtBubble = display.newText( {
+            x = display.contentWidth - 131, y = 10,
+            text = totalBubble, font = "Chivo", fontSize = 12,
+        })
+        txtBubble:setFillColor( 1 )
+        self:insert(txtBubble)
+	end
     
     -- Return to last scene
     function returnScene( event )
@@ -115,19 +131,7 @@ function Header:new()
         btnSearch:translate( display.contentWidth - 90, 25 )
         btnSearch:addEventListener( "tap", showSearch )
         grpTool:insert(btnSearch)
-        -- Temporal bubble
-        local notBubble = display.newCircle( display.contentWidth - 132, 10, 10 )
-        notBubble:setFillColor(128,128,128)
-        notBubble.strokeWidth = 2
-        notBubble:setStrokeColor(.8)
-        grpTool:insert(notBubble)
-        local txtBubble = display.newText( {
-            x = display.contentWidth - 131, y = 10,
-            text = "3", font = "Chivo", fontSize = 12,
-        })
-        txtBubble:setFillColor( .1 )
-        grpTool:insert(txtBubble)
-
+        
         local btnMensaje = display.newImage( "img/btn/btnMenuNotification.png" )
         btnMensaje:translate( display.contentWidth - 150, 25 )
         btnMensaje:addEventListener( "tap", showNotifications )
@@ -158,6 +162,11 @@ function Header:new()
         bgSearch = display.newImage( "img/btn/bgTxtSearch.png" )
         bgSearch:translate(270, 45 )
         grpSearch:insert(bgSearch)
+
+        self:insert(btnHerramienta)
+		
+		--verificamos notificaciones
+		RestManager.getNotificationsUnRead()
     end
     
     -- Creamos la pantalla del menu

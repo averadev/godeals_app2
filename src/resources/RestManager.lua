@@ -322,5 +322,95 @@ local RestManager = {}
         network.request( url, "GET", callback )
 		
 	end
-
+	
+	-- se obtiene el total de notificaciones no leidas
+	
+	RestManager.getNotificationsUnRead = function()
+		
+		local url = settings.url
+        url = url.."api/getNotificationsUnRead/format/json"
+        url = url.."/idApp/"..settings.idApp
+    
+        local function callback(event)
+            if ( event.isError ) then
+            else
+                --hideLoadLogin()
+                local data = json.decode(event.response)
+                if data.success then
+					if data.items > 0 then
+						createNotBubble(data.items)
+					end
+                else
+                    native.showAlert( "Go Deals", data.message, { "OK"})
+                end
+            end
+            return true
+        end
+        -- Do request
+        network.request( url, "GET", callback )
+		
+	end
+	
+	-- se obtiene las notificaciones del usuarios
+	
+	RestManager.getNotifications = function()
+		
+		local url = settings.url
+        url = url.."api/getNotifications/format/json"
+        url = url.."/idApp/"..settings.idApp
+    
+        local function callback(event)
+            if ( event.isError ) then
+            else
+				local data = json.decode(event.response)
+                if data.success then
+                    setNotificationsElements(data.items)
+					loadNotificationsImage({posc = 1})
+                end
+            end
+            return true
+        end
+        -- Do request
+        network.request( url, "GET", callback )
+		
+	end
+	
+	RestManager.getNotifications = function()
+		
+		local url = settings.url
+        url = url.."api/getNotifications/format/json"
+        url = url.."/idApp/"..settings.idApp
+    
+        local function callback(event)
+            if ( event.isError ) then
+            else
+				local data = json.decode(event.response)
+                if data.success then
+                    setNotificationsElements(data.items)
+					loadNotificationsImage({posc = 1})
+                end
+            end
+            return true
+        end
+        -- Do request
+        network.request( url, "GET", callback )
+		
+	end
+	
+	---marca la notificacion como leida
+	
+	RestManager.notificationRead = function(idNotification)
+		
+		local url = settings.url
+        url = url.."api/notificationRead/format/json"
+        url = url.."/idNotification/"..idNotification
+    
+        local function callback(event)
+            return true
+        end
+        -- Do request
+        network.request( url, "GET", callback )
+		
+	end
+	
 return RestManager

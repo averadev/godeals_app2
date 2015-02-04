@@ -10,6 +10,9 @@ Header = {}
 function Header:new()
     -- Variables
     local self = display.newGroup()
+    local grpTool = display.newGroup()
+    local grpSearch = display.newGroup()
+    local imgSearch, btnClose, txtSearch
     
     -- Obtener cupones descargados
     function showHome(event)
@@ -35,8 +38,24 @@ function Header:new()
         end
     end
     
+    function hideSearch( event )
+        event.target.alpha = 0
+        txtSearch.y = -100
+        transition.to( imgSearch, { x = display.contentWidth - 90, time = 400, transition = easing.outExpo, 
+			onComplete=function()
+                    grpSearch.alpha = 0
+					grpTool.alpha = 1
+            end
+        })
+    end
+    
     function showSearch( event )
-        
+        grpTool.alpha = 0
+        grpSearch.alpha = 1
+        txtSearch.y = 30
+        transition.to( imgSearch, { x = 150, time = 400, transition = easing.outExpo, 
+			onComplete=function() btnClose.alpha = 1 end
+        })
     end
     
     -- Temporal
@@ -75,45 +94,70 @@ function Header:new()
         local logo = display.newImage( "img/btn/logo.png" )
         logo:translate( 45, 23 )
         self:insert(logo)
+        
+        -- Grupo que se oculta en la busqueda
+        self:insert(grpTool)
+        self:insert(grpSearch)
 
         local txtCancun = display.newText( {
             x = 130, y = 23,
             text = "Cancun", font = "Chivo", fontSize = 25,
         })
         txtCancun:setFillColor( .1 )
-        self:insert(txtCancun)
+        grpTool:insert(txtCancun)
 
         local btnWallet = display.newImage( "img/btn/btnMenuWallet.png" )
         btnWallet:translate( display.contentWidth - 212, 23 )
         btnWallet:addEventListener( "tap", showWallet )
-        self:insert(btnWallet)
+        grpTool:insert(btnWallet)
 
         local btnSearch = display.newImage( "img/btn/btnMenuSearch.png" )
         btnSearch:translate( display.contentWidth - 90, 25 )
         btnSearch:addEventListener( "tap", showSearch )
-        self:insert(btnSearch)
+        grpTool:insert(btnSearch)
         -- Temporal bubble
         local notBubble = display.newCircle( display.contentWidth - 132, 10, 10 )
         notBubble:setFillColor(128,128,128)
         notBubble.strokeWidth = 2
         notBubble:setStrokeColor(.8)
-        self:insert(notBubble)
+        grpTool:insert(notBubble)
         local txtBubble = display.newText( {
             x = display.contentWidth - 131, y = 10,
             text = "3", font = "Chivo", fontSize = 12,
         })
         txtBubble:setFillColor( .1 )
-        self:insert(txtBubble)
+        grpTool:insert(txtBubble)
 
         local btnMensaje = display.newImage( "img/btn/btnMenuNotification.png" )
         btnMensaje:translate( display.contentWidth - 150, 25 )
         btnMensaje:addEventListener( "tap", showNotifications )
-        self:insert(btnMensaje)
+        grpTool:insert(btnMensaje)
 
         local btnHerramienta = display.newImage( "img/btn/btnMenuUser.png" )
         btnHerramienta:translate( display.contentWidth - 35, 25 )
         btnHerramienta:addEventListener( "tap", saveBeacon )
-        self:insert(btnHerramienta)
+        grpTool:insert(btnHerramienta)
+                
+        -- Search Elements
+        grpSearch.alpha = 0
+        txtSearch = native.newTextField( 300, -100, 250, 35 )
+        txtSearch.method = "create"
+        txtSearch.size = 18
+        txtSearch.hasBackground = false 
+        grpSearch:insert(txtSearch)
+        
+        imgSearch = display.newImage( "img/btn/btnMenuSearch.png" )
+        imgSearch:translate( display.contentWidth - 90, 25 )
+        grpSearch:insert(imgSearch)
+        
+        btnClose = display.newImage( "img/btn/btnMenuClose.png" )
+        btnClose:translate( display.contentWidth - 30, 25 )
+        btnClose:addEventListener( "tap", hideSearch )
+        grpSearch:insert(btnClose)
+        
+        bgSearch = display.newImage( "img/btn/bgTxtSearch.png" )
+        bgSearch:translate(270, 45 )
+        grpSearch:insert(bgSearch)
     end
     
     -- Creamos la pantalla del menu

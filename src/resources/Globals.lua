@@ -6,5 +6,9 @@ return {
     
     scene = {},
     
-    noCallbackGlobal = 0
+    noCallbackGlobal = 0,
+	
+	notBubble = {},
+	
+	txtBubble = {}
 }

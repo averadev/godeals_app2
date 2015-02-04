@@ -48,17 +48,30 @@ function Header:new()
     end
 	
 	function createNotBubble(totalBubble)
-		local notBubble = display.newCircle( display.contentWidth - 132, 10, 10 )
-        notBubble:setFillColor(1,.1,.1)
-        notBubble.strokeWidth = 2
-        notBubble:setStrokeColor(.8)
-        self:insert(notBubble)
-        local txtBubble = display.newText( {
+	
+		local tTxt = #Globals.txtBubble + 1
+	
+		Globals.notBubble[tTxt] = display.newCircle( display.contentWidth - 132, 10, 10 )
+        Globals.notBubble[tTxt]:setFillColor(1,.1,.1)
+        Globals.notBubble[tTxt].strokeWidth = 2
+        Globals.notBubble[tTxt]:setStrokeColor(.8)
+        self:insert(Globals.notBubble[tTxt])
+        Globals.txtBubble[tTxt] = display.newText( {
             x = display.contentWidth - 131, y = 10,
             text = totalBubble, font = "Chivo", fontSize = 12,
         })
-        txtBubble:setFillColor( 1 )
-        self:insert(txtBubble)
+        Globals.txtBubble[tTxt]:setFillColor( 1 )
+        self:insert(Globals.txtBubble[tTxt])
+		
+		if #Globals.txtBubble > 0 then
+			Globals.txtBubble[tTxt].text = Globals.txtBubble[1].text
+		end
+		
+		if Globals.txtBubble[1].text == nil then
+			Globals.notBubble[tTxt]:removeSelf()
+			Globals.txtBubble[tTxt]:removeSelf()
+		end
+		
 	end
     
     -- Return to last scene

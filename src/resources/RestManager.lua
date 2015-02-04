@@ -386,8 +386,10 @@ local RestManager = {}
             else
 				local data = json.decode(event.response)
                 if data.success then
+					if #data.items > 0 then
                     setNotificationsElements(data.items)
 					loadNotificationsImage({posc = 1})
+					end
                 end
             end
             return true

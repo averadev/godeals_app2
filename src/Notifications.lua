@@ -33,6 +33,7 @@ local homeScreen = display.newGroup()
 -- Arreglos
 local elements = {}
 local imageItems = {}
+local noLeido = {}
 
 ---------------------------------------------------------------------------------
 -- Setters
@@ -49,7 +50,24 @@ end
 
 function markRead( event )
 
-	RestManager.notificationRead( event.target.id )
+	if elements[event.target.posci].leido == "1" then
+	
+		elements[event.target.posci].leido = 0
+	
+		for y = 1, #Globals.txtBubble, 1 do
+		
+			if Globals.txtBubble[y].text ~= nill then
+				if Globals.txtBubble[y].text == "1" then
+					Globals.txtBubble[y]:removeSelf()
+					Globals.notBubble[y]:removeSelf()
+				else
+					Globals.txtBubble[y].text = Globals.txtBubble[y].text - 1
+				end
+			end
+		end
+		noLeido[event.target.posci]:removeSelf()
+		RestManager.notificationRead( event.target.id )
+	end
 
 end
 
@@ -123,6 +141,7 @@ function buildNotificationsItems(objScreen)
             evento:build(elements[y], imageItems[y])
             evento.y = yMain
 			evento.id = elements[y].idRelacional
+			evento.posci = y
 			evento:addEventListener('tap', markRead)
 			yMain = yMain + 102
 		
@@ -133,17 +152,18 @@ function buildNotificationsItems(objScreen)
 			deal:build(elements[y], imageItems[y])
 			deal.y = yMain
 			deal.id = elements[y].idRelacional
+			deal.posci = y
 			deal:addEventListener('tap', markRead)
 			yMain = yMain + 102
 		
 		end
 		
 		if elements[y].leido == "1" then
-				local noLeido = display.newRect( 0, h, 5, 100 )
-				noLeido.x = 33
-				noLeido.y = yMain - 52
-				noLeido:setFillColor( 0 )
-				svContent:insert(noLeido)
+				noLeido[y] = display.newRect( 0, h, 5, 100 )
+				noLeido[y].x = 33
+				noLeido[y].y = yMain - 52
+				noLeido[y]:setFillColor( 0 )
+				svContent:insert(noLeido[y])
 		end
 		
     end

@@ -62,10 +62,9 @@ settings = {
             },
         },
         UIAppFonts = {
-            "Chivo-Black.ttf",
-            "Chivo-BlackItalic.ttf",
-            "Chivo-Italic.ttf",
-            "Chivo-Regular.ttf"
+            "Lato-Black.ttf",
+            "Lato-Bold.ttf",
+            "Lato-Regular.ttf"
         },
     },
     

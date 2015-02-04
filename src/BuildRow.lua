@@ -21,7 +21,7 @@ function MonthTitle:new()
             text = desc,     
             x = 245, y = 15,
             width = 470, height = 35,
-            font = "Chivo-Black", fontSize = 24, align = "left"
+            font = "Lato-Bold", fontSize = 24, align = "left"
 		})
 		txtTitleDate:setFillColor( 0 )
 		container:insert(txtTitleDate)
@@ -84,7 +84,7 @@ function Event:new()
             text = item.name,     
             x = 30, y = -5,
             width = 300, height =60,
-            font = "Chivo", fontSize = 24, align = "left"
+            font = "Lato-Regular", fontSize = 24, align = "left"
         })
         txtTitle:setFillColor( 0 )
         container:insert(txtTitle)
@@ -93,7 +93,7 @@ function Event:new()
             text = getDate(item.iniDate),     
             x = 30, y = 25,
             width = 300, height =60,
-            font = "Chivo", fontSize = 18, align = "left"
+            font = "Lato-Regular", fontSize = 18, align = "left"
         })
         txtDate:setFillColor( 146/255, 146/255, 146/255)
         container:insert(txtDate)
@@ -102,7 +102,7 @@ function Event:new()
             text = item.address,     
             x = 30, y = 45,
             width = 300, height =60,
-            font = "Chivo", fontSize = 18, align = "left"
+            font = "Lato-Regular", fontSize = 18, align = "left"
         })
         txtPlace:setFillColor( 146/255, 146/255, 146/255)
         container:insert(txtPlace)
@@ -164,7 +164,7 @@ function Deal:new()
             text = item.name ,     
             x = 30, y = 5,
             width = 300, height = 60,
-            font = "Chivo", fontSize = 24, align = "left"
+            font = "Lato-Regular", fontSize = 24, align = "left"
         })
         txtTitle:setFillColor( 0 )
         container:insert(txtTitle)
@@ -173,7 +173,7 @@ function Deal:new()
             text = item.validity,     
             x = 30, y = 35,
             width = 300, height =60,
-            font = "Chivo", fontSize = 18, align = "left"
+            font = "Lato-Regular", fontSize = 18, align = "left"
         })
         txtDate:setFillColor( 146/255, 146/255, 146/255)
         container:insert(txtDate)
@@ -193,7 +193,7 @@ function Deal:new()
             
             local txtBubble = display.newText( {
                 x = 182, y = -27,
-                text = item.stock, font = "Chivo", fontSize = 16,
+                text = item.stock, font = "Lato-Regular", fontSize = 16,
             })
             txtBubble:setFillColor( .1 )
             container:insert(txtBubble)  --]]

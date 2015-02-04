@@ -131,7 +131,7 @@ function buildItems(screen)
         local textSeparadorEventos = display.newText( {
             text = "Recomendaciones de eventos y actividades.",     
             x = 300, y = 217, width = intW, height = 80,
-            font = "Chivo", fontSize = 19, align = "left"
+            font = "Lato-Regular", fontSize = 19, align = "left"
         })
         textSeparadorEventos:setFillColor( 85/255, 85/255, 85/255 )
         scrViewMain:insert(textSeparadorEventos)
@@ -158,7 +158,7 @@ function buildItems(screen)
         local textSeparadorEventos = display.newText( {
             text = "Recomendaciones de promociones para ti.",     
             x = 300, y = yMain + 27, width = intW, height = 80,
-            font = "Chivo", fontSize = 19, align = "left"
+            font = "Lato-Regular", fontSize = 19, align = "left"
         })
         textSeparadorEventos:setFillColor( 85/255, 85/255, 85/255 )
         scrViewMain:insert(textSeparadorEventos)
@@ -452,11 +452,7 @@ function getFBData()
 		contenerUser.y = 0
 		scrViewMain:insert( contenerUser )
 		
-		local bgFotoFacebook = display.newRect( 0, 0, display.contentWidth, 90 )
-			bgFotoFacebook.anchorX = 0
-			bgFotoFacebook.anchorY = 0
-			bgFotoFacebook:setFillColor( 1 )
-			contenerUser:insert(bgFotoFacebook)
+		
 		
 		if settings.fbId == "" then
 		
@@ -500,7 +496,7 @@ function getFBData()
 		text = settings.name,     
 		x = 245, y = 25,
 		width = intW, height = 30,
-		font = "Chivo-Black",  fontSize = 26, align = "left"
+		font = "Lato-Bold",  fontSize = 26, align = "left"
 	})
 	textNombre:setFillColor( 0 )
 	contenerUser:insert(textNombre)
@@ -512,10 +508,10 @@ function getFBData()
 	end
 		
 	local textSaludo = display.newText( {
-		text = "Actualmente esta viendo eventos y cupones de Cancún",     
-		x = 310, y = 80,
-		width = 400, height =20,
-		font = "Chivo",  fontSize = 14, align = "left"
+		text = "RECIBE DEALS ÚNICOS, CONSULTA EVENTOS ESPECIALES Y MÁS",     
+		x = 310, y = 100,
+		width = 400, height =12,
+		font = "Lato-Regular",  fontSize = 8, align = "left"
 	})
 	textSaludo:setFillColor( 176/255, 176/255, 176/255 )
 	contenerUser:insert(textSaludo)
@@ -554,13 +550,13 @@ function scene:createScene( event )
 	svMenuTxt = widget.newScrollView
 	{
 		x = 240,
-		y = h + 89,
+		y = h + 92,
 		width = intW,
-		height = 70,
+		height = 65,
 		listener = ListenerChangeMenuHome,
 		horizontalScrollDisabled = false,
         verticalScrollDisabled = true,
-		backgroundColor = { 245/255, 245/255, 245/255 }
+		backgroundColor = { .87, .87, .87 }
 	}
 	homeScreen:insert(svMenuTxt)
 	
@@ -568,8 +564,6 @@ function scene:createScene( event )
 	triangle:translate( display.contentWidth * .5, 123 + h)
 	triangle:setFillColor( 1 )
 	triangle.isVisible = true
-	triangle.height = 15
-	triangle.width = 24
 	homeScreen:insert(triangle)
 	
 	scrViewMain = widget.newScrollView
@@ -581,7 +575,7 @@ function scene:createScene( event )
 		listener = ListenerChangeScrollHome,
 		horizontalScrollDisabled = false,
         verticalScrollDisabled = false,
-		backgroundColor = { 245/255, 245/255, 245/255 }
+		backgroundColor = { .92, .92, .92 }
 	}
 	homeScreen:insert(scrViewMain)
 	scrViewMain.name = "scrViewMain"
@@ -593,7 +587,7 @@ function scene:createScene( event )
 		width = display.contentWidth,
 		height = display.contentHeight,
 		listener = ListenerChangeScrollHome,
-		backgroundColor = { 245/255, 245/255, 245/255 }
+		backgroundColor = { .92, .92, .92 }
 	}
 	homeScreen:insert(scrViewEventos)
 	scrViewEventos.name = "scrViewEventos"
@@ -605,7 +599,7 @@ function scene:createScene( event )
 		width = display.contentWidth,
 		height = display.contentHeight,
 		listener = ListenerChangeScrollHome,
-		backgroundColor = { 245/255, 245/255, 245/255 }
+		backgroundColor = { .92, .92, .92 }
 	}
 	homeScreen:insert(scrViewDeals)
 	scrViewDeals.name = "scrViewDeals"
@@ -615,7 +609,7 @@ function scene:createScene( event )
 	
 	txtMenuInicio = display.newText( {    
         x = display.contentWidth * .5, y = 30,
-        text = "Inicio",  font = "Chivo", fontSize = 30,
+        text = "Inicio",  font = "Lato-Regular", fontSize = 30,
 	})
 	txtMenuInicio:setFillColor( 0 )
 	groupMenu:insert(txtMenuInicio)
@@ -623,7 +617,7 @@ function scene:createScene( event )
 	
 	txtMenuEventos = display.newText( {
         x = display.contentWidth * .85, y = 30,
-        text = "Eventos", font = "Chivo", fontSize = 30,
+        text = "Eventos", font = "Lato-Regular", fontSize = 30,
 	})
 	txtMenuEventos:setFillColor( 161/255, 161/255, 161/255 )
 	groupMenu:insert(txtMenuEventos)
@@ -631,7 +625,7 @@ function scene:createScene( event )
 	
 	txtMenuDeals = display.newText( {
         x = display.contentWidth * 1.2, y = 30,
-        text = "Deals", font = "Chivo", fontSize = 30,
+        text = "Deals", font = "Lato-Regular", fontSize = 30,
 	})
 	txtMenuDeals:setFillColor( 161/255, 161/255, 161/255 )
 	groupMenu:insert(txtMenuDeals)

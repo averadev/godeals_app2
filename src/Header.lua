@@ -71,13 +71,13 @@ function Header:new()
         notBubble:setFillColor(1,.1,.1)
         notBubble.strokeWidth = 2
         notBubble:setStrokeColor(.8)
-        self:insert(notBubble)
+        grpTool:insert(notBubble)
         local txtBubble = display.newText( {
             x = display.contentWidth - 131, y = 10,
-            text = totalBubble, font = "Chivo", fontSize = 12,
+            text = totalBubble, font = "Lato-Regular", fontSize = 12,
         })
         txtBubble:setFillColor( 1 )
-        self:insert(txtBubble)
+        grpTool:insert(txtBubble)
 	end
     
     -- Return to last scene
@@ -101,14 +101,14 @@ function Header:new()
     function self:buildToolbar(desc)
         -- Incluye botones que de se ocultaran en la bus
         
-        local toolbar = display.newRect( 0, 0, display.contentWidth, 55 )
+        local toolbar = display.newRect( 0, 0, display.contentWidth, 60 )
         toolbar.anchorX = 0
         toolbar.anchorY = 0
-        toolbar:setFillColor( 221/255, 236/255, 241/255 )
+        toolbar:setFillColor( .2, .2, .2 )
         self:insert(toolbar)
         
         local logo = display.newImage( "img/btn/logo.png" )
-        logo:translate( 45, 23 )
+        logo:translate( 45, 30 )
         self:insert(logo)
         
         -- Grupo que se oculta en la busqueda
@@ -116,54 +116,53 @@ function Header:new()
         self:insert(grpSearch)
 
         local txtCancun = display.newText( {
-            x = 130, y = 23,
-            text = "Cancun", font = "Chivo", fontSize = 25,
+            x = 135, y = 30,
+            text = "CANCUN", font = "Lato-Regular", fontSize = 25,
         })
-        txtCancun:setFillColor( .1 )
+        txtCancun:setFillColor( 1 )
         grpTool:insert(txtCancun)
 
         local btnWallet = display.newImage( "img/btn/btnMenuWallet.png" )
-        btnWallet:translate( display.contentWidth - 212, 23 )
+        btnWallet:translate( display.contentWidth - 212, 30 )
         btnWallet:addEventListener( "tap", showWallet )
         grpTool:insert(btnWallet)
 
         local btnSearch = display.newImage( "img/btn/btnMenuSearch.png" )
-        btnSearch:translate( display.contentWidth - 90, 25 )
+        btnSearch:translate( display.contentWidth - 90, 30 )
         btnSearch:addEventListener( "tap", showSearch )
         grpTool:insert(btnSearch)
         
         local btnMensaje = display.newImage( "img/btn/btnMenuNotification.png" )
-        btnMensaje:translate( display.contentWidth - 150, 25 )
+        btnMensaje:translate( display.contentWidth - 150, 30 )
         btnMensaje:addEventListener( "tap", showNotifications )
         grpTool:insert(btnMensaje)
 
-        local btnHerramienta = display.newImage( "img/btn/btnMenuUser.png" )
-        btnHerramienta:translate( display.contentWidth - 35, 25 )
-        btnHerramienta:addEventListener( "tap", saveBeacon )
-        grpTool:insert(btnHerramienta)
+        local btnUser = display.newImage( "img/btn/btnMenuUser.png" )
+        btnUser:translate( display.contentWidth - 35, 30 )
+        btnUser:addEventListener( "tap", saveBeacon )
+        grpTool:insert(btnUser)
                 
         -- Search Elements
         grpSearch.alpha = 0
-        txtSearch = native.newTextField( 300, -100, 250, 35 )
+        txtSearch = native.newTextField( 300, -100, 250, 40 )
         txtSearch.method = "create"
         txtSearch.size = 18
         txtSearch.hasBackground = false 
         grpSearch:insert(txtSearch)
         
         imgSearch = display.newImage( "img/btn/btnMenuSearch.png" )
-        imgSearch:translate( display.contentWidth - 90, 25 )
+        imgSearch:translate( display.contentWidth - 90, 30 )
         grpSearch:insert(imgSearch)
         
         btnClose = display.newImage( "img/btn/btnMenuClose.png" )
-        btnClose:translate( display.contentWidth - 30, 25 )
+        btnClose:translate( display.contentWidth - 30, 30 )
         btnClose:addEventListener( "tap", hideSearch )
         grpSearch:insert(btnClose)
         
         bgSearch = display.newImage( "img/btn/bgTxtSearch.png" )
-        bgSearch:translate(270, 45 )
+        bgSearch:translate(270, 50 )
         grpSearch:insert(bgSearch)
-
-        self:insert(btnHerramienta)
+        
 		
 		--verificamos notificaciones
 		RestManager.getNotificationsUnRead()
@@ -172,7 +171,7 @@ function Header:new()
     -- Creamos la pantalla del menu
     function self:buildNavBar(texto, idElement)
         
-        local menu = display.newRect( 0, 55, display.contentWidth, 75 )
+        local menu = display.newRect( 0, 60, display.contentWidth, 65 )
         menu.anchorX = 0
         menu.anchorY = 0
         menu:setFillColor( 189/255, 203/255, 206/255 )
@@ -180,7 +179,7 @@ function Header:new()
         
         txtTitle = display.newText( {
             x = (display.contentWidth/2), y = 95,
-            text = texto, font = "Chivo", fontSize = 22,
+            text = texto, font = "Lato-Regular", fontSize = 22,
         })
         txtTitle:setFillColor( .2 )
         self:insert(txtTitle)

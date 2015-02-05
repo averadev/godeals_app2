@@ -17,10 +17,13 @@ local Globals = require('src.resources.Globals')
 local DBManager = require('src.resources.DBManager')
 local RestManager = require('src.resources.RestManager')
 
+
+
 -- Grupos y Contenedores
 local scene = storyboard.newScene()
 local homeScreen = display.newGroup()
 grupoModal = display.newGroup()
+groupSearchModal = display.newGroup()
 local groupMenu, scrViewMain, scrViewEventos, scrViewDeals,svMenuTxt
 local currentSv
 
@@ -552,8 +555,9 @@ function scene:createScene( event )
 	
 	screen:insert(homeScreen)
 	screen:insert(grupoModal)
+	screen:insert(groupSearchModal)
 	
-	local bg = display.newRect( 0, 0, display.contentWidth, display.contentHeight )
+	local bg = display.newRect( 0, h, display.contentWidth, display.contentHeight )
 	bg.anchorX = 0
 	bg.anchorY = 0
 	bg:setFillColor( 1 )

@@ -3,6 +3,7 @@
 ---------------------------------------------------------------------------------
 -- Encabezao general
 ---------------------------------------------------------------------------------
+require('src.Search')
 local Globals = require('src.resources.Globals')
 local storyboard = require( "storyboard" )
 local RestManager = require('src.resources.RestManager')
@@ -90,6 +91,11 @@ function Header:new()
 			Globals.txtBubble[tTxt]:removeSelf()
 		end
 	end
+	
+	function SearchText( event )
+		modalSeach()
+		return true
+	end
     
     -- Return to last scene
     function returnScene( event )
@@ -164,6 +170,7 @@ function Header:new()
         imgSearch = display.newImage( "img/btn/btnMenuSearch.png" )
         imgSearch:translate( display.contentWidth - 90, 30 )
         grpSearch:insert(imgSearch)
+		imgSearch:addEventListener('tap',SearchText)
         
         btnClose = display.newImage( "img/btn/btnMenuClose.png" )
         btnClose:translate( display.contentWidth - 30, 30 )

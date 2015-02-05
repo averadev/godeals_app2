@@ -62,9 +62,11 @@ settings = {
             },
         },
         UIAppFonts = {
+            "Lato-Hairline.ttf",
+            "Lato-Light.ttf",
+            "Lato-Regular.ttf",
             "Lato-Black.ttf",
             "Lato-Bold.ttf",
-            "Lato-Regular.ttf"
         },
     },
     

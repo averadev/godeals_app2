@@ -52,21 +52,23 @@ function Event:new()
     end
     
     -- Creamos la pantalla del menu
-    function self:build(item, image)
+    function self:build(isBg, item, image)
         
         -- Generamos contenedor
-        local container = display.newContainer( 450, 100 )
-        container.x = 255
-        container.y = 50
+        local container = display.newContainer( 480, 120 )
+        container.x = 240
+        container.y = 60
 		container.name = 2
 		container.item = item
         self:insert( container )
 		container:addEventListener( "tap", showEvent )
 
-        -- Agregamos rectangulo alfa al pie
-        local maxShape = display.newRect( 0, 0, 480, 100 )
-        maxShape:setFillColor( 1 )
-        container:insert( maxShape )
+       -- Agregamos fondo
+        if isBg then
+            local maxShape = display.newRect( 0, 0, 460, 110 )
+            maxShape:setFillColor( .89 )
+            container:insert( maxShape )
+        end
 
         -- Agregamos imagen
         local mask = graphics.newMask( "img/bgk/maskImgRow.jpg" )
@@ -74,15 +76,15 @@ function Event:new()
         item.tipo  = "Event"
         image.alpha = 1
         image.x= -175
-        image.width = 80
-        image.height  = 80
+        image.width = 100
+        image.height  = 100
         image.item = item
         container:insert( image )
 
         -- Agregamos textos
         local txtTitle = display.newText( {
             text = item.name,     
-            x = 30, y = -5,
+            x = 40, y = -5,
             width = 300, height =60,
             font = "Lato-Regular", fontSize = 24, align = "left"
         })
@@ -91,20 +93,20 @@ function Event:new()
 
         local txtDate = display.newText( {
             text = getDate(item.iniDate),     
-            x = 30, y = 25,
+            x = 40, y = 25,
             width = 300, height =60,
             font = "Lato-Regular", fontSize = 18, align = "left"
         })
-        txtDate:setFillColor( 146/255, 146/255, 146/255)
+        txtDate:setFillColor( .3 )
         container:insert(txtDate)
 
         local txtPlace = display.newText( {
             text = item.address,     
-            x = 30, y = 45,
+            x = 40, y = 45,
             width = 300, height =60,
             font = "Lato-Regular", fontSize = 18, align = "left"
         })
-        txtPlace:setFillColor( 146/255, 146/255, 146/255)
+        txtPlace:setFillColor( .3 )
         container:insert(txtPlace)
     end
 
@@ -133,20 +135,21 @@ function Deal:new()
     end
     
     -- Creamos la pantalla del menu
-    function self:build(item, image)
+    function self:build(isBg, item, image)
         -- Generamos contenedor
-        local container = display.newContainer( 450, 100 )
-        container.x = 255
-        container.y = 50
-		container.name = 1
+        local container = display.newContainer( 480, 120 )
+        container.x = 240
+        container.y = 60
 		container.item = item
         self:insert( container )
 		container:addEventListener( "tap", showCoupon )
 
-        -- Agregamos rectangulo alfa al pie
-        local maxShape = display.newRect( 0, 0, 480, 100 )
-        maxShape:setFillColor( 1 )
-        container:insert( maxShape )
+        -- Agregamos fondo
+        if isBg then
+            local maxShape = display.newRect( 0, 0, 460, 110 )
+            maxShape:setFillColor( .89 )
+            container:insert( maxShape )
+        end
 
         -- Agregamos imagen
         local mask = graphics.newMask( "img/bgk/maskImgRow.jpg" )
@@ -154,50 +157,44 @@ function Deal:new()
         item.tipo  = "Coupon"
         image.alpha = 1
         image.x= -175
-        image.width = 80
-        image.height  = 80
+        image.width = 100
+        image.height  = 100
         image.item = item
         container:insert( image )
 
         -- Agregamos textos
         local txtTitle = display.newText( {
             text = item.name ,     
-            x = 30, y = 5,
+            x = 40, y = -5,
             width = 300, height = 60,
             font = "Lato-Regular", fontSize = 24, align = "left"
         })
         txtTitle:setFillColor( 0 )
         container:insert(txtTitle)
 
-        local txtDate = display.newText( {
-            text = item.validity,     
-            x = 30, y = 35,
+        local txtPartner = display.newText( {
+            text = item.partner,     
+            x = 40, y = 25,
             width = 300, height =60,
             font = "Lato-Regular", fontSize = 18, align = "left"
         })
-        txtDate:setFillColor( 146/255, 146/255, 146/255)
-        container:insert(txtDate)
-        
+        txtPartner:setFillColor( .3 )
+        container:insert(txtPartner)
+
+        local txtStock = display.newText( {
+            text = item.stock.." Disponibles",     
+            x = 40, y = 45,
+            width = 300, height =60,
+            font = "Lato-Regular", fontSize = 18, align = "left"
+        })
         if item.stock == '0' then
-            local agotado = display.newImage( "img/btn/agotado.png" )
-            agotado:translate( 165, 0 )
-            agotado.alpha = .8
-            container:insert(agotado)
-        --[[
+            txtStock:setFillColor( .8, .5, .5 )
         else
-            local dealBubble = display.newCircle( 180, -27, 15 )
-            dealBubble:setFillColor(.8, 1, .8)
-            dealBubble.strokeWidth = 2
-            dealBubble:setStrokeColor(.8)
-            container:insert(dealBubble)
-            
-            local txtBubble = display.newText( {
-                x = 182, y = -27,
-                text = item.stock, font = "Lato-Regular", fontSize = 16,
-            })
-            txtBubble:setFillColor( .1 )
-            container:insert(txtBubble)  --]]
+            txtStock:setFillColor( .3 )
         end
+        container:insert(txtStock)
+        
+        
         
     end
 

@@ -18,8 +18,8 @@ local RestManager = {}
           return str    
     end
 	
-	RestManager.getTodayEvent = function()
-		local url = settings.url .. "api/getTodayEvent/format/json"
+	RestManager.getRecommended = function()
+		local url = settings.url .. "api/getRecommended/format/json/idApp/" .. settings.idApp
 	   
 	   local function callback(event)
             if ( event.isError ) then
@@ -27,26 +27,7 @@ local RestManager = {}
 				local data = json.decode(event.response)
                 if data.success then
                     setElements(data.items)
-					loadImage({posc = 1, screen = 'MainEvent', path = 'assets/img/app/event/'})
-                end
-            end
-            return true
-        end
-        -- Do request
-        network.request( url, "GET", callback )
-	   
-	end
-	
-	RestManager.getTodayDeal = function()
-		local url = settings.url .. "api/getTodayDeal/format/json/idApp/" .. settings.idApp
-	   
-	   local function callback(event)
-            if ( event.isError ) then
-            else
-				local data = json.decode(event.response)
-                if data.success then
-                    setElements(data.items)
-					loadImage({posc = 1, screen = 'MainDeal', path = 'assets/img/app/deal/'})
+					loadImage({posc = 1, screen = 'MainScreen'})
                 end
             end
             return true
@@ -83,7 +64,7 @@ local RestManager = {}
 				local data = json.decode(event.response)
                 if data.success then
                     setElements(data.items)
-					loadImage({posc = 1, screen = 'EventPanel', path = 'assets/img/app/event/'})
+					loadImage({posc = 1, screen = 'EventPanel'})
                 end
             end
             return true
@@ -101,7 +82,7 @@ local RestManager = {}
 				local data = json.decode(event.response)
                 if data.success then
                     setElements(data.items)
-					loadImage({posc = 1, screen = 'DealPanel', path = 'assets/img/app/deal/'})
+					loadImage({posc = 1, screen = 'DealPanel'})
                 end
             end
             return true

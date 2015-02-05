@@ -236,16 +236,13 @@ function buildEvent(item)
 	groupEvent.y = h
 	homeScreen:insert( groupEvent )
 	
-	local BgMenuEvent = display.newRect( midW, 170, intW, 76 )
-	BgMenuEvent:setFillColor( 217/255, 217/255, 217/255 )
-	groupEvent:insert(BgMenuEvent)
 	
 	svMenuTxt = widget.newScrollView
 	{
 		x = midW,
-		y = 168,
+		y = h + 130,
 		width = intW,
-		height = 73,
+		height = 60,
 		listener = ListenerChangeMenuEvent,
 		horizontalScrollDisabled = true,
         verticalScrollDisabled = true,
@@ -253,9 +250,9 @@ function buildEvent(item)
 	}
 	groupEvent:insert(svMenuTxt)
 	
-	MenuEventBar = display.newRect( midW, 205 , intW /3, 4 )
-	MenuEventBar:setFillColor( 88/255, 188/255, 36/255 )
-	groupEvent:insert(MenuEventBar)
+	local greenLine = display.newImage( "img/btn/greenLine.png" )
+	greenLine:translate( display.contentWidth * .5, h + 159)
+	groupEvent:insert(greenLine)
 	
 	groupMenuEventText = display.newGroup()
 	groupMenuEventText.y = 35
@@ -295,7 +292,7 @@ function buildEventInfo(item)
 		text = itemObj.place,
 		x = 320,
 		y =  lastY,
-		font = "Chivo",
+		font = "Lato-Regular",
 		width = 300,
 		fontSize = 30,
 		align = "left"
@@ -311,7 +308,7 @@ function buildEventInfo(item)
 		text =itemObj.address,
 		x = 320,
 		y =  lastY,
-		font = "Chivo",
+		font = "Lato-Regular",
 		width = 300,
 		fontSize = 18,
 		align = "left"
@@ -338,7 +335,7 @@ function buildEventInfo(item)
 		x = 240,
 		y = lastY - 40,
 		width = 420,
-		font = "Chivo",
+		font = "Lato-Regular",
 		fontSize = 22,
 		align = "left"
 	})
@@ -350,7 +347,7 @@ function buildEventInfo(item)
 		x = 240,
 		y = lastY,
 		width = 420,
-		font = "Chivo",
+		font = "Lato-Regular",
 		fontSize = 18,
 		align = "left"
 	})
@@ -369,7 +366,7 @@ function buildEventInfo(item)
 		text = "Consultar ubicación del evento",
 		x = 230, y = lastY,
 		height = 40, width = 400,
-		font = "Chivo", fontSize = 22, align = "center"
+		font = "Lato-Regular", fontSize = 22, align = "center"
 	})
     txtAdditionalInformation.itemObj = itemObj
 	txtAdditionalInformation:setFillColor( 0 )
@@ -382,11 +379,9 @@ function buildEventInfo(item)
 	lineLink:setFillColor( .2 )
 	srvEventos[1]:insert( lineLink )
     
-    local spc = display.newRect( 0, lastY + 500, 1, 1 )
-    spc:setFillColor( .9 )
-    srvEventos[1]:insert(spc)
-	
-	lastY = lastY + 280
+	local spc = display.newRect( 0, lastY + 70, 1, 1 )
+    spc:setFillColor( 0 )
+    srvEventos[1]:insert( spc )
 	
 	--decidimos si el evento es por un comercio o por un lugar
 	if callbackCurrent == Globals.noCallbackGlobal then
@@ -399,10 +394,6 @@ function buildEventInfo(item)
 	
 	loadImageOfPartner()
 	
-	--lastY = lastY + 300
-	
-	srvEventos[#srvEventos]:setScrollHeight(lastY)
-	
 end
 
 --mostramos los deals del comercio
@@ -410,13 +401,11 @@ function buildEventPromociones(items)
 
 	if #items > 0 then
 	
-	srvEventos[1]:setIsLocked( false, "horizontal" )
-	svMenuTxt:setIsLocked( false, "horizontal" )
-	
-	createScrollViewEvent("promociones")
+        srvEventos[1]:setIsLocked( false, "horizontal" )
+        svMenuTxt:setIsLocked( false, "horizontal" )
+        createScrollViewEvent("promociones")
 	
 		lastY = 25
-	
 		for y = 1, #items, 1 do 
             -- Create container
 			
@@ -425,11 +414,14 @@ function buildEventPromociones(items)
 			
             local deal = Deal:new()
             srvEventos[#srvEventos]:insert(deal)
-            deal:build(items[y], imageEventDeals[y])
+            deal:build(true, items[y], imageEventDeals[y])
             deal.y = lastY
-			lastY = lastY + 102
+			lastY = lastY + 120
         end
-	
+        
+        local spc = display.newRect( 0, lastY, 1, 1 )
+        spc:setFillColor( 0 )
+        srvEventos[#srvEventos]:insert( spc )
 	end
 	
 	--llamamos a la galeria
@@ -440,28 +432,26 @@ end
 --mostramos la galeria
 function buildEventGaleria(items)
 	
-		lastY = 75
-	
-		srvEventos[1]:setIsLocked( false, "horizontal" )
-		svMenuTxt:setIsLocked( false, "horizontal" )
-	
-		createScrollViewEvent("Galeria")
-	
-		for y = 1, #items, 1 do 
-            -- Create container
-			
-			imageEventGallery[y] = display.newImage( items[y].image, system.TemporaryDirectory )
-			imageEventGallery[y].alpha = 1
-			
-            local gallery = Gallery:new()
-            srvEventos[#srvEventos]:insert(gallery)
-            gallery:build(items[y], imageEventGallery[y])
-            gallery.y = lastY
-			lastY = lastY + 210
-        end
-		
-		srvEventos[#srvEventos]:setScrollHeight(lastY)
+    lastY = 75
+    srvEventos[1]:setIsLocked( false, "horizontal" )
+    svMenuTxt:setIsLocked( false, "horizontal" )
+    createScrollViewEvent("Galeria")
 
+    for y = 1, #items, 1 do 
+        -- Add image
+        imageEventGallery[y] = display.newImage( items[y].image, system.TemporaryDirectory )
+        imageEventGallery[y].alpha = 1
+
+        local gallery = Gallery:new()
+        srvEventos[#srvEventos]:insert(gallery)
+        gallery:build(items[y], imageEventGallery[y])
+        gallery.y = lastY
+        lastY = lastY + 210
+    end
+
+    local spc = display.newRect( 0, lastY, 1, 1 )
+    spc:setFillColor( 0 )
+    srvEventos[#srvEventos]:insert( spc )
 end
 
 --llamas al metodo para cargar las imagenes
@@ -485,8 +475,8 @@ function createScrollViewEvent(nameTxt)
 	txtMenuEvent[positionCurrent] = display.newText({
 			text = nameTxt,
 			x = positionTxtMenu,
-			y =  0,
-			font = "Chivo",
+			y =  -5,
+			font = "Lato-Regular",
 			fontSize = 22
 	})
 	txtMenuEvent[positionCurrent]:setFillColor( 0 )
@@ -502,10 +492,10 @@ function createScrollViewEvent(nameTxt)
 	
 	srvEventos[positionCurrent] = widget.newScrollView
 	{
-		top = 210,
+		top = h + 163,
 		left = positionScrollEvent,
 		width = intW,
-		height = intH,
+		height = intH - (h + 185),
 		listener = ListenerChangeScrollEvent,
 		horizontalScrollDisabled = false,
 		verticalScrollDisabled = false,

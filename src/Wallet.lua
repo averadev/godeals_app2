@@ -85,15 +85,15 @@ end
 
 function buildWalletItems()
     yMain = 50
-    local separadorEventos = display.newImage( "img/btn/btnArrowBlack.png" )
+    local separadorEventos = display.newImage( "img/btn/btnArrowGreen.png" )
     separadorEventos:translate( 41, yMain -3)
     separadorEventos.isVisible = true
     svContent:insert(separadorEventos)
 
     local textSeparadorEventos = display.newText( {
         text = "Estos son los Deals disponibles en tu cartera.",     
-        x = 300, y = yMain + 27, width = intW, height = 80,
-        font = "Chivo", fontSize = 19, align = "left"
+        x = 300, y = yMain, width = intW, height = 20,
+        font = "Lato-Regular", fontSize = 14, align = "left"
     })
     textSeparadorEventos:setFillColor( 85/255, 85/255, 85/255 )
     svContent:insert(textSeparadorEventos)
@@ -103,9 +103,9 @@ function buildWalletItems()
         -- Create container
         local deal = Deal:new()
         svContent:insert(deal)
-        deal:build(elements[y], imageItems[y])
+        deal:build(true, elements[y], imageItems[y])
         deal.y = yMain
-        yMain = yMain + 102
+        yMain = yMain + 120
     end
 end
 

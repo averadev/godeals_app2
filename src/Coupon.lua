@@ -96,14 +96,14 @@ function buildCoupon()
 
 	svCoupon = widget.newScrollView
 	{
-		top = h + 134,
+		top = h + 125,
 		left = 0,
 		width = intW,
-		height = intH,
+		height = intH - (h + 125),
 		listener = scrollListenerContent1,
 		horizontalScrollDisabled = false,
         verticalScrollDisabled = false,
-		backgroundColor = { 245/255, 245/255, 245/255 }
+		backgroundColor = { .96 }
 	}
 	homeScreen:insert(svCoupon)
 	
@@ -136,7 +136,7 @@ function buildCoupon()
         y = 80,
         width = 240,
         height =0,
-        font = "Chivo",   
+        font = "Lato-Regular",   
         fontSize = 30,
         align = "left"
     })
@@ -149,7 +149,7 @@ function buildCoupon()
         y = 110,
         width = 240,
         height =25,
-        font = "Chivo",   
+        font = "Lato-Regular",   
         fontSize = 17,
         align = "left"
     })
@@ -167,7 +167,7 @@ function buildCoupon()
         y = 170,
         width = 240,
         height =60,
-        font = "Chivo",   
+        font = "Lato-Regular",   
         fontSize = 17,
         align = "left"
     })
@@ -179,7 +179,7 @@ function buildCoupon()
 		x = 240,
 		y = lastY,
 		width = 370,
-		font = "Chivo",
+		font = "Lato-Regular",
 		fontSize = 24,
 		align = "left"
 	})
@@ -203,7 +203,7 @@ function buildCoupon()
 		y = lastY,
 		height = 40,
 		width = 370,
-		font = "Chivo",
+		font = "Lato-Regular",
 		fontSize = 19,
 		align = "left"
 	})
@@ -221,7 +221,7 @@ function buildCoupon()
 		y = lastY,
 		height = 40,
 		width = 370,
-		font = "Chivo",
+		font = "Lato-Regular",
 		fontSize = 19,
 		align = "left"
 	})
@@ -236,7 +236,7 @@ function buildCoupon()
 		y = lastY,
 		height = 40,
 		width = 370,
-		font = "Chivo",
+		font = "Lato-Regular",
 		fontSize = 19,
 		align = "left"
 	})
@@ -250,7 +250,7 @@ function buildCoupon()
 		x = 240,
 		y = lastY,
 		width = 370,
-		font = "Chivo",
+		font = "Lato-Regular",
 		fontSize = 18,
 		align = "left"
 	})
@@ -306,7 +306,7 @@ function buildCoupon()
 		y =  lastY,
 		height = 40,
 		width = 400,
-		font = "Chivo",
+		font = "Lato-Regular",
 		fontSize = 22,
 		align = "left"
 	})
@@ -324,7 +324,7 @@ function buildCoupon()
 		x = midW,
 		y = lastY,
 		width = 420,
-		font = "Chivo",
+		font = "Lato-Regular",
 		fontSize = 18,
 		align = "left"
 	})
@@ -343,7 +343,7 @@ function buildCoupon()
 		text = "Consultar informacion del comercio",
 		x = 230, y = lastY,
 		height = 40, width = 400,
-		font = "Chivo", fontSize = 22, align = "center"
+		font = "Lato-Regular", fontSize = 22, align = "center"
 	})
 	txtAdditionalInformation:setFillColor( 0 )
 	svCoupon:insert( txtAdditionalInformation )
@@ -355,7 +355,9 @@ function buildCoupon()
 	lineLink:setFillColor( .2 )
 	svCoupon:insert( lineLink )
 	
-	svCoupon:setScrollHeight(lastY + 200)
+	local spc = display.newRect( 0, lastY + 50, 1, 1 )
+    spc:setFillColor( 0 )
+    svCoupon:insert( spc )
 	
 end
 

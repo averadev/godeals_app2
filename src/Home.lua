@@ -38,7 +38,7 @@ local elements = {}
 local imageItems = {}
 
 -- Contadores
-local yMain = 220
+local yMain = 215
 local noCallback = 0
 local callbackCurrent = 0
 
@@ -113,7 +113,7 @@ function loadImage(obj)
         end
         
         -- Descargamos de la nube
-        display.loadRemoteImage( settings.url..obj.path..elements[obj.posc].image, 
+        display.loadRemoteImage( settings.url..elements[obj.posc].path..elements[obj.posc].image, 
         "GET", loadImageListener, elements[obj.posc].image, system.TemporaryDirectory ) 
     end
 end
@@ -121,57 +121,68 @@ end
 -- Carga los paneles
 function buildItems(screen)    
     
-    if screen == "MainEvent" then
+    if screen == "MainScreen" then
+        -- Eventos
+        local maxShape = display.newRect( intW/2, yMain, intW, 50 )
+        maxShape:setFillColor( .87 )
+        scrViewMain:insert( maxShape )
         
-        local separadorEventos = display.newImage( "img/btn/btnArrowBlack.png" )
-        separadorEventos:translate( 41, 190 -3)
+        local separadorEventos = display.newImage( "img/btn/btnArrowGreen.png" )
+        separadorEventos:translate( 41, yMain - 2 )
         separadorEventos.isVisible = true
         scrViewMain:insert(separadorEventos)
-
+        
         local textSeparadorEventos = display.newText( {
-            text = "Recomendaciones de eventos y actividades.",     
-            x = 300, y = 217, width = intW, height = 80,
-            font = "Lato-Regular", fontSize = 19, align = "left"
+            text = "RECOMENDACIONES DE EVENTOS Y ACTIVIDADES.",     
+            x = 300, y = yMain, width = intW, height = 20,
+            font = "Lato-Regular", fontSize = 14, align = "left"
         })
-        textSeparadorEventos:setFillColor( 85/255, 85/255, 85/255 )
+        textSeparadorEventos:setFillColor( 0 )
         scrViewMain:insert(textSeparadorEventos)
         
+        yMain = yMain + 40
         for y = 1, #elements, 1 do 
-            -- Create container
-            local evento = Event:new()
-            scrViewMain:insert(evento)
-            evento:build(elements[y], imageItems[y])
-            evento.y = yMain
-            yMain = yMain + 102 
+            -- Create event
+            if not (elements[y].rowType == 'deal') then
+                local evento = Event:new()
+                scrViewMain:insert(evento)
+                evento:build(false, elements[y], imageItems[y])
+                evento.y = yMain
+                yMain = yMain + 120
+            end
         end
-        -- Siguiente solicitud
-        RestManager.getTodayDeal()
         
-    elseif screen == "MainDeal" then
+        -- Deals
+        yMain = yMain + 40
+        local maxShape = display.newRect( intW/2, yMain, intW, 50 )
+        maxShape:setFillColor( .87 )
+        scrViewMain:insert( maxShape )
         
-        yMain = yMain + 50
-        local separadorEventos = display.newImage( "img/btn/btnArrowBlack.png" )
-        separadorEventos:translate( 41, yMain -3)
+        local separadorEventos = display.newImage( "img/btn/btnArrowGreen.png" )
+        separadorEventos:translate( 41, yMain - 2 )
         separadorEventos.isVisible = true
         scrViewMain:insert(separadorEventos)
-
+        
         local textSeparadorEventos = display.newText( {
-            text = "Recomendaciones de promociones para ti.",     
-            x = 300, y = yMain + 27, width = intW, height = 80,
-            font = "Lato-Regular", fontSize = 19, align = "left"
+            text = "RECOMENDACIONES DE EVENTOS Y ACTIVIDADES.",     
+            x = 300, y = yMain, width = intW, height = 20,
+            font = "Lato-Regular", fontSize = 14, align = "left"
         })
-        textSeparadorEventos:setFillColor( 85/255, 85/255, 85/255 )
+        textSeparadorEventos:setFillColor( 0 )
         scrViewMain:insert(textSeparadorEventos)
         
-        yMain = yMain + 30
+        yMain = yMain + 40
         for y = 1, #elements, 1 do 
-            -- Create container
-            local deal = Deal:new()
-            scrViewMain:insert(deal)
-            deal:build(elements[y], imageItems[y])
-            deal.y = yMain
-            yMain = yMain + 102
+            -- Create event
+            if elements[y].rowType == 'deal' then
+                local deal = Deal:new()
+                scrViewMain:insert(deal)
+                deal:build(false, elements[y], imageItems[y])
+                deal.y = yMain
+                yMain = yMain + 120
+            end
         end
+        
         -- Siguiente solicitud
         RestManager.getAllEvent()
         
@@ -196,27 +207,27 @@ function buildItems(screen)
             -- Create noCallback = noCallback + 1
             local evento = Event:new()
             scrViewEventos:insert(evento)
-            evento:build(elements[y], imageItems[y])
+            evento:build(true, elements[y], imageItems[y])
             evento.y = lastY
             
-            lastY = lastY + 102
+            lastY = lastY + 120
         end
         -- Siguiente solicitud
         RestManager.getAllCoupon()
         
     elseif screen == "DealPanel" then
         
-        local lastY = 0
+        local lastY = 20
         local currentMonth = 0
         for y = 1, #elements, 1 do 
             
             -- Create container
             local deal = Deal:new()
             scrViewDeals:insert(deal)
-            deal:build(elements[y], imageItems[y])
+            deal:build(true, elements[y], imageItems[y])
             deal.y = lastY
             
-            lastY = lastY + 102
+            lastY = lastY + 120
         end
     end
 end
@@ -445,76 +456,83 @@ function showFilter(boolShow)
 end
 
 function getFBData()
-		local sizeAvatar = 'width=100&height=100'
+		local sizeAvatar = 'width=130&height=130'
         
 		contenerUser = display.newContainer( display.contentWidth * 2, 350 )
 		contenerUser.x = 0
 		contenerUser.y = 0
 		scrViewMain:insert( contenerUser )
 		
-		
-		
 		if settings.fbId == "" then
-		
+            local mask = graphics.newMask( "img/bgk/maskFB.jpg" )
 			local avatar = display.newImage( "img/bgk/user.png" )
-			avatar.x = 55
-			avatar.y = 90
-			avatar.height = 100
-			avatar.width = 100
+            avatar:setMask( mask )
+			avatar.x = 110
+            avatar.y = 90
+            avatar.height = 130
+            avatar.width = 130
 			contenerUser:insert(avatar)
-			
 		else
-		
 			local path = system.pathForFile( "avatarFb"..settings.fbId, system.TemporaryDirectory )
 			local fhd = io.open( path )
 			if fhd then
 				fhd:close()
-			
+                local mask = graphics.newMask( "img/bgk/maskFB.jpg" )
 				local avatar = display.newImage("avatarFb"..settings.fbId, system.TemporaryDirectory )
-				avatar.x = 55
+                avatar:setMask( mask )
+				avatar.x = 110
 				avatar.y = 90
-				avatar.height = 100
-				avatar.width = 100
+				avatar.height = 130
+				avatar.width = 130
 				contenerUser:insert(avatar)
 			else
 				local function networkListenerFB( event )
 					-- Verificamos el callback activo
 					if ( event.isError ) then
 					else
-						event.target.x = 55
-						event.target.y = 90
+                        local mask = graphics.newMask( "img/bgk/maskFB.jpg" )
+						event.target:setMask( mask )
+                        event.target.x = 110
+                        event.target.y = 90
+                        event.target.height = 130
+                        event.target.width = 130
 						contenerUser:insert( event.target )
 					end
 				end
 				display.loadRemoteImage( "http://graph.facebook.com/".. settings.fbId .."/picture?type=large&"..sizeAvatar, 
 					"GET", networkListenerFB, "avatarFb"..settings.fbId, system.TemporaryDirectory )
-				 
 			end
 		end
+    
+    local textSaludo = display.newText( {
+		text = "HOLA!",     
+		x = 375, y = 65,
+		width = 350, height =20,
+		font = "Lato-Regular",  fontSize = 16, align = "left"
+	})
+	textSaludo:setFillColor( .3 )
+	contenerUser:insert(textSaludo)
 		
 	local textNombre = display.newText( {
 		text = settings.name,     
-		x = 245, y = 25,
-		width = intW, height = 30,
-		font = "Lato-Bold",  fontSize = 26, align = "left"
+		x = 375, y = 90,
+		width = 350, height = 30,
+		font = "Lato-Bold",  fontSize = 30, align = "left"
 	})
 	textNombre:setFillColor( 0 )
 	contenerUser:insert(textNombre)
-	
-	print(settings.fbId .. "a")
-	
 	if settings.fbId == "" then
 		textNombre.text = settings.email
 	end
 		
-	local textSaludo = display.newText( {
+	local textMsg = display.newText( {
 		text = "RECIBE DEALS ÚNICOS, CONSULTA EVENTOS ESPECIALES Y MÁS",     
-		x = 310, y = 100,
-		width = 400, height =12,
+		x = 375, y = 120,
+		width = 350, height =12,
 		font = "Lato-Regular",  fontSize = 8, align = "left"
 	})
-	textSaludo:setFillColor( 176/255, 176/255, 176/255 )
-	contenerUser:insert(textSaludo)
+	textMsg:setFillColor( .3 )
+	contenerUser:insert(textMsg)
 	
 end
 
@@ -560,11 +578,9 @@ function scene:createScene( event )
 	}
 	homeScreen:insert(svMenuTxt)
 	
-	local triangle = display.newImage( "img/btn/triangle.png" )
-	triangle:translate( display.contentWidth * .5, 123 + h)
-	triangle:setFillColor( 1 )
-	triangle.isVisible = true
-	homeScreen:insert(triangle)
+	local greenLine = display.newImage( "img/btn/greenLine.png" )
+	greenLine:translate( display.contentWidth * .5, 123 + h)
+	homeScreen:insert(greenLine)
 	
 	scrViewMain = widget.newScrollView
 	{
@@ -609,7 +625,7 @@ function scene:createScene( event )
 	
 	txtMenuInicio = display.newText( {    
         x = display.contentWidth * .5, y = 30,
-        text = "Inicio",  font = "Lato-Regular", fontSize = 30,
+        text = "Inicio",  font = "Lato-Light", fontSize = 30,
 	})
 	txtMenuInicio:setFillColor( 0 )
 	groupMenu:insert(txtMenuInicio)
@@ -617,7 +633,7 @@ function scene:createScene( event )
 	
 	txtMenuEventos = display.newText( {
         x = display.contentWidth * .85, y = 30,
-        text = "Eventos", font = "Lato-Regular", fontSize = 30,
+        text = "Eventos", font = "Lato-Light", fontSize = 30,
 	})
 	txtMenuEventos:setFillColor( 161/255, 161/255, 161/255 )
 	groupMenu:insert(txtMenuEventos)
@@ -625,7 +641,7 @@ function scene:createScene( event )
 	
 	txtMenuDeals = display.newText( {
         x = display.contentWidth * 1.2, y = 30,
-        text = "Deals", font = "Lato-Regular", fontSize = 30,
+        text = "Deals", font = "Lato-Light", fontSize = 30,
 	})
 	txtMenuDeals:setFillColor( 161/255, 161/255, 161/255 )
 	groupMenu:insert(txtMenuDeals)
@@ -649,7 +665,7 @@ function scene:createScene( event )
 	btnModal:toFront()
     clearTempDir()
     --RestManager.getAds()
-    RestManager.getTodayEvent()
+    RestManager.getRecommended()
 	
 	Globals.noCallbackGlobal = Globals.noCallbackGlobal + 1
 	callbackCurrent = Globals.noCallbackGlobal

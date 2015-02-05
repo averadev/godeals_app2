@@ -276,7 +276,7 @@ function buildPartnerInfo(item)
 		text = item.name,
 		x = 320,
 		y =  lastY,
-		font = "Chivo",
+		font = "Lato-Regular",
 		width = 300,
 		fontSize = 30,
 		align = "left"
@@ -291,7 +291,7 @@ function buildPartnerInfo(item)
 		text = item.address,
 		x = 320,
 		y =  lastY,
-		font = "Chivo",
+		font = "Lato-Regular",
 		width = 300,
 		fontSize = 18,
 		align = "left"
@@ -312,7 +312,7 @@ function buildPartnerInfo(item)
 		x = 240,
 		y = lastY - 40,
 		width = 420,
-		font = "Chivo",
+		font = "Lato-Regular",
 		fontSize = 22,
 		align = "left"
 	})
@@ -324,7 +324,7 @@ function buildPartnerInfo(item)
 		x = 240,
 		y = lastY,
 		width = 420,
-		font = "Chivo",
+		font = "Lato-Regular",
 		fontSize = 18,
 		align = "left"
 	})
@@ -343,7 +343,7 @@ function buildPartnerInfo(item)
 		text = "Consultar ubicación del evento",
 		x = 230, y = lastY,
 		height = 40, width = 400,
-		font = "Chivo", fontSize = 22, align = "center"
+		font = "Lato-Regular", fontSize = 22, align = "center"
 	})
     txtAdditionalInformation.itemObj = item
 	txtAdditionalInformation:setFillColor( 0 )
@@ -390,7 +390,7 @@ function buildPartnerPromociones(items)
 			
             local deal = Deal:new()
             srvPartner[#srvPartner]:insert(deal)
-            deal:build(items[y], imagePartnerDeals[y])
+            deal:build(true, items[y], imagePartnerDeals[y])
             deal.y = lastY
 			lastY = lastY + 102
         end
@@ -451,7 +451,7 @@ function createScrollViewPartner(nameTxt)
 			text = nameTxt,
 			x = positionTxtMenu,
 			y =  0,
-			font = "Chivo",
+			font = "Lato-Regular",
 			fontSize = 22
 	})
 	txtMenuPartner[positionCurrent]:setFillColor( 0 )

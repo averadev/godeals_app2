@@ -117,15 +117,15 @@ end
 function buildNotificationsItems(objScreen)
 
     yMain = 50
-    local separadorEventos = display.newImage( "img/btn/btnArrowBlack.png" )
+    local separadorEventos = display.newImage( "img/btn/btnArrowGreen.png" )
     separadorEventos:translate( 41, yMain -3)
     separadorEventos.isVisible = true
     svContent:insert(separadorEventos)
 
     local textSeparadorEventos = display.newText( {
         text = "Estas son tus notificaciones.",     
-        x = 300, y = yMain + 27, width = intW, height = 80,
-        font = "Chivo", fontSize = 19, align = "left"
+        x = 300, y = yMain, width = intW, height = 20,
+        font = "Lato-Regular", fontSize = 14, align = "left"
     })
     textSeparadorEventos:setFillColor( 85/255, 85/255, 85/255 )
     svContent:insert(textSeparadorEventos)
@@ -138,32 +138,32 @@ function buildNotificationsItems(objScreen)
 		
 			local evento = Event:new()
             svContent:insert(evento)
-            evento:build(elements[y], imageItems[y])
+            evento:build(true, elements[y], imageItems[y])
             evento.y = yMain
 			evento.id = elements[y].idRelacional
 			evento.posci = y
 			evento:addEventListener('tap', markRead)
-			yMain = yMain + 102
+			yMain = yMain + 120
 		
 		elseif elements[y].tipo == "2" then
 		
 			local deal = Deal:new()
 			svContent:insert(deal)
-			deal:build(elements[y], imageItems[y])
+			deal:build(true, elements[y], imageItems[y])
 			deal.y = yMain
 			deal.id = elements[y].idRelacional
 			deal.posci = y
 			deal:addEventListener('tap', markRead)
-			yMain = yMain + 102
+			yMain = yMain + 120
 		
 		end
 		
 		if elements[y].leido == "1" then
-				noLeido[y] = display.newRect( 0, h, 5, 100 )
-				noLeido[y].x = 33
-				noLeido[y].y = yMain - 52
-				noLeido[y]:setFillColor( 0 )
-				svContent:insert(noLeido[y])
+            noLeido[y] = display.newRect( 0, h, 2, 110 )
+            noLeido[y].x = 10
+            noLeido[y].y = yMain - 60
+            noLeido[y]:setFillColor( .18, .59, 0 )
+            svContent:insert(noLeido[y])
 		end
 		
     end

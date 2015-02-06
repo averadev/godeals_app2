@@ -1,5 +1,4 @@
 
-
 ---------------------------------------------------------------------------------
 -- Encabezao general
 ---------------------------------------------------------------------------------
@@ -50,6 +49,9 @@ function Header:new()
 					grpTool.alpha = 1
             end
         })
+		closeModalSearch()
+		native.setKeyboardFocus(nil)
+		txtSearch.text = ""
     end
     
     function showSearch( event )
@@ -93,8 +95,8 @@ function Header:new()
 	end
 	
 	function SearchText( homeScreen )
-		--modalSeach(txtSearch.text,homeScreen)
-		modalSeach("Fish",homeScreen)
+		modalSeach(txtSearch.text,homeScreen)
+		--modalSeach("Fish",homeScreen)
 		return true
 	end
 	
@@ -170,6 +172,7 @@ function Header:new()
                 
         -- Search Elements
         grpSearch.alpha = 0
+		
         txtSearch = native.newTextField( 300, -100, 250, 40 )
         txtSearch.method = "create"
         txtSearch.size = 18

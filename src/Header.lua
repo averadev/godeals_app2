@@ -92,9 +92,18 @@ function Header:new()
 		end
 	end
 	
-	function SearchText( event )
-		modalSeach()
+	function SearchText( homeScreen )
+		--modalSeach(txtSearch.text,homeScreen)
+		modalSeach("Fish",homeScreen)
 		return true
+	end
+	
+	function onTxtFocusSearch(event)
+		if ( "submitted" == event.phase ) then
+			-- Hide Keyboard
+			native.setKeyboardFocus(nil)
+			getSceneSearch()
+		end
 	end
     
     -- Return to last scene
@@ -165,12 +174,13 @@ function Header:new()
         txtSearch.method = "create"
         txtSearch.size = 18
         txtSearch.hasBackground = false 
+		txtSearch:addEventListener( "userInput", onTxtFocusSearch )
         grpSearch:insert(txtSearch)
         
         imgSearch = display.newImage( "img/btn/btnMenuSearch.png" )
         imgSearch:translate( display.contentWidth - 90, 30 )
         grpSearch:insert(imgSearch)
-		imgSearch:addEventListener('tap',SearchText)
+		imgSearch:addEventListener('tap',getSceneSearch)
         
         btnClose = display.newImage( "img/btn/btnMenuClose.png" )
         btnClose:translate( display.contentWidth - 30, 30 )

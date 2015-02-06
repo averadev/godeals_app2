@@ -109,7 +109,12 @@ function buildWalletItems()
     end
 end
 
-
+--obtenemos el grupo homeScreen de la escena actual
+function getSceneSearch( event )
+	--modalSeach(txtSearch.text)
+	SearchText(homeScreen)
+	return true
+end
 
 function scene:createScene( event )
 

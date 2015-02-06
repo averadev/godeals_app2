@@ -17,8 +17,6 @@ local Globals = require('src.resources.Globals')
 local DBManager = require('src.resources.DBManager')
 local RestManager = require('src.resources.RestManager')
 
-
-
 -- Grupos y Contenedores
 local scene = storyboard.newScene()
 local homeScreen = display.newGroup()
@@ -544,6 +542,12 @@ function openModal( event )
 	return true
 end	
 
+--obtenemos el grupo homeScreen de la escena actual
+function getSceneSearch( event )
+	--modalSeach(txtSearch.text)
+	SearchText(homeScreen)
+	return true
+end
 
 ---------------------------------------------------------------------------------
 -- DEFAULT METHODS

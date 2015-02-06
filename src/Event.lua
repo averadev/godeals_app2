@@ -59,6 +59,13 @@ function showMapa( event )
 	})
 end
 
+--obtenemos el grupo homeScreen de la escena actual
+function getSceneSearch( event )
+	--modalSeach(txtSearch.text)
+	SearchText(homeScreen)
+	return true
+end
+
 function ListenerChangeMenuEvent( event )
 	
 	local positionScroll

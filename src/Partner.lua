@@ -1,4 +1,5 @@
 
+require('src.Menu')
 require('src.Header')
 local widget = require( "widget" )
 local storyboard = require( "storyboard" )
@@ -39,7 +40,8 @@ local itemPartner = {}
 ---- grupos ----
 
 local homeScreen = display.newGroup()
-
+local menuScreenLeft = MenuLeft:new()
+local menuScreenRight = MenuRight:new()
 
 --------listener scroll
 
@@ -222,6 +224,32 @@ end
 function getSceneSearch( event )
 	--modalSeach(txtSearch.text)
 	SearchText(homeScreen)
+	return true
+end
+
+--muestra el menuIzquierdo
+function showMenuLeft( event )
+	transition.to( homeScreen, { x = 400, time = 400, transition = easing.outExpo } )
+	transition.to( menuScreenLeft, { x = 40, time = 400, transition = easing.outExpo } )
+end
+
+--esconde el menuIzquierdo
+function hideMenuLeft( event )
+	transition.to( menuScreenLeft, { x = -480, time = 400, transition = easing.outExpo } )
+	transition.to( homeScreen, { x = 0, time = 400, transition = easing.outExpo } )
+	return true
+end
+
+--muestra el menu Derecho
+function showMenuRight( event )
+	transition.to( homeScreen, { x = -400, time = 400, transition = easing.outExpo } )
+	transition.to( menuScreenRight, { x = 0, time = 400, transition = easing.outExpo } )
+end
+
+--esconde el menu Derecho
+function hideMenuRight( event )
+	transition.to( menuScreenRight, { x = 481, time = 400, transition = easing.outExpo } )
+	transition.to( homeScreen, { x = 0, time = 400, transition = easing.outExpo } )
 	return true
 end
 
@@ -640,6 +668,10 @@ function scene:createScene( event )
     homeScreen:insert(header)
     header:buildToolbar()
     header:buildNavBar(title)
+	
+	--creamos la pantalla del menu
+	menuScreenLeft:builScreenLeft()
+	menuScreenRight:builScreenRight()
 	
 	Globals.noCallbackGlobal = Globals.noCallbackGlobal + 1
 	callbackCurrent = Globals.noCallbackGlobal

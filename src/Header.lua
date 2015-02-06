@@ -64,10 +64,11 @@ function Header:new()
     end
     
     -- Temporal
-    function saveBeacon( event )
+    --[[function saveBeacon( event )
         -- Move
-        
-    end
+        print("hola")
+		
+    end]]
 	
 	function createNotBubble(totalBubble)
         local tTxt = #Globals.txtBubble + 1
@@ -137,6 +138,7 @@ function Header:new()
         
         local logo = display.newImage( "img/btn/logo.png" )
         logo:translate( 45, 30 )
+		logo:addEventListener("tap",showMenuLeft)
         self:insert(logo)
         
         -- Grupo que se oculta en la busqueda
@@ -167,7 +169,8 @@ function Header:new()
 
         local btnUser = display.newImage( "img/btn/btnMenuUser.png" )
         btnUser:translate( display.contentWidth - 35, 30 )
-        btnUser:addEventListener( "tap", saveBeacon )
+        --btnUser:addEventListener( "tap", saveBeacon )
+		btnUser:addEventListener( "tap", showMenuRight )
         grpTool:insert(btnUser)
                 
         -- Search Elements

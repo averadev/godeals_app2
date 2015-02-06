@@ -8,6 +8,7 @@
 -- REQUIRE & VARIABLES
 ---------------------------------------------------------------------------------
 
+require('src.Menu')
 require('src.Header')
 local storyboard = require( "storyboard" )
 local Globals = require('src.resources.Globals')
@@ -40,9 +41,14 @@ local btnDownloadCoupon
 --pantalla
 
 local homeScreen = display.newGroup()
+local menuScreenLeft = MenuLeft:new()
+local menuScreenRight = MenuRight:new()
 
--- funciones
+----------------------------------------------------------
+-- Funciones
+----------------------------------------------------------
 
+--llama la pantalla del partner
 function showPartner( event )
 
 	storyboard.gotoScene( "src.Partner", {
@@ -65,9 +71,7 @@ function showRedimir( event )
 end
 
 function DownloadCoupon( event )
-
 	RestManager.discountCoupon(event.target.idCoipon)
-	
 end
 
 function changeButtonCoupon()
@@ -90,15 +94,43 @@ function getSceneSearch( event )
 	return true
 end
 
+--muestra el menuIzquierdo
+function showMenuLeft( event )
+	transition.to( homeScreen, { x = 400, time = 400, transition = easing.outExpo } )
+	transition.to( menuScreenLeft, { x = 40, time = 400, transition = easing.outExpo } )
+end
+
+--esconde el menuIzquierdo
+function hideMenuLeft( event )
+	transition.to( menuScreenLeft, { x = -480, time = 400, transition = easing.outExpo } )
+	transition.to( homeScreen, { x = 0, time = 400, transition = easing.outExpo } )
+	return true
+end
+
+--muestra el menu Derecho
+function showMenuRight( event )
+	transition.to( homeScreen, { x = -400, time = 400, transition = easing.outExpo } )
+	transition.to( menuScreenRight, { x = 0, time = 400, transition = easing.outExpo } )
+end
+
+--esconde el menu Derecho
+function hideMenuRight( event )
+	transition.to( menuScreenRight, { x = 481, time = 400, transition = easing.outExpo } )
+	transition.to( homeScreen, { x = 0, time = 400, transition = easing.outExpo } )
+	return true
+end
+
 function setCouponId( item )
 	itemObj = item
 	buildCoupon()
 end
 
+--llama a la funcion para crear un cupon
 function createCoupon()
 	buildCoupon()
 end
 
+--crea un cupon
 function buildCoupon()
 
 	svCoupon = widget.newScrollView
@@ -368,6 +400,10 @@ function buildCoupon()
 	
 end
 
+----------------------------------------------------------
+-- Funciones Default
+----------------------------------------------------------
+
 function scene:createScene( event )
 
 	screen = self.view
@@ -379,6 +415,10 @@ function scene:createScene( event )
     header.y = h
     header:buildToolbar()
     header:buildNavBar(event.params.item.name, event.params.item.id)
+	
+	--creamos la pantalla del menu
+	menuScreenLeft:builScreenLeft()
+	menuScreenRight:builScreenRight()
 	
 	----obtenemos los parametros del cupon
 	if event.params.item == nil then

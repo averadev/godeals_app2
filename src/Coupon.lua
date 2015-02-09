@@ -34,6 +34,7 @@ local currentSv
 local settings
 local tmpRedimir
 
+local txtInfo, txtBtn, txtTitleInfo
 local info, promotions, gallery, MenuEventBar
 
 local btnDownloadCoupon
@@ -59,6 +60,7 @@ function showPartner( event )
 end
 
 function showRedimir( event )
+	print("Redimir")
     if tmpRedimir then
         tmpRedimir:removeSelf()
         tmpRedimir = nil
@@ -71,6 +73,22 @@ function showRedimir( event )
 end
 
 function DownloadCoupon( event )
+	print("DownloadCoupon")
+	transition.to( txtTitleInfo, { alpha = 0, time = 200, transition = easing.outExpo } )
+	transition.to( txtInfo, { alpha = 0, time = 200, transition = easing.outExpo } )
+	transition.to( txtBtn, { alpha = 0, time = 200, transition = easing.outExpo } )
+	
+	timer.performWithDelay(200, function() 
+		txtTitleInfo.text = "Redime este Deal!"
+		txtInfo.text = "Deja presionado el boton mientras lo acercas a nuestro dispositivo GO> "..
+                            "disponible en todos los establecimientos afiliados. PREGUNTA POR EL!"
+		txtBtn.text = "REDIMIR DEAL"
+			
+		transition.to( txtBtn, { alpha = 1, time = 200, delay = 200, transition = easing.outExpo } )
+		transition.to( txtInfo, { alpha = 1, time = 200, delay = 200, transition = easing.outExpo } )
+		transition.to( txtTitleInfo, { alpha = 1, time = 200, delay = 200, transition = easing.outExpo } )
+	end, 1)
+	
 	RestManager.discountCoupon(event.target.idCoipon)
 end
 
@@ -242,7 +260,7 @@ function buildCoupon()
             agotado.alpha = .8
             svCoupon:insert(agotado)
     else
-        local txtTitleInfo = display.newText( {
+        txtTitleInfo = display.newText( {
             text = "¿Te interesa este Deal?",
             x = 240, y = 340,
             width = 400, height = 0,
@@ -251,7 +269,7 @@ function buildCoupon()
         txtTitleInfo:setFillColor( 0 )
         svCoupon:insert( txtTitleInfo )
 
-        local txtInfo = display.newText( {
+        txtInfo = display.newText( {
             text =  "No lo pienses mas y descargalo, "..
                     "se guardara en tu cartera para que lo uses en tu proxima visita.",
             x = 240, y = 385,
@@ -262,11 +280,11 @@ function buildCoupon()
         svCoupon:insert( txtInfo )
         
         local rctBtn = display.newRoundedRect( midW, 450, 400, 55, 5 )
+		rctBtn.idCoipon = itemObj.id
         rctBtn:setFillColor( .2, .6 ,0 )
-        rctBtn:addEventListener( "tap", showRedimir )
         svCoupon:insert(rctBtn)
         
-        local txtBtn = display.newText( {
+        txtBtn = display.newText( {
             text =  "DESCARGAR DEAL",
             x = 240, y = 450,
             width = 400, height = 0,
@@ -280,9 +298,9 @@ function buildCoupon()
             txtInfo.text =  "Deja presionado el boton mientras lo acercas a nuestro dispositivo GO> "..
                             "disponible en todos los establecimientos afiliados. PREGUNTA POR EL!"
             txtBtn.text = "REDIMIR DEAL"
-            txtBtn:addEventListener( "tap", showRedimir )
+            rctBtn:addEventListener( "tap", showRedimir )
         else
-            txtBtn:addEventListener( "tap", DownloadCoupon )
+            rctBtn:addEventListener( "tap", DownloadCoupon )
         end
     end
     

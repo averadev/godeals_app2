@@ -43,6 +43,7 @@ function Header:new()
     end
     
     function hideSearch( event )
+		native.setKeyboardFocus(nil)
         event.target.alpha = 0
         txtSearch.y = -100
         transition.to( imgSearch, { x = display.contentWidth - 90, time = 400, transition = easing.outExpo, 
@@ -52,7 +53,6 @@ function Header:new()
             end
         })
 		closeModalSearch()
-		native.setKeyboardFocus(nil)
 		txtSearch.text = ""
     end
     
@@ -114,7 +114,44 @@ function Header:new()
 		if ( "submitted" == event.phase ) then
 			-- Hide Keyboard
 			native.setKeyboardFocus(nil)
-			getSceneSearch()
+			
+			local currentScene =  storyboard.getCurrentSceneName()
+			if currentScene == "src.Home" then
+				getSceneSearchH()
+			elseif currentScene == "src.Event" then
+				getSceneSearchE()
+			elseif currentScene == "src.Coupon" then
+				getSceneSearchC()
+			elseif currentScene == "src.Partner" then
+				getSceneSearchP()
+			elseif currentScene == "src.Mapa" then
+				getSceneSearchM()
+			elseif currentScene == "src.Notifications" then
+				getSceneSearchN()
+			elseif currentScene == "src.Wallet" then
+				getSceneSearchW()
+			end
+		end
+	end
+	
+	function getSceneSearch( event )
+	
+		native.setKeyboardFocus(nil)
+		local currentScene =  storyboard.getCurrentSceneName()
+		if currentScene == "src.Home" then
+			getSceneSearchH()
+		elseif currentScene == "src.Event" then
+			getSceneSearchE()
+		elseif currentScene == "src.Coupon" then
+			getSceneSearchC()
+		elseif currentScene == "src.Partner" then
+			getSceneSearchP()
+		elseif currentScene == "src.Mapa" then
+			getSceneSearchM()
+		elseif currentScene == "src.Notifications" then
+			getSceneSearchN()
+		elseif currentScene == "src.Wallet" then
+			getSceneSearchW()
 		end
 	end
     

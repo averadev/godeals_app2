@@ -50,7 +50,7 @@ end
 ---------------------------------------------------------------------------------
 
 --obtenemos el grupo homeScreen de la escena actual
-function getSceneSearch( event )
+function getSceneSearchN( event )
 	--modalSeach(txtSearch.text)
 	SearchText(homeScreen)
 	return true

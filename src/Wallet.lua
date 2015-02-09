@@ -46,7 +46,7 @@ function setWalletElements(items)
 end
 
 --obtenemos el grupo homeScreen de la escena actual
-function getSceneSearch( event )
+function getSceneSearchW( event )
 	--modalSeach(txtSearch.text)
 	SearchText(homeScreen)
 	return true

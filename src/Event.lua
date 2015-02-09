@@ -75,7 +75,7 @@ function hideMenuLeft( event )
 end
 
 --obtenemos el grupo homeScreen de la escena actual
-function getSceneSearch( event )
+function getSceneSearchE( event )
 	--modalSeach(txtSearch.text)
 	SearchText(homeScreen)
 	return true
@@ -398,6 +398,8 @@ function buildEventInfo(item)
     txtInfo.y = (txtInfo.height / 2) + lastY + 30
 	groupInfo:insert( txtInfo )
     
+	txtInfo.height = txtInfo.height + 10
+	
     bgGeneralInformacion.height = txtInfo.height + 70
     bgGeneralInformacion.y = (txtInfo.height / 2) + lastY + 10
     

@@ -106,7 +106,7 @@ function changeButtonCoupon()
 end
 
 --obtenemos el grupo homeScreen de la escena actual
-function getSceneSearch( event )
+function getSceneSearchC( event )
 	--modalSeach(txtSearch.text)
 	SearchText(homeScreen)
 	return true
@@ -328,6 +328,8 @@ function buildCoupon()
 	txtClauses:setFillColor( 0 )
     txtClauses.y = txtClauses.height/2 + 580
 	svCoupon:insert( txtClauses )
+	
+	txtClauses.height = txtClauses.height + 10
     
     lastY = txtClauses.height + 620
     local spc = display.newRect( 0, lastY, 1, 1 )

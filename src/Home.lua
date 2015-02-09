@@ -550,7 +550,7 @@ function openModal( event )
 end	
 
 --obtenemos el grupo homeScreen de la escena actual
-function getSceneSearch( event )
+function getSceneSearchH( event )
 	--modalSeach(txtSearch.text)
 	SearchText(homeScreen)
 	return true

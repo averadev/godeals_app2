@@ -70,13 +70,13 @@ function Header:new()
 	function createNotBubble(totalBubble)
         local tTxt = #Globals.txtBubble + 1
 	
-		Globals.notBubble[tTxt] = display.newCircle( display.contentWidth - 132, 10, 10 )
-        Globals.notBubble[tTxt]:setFillColor(1,.1,.1)
+		Globals.notBubble[tTxt] = display.newCircle( display.contentWidth - 132, 40, 10 )
+        Globals.notBubble[tTxt]:setFillColor(.1,.5,.1)
         Globals.notBubble[tTxt].strokeWidth = 2
         Globals.notBubble[tTxt]:setStrokeColor(.8)
         grpTool:insert(Globals.notBubble[tTxt])
         Globals.txtBubble[tTxt] = display.newText( {
-            x = display.contentWidth - 131, y = 10,
+            x = display.contentWidth - 131, y = 40,
             text = totalBubble, font = "Lato-Regular", fontSize = 12,
         })
         Globals.txtBubble[tTxt]:setFillColor( 1 )
@@ -134,7 +134,7 @@ function Header:new()
 
         local txtCancun = display.newText( {
             x = 135, y = 30,
-            text = "CANCUN", font = "Lato-Regular", fontSize = 25,
+            text = "CANCUN", font = "Lato-Bold", fontSize = 23,
         })
         txtCancun:setFillColor( 1 )
         grpTool:insert(txtCancun)
@@ -187,12 +187,12 @@ function Header:new()
     end
     
     -- Creamos la pantalla del menu
-    function self:buildNavBar(texto, idElement)
+    function self:buildNavBar(texto)
         
         local menu = display.newRect( 0, 60, display.contentWidth, 65 )
         menu.anchorX = 0
         menu.anchorY = 0
-        menu:setFillColor( 189/255, 203/255, 206/255 )
+        menu:setFillColor( .87 )
         self:insert(menu)
         
         txtTitle = display.newText( {
@@ -204,18 +204,10 @@ function Header:new()
 
         local imgBtnBack = display.newImage( "img/btn/btnBackward.png" )
         imgBtnBack.x= 30
-        imgBtnBack.y = 90
+        imgBtnBack.y = 92
         imgBtnBack:addEventListener( "tap", returnScene )
         self:insert( imgBtnBack )
-
-        if idElement ~= nil then
-            local imgToWallet = display.newImage( "img/btn/btnUp.png" )
-            imgToWallet.x= 420
-            imgToWallet.y = 90
-            imgToWallet.id = idElement
-            imgToWallet:addEventListener( "tap", sendToWallet )
-            self:insert( imgToWallet )
-        end
+        
     end
     
     return self

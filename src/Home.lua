@@ -459,7 +459,7 @@ function showFilter(boolShow)
 end
 
 function getFBData()
-		local sizeAvatar = 'width=130&height=130'
+		local sizeAvatar = 'width=140&height=140'
         
 		contenerUser = display.newContainer( display.contentWidth * 2, 350 )
 		contenerUser.x = 0
@@ -467,38 +467,38 @@ function getFBData()
 		scrViewMain:insert( contenerUser )
 		
 		if settings.fbId == "" then
-            local mask = graphics.newMask( "img/bgk/maskFB.jpg" )
+            local mask = graphics.newMask( "img/bgk/maskBig.jpg" )
 			local avatar = display.newImage( "img/bgk/user.png" )
             avatar:setMask( mask )
 			avatar.x = 110
             avatar.y = 90
-            avatar.height = 130
-            avatar.width = 130
+            avatar.width = 140
+            avatar.height  = 140
 			contenerUser:insert(avatar)
 		else
 			local path = system.pathForFile( "avatarFb"..settings.fbId, system.TemporaryDirectory )
 			local fhd = io.open( path )
 			if fhd then
 				fhd:close()
-                local mask = graphics.newMask( "img/bgk/maskFB.jpg" )
+                local mask = graphics.newMask( "img/bgk/maskBig.jpg" )
 				local avatar = display.newImage("avatarFb"..settings.fbId, system.TemporaryDirectory )
                 avatar:setMask( mask )
 				avatar.x = 110
 				avatar.y = 90
-				avatar.height = 130
-				avatar.width = 130
+                avatar.width = 140
+                avatar.height  = 140
 				contenerUser:insert(avatar)
 			else
 				local function networkListenerFB( event )
 					-- Verificamos el callback activo
 					if ( event.isError ) then
 					else
-                        local mask = graphics.newMask( "img/bgk/maskFB.jpg" )
+                        local mask = graphics.newMask( "img/bgk/maskBig.jpg" )
 						event.target:setMask( mask )
                         event.target.x = 110
                         event.target.y = 90
-                        event.target.height = 130
-                        event.target.width = 130
+                        event.target.height = 140
+                        event.target.width = 140
 						contenerUser:insert( event.target )
 					end
 				end
@@ -578,7 +578,7 @@ function scene:createScene( event )
 		listener = ListenerChangeMenuHome,
 		horizontalScrollDisabled = false,
         verticalScrollDisabled = true,
-		backgroundColor = { .87, .87, .87 }
+		backgroundColor = { .87 }
 	}
 	homeScreen:insert(svMenuTxt)
 	
@@ -595,7 +595,7 @@ function scene:createScene( event )
 		listener = ListenerChangeScrollHome,
 		horizontalScrollDisabled = false,
         verticalScrollDisabled = false,
-		backgroundColor = { .92, .92, .92 }
+		backgroundColor = { .92 }
 	}
 	homeScreen:insert(scrViewMain)
 	scrViewMain.name = "scrViewMain"
@@ -607,7 +607,7 @@ function scene:createScene( event )
 		width = display.contentWidth,
 		height = display.contentHeight,
 		listener = ListenerChangeScrollHome,
-		backgroundColor = { .92, .92, .92 }
+		backgroundColor = { .92 }
 	}
 	homeScreen:insert(scrViewEventos)
 	scrViewEventos.name = "scrViewEventos"
@@ -619,7 +619,7 @@ function scene:createScene( event )
 		width = display.contentWidth,
 		height = display.contentHeight,
 		listener = ListenerChangeScrollHome,
-		backgroundColor = { .92, .92, .92 }
+		backgroundColor = { .92 }
 	}
 	homeScreen:insert(scrViewDeals)
 	scrViewDeals.name = "scrViewDeals"

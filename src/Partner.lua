@@ -287,6 +287,12 @@ function buildPartnerInfo(item)
 	txtPartner.y = txtPartner.y + txtPartner.height/2
 	lastY = lastY + txtPartner.height + 10
 	
+	local btnPartner = display.newImage( "img/btn/btnPartner.png" )
+	btnPartner.x= 430
+	btnPartner.y = lastY
+    btnPartner:addEventListener( "tap", showMapa )
+    srvPartner[#srvPartner]:insert( btnPartner )
+	
 	local txtAddress = display.newText({
 		text = item.address,
 		x = 320,
@@ -301,72 +307,43 @@ function buildPartnerInfo(item)
 	
 	txtAddress.y = txtAddress.y + txtAddress.height/2
 	
-	lastY = lastY + 180
+	lastY = lastY + 150
 	
-	local bgGeneralInformacion = display.newRect( midW, 0, 480, 76 )
+	-- Detail Event
+	local bgGeneralInformacion = display.newRect( midW, lastY, 440, 76 )
 	bgGeneralInformacion:setFillColor( 1 )
 	srvPartner[#srvPartner]:insert(bgGeneralInformacion)
-	
-	local txtGeneralInformacion = display.newText({
-		text = "Informacion general",
-		x = 240,
-		y = lastY - 40,
-		width = 420,
-		font = "Lato-Regular",
-		fontSize = 22,
-		align = "left"
+    
+    local txtGeneralInformacion = display.newText({
+		text = "Informacion Adicional:",
+		x = 230, y =  lastY + 5,
+		height = 20, width = 400,
+		font = "Lato-Bold", fontSize = 16, align = "left"
 	})
 	txtGeneralInformacion:setFillColor( 0 )
-	srvPartner[#srvPartner]:insert( txtGeneralInformacion )
+	srvPartner[#srvPartner]:insert(txtGeneralInformacion)
 	
 	local txtInfo = display.newText({
 		text = item.info,
-		x = 240,
-		y = lastY,
+		x = midW, y = lastY,
 		width = 420,
-		font = "Lato-Regular",
-		fontSize = 18,
-		align = "left"
+		font = "Lato-Regular", fontSize = 16, align = "left"
 	})
 	txtInfo:setFillColor( 0 )
+    txtInfo.y = (txtInfo.height / 2) + lastY + 30
 	srvPartner[#srvPartner]:insert( txtInfo )
-	
-	txtInfo.y = txtInfo.y + txtInfo.height/2
-	
-	bgGeneralInformacion.height = txtInfo.height + 40
-	
-	bgGeneralInformacion.y = bgGeneralInformacion.height/2 + lastY - 15
-	
-	lastY = lastY + bgGeneralInformacion.height + 30
-		
-	local txtAdditionalInformation = display.newText({
-		text = "Consultar ubicación del evento",
-		x = 230, y = lastY,
-		height = 40, width = 400,
-		font = "Lato-Regular", fontSize = 22, align = "center"
-	})
-    txtAdditionalInformation.itemObj = item
-	txtAdditionalInformation:setFillColor( 0 )
-	srvPartner[#srvPartner]:insert( txtAdditionalInformation )
-	txtAdditionalInformation:addEventListener( "tap", showMapa )
     
-    local lineLink = display.newRect( 50, lastY + 15, 360, 1 )
-	lineLink.anchorX = 0
-	lineLink.anchorY = 0
-	lineLink:setFillColor( .2 )
-	srvPartner[#srvPartner]:insert( lineLink )
-	
-	local spc = display.newRect( 0, lastY + 550, 1, 1 )
-    spc:setFillColor( .9 )
-    srvPartner[#srvPartner]:insert(spc)
+    bgGeneralInformacion.height = txtInfo.height + 70
+    bgGeneralInformacion.y = (txtInfo.height / 2) + lastY + 10
+    
+    lastY = lastY + bgGeneralInformacion.height + 25
+	local spc = display.newRect( 0, lastY, 1, 1 )
+    spc:setFillColor( 0 )
+    srvPartner[#srvPartner]:insert( spc )
 	
 	if callbackCurrent == Globals.noCallbackGlobal then
 		RestManager.getDealsByPartner(idPartner,"partner")
 	end
-	
-	lastY = lastY + 600
-	
-	srvPartner[1]:setScrollHeight( lastY )
 	
 end
 
@@ -392,7 +369,7 @@ function buildPartnerPromociones(items)
             srvPartner[#srvPartner]:insert(deal)
             deal:build(true, items[y], imagePartnerDeals[y])
             deal.y = lastY
-			lastY = lastY + 102
+			lastY = lastY + 120
         end
 	
 	end

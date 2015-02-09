@@ -101,7 +101,7 @@ function buildCoupon()
 		width = intW,
 		height = intH - (h + 125),
 		listener = scrollListenerContent1,
-		horizontalScrollDisabled = false,
+		horizontalScrollDisabled = true,
         verticalScrollDisabled = false,
 		backgroundColor = { .96 }
 	}
@@ -110,255 +110,169 @@ function buildCoupon()
 	grupoSvCoupon = display.newGroup()
 	svCoupon:insert(grupoSvCoupon)
 
-	local imgShape = display.newRoundedRect( midW, 20, 444, 455,12 )
+	local imgShape = display.newRoundedRect( midW, 260, 450, 470,12 )
 	imgShape:setFillColor( 1 )
 	svCoupon:insert(imgShape)
 	
-	local imgBgCoupon = display.newImage( "img/bgk/bgCoupon.fw.png" )
+	local imgBgCoupon = display.newImage( "img/bgk/bgCoupon.png" )
 	imgBgCoupon.alpha = 1
-    imgBgCoupon.x= 240
-	imgBgCoupon.y = 0
-    imgBgCoupon.width = 410
-    imgBgCoupon.height  = 410
+    imgBgCoupon.x= midW
+	imgBgCoupon.y = 260
     svCoupon:insert( imgBgCoupon )
-	
+    
+    local mask = graphics.newMask( "img/bgk/maskBig.jpg" )
 	local imgCoupon = display.newImage( itemObj.image, system.TemporaryDirectory )
-	imgCoupon.alpha = 1
-    imgCoupon.x= 121
-	imgCoupon.y = 124
-    imgCoupon.width = 128
-    imgCoupon.height  = 128
+    imgCoupon.x= 100
+	imgCoupon.y = 122
+    imgCoupon.width = 140
+    imgCoupon.height  = 140
     svCoupon:insert( imgCoupon )
+    imgCoupon:setMask( mask )
+    
+    local btnPartner = display.newImage( "img/btn/btnPartner.png" )
+	btnPartner.x= 430
+	btnPartner.y = 85
+    btnPartner:addEventListener( "tap", showPartner )
+    svCoupon:insert( btnPartner )
 	
 	local txtPartner = display.newText( {
         text = itemObj.partner,    
-        x = 320,
-        y = 80,
-        width = 240,
-        height =0,
-        font = "Lato-Regular",   
-        fontSize = 30,
-        align = "left"
+        x = 300, y = 80,
+        width = 240, height =0,
+        font = "Lato-Regular", fontSize = 30, align = "left"
     })
     txtPartner:setFillColor( 0 )
     svCoupon:insert( txtPartner )
     
-	local txtAddressPartner = display.newText( {
-        text = itemObj.address,
-        x = 320,
-        y = 110,
-        width = 240,
-        height =25,
-        font = "Lato-Regular",   
-        fontSize = 17,
-        align = "left"
+	local txtTotalDeals = display.newText( {
+        text = itemObj.total.." Deals",
+        x = 300, y = 115,
+        width = 240, height =25,
+        font = "Lato-Regular", fontSize = 20, align = "left"
     })
-    txtAddressPartner:setFillColor( 0 )
-    svCoupon:insert( txtAddressPartner )
+    txtTotalDeals:setFillColor( 0 )
+    svCoupon:insert( txtTotalDeals )
+    
+    local txtStock = display.newText( {
+        text = itemObj.stock.." Disponibles",
+        x = 300, y = 140,
+        width = 240, height =25,
+        font = "Lato-Regular", fontSize = 20, align = "left"
+    })
+    txtStock:setFillColor( .2, .6 ,0 )
+    svCoupon:insert( txtStock )
+    
+    local txtValidity = display.newText( {
+        text = "VIGENCIA: "..itemObj.validity,
+        x = 300, y = 172,
+        width = 240, height = 34 ,
+        font = "Lato-Regular", fontSize = 14, align = "left"
+    })
+    txtValidity:setFillColor( 0 )
+    svCoupon:insert( txtValidity )
     
     -- Reasigna posicion en textos grandes
     if txtPartner.contentHeight > 50 then
-        txtAddressPartner.y = 130
+        txtPartner.y = txtPartner.y + 5
+        txtTotalDeals.y = txtTotalDeals.y + 20
+        txtStock.y = txtStock.y + 20
+        txtValidity.y = txtValidity.y + 20
     end
-	
-	local txtSchedulePartner = display.newText( {
-        text = "Abierto de Lunes a Domingo de 11:00 am a 9:00 pm.",
-        x = 320,
-        y = 170,
-        width = 240,
-        height =60,
-        font = "Lato-Regular",   
-        fontSize = 17,
-        align = "left"
+    
+    
+    -- Max Desc
+    local bgMaxDesc = display.newRect( midW, 260, 444, 80 )
+	bgMaxDesc:setFillColor( .89 )
+	svCoupon:insert(bgMaxDesc)
+    
+    local txtMaxDesc = display.newText( {
+        text = itemObj.detail,
+        x = 240, y = 260,
+        width = 410, height = 0,
+        font = "Lato-Regular", fontSize = 20, align = "center"
     })
-    txtSchedulePartner:setFillColor( 0 )
-    svCoupon:insert( txtSchedulePartner )
-	
-	local txtDescription = display.newText({
-		text = itemObj.detail,
-		x = 240,
-		y = lastY,
-		width = 370,
-		font = "Lato-Regular",
-		fontSize = 24,
-		align = "left"
-	})
-	txtDescription:setFillColor( 0 )
-	svCoupon:insert( txtDescription )
-	
-	lastY = lastY + txtDescription.height + 25
-	
-	txtDescription.y = txtDescription.height/2 + txtDescription.y
-	
-	local grupoCouponsReleased = display.newGroup()
-	svCoupon:insert( grupoCouponsReleased )
-	
-	local CouponsReleased = 100
-	
-	local remainingCoupons = CouponsReleased - 47
-	
-	local txtCouponsReleased = display.newText({
-		text = "Limitado a " .. itemObj.total .. " Cupones",
-		x = 240,
-		y = lastY,
-		height = 40,
-		width = 370,
-		font = "Lato-Regular",
-		fontSize = 19,
-		align = "left"
-	})
-	txtCouponsReleased:setFillColor( 0 )
-	svCoupon:insert( txtCouponsReleased )
-	
-	lastY = lastY + 25
-	
-	local CouponsReleasedSize  = string.len( CouponsReleased ) * 13
-	local withCouponsReleased =  (string.len( CouponsReleased ) * 8.3) / string.len( CouponsReleased ) -1
-	
-	local txtRemainingCoupons = display.newText({
-		text = itemObj.stock .. " cupones disponibles.",
-		x = 240,
-		y = lastY,
-		height = 40,
-		width = 370,
-		font = "Lato-Regular",
-		fontSize = 19,
-		align = "left"
-	})
-	txtRemainingCoupons:setFillColor( 0 )
-	svCoupon:insert( txtRemainingCoupons )
-	
-	lastY = lastY + 25
-	
-	local txtRequirements = display.newText({
-		text = "Requisitos para el canje del cupon:",
-		x = 240,
-		y = lastY,
-		height = 40,
-		width = 370,
-		font = "Lato-Regular",
-		fontSize = 19,
-		align = "left"
-	})
-	txtRequirements:setFillColor( 0 )
-	svCoupon:insert( txtRequirements )
-	
-	lastY = lastY + 10
-	
-	local txtDetail = display.newText({
-		text = itemObj.detail,
-		x = 240,
-		y = lastY,
-		width = 370,
-		font = "Lato-Regular",
-		fontSize = 18,
-		align = "left"
-	})
-	txtDetail:setFillColor( 0 )
-	svCoupon:insert( txtDetail )
-	
-	txtDetail.y = txtDetail.height/2 + txtDetail.y
-	
-	lastY = lastY + txtDetail.height + 50
-	
+    txtMaxDesc:setFillColor( 0 )
+    svCoupon:insert( txtMaxDesc )
+    
+    
+    -- Descarga / Redime
     if itemObj.stock == '0' then
             local agotado = display.newImage( "img/btn/agotadoMax.png" )
             agotado.x= 240
-            agotado.y = lastY - 5
+            agotado.y = 450
             agotado.alpha = .8
             svCoupon:insert(agotado)
-    elseif itemObj.assigned == 1 or itemObj.assigned == '1' then 
-        local btnCanjearCoupon = display.newImage( "img/btn/btnCanjearCoupon.png" )
-        btnCanjearCoupon.alpha = 1
-        btnCanjearCoupon.x= 240
-        btnCanjearCoupon.y = lastY
-        btnCanjearCoupon.width = 376
-        btnCanjearCoupon.height  = 58
-        svCoupon:insert( btnCanjearCoupon )
-        btnCanjearCoupon:addEventListener( "tap", showRedimir )
     else
-        btnDownloadCoupon = display.newImage( "img/btn/btnDownloadCoupon.png" )
-        btnDownloadCoupon.alpha = 1
-        btnDownloadCoupon.x= 240
-        btnDownloadCoupon.y = lastY
-        btnDownloadCoupon.width = 376
-        btnDownloadCoupon.height  = 58
-		btnDownloadCoupon.idCoipon = itemObj.id
-        svCoupon:insert( btnDownloadCoupon )
-		btnDownloadCoupon:addEventListener( "tap", DownloadCoupon )
+        local txtTitleInfo = display.newText( {
+            text = "¿Te interesa este Deal?",
+            x = 240, y = 340,
+            width = 400, height = 0,
+            font = "Lato-Bold", fontSize = 16, align = "left"
+        })
+        txtTitleInfo:setFillColor( 0 )
+        svCoupon:insert( txtTitleInfo )
+
+        local txtInfo = display.newText( {
+            text =  "No lo pienses mas y descargalo, "..
+                    "se guardara en tu cartera para que lo uses en tu proxima visita.",
+            x = 240, y = 385,
+            width = 400, height = 60,
+            font = "Lato-Regular", fontSize = 16, align = "left"
+        })
+        txtInfo:setFillColor( 0 )
+        svCoupon:insert( txtInfo )
+        
+        local rctBtn = display.newRoundedRect( midW, 450, 400, 55, 5 )
+        rctBtn:setFillColor( .2, .6 ,0 )
+        rctBtn:addEventListener( "tap", showRedimir )
+        svCoupon:insert(rctBtn)
+        
+        local txtBtn = display.newText( {
+            text =  "DESCARGAR DEAL",
+            x = 240, y = 450,
+            width = 400, height = 0,
+            font = "Lato-Regular", fontSize = 26, align = "center"
+        })
+        txtBtn:setFillColor( 1 )
+        svCoupon:insert( txtBtn )
+        
+        if itemObj.assigned == 1 or itemObj.assigned == '1' then 
+            txtTitleInfo.text = "Redime este Deal!"
+            txtInfo.text =  "Deja presionado el boton mientras lo acercas a nuestro dispositivo GO> "..
+                            "disponible en todos los establecimientos afiliados. PREGUNTA POR EL!"
+            txtBtn.text = "REDIMIR DEAL"
+            txtBtn:addEventListener( "tap", showRedimir )
+        else
+            txtBtn:addEventListener( "tap", DownloadCoupon )
+        end
     end
-	
-	lastYCoupon = lastY
-	
-	imgBgCoupon.height = lastY + 10
-	
-	imgBgCoupon.y = imgBgCoupon.height/2 + 35
-	
-	imgShape.height = lastY + 40
-	
-	imgShape.y = imgShape.height/2 + 20
-	
-	lastY = lastY + 75 + 50
-	
-	local txtAdditionalInformation = display.newText({
-		text = "Informacion Adicional",
-		x = 230,
-		y =  lastY,
-		height = 40,
-		width = 400,
-		font = "Lato-Regular",
-		fontSize = 22,
-		align = "left"
+    
+    
+    -- Detail Clauses
+    local txtAdditionalInformation = display.newText({
+		text = "Informacion Adicional:",
+		x = 230, y =  560,
+		height = 20, width = 400,
+		font = "Lato-Bold", fontSize = 16, align = "left"
 	})
 	txtAdditionalInformation:setFillColor( 0 )
 	svCoupon:insert(txtAdditionalInformation)
 	
-	lastY = lastY + 40
-	
-	local imgBgDetail = display.newRect( midW, lastY, intW, 156 )
-	imgBgDetail:setFillColor( 1 )
-	svCoupon:insert(imgBgDetail)
-	
 	local txtClauses = display.newText({
 		text = itemObj.clauses,
-		x = midW,
-		y = lastY,
+		x = midW, y = 580,
 		width = 420,
-		font = "Lato-Regular",
-		fontSize = 18,
-		align = "left"
+		font = "Lato-Regular", fontSize = 16, align = "left"
 	})
 	txtClauses:setFillColor( 0 )
+    txtClauses.y = txtClauses.height/2 + 580
 	svCoupon:insert( txtClauses )
-	
-	txtClauses.y = txtClauses.height/2 + lastY
-	
-	imgBgDetail.height = txtClauses.height + 50
-	
-	imgBgDetail.y = txtClauses.height / 2 + lastY
-	
-	lastY = lastY + txtClauses.height + 70
-	
-	local txtAdditionalInformation = display.newText({
-		text = "Consultar informacion del comercio",
-		x = 230, y = lastY,
-		height = 40, width = 400,
-		font = "Lato-Regular", fontSize = 22, align = "center"
-	})
-	txtAdditionalInformation:setFillColor( 0 )
-	svCoupon:insert( txtAdditionalInformation )
-	txtAdditionalInformation:addEventListener( "tap", showPartner )
     
-    local lineLink = display.newRect( 50, lastY + 15, 360, 1 )
-	lineLink.anchorX = 0
-	lineLink.anchorY = 0
-	lineLink:setFillColor( .2 )
-	svCoupon:insert( lineLink )
-	
-	local spc = display.newRect( 0, lastY + 50, 1, 1 )
+    lastY = txtClauses.height + 620
+    local spc = display.newRect( 0, lastY, 1, 1 )
     spc:setFillColor( 0 )
     svCoupon:insert( spc )
-	
+    
 end
 
 function scene:createScene( event )
@@ -371,7 +285,7 @@ function scene:createScene( event )
     homeScreen:insert(header)
     header.y = h
     header:buildToolbar()
-    header:buildNavBar(event.params.item.name, event.params.item.id)
+    header:buildNavBar(event.params.item.name)
 	
 	----obtenemos los parametros del cupon
 	if event.params.item == nil then

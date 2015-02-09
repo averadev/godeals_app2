@@ -24,7 +24,7 @@ local midW = display.contentCenterX
 local midH = display.contentCenterY
 
 local toolbar, menu
-local groupMenu, groupEvent, groupMenuEventText
+local groupMenu, groupInfo, groupEvent, groupMenuEventText
 local svCoupon, svInfo, svPromotions, svGallery
 local h = display.topStatusBarContentHeight
 local lastY = 200;
@@ -274,19 +274,14 @@ end
 --creamos la primera seccion del evento
 function buildEventInfo(item)
 
-	lastY = 40
-	
-	local imgEvent = display.newImage(  "img/tmp/" .. itemObj.imageFull )
-	imgEvent.x = midW
-	srvEventos[1]:insert( imgEvent )
+	lastY = 70
+	groupInfo = display.newGroup()
+    srvEventos[1]:insert(groupInfo)
+	loadImageFull(itemObj.imageFull)
     
-    imgEvent.y = lastY + (imgEvent.height / 2)
-    
-	lastY = lastY + imgEvent.height + 75
-	
-	local bgPartnerInfo = display.newRect( midW, 0, 480, 76 )
-	bgPartnerInfo:setFillColor( 1 )
-	srvEventos[1]:insert(bgPartnerInfo)
+	local bgPartnerInfo = display.newRect( midW, 0, 460, 76 )
+	bgPartnerInfo:setFillColor( .87 )
+	groupInfo:insert(bgPartnerInfo)
 	
 	local txtPartner = display.newText({
 		text = itemObj.place,
@@ -298,10 +293,8 @@ function buildEventInfo(item)
 		align = "left"
 	})
 	txtPartner:setFillColor( 0 )
-	srvEventos[1]:insert( txtPartner )
-	
+	groupInfo:insert( txtPartner )
 	txtPartner.y = txtPartner.y + txtPartner.height/2
-	
 	lastY = lastY + txtPartner.height + 10
 	
 	local txtAddress = display.newText({
@@ -314,74 +307,52 @@ function buildEventInfo(item)
 		align = "left"
 	})
 	txtAddress:setFillColor( 0 )
-	srvEventos[1]:insert( txtAddress )
+	groupInfo:insert( txtAddress )
+    
+    local btnPartner = display.newImage( "img/btn/btnPartner.png" )
+	btnPartner.x= 430
+	btnPartner.y = lastY
+    btnPartner:addEventListener( "tap", showMapa )
+    groupInfo:insert( btnPartner )
 	
 	txtAddress.y = txtAddress.y + txtAddress.height/2
-	
 	bgPartnerInfo.height = txtPartner.height + txtAddress.height + 40
-	
 	bgPartnerInfo.y = bgPartnerInfo.height/2 + lastY - txtPartner.height - 20
-	
 	lastYImage = bgPartnerInfo.y
+	lastY = lastY + 120
 	
-	lastY = lastY + 150
-	
-	local bgGeneralInformacion = display.newRect( midW, 0, 480, 76 )
+    
+    -- Detail Event
+	local bgGeneralInformacion = display.newRect( midW, lastY, 440, 76 )
 	bgGeneralInformacion:setFillColor( 1 )
-	srvEventos[1]:insert(bgGeneralInformacion)
-	
-	local txtGeneralInformacion = display.newText({
-		text = "Informacion general",
-		x = 240,
-		y = lastY - 40,
-		width = 420,
-		font = "Lato-Regular",
-		fontSize = 22,
-		align = "left"
+	groupInfo:insert(bgGeneralInformacion)
+    
+    local txtGeneralInformacion = display.newText({
+		text = "Informacion Adicional:",
+		x = 230, y =  lastY + 5,
+		height = 20, width = 400,
+		font = "Lato-Bold", fontSize = 16, align = "left"
 	})
 	txtGeneralInformacion:setFillColor( 0 )
-	srvEventos[1]:insert( txtGeneralInformacion )
+	groupInfo:insert(txtGeneralInformacion)
 	
 	local txtInfo = display.newText({
 		text = itemObj.detail,
-		x = 240,
-		y = lastY,
+		x = midW, y = lastY,
 		width = 420,
-		font = "Lato-Regular",
-		fontSize = 18,
-		align = "left"
+		font = "Lato-Regular", fontSize = 16, align = "left"
 	})
 	txtInfo:setFillColor( 0 )
-	srvEventos[1]:insert( txtInfo )
-	
-	txtInfo.y = txtInfo.y + txtInfo.height/2
-	
-	bgGeneralInformacion.height = txtInfo.height + 40
-	
-	bgGeneralInformacion.y = bgGeneralInformacion.height/2 + lastY - 15
-	
-	lastY = lastY + bgGeneralInformacion.height + 30
-	
-	local txtAdditionalInformation = display.newText({
-		text = "Consultar ubicación del evento",
-		x = 230, y = lastY,
-		height = 40, width = 400,
-		font = "Lato-Regular", fontSize = 22, align = "center"
-	})
-    txtAdditionalInformation.itemObj = itemObj
-	txtAdditionalInformation:setFillColor( 0 )
-	srvEventos[1]:insert( txtAdditionalInformation )
-	txtAdditionalInformation:addEventListener( "tap", showMapa )
+    txtInfo.y = (txtInfo.height / 2) + lastY + 30
+	groupInfo:insert( txtInfo )
     
-    local lineLink = display.newRect( 50, lastY + 15, 360, 1 )
-	lineLink.anchorX = 0
-	lineLink.anchorY = 0
-	lineLink:setFillColor( .2 )
-	srvEventos[1]:insert( lineLink )
+    bgGeneralInformacion.height = txtInfo.height + 70
+    bgGeneralInformacion.y = (txtInfo.height / 2) + lastY + 10
     
-	local spc = display.newRect( 0, lastY + 70, 1, 1 )
+    lastY = lastY + bgGeneralInformacion.height + 25
+	local spc = display.newRect( 0, lastY, 1, 1 )
     spc:setFillColor( 0 )
-    srvEventos[1]:insert( spc )
+    groupInfo:insert( spc )
 	
 	--decidimos si el evento es por un comercio o por un lugar
 	if callbackCurrent == Globals.noCallbackGlobal then
@@ -506,12 +477,47 @@ function createScrollViewEvent(nameTxt)
 	
 end
 
+------cargamos las imagen full
+function loadImageFull(imageName)
+     -- Determinamos si la imagen existe
+    local path = system.pathForFile( imageName, system.TemporaryDirectory )
+    local fhd = io.open( path )
+    if fhd then
+        fhd:close()
+		if callbackCurrent == Globals.noCallbackGlobal then
+			local imgEvent = display.newImage( imageName, system.TemporaryDirectory )
+            imgEvent.x = midW
+            imgEvent.y = (imgEvent.height / 2)
+            srvEventos[1]:insert( imgEvent )
+            groupInfo.y = imgEvent.height
+		end
+    else
+        -- Listener de la carga de la imagen del servidor
+        local function loadImageListener( event )
+            if ( event.isError ) then
+                native.showAlert( "Go Deals", "Network error :(", { "OK"})
+            else
+				if callbackCurrent == Globals.noCallbackGlobal then
+				    event.target.x = midW
+                    event.target.y = (event.target.height / 2)
+                    srvEventos[1]:insert( event.target )
+                    groupInfo.y = event.target.height
+                else
+                    event.target:removeSelf()
+                    event.target = nil
+				end
+            end
+        end
+        
+        -- Descargamos de la nube
+        display.loadRemoteImage( settings.url.."assets/img/app/event/full/"..imageName, 
+        "GET", loadImageListener, imageName, system.TemporaryDirectory ) 
+    end
+end
+
 ------cargamos las imagenes del partner
-
 function loadImageOfPartner(typeImage)
-
-	local path
-		path = system.pathForFile( itemObj.placeImage, system.TemporaryDirectory )
+	local path = system.pathForFile( itemObj.placeImage, system.TemporaryDirectory )
     local fhd = io.open( path )
     if fhd then
         fhd:close()
@@ -527,7 +533,7 @@ function loadImageOfPartner(typeImage)
 				imgEvent.width = 120
 				imgEvent.height = 120
 				imgEvent:setMask( mask )
-				srvEventos[1]:insert( imgEvent )
+				groupInfo:insert( imgEvent )
 			end
 		
     else
@@ -549,7 +555,7 @@ function loadImageOfPartner(typeImage)
 				imgEvent.width = 120
 				imgEvent.height = 120
 				imgEvent:setMask( mask )
-				srvEventos[1]:insert( imgEvent )
+				groupInfo:insert( imgEvent )
 			end
             end
         end
@@ -626,7 +632,7 @@ function scene:createScene( event )
     homeScreen:insert(header)
     header.y = h
     header:buildToolbar()
-    header:buildNavBar(itemObj.name, itemObj.id)
+    header:buildNavBar(itemObj.name)
 	
 	Globals.noCallbackGlobal = Globals.noCallbackGlobal + 1
 	callbackCurrent = Globals.noCallbackGlobal

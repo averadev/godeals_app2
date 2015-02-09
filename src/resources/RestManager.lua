@@ -396,4 +396,57 @@ local RestManager = {}
 		
 	end
 	
+	-- obtiene los eventos de la busqueda
+	
+	RestManager.getSearchEvent = function(text)
+		
+		local url = settings.url
+        url = url.."api/getSearchEvent/format/json"
+		url = url.."/texto/"..text
+        url = url.."/idApp/"..settings.idApp
+    
+        local function callback(event)
+            if ( event.isError ) then
+            else
+				local data = json.decode(event.response)
+                if data.success then
+					if #data.items > 0 then
+                    setSearchElements(data.items)
+					loadSearchImage({posc = 1,path = "assets/img/app/event/",screen = "event"})
+					else
+						RestManager.getSearchCoupon(text)
+					end
+                end
+            end
+            return true
+        end
+        -- Do request
+        network.request( url, "GET", callback )
+	end
+	
+	--obtiene los deals de la busqueda
+	RestManager.getSearchCoupon = function(text)
+		
+		local url = settings.url
+        url = url.."api/getSearchCoupon/format/json"
+		url = url.."/texto/"..text
+        url = url.."/idApp/"..settings.idApp
+    
+        local function callback(event)
+            if ( event.isError ) then
+            else
+				local data = json.decode(event.response)
+                if data.success then
+					if #data.items > 0 then
+                    setSearchElements(data.items)
+					loadSearchImage({posc = 1,path = "assets/img/app/deal/",screen = "deal"})
+					end
+                end
+            end
+            return true
+        end
+        -- Do request
+        network.request( url, "GET", callback )
+	end
+	
 return RestManager

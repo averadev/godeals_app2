@@ -8,6 +8,7 @@
 -- OBJETOS Y VARIABLES
 ---------------------------------------------------------------------------------
 -- Includes
+require('src.Menu')
 require('src.Modal')
 require('src.Header')
 require('src.BuildRow')
@@ -17,11 +18,11 @@ local Globals = require('src.resources.Globals')
 local DBManager = require('src.resources.DBManager')
 local RestManager = require('src.resources.RestManager')
 
-
-
 -- Grupos y Contenedores
 local scene = storyboard.newScene()
 local homeScreen = display.newGroup()
+local menuScreenLeft = MenuLeft:new()
+local menuScreenRight = MenuRight:new()
 grupoModal = display.newGroup()
 groupSearchModal = display.newGroup()
 local groupMenu, scrViewMain, scrViewEventos, scrViewDeals,svMenuTxt
@@ -449,6 +450,10 @@ function ListenerChangeScrollHome( event )
 	
 end
 
+---------------------------------------------------
+--------- funciones
+---------------------------------------------------
+
 -- Ocultamos o Mostramos filtro
 function showFilter(boolShow)
     if boolShow and btnModal.alpha == 0 then
@@ -544,6 +549,38 @@ function openModal( event )
 	return true
 end	
 
+--obtenemos el grupo homeScreen de la escena actual
+function getSceneSearch( event )
+	--modalSeach(txtSearch.text)
+	SearchText(homeScreen)
+	return true
+end
+
+--muestra el menuIzquierdo
+function showMenuLeft( event )
+	transition.to( homeScreen, { x = 400, time = 400, transition = easing.outExpo } )
+	transition.to( menuScreenLeft, { x = 40, time = 400, transition = easing.outExpo } )
+end
+
+--esconde el menuIzquierdo
+function hideMenuLeft( event )
+	transition.to( menuScreenLeft, { x = -480, time = 400, transition = easing.outExpo } )
+	transition.to( homeScreen, { x = 0, time = 400, transition = easing.outExpo } )
+	return true
+end
+
+--muestra el menu Derecho
+function showMenuRight( event )
+	transition.to( homeScreen, { x = -400, time = 400, transition = easing.outExpo } )
+	transition.to( menuScreenRight, { x = 0, time = 400, transition = easing.outExpo } )
+end
+
+--esconde el menu Derecho
+function hideMenuRight( event )
+	transition.to( menuScreenRight, { x = 481, time = 400, transition = easing.outExpo } )
+	transition.to( homeScreen, { x = 0, time = 400, transition = easing.outExpo } )
+	return true
+end
 
 ---------------------------------------------------------------------------------
 -- DEFAULT METHODS
@@ -656,6 +693,10 @@ function scene:createScene( event )
 	
 	currentSv = scrViewMain
 	
+	--creamos la pantalla del menu
+	menuScreenLeft:builScreenLeft()
+	menuScreenRight:builScreenRight()
+	
 	settings = DBManager.getSettings()
 	
 	getFBData()
@@ -665,6 +706,7 @@ function scene:createScene( event )
 	btnModal.alpha = 0
 	homeScreen:insert(btnModal)
 	btnModal:addEventListener( "tap", openModal )
+	
 	
 	btnModal:toFront()
     clearTempDir()

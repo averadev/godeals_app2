@@ -206,7 +206,7 @@ function scene:createScene( event )
 	background.y = midH
     screen:insert(background)
     
-    imgLogo = display.newImage("img/btn/logo.png", true) 
+    imgLogo = display.newImage("img/btn/logoLogin.png", true) 
 	imgLogo.x = midW
 	imgLogo.y = midH / 2
 	screen:insert(imgLogo)  

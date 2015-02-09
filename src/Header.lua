@@ -6,6 +6,7 @@ require('src.Search')
 local Globals = require('src.resources.Globals')
 local storyboard = require( "storyboard" )
 local RestManager = require('src.resources.RestManager')
+local DBManager = require('src.resources.DBManager')
 
 Header = {}
 
@@ -15,6 +16,7 @@ function Header:new()
     local grpTool = display.newGroup()
     local grpSearch = display.newGroup()
     local imgSearch, btnClose, txtSearch
+	local txtCiudad
     
     -- Obtener cupones descargados
     function showHome(event)
@@ -57,18 +59,25 @@ function Header:new()
     function showSearch( event )
         grpTool.alpha = 0
         grpSearch.alpha = 1
-        txtSearch.y = 30
+        txtSearch.y = 37
         transition.to( imgSearch, { x = 150, time = 400, transition = easing.outExpo, 
 			onComplete=function() btnClose.alpha = 1 end
         })
     end
     
     -- Temporal
-    --[[function saveBeacon( event )
-        -- Move
-        print("hola")
-		
-    end]]
+	function saveBeacon( event )
+		-- Move
+		local dataTmp = {
+			{id = '1', message = 'Bienvenido, hoy tenemos una oferta para ti.', uuid = '1a4f5be7-6683-44a6-b559-b8bf6efd9ad7', 
+				latitude = '0', longitude = '0', distanceMin = '.3', distanceMax = '0', partnerId = '2'},
+			{id = '2', message = 'Bienvenido, hoy tenemos una oferta para ti.', uuid = 'f7826da6-4fa2-4e98-8024-bc5b71e0893e', 
+				latitude = '0', longitude = '0', distanceMin = '.3', distanceMax = '0', partnerId = '2'},
+			{id = '3', message = 'Bienvenido, hoy tenemos una oferta para ti.', uuid = 'a1ea8136-0e1b-d4a1-b840-63f88c8da1ea', 
+				latitude = '0', longitude = '0', distanceMin = '.3', distanceMax = '0', partnerId = '2'}
+		}
+		DBManager.saveAds(dataTmp)
+	end
 	
 	function createNotBubble(totalBubble)
         local tTxt = #Globals.txtBubble + 1
@@ -145,12 +154,13 @@ function Header:new()
         self:insert(grpTool)
         self:insert(grpSearch)
 
-        local txtCancun = display.newText( {
+        txtCiudad = display.newText( {
             x = 135, y = 30,
+			align = "left", width = 100,
             text = "CANCUN", font = "Lato-Bold", fontSize = 23,
         })
-        txtCancun:setFillColor( 1 )
-        grpTool:insert(txtCancun)
+        txtCiudad:setFillColor( 1 )
+        grpTool:insert(txtCiudad)
 
         local btnWallet = display.newImage( "img/btn/btnMenuWallet.png" )
         btnWallet:translate( display.contentWidth - 212, 30 )
@@ -176,7 +186,8 @@ function Header:new()
         -- Search Elements
         grpSearch.alpha = 0
 		
-        txtSearch = native.newTextField( 300, -100, 250, 40 )
+        txtSearch = native.newTextField( 300, -100, 250, 60 )
+		txtSearch:setTextColor(1)
         txtSearch.method = "create"
         txtSearch.size = 18
         txtSearch.hasBackground = false 
@@ -196,7 +207,6 @@ function Header:new()
         bgSearch = display.newImage( "img/btn/bgTxtSearch.png" )
         bgSearch:translate(270, 50 )
         grpSearch:insert(bgSearch)
-        
 		
 		--verificamos notificaciones
 		RestManager.getNotificationsUnRead()
@@ -225,6 +235,10 @@ function Header:new()
         self:insert( imgBtnBack )
         
     end
+	
+	function changeCityName(txtMin)
+		txtCiudad.text = txtMin
+	end
     
     return self
 end

@@ -83,12 +83,14 @@ end
 
 --muestra el menuIzquierdo
 function showMenuLeft( event )
+	homeScreen.alpha = .5
 	transition.to( homeScreen, { x = 400, time = 400, transition = easing.outExpo } )
 	transition.to( menuScreenLeft, { x = 40, time = 400, transition = easing.outExpo } )
 end
 
 --esconde el menuIzquierdo
 function hideMenuLeft( event )
+	homeScreen.alpha = 1
 	transition.to( menuScreenLeft, { x = -480, time = 400, transition = easing.outExpo } )
 	transition.to( homeScreen, { x = 0, time = 400, transition = easing.outExpo } )
 	return true
@@ -96,12 +98,14 @@ end
 
 --muestra el menu Derecho
 function showMenuRight( event )
+	homeScreen.alpha = .5
 	transition.to( homeScreen, { x = -400, time = 400, transition = easing.outExpo } )
 	transition.to( menuScreenRight, { x = 0, time = 400, transition = easing.outExpo } )
 end
 
 --esconde el menu Derecho
 function hideMenuRight( event )
+	homeScreen.alpha = 1
 	transition.to( menuScreenRight, { x = 481, time = 400, transition = easing.outExpo } )
 	transition.to( homeScreen, { x = 0, time = 400, transition = easing.outExpo } )
 	return true

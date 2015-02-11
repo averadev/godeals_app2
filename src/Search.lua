@@ -5,6 +5,7 @@ local RestManager = require('src.resources.RestManager')
 local widget = require( "widget" )
 local Globals = require('src.resources.Globals')
 
+
 local intW = display.contentWidth
 local intH = display.contentHeight
 local h = display.topStatusBarContentHeight
@@ -19,10 +20,27 @@ local scrViewSearch
 local elements = {}
 local imageItems = {}
 
-a = display.newGroup()
+GroupSearch = display.newGroup()
 
 function setSearchElements(items)
 	elements = items
+end
+
+function hideModalSearch( event )
+
+	--hideSearch2()
+	deleteTxt()
+
+	Globals.noCallbackGlobal = Globals.noCallbackGlobal + 1
+	local pSearch = #Globals.searchText + 1
+	Globals.searchText[pSearch] = texto
+	
+	btnModal:removeSelf()
+	scrViewSearch:removeSelf()
+	btnModal = nil
+	scrViewSearch = nil
+	
+	
 end
 
 function loadSearchImage(obj)
@@ -94,7 +112,8 @@ function buildSearchItems(screen)
             scrViewSearch:insert(evento)
             evento:build(true,elements[y], imageItems[y])
             evento.y = yMain
-            yMain = yMain + 102 
+			evento:addEventListener( 'tap', hideModalSearch)
+            yMain = yMain + 102
 			
         end
 		
@@ -124,6 +143,7 @@ function buildSearchItems(screen)
             scrViewSearch:insert(deal)
             deal:build(true, elements[y], imageItems[y])
             deal.y = yMain
+			deal:addEventListener( 'tap', hideModalSearch)
             yMain = yMain + 102
 			
         end
@@ -140,18 +160,20 @@ end
 
 function closeModalSearch()
 	if btnModal ~= nil then
+		
 		Globals.noCallbackGlobal = Globals.noCallbackGlobal + 1
 		btnModal:removeSelf()
 		scrViewSearch:removeSelf()
 		btnModal = nil
 		scrViewSearch = nil
-		
+		--native.showAlert( "Go Deals",Globals.searchText[#Globals.searchText] , { "OK"})
+		--print(Globals.searchText[#Globals.searchText])
 	end
 	
 	return true
 end
 
-function modalSeach(text,GroupSearch)
+function modalSeach(text)
 
 	yMain = 0
 	
@@ -160,7 +182,6 @@ function modalSeach(text,GroupSearch)
 		scrViewSearch:removeSelf()
 		btnModal = nil
 		scrViewSearch = nil
-		
 	end
     
     btnModal = display.newRect( display.contentCenterX, display.contentCenterY + h + 60, intW, intH )

@@ -17,6 +17,8 @@ function Header:new()
     local grpSearch = display.newGroup()
     local imgSearch, btnClose, txtSearch
 	local txtCiudad
+	local h = display.topStatusBarContentHeight
+	--local serachScreen = Search:new()
     
     -- Obtener cupones descargados
     function showHome(event)
@@ -28,10 +30,11 @@ function Header:new()
     
     -- Obtener cupones descargados
     function showWallet(event)
-        if storyboard.getCurrentSceneName() ~= "src.Wallet" then
+       --[[ if storyboard.getCurrentSceneName() ~= "src.Wallet" then
             Globals.noCallbackGlobal = Globals.noCallbackGlobal + 1
             storyboard.gotoScene( "src.Wallet", { time = 400, effect = "slideLeft" })
-        end
+        end]]
+		showSearch()
     end
     
     -- Obtener cupones descargados
@@ -45,7 +48,12 @@ function Header:new()
     function hideSearch( event )
 		native.setKeyboardFocus(nil)
         event.target.alpha = 0
-        txtSearch.y = -100
+		
+		
+        if Globals.txtSearch ~= nil then
+			Globals.txtSearch:removeSelf()
+			Globals.txtSearch = nil
+		end
         transition.to( imgSearch, { x = display.contentWidth - 90, time = 400, transition = easing.outExpo, 
 			onComplete=function()
                     grpSearch.alpha = 0
@@ -53,17 +61,53 @@ function Header:new()
             end
         })
 		closeModalSearch()
-		txtSearch.text = ""
+    end
+	
+	function hideSearch2( event )
+	
+		native.setKeyboardFocus(nil)
+		btnClose.alpha = 0
+		if Globals.txtSearch ~= nil then
+			Globals.txtSearch:removeSelf()
+			Globals.txtSearch = nil
+		end
+        transition.to( imgSearch, { x = display.contentWidth - 90, time = 400, transition = easing.outExpo, 
+			onComplete=function()
+                    grpSearch.alpha = 0
+					grpTool.alpha = 1
+            end
+        })
+		
     end
     
     function showSearch( event )
         grpTool.alpha = 0
         grpSearch.alpha = 1
-        txtSearch.y = 37
+        --txtSearch.y = 37
         transition.to( imgSearch, { x = 150, time = 400, transition = easing.outExpo, 
 			onComplete=function() btnClose.alpha = 1 end
         })
+		createTxt("")
     end
+	
+	function createTxt(text)
+		Globals.txtSearch = native.newTextField( 300, 37 + h, 250, 60 )
+		Globals.txtSearch:setTextColor(1)
+        Globals.txtSearch.method = "create"
+        Globals.txtSearch.size = 18
+        Globals.txtSearch.hasBackground = false 
+		Globals.txtSearch:addEventListener( "userInput", onTxtFocusSearch )
+       -- grpSearch:insert(Globals.txtSearch)
+		--Globals.txtSearch.text = Globals.searchText[#Globals.searchText]
+		Globals.txtSearch.text = text
+	end
+	
+	function deleteTxt()
+		if Globals.txtSearch ~= nil then
+			Globals.txtSearch:removeSelf()
+			Globals.txtSearch = nil
+		end
+	end
     
     -- Temporal
 	function saveBeacon( event )
@@ -104,11 +148,11 @@ function Header:new()
 		end
 	end
 	
-	function SearchText( homeScreen )
-		modalSeach(txtSearch.text,homeScreen)
-		--modalSeach("Fish",homeScreen)
+	--[[function SearchText( homeScreen )
+		--modalSeach(txtSearch.text,homeScreen)
+		modalSeach("Fish",homeScreen)
 		return true
-	end
+	end]]
 	
 	function onTxtFocusSearch(event)
 		if ( "submitted" == event.phase ) then
@@ -134,6 +178,35 @@ function Header:new()
 		end
 	end
 	
+	--[[function getSceneSearch( event )
+	
+		native.setKeyboardFocus(nil)
+		local currentScene =  storyboard.getCurrentSceneName()
+		if currentScene == "src.Home" then
+			getSceneSearchH()
+		elseif currentScene == "src.Event" then
+			getSceneSearchE()
+		elseif currentScene == "src.Coupon" then
+			getSceneSearchC()
+		elseif currentScene == "src.Partner" then
+			getSceneSearchP()
+		elseif currentScene == "src.Mapa" then
+			getSceneSearchM()
+		elseif currentScene == "src.Notifications" then
+			getSceneSearchN()
+		elseif currentScene == "src.Wallet" then
+			getSceneSearchW()
+		end
+	end]]
+	
+	function SearchText( event )
+		
+		modalSeach(Globals.txtSearch.text)
+		--modalSeach("Fish")
+		
+		return true
+	end
+	
 	function getSceneSearch( event )
 	
 		native.setKeyboardFocus(nil)
@@ -157,14 +230,24 @@ function Header:new()
     
     -- Return to last scene
     function returnScene( event )
+	
         -- Obtenemos escena anterior y eliminamos del arreglo
         if #Globals.scene > 1 then
+			
             local previousScene = Globals.scene[#Globals.scene - 1]
             table.remove(Globals.scene, #Globals.scene)
             table.remove(Globals.scene, #Globals.scene)
             -- Movemos a la escena anterior
             storyboard.gotoScene( previousScene, { time = 400, effect = "slideRight" })
         end
+		
+		if #Globals.searchText > 0 then
+			modalSeach(Globals.searchText[#Globals.searchText])
+			createTxt(Globals.searchText[#Globals.searchText])
+			table.remove(Globals.searchText, #Globals.searchText)
+			--showSearch()
+		end
+		
     end
     
     -- Envia elemento a la cartera
@@ -223,18 +306,19 @@ function Header:new()
         -- Search Elements
         grpSearch.alpha = 0
 		
-        txtSearch = native.newTextField( 300, -100, 250, 60 )
+        --[[txtSearch = native.newTextField( 300, -100, 250, 60 )
 		txtSearch:setTextColor(1)
         txtSearch.method = "create"
         txtSearch.size = 18
         txtSearch.hasBackground = false 
 		txtSearch:addEventListener( "userInput", onTxtFocusSearch )
-        grpSearch:insert(txtSearch)
+        grpSearch:insert(txtSearch)]]
         
         imgSearch = display.newImage( "img/btn/btnMenuSearch.png" )
         imgSearch:translate( display.contentWidth - 90, 30 )
         grpSearch:insert(imgSearch)
-		imgSearch:addEventListener('tap',getSceneSearch)
+		--imgSearch:addEventListener('tap',getSceneSearch)
+		imgSearch:addEventListener('tap', SearchText)
         
         btnClose = display.newImage( "img/btn/btnMenuClose.png" )
         btnClose:translate( display.contentWidth - 30, 30 )

@@ -43,6 +43,10 @@ function Event:new()
         local Globals = require('src.resources.Globals')
         local storyboard = require( "storyboard" )
         Globals.noCallbackGlobal = Globals.noCallbackGlobal + 1
+		
+		--hideSearch2()
+		deleteTxt()
+		
         local current = storyboard.getCurrentSceneName()
 		if current ~= "src.Event" then
 			storyboard.removeScene( "src.Event" )
@@ -132,6 +136,10 @@ function Deal:new()
         local Globals = require('src.resources.Globals')
         local storyboard = require( "storyboard" )
         Globals.noCallbackGlobal = Globals.noCallbackGlobal + 1
+		
+		--hideSearch2()
+		deleteTxt()
+		
         local current = storyboard.getCurrentSceneName()
 		if current ~= "src.Coupon" then
 			storyboard.removeScene( "src.Coupon" )

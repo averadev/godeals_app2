@@ -8,7 +8,7 @@ return {
 	
 	searchText = {},
 	
-	txtSearch = {},
+	txtSearch = nil,
 	
 	btnModal = {},
     

@@ -21,8 +21,6 @@ local RestManager = require('src.resources.RestManager')
 -- Grupos y Contenedores
 local scene = storyboard.newScene()
 local homeScreen = display.newGroup()
-local menuScreenLeft = MenuLeft:new()
-local menuScreenRight = MenuRight:new()
 grupoModal = display.newGroup()
 groupSearchModal = display.newGroup()
 local groupMenu, scrViewMain, scrViewEventos, scrViewDeals,svMenuTxt
@@ -243,6 +241,11 @@ function getDate(strDate)
         fecha = u .. " de "..Globals.Months[tonumber(v)].." de " .. k  
     end
     return fecha
+end
+
+--obtenemos el homeScreen de la escena
+function getScreenH()
+	return homeScreen
 end
 
 ---------------------------------------------------------------------------------
@@ -556,36 +559,6 @@ function getSceneSearchH( event )
 	return true
 end
 
---muestra el menuIzquierdo
-function showMenuLeft( event )
-	homeScreen.alpha = .5
-	transition.to( homeScreen, { x = 400, time = 400, transition = easing.outExpo } )
-	transition.to( menuScreenLeft, { x = 40, time = 400, transition = easing.outExpo } )
-end
-
---esconde el menuIzquierdo
-function hideMenuLeft( event )
-	homeScreen.alpha = 1
-	transition.to( menuScreenLeft, { x = -480, time = 400, transition = easing.outExpo } )
-	transition.to( homeScreen, { x = 0, time = 400, transition = easing.outExpo } )
-	return true
-end
-
---muestra el menu Derecho
-function showMenuRight( event )
-	homeScreen.alpha = .5
-	transition.to( homeScreen, { x = -400, time = 400, transition = easing.outExpo } )
-	transition.to( menuScreenRight, { x = 0, time = 400, transition = easing.outExpo } )
-end
-
---esconde el menu Derecho
-function hideMenuRight( event )
-	homeScreen.alpha = 1
-	transition.to( menuScreenRight, { x = 481, time = 400, transition = easing.outExpo } )
-	transition.to( homeScreen, { x = 0, time = 400, transition = easing.outExpo } )
-	return true
-end
-
 ---------------------------------------------------------------------------------
 -- DEFAULT METHODS
 ---------------------------------------------------------------------------------
@@ -696,10 +669,6 @@ function scene:createScene( event )
 	scrViewMain:insert(grupoSeparadorEventos)
 	
 	currentSv = scrViewMain
-	
-	--creamos la pantalla del menu
-	menuScreenLeft:builScreenLeft()
-	menuScreenRight:builScreenRight()
 	
 	settings = DBManager.getSettings()
 	

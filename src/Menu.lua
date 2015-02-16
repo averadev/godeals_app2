@@ -2,6 +2,8 @@ MenuLeft = {}
 MenuRight = {}
 
 function MenuLeft:new()
+
+	local RestManager = require('src.resources.RestManager')
 	
 	local intW = display.contentWidth
 	local intH = display.contentHeight
@@ -29,11 +31,15 @@ function MenuLeft:new()
 		MenuLeft:addEventListener("touch",blockMenu)
 		selfL:insert(MenuLeft)
 		
-		createMenuLeft()
+		RestManager.getCity()
 		
 	end
 	
-	function createMenuLeft()
+	function createMenuLeft(items)
+	
+		local lastY = 90
+	
+		local rectCity = {}
 		
 		local MenuLeftCiudad = display.newRect( display.contentCenterX - 80, h + 30 , 400, 60 )
 		MenuLeftCiudad:setFillColor( .66 )
@@ -47,44 +53,32 @@ function MenuLeft:new()
 			local t = event.target
 			t.alpha = 1
 			transition.to( t, { alpha = .1, time = 200, transition = easing.outExpo } )
-			changeCityName(t.txtMin)
+			changeCityName(event.target)
 		end
 		
-		-- Cancun
-		local rectCancun = display.newRect(  display.contentCenterX - 80, 90 + h, 400, 60 )
-        rectCancun:setFillColor( .5 )
-		rectCancun.alpha = .1
-		rectCancun.txtMin = "CANCUN"
-		rectCancun:addEventListener( "tap", changeCity )
-		selfL:insert(rectCancun)
+		--creamos los botones del menu
 		
-		local txtCancun = display.newText( {    
-        x = 150, y = MenuLeftCiudad.height + 35 + h, align = "left", width = 300,
-        text = "Cancun",  font = "Lato-Light", fontSize = 25,
-		})
-		txtCancun:setFillColor( 0 )
-		selfL:insert(txtCancun)
-		
-		lineLeft[1] = display.newLine(-40, 120 + h, 360, 120 + h)
-		selfL:insert(lineLeft[1])
-		
-		-- Playa
-		local rectPlaya = display.newRect(  display.contentCenterX - 80, 150 + h, 400, 60 )
-        rectPlaya:setFillColor( .5 )
-		rectPlaya.alpha = .1
-		rectPlaya.txtMin = "PLAYA"
-		rectPlaya:addEventListener( "tap", changeCity )
-		selfL:insert(rectPlaya)
-		
-		local txtPlaya = display.newText( {    
-        x = 150, y = MenuLeftCiudad.height + 95 + h, align = "left", width = 300,
-        text = "Playa del Carmen",  font = "Lato-Light", fontSize = 25,
-		})
-		txtPlaya:setFillColor( 0 )
-		selfL:insert(txtPlaya)
-		
-		lineLeft[2] = display.newLine(-40, 180 + h, 360, 180 + h)
-		selfL:insert(lineLeft[2])
+		for y = 1, #items, 1 do
+			rectCity[y] = display.newRect(  display.contentCenterX - 80, lastY + h, 400, 60 )
+			rectCity[y]:setFillColor( .5 )
+			rectCity[y].alpha = .1
+			rectCity[y].txtMin = items[y].name
+			rectCity[y].id = items[y].idCity
+			rectCity[y]:addEventListener( "tap", changeCity )
+			selfL:insert(rectCity[y])
+			
+			txtCity = display.newText( {    
+			x = 150, y = MenuLeftCiudad.height + lastY - 55 + h, align = "left", width = 300,
+			text = items[y].name,  font = "Lato-Light", fontSize = 25,
+			})
+			txtCity:setFillColor( 0 )
+			selfL:insert(txtCity)
+			
+			lineLeft[y] = display.newLine(-40, lastY + 30 + h, 360, lastY + 30 + h)
+			selfL:insert(lineLeft[y])
+			
+			lastY = lastY + 60
+		end
 		
 		-- Border Right
         local borderRight = display.newRect( 358, intH / 2, 4, intH )

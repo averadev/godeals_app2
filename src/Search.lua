@@ -166,8 +166,6 @@ function closeModalSearch()
 		scrViewSearch:removeSelf()
 		btnModal = nil
 		scrViewSearch = nil
-		--native.showAlert( "Go Deals",Globals.searchText[#Globals.searchText] , { "OK"})
-		--print(Globals.searchText[#Globals.searchText])
 	end
 	
 	return true

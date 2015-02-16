@@ -19,7 +19,7 @@ local RestManager = {}
     end
 	
 	RestManager.getRecommended = function()
-		local url = settings.url .. "api/getRecommended/format/json/idApp/" .. settings.idApp
+		local url = settings.url .. "api/getRecommended/format/json/idApp/" .. settings.idApp .. "/city/" .. settings.city
 	   
 	   local function callback(event)
             if ( event.isError ) then
@@ -38,7 +38,7 @@ local RestManager = {}
 
     RestManager.getMyDeals = function()
 		
-		local url = settings.url .. "api/getMyDeals/format/json/idApp/" .. settings.idApp
+		local url = settings.url .. "api/getMyDeals/format/json/idApp/" .. settings.idApp .. "/city/" .. settings.city
 	   
 	   local function callback(event)
             if ( event.isError ) then
@@ -56,7 +56,7 @@ local RestManager = {}
 	end
 	
 	RestManager.getAllEvent = function()
-		local url = settings.url .. "api/getAllEvent/format/json"
+		local url = settings.url .. "api/getAllEvent/format/json" .. "/city/" .. settings.city
 	   
 	   local function callback(event)
             if ( event.isError ) then
@@ -74,7 +74,7 @@ local RestManager = {}
 	end
 	
 	RestManager.getAllCoupon = function()
-		local url = settings.url .. "api/getAllDeal/format/json/idApp/" .. settings.idApp
+		local url = settings.url .. "api/getAllDeal/format/json/idApp/" .. settings.idApp .. "/city/" .. settings.city
 	   
 	   local function callback(event)
             if ( event.isError ) then
@@ -125,7 +125,7 @@ local RestManager = {}
 	end
 	
 	RestManager.getDealsByPartner = function(idPartner,typeInfo)
-		local url = settings.url .. "api/getDealsByPartner/format/json/idPartner/" .. idPartner
+		local url = settings.url .. "api/getDealsByPartner/format/json/idPartner/" .. idPartner .. "/city/" .. settings.city
 	   
 	   local function callback(event)
             if ( event.isError ) then
@@ -210,11 +210,10 @@ local RestManager = {}
                 --hideLoadLogin()
                 local data = json.decode(event.response)
                 if data.success then
-				
                     DBManager.updateUser(data.idApp, email, password, name, fbId)
                     gotoHome()
                 else
-                    native.showAlert( "Go Deals", data.message, { "OK"})
+                    native.showAlert( "Go Deals", data.message, { "OK" })
                 end
             end
             return true
@@ -428,7 +427,7 @@ local RestManager = {}
 	RestManager.getSearchCoupon = function(text)
 		
 		local url = settings.url
-        url = url.."api/getSearchCoupon/format/json"
+        url = url.."api/getSearchCoupon/format/json/city/" .. settings.city
 		url = url.."/texto/"..text
         url = url.."/idApp/"..settings.idApp
     
@@ -442,6 +441,70 @@ local RestManager = {}
 					loadSearchImage({posc = 1,path = "assets/img/app/deal/",screen = "deal"})
 					end
                 end
+            end
+            return true
+        end
+        -- Do request
+        network.request( url, "GET", callback )
+	end
+	
+	--obtiene si el cupon esta descargado
+	RestManager.getCouponDownload = function(idCoupon)
+		
+		local url = settings.url
+        url = url.."api/getCouponDownload/format/json"
+		url = url.."/idApp/"..settings.idApp
+		url = url.."/idCoupon/"..idCoupon
+    
+        local function callback(event)
+            if ( event.isError ) then
+            else
+				local data = json.decode(event.response)
+                if data.success then
+                    AssignedCoupon(data.items)
+                else
+					createCoupon()
+				end
+            end
+            return true
+        end
+        -- Do request
+        network.request( url, "GET", callback )
+	end
+	
+	--obtiene las ciudades
+	RestManager.getCity = function()
+		
+		local url = settings.url
+        url = url.."api/getCity/format/json"
+    
+        local function callback(event)
+            if ( event.isError ) then
+            else
+				local data = json.decode(event.response)
+                if data.success then
+                    createMenuLeft(data.items)
+				end
+            end
+            return true
+        end
+        -- Do request
+        network.request( url, "GET", callback )
+	end
+	
+	--obtiene la ciudad
+	RestManager.getCityById = function()
+		
+		local url = settings.url
+        url = url.."api/getCityById/format/json/city/" .. settings.city
+    
+        local function callback(event)
+            if ( event.isError ) then
+            else
+				local data = json.decode(event.response)
+                if data.success then
+					changeTxtcity(data.items[1].name)
+				end
             end
             return true
         end

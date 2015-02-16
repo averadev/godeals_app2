@@ -42,8 +42,6 @@ local btnDownloadCoupon
 --pantalla
 
 local homeScreen = display.newGroup()
-local menuScreenLeft = MenuLeft:new()
-local menuScreenRight = MenuRight:new()
 
 ----------------------------------------------------------
 -- Funciones
@@ -51,13 +49,17 @@ local menuScreenRight = MenuRight:new()
 
 --llama la pantalla del partner
 function showPartner( event )
-
 	storyboard.gotoScene( "src.Partner", {
 		time = 400,
 		effect = "crossFade",
 		params = { idPartner = itemObj.partnerId, name = itemObj.partner }
 	})
 end
+
+	function AssignedCoupon(item)
+		itemObj.assigned = item
+		createCoupon()
+	end
 
 function showRedimir( event )
 	print("Redimir")
@@ -73,7 +75,6 @@ function showRedimir( event )
 end
 
 function DownloadCoupon( event )
-	print("DownloadCoupon")
 	transition.to( txtTitleInfo, { alpha = 0, time = 200, transition = easing.outExpo } )
 	transition.to( txtInfo, { alpha = 0, time = 200, transition = easing.outExpo } )
 	transition.to( txtBtn, { alpha = 0, time = 200, transition = easing.outExpo } )
@@ -93,7 +94,9 @@ function DownloadCoupon( event )
 end
 
 function changeButtonCoupon()
-	btnDownloadCoupon:removeSelf();
+	--[[btnDownloadCoupon:removeSelf();
+	
+	print(Deal)
 	
 	local btnCanjearCoupon = display.newImage( "img/btn/btnCanjearCoupon.png" )
         btnCanjearCoupon.alpha = 1
@@ -102,7 +105,7 @@ function changeButtonCoupon()
         btnCanjearCoupon.width = 376
         btnCanjearCoupon.height  = 58
         svCoupon:insert( btnCanjearCoupon )
-        btnCanjearCoupon:addEventListener( "tap", showRedimir )
+        btnCanjearCoupon:addEventListener( "tap", showRedimir )]]
 end
 
 --obtenemos el grupo homeScreen de la escena actual
@@ -112,34 +115,10 @@ function getSceneSearchC( event )
 	return true
 end
 
---muestra el menuIzquierdo
-function showMenuLeft( event )
-	homeScreen.alpha = .5
-	transition.to( homeScreen, { x = 400, time = 400, transition = easing.outExpo } )
-	transition.to( menuScreenLeft, { x = 40, time = 400, transition = easing.outExpo } )
-end
-
---esconde el menuIzquierdo
-function hideMenuLeft( event )
-	homeScreen.alpha = 1
-	transition.to( menuScreenLeft, { x = -480, time = 400, transition = easing.outExpo } )
-	transition.to( homeScreen, { x = 0, time = 400, transition = easing.outExpo } )
-	return true
-end
-
---muestra el menu Derecho
-function showMenuRight( event )
-	homeScreen.alpha = .5
-	transition.to( homeScreen, { x = -400, time = 400, transition = easing.outExpo } )
-	transition.to( menuScreenRight, { x = 0, time = 400, transition = easing.outExpo } )
-end
-
---esconde el menu Derecho
-function hideMenuRight( event )
-	homeScreen.alpha = 1
-	transition.to( menuScreenRight, { x = 481, time = 400, transition = easing.outExpo } )
-	transition.to( homeScreen, { x = 0, time = 400, transition = easing.outExpo } )
-	return true
+--obtenemos el homeScreen de la escena
+function getScreenC()
+	print("hola")
+	return homeScreen
 end
 
 function setCouponId( item )
@@ -354,16 +333,14 @@ function scene:createScene( event )
     header:buildToolbar()
     header:buildNavBar(event.params.item.name)
 	
-	--creamos la pantalla del menu
-	menuScreenLeft:builScreenLeft()
-	menuScreenRight:builScreenRight()
-	
-	----obtenemos los parametros del cupon
+	--obtenemos los parametros del cupon
 	if event.params.item == nil then
 		RestManager.getCouponById(1)
 	else
 		itemObj = event.params.item
-		createCoupon()
+		--verifica si el cupon ha sido descargado
+		RestManager.getCouponDownload(itemObj.id)
+		--createCoupon()
 	end
 	
 end

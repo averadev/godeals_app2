@@ -41,8 +41,6 @@ local info, promotions, gallery, MenuEventBar
 --pantalla
 
 local homeScreen = display.newGroup()
-local menuScreenLeft = MenuLeft:new()
-local menuScreenRight = MenuRight:new()
 
 -- tablas
 
@@ -62,18 +60,6 @@ function showMapa( event )
 	})
 end
 
-function showMenu( event )
-	transition.to( homeScreen, { x = 400, time = 400, transition = easing.outExpo } )
-	transition.to( menuScreenLeft, { x = 40, time = 400, transition = easing.outExpo } )
-end
-
---ocultamos el menuIzquierdo
-function hideMenuLeft( event )
-	transition.to( menuScreenLeft, { x = -480, time = 400, transition = easing.outExpo } )
-	transition.to( homeScreen, { x = 0, time = 400, transition = easing.outExpo } )
-	return true
-end
-
 --obtenemos el grupo homeScreen de la escena actual
 function getSceneSearchE( event )
 	--modalSeach(txtSearch.text)
@@ -81,34 +67,9 @@ function getSceneSearchE( event )
 	return true
 end
 
---muestra el menuIzquierdo
-function showMenuLeft( event )
-	homeScreen.alpha = .5
-	transition.to( homeScreen, { x = 400, time = 400, transition = easing.outExpo } )
-	transition.to( menuScreenLeft, { x = 40, time = 400, transition = easing.outExpo } )
-end
-
---esconde el menuIzquierdo
-function hideMenuLeft( event )
-	homeScreen.alpha = 1
-	transition.to( menuScreenLeft, { x = -480, time = 400, transition = easing.outExpo } )
-	transition.to( homeScreen, { x = 0, time = 400, transition = easing.outExpo } )
-	return true
-end
-
---muestra el menu Derecho
-function showMenuRight( event )
-	homeScreen.alpha = .5
-	transition.to( homeScreen, { x = -400, time = 400, transition = easing.outExpo } )
-	transition.to( menuScreenRight, { x = 0, time = 400, transition = easing.outExpo } )
-end
-
---esconde el menu Derecho
-function hideMenuRight( event )
-	homeScreen.alpha = 1
-	transition.to( menuScreenRight, { x = 481, time = 400, transition = easing.outExpo } )
-	transition.to( homeScreen, { x = 0, time = 400, transition = easing.outExpo } )
-	return true
+--obtenemos el homeScreen de la escena
+function getScreenE()
+	return homeScreen
 end
 
 function ListenerChangeMenuEvent( event )
@@ -687,10 +648,6 @@ function scene:createScene( event )
     header.y = h
     header:buildToolbar()
     header:buildNavBar(itemObj.name)
-	
-	--creamos la pantalla del menu
-	menuScreenLeft:builScreenLeft()
-	menuScreenRight:builScreenRight()
 	
 	Globals.noCallbackGlobal = Globals.noCallbackGlobal + 1
 	callbackCurrent = Globals.noCallbackGlobal

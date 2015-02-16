@@ -1,5 +1,4 @@
 
-
 ---------------------------------------------------------------------------------
 -- MONTH TITLE
 ---------------------------------------------------------------------------------
@@ -128,9 +127,14 @@ end
 -- DEAL
 ---------------------------------------------------------------------------------
 Deal = {}
+local assigned = 0
 function Deal:new()
     -- Variables
     local self = display.newGroup()
+	
+	function AssignedCoupon(item)
+		assigned = item
+	end
     
     function showCoupon(event)
         local Globals = require('src.resources.Globals')
@@ -147,6 +151,13 @@ function Deal:new()
 			storyboard.gotoScene( "src.Home")
 			storyboard.removeScene( "src.Coupon" )
 		end
+		
+		--Globals.getCouponDownload(event.target.item)
+		
+		--print(event.target.item.assigned)
+		
+		--print(assigned)
+		
         storyboard.gotoScene( "src.Coupon", {
             time = 400,
             effect = "crossFade",

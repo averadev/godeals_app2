@@ -7,6 +7,12 @@ local Globals = require('src.resources.Globals')
 local storyboard = require( "storyboard" )
 local RestManager = require('src.resources.RestManager')
 local DBManager = require('src.resources.DBManager')
+local settings = DBManager.getSettings()
+
+local txtCiudad = {}
+local textoCiudad = ""
+local menuScreenLeft = nil
+local menuScreenRight = nil
 
 Header = {}
 
@@ -16,9 +22,7 @@ function Header:new()
     local grpTool = display.newGroup()
     local grpSearch = display.newGroup()
     local imgSearch, btnClose, txtSearch
-	local txtCiudad
 	local h = display.topStatusBarContentHeight
-	--local serachScreen = Search:new()
     
     -- Obtener cupones descargados
     function showHome(event)
@@ -30,17 +34,18 @@ function Header:new()
     
     -- Obtener cupones descargados
     function showWallet(event)
-       --[[ if storyboard.getCurrentSceneName() ~= "src.Wallet" then
+       if storyboard.getCurrentSceneName() ~= "src.Wallet" then
             Globals.noCallbackGlobal = Globals.noCallbackGlobal + 1
+			storyboard.removeScene( "src.Wallet" )
             storyboard.gotoScene( "src.Wallet", { time = 400, effect = "slideLeft" })
-        end]]
-		showSearch()
+        end
     end
     
     -- Obtener cupones descargados
     function showNotifications(event)
         if storyboard.getCurrentSceneName() ~= "src.Notifications" then
             Globals.noCallbackGlobal = Globals.noCallbackGlobal + 1
+			storyboard.removeScene( "src.Notifications" )
             storyboard.gotoScene( "src.Notifications", { time = 400, effect = "slideLeft" })
         end
     end
@@ -48,7 +53,6 @@ function Header:new()
     function hideSearch( event )
 		native.setKeyboardFocus(nil)
         event.target.alpha = 0
-		
 		
         if Globals.txtSearch ~= nil then
 			Globals.txtSearch:removeSelf()
@@ -97,8 +101,6 @@ function Header:new()
         Globals.txtSearch.size = 18
         Globals.txtSearch.hasBackground = false 
 		Globals.txtSearch:addEventListener( "userInput", onTxtFocusSearch )
-       -- grpSearch:insert(Globals.txtSearch)
-		--Globals.txtSearch.text = Globals.searchText[#Globals.searchText]
 		Globals.txtSearch.text = text
 	end
 	
@@ -107,6 +109,64 @@ function Header:new()
 			Globals.txtSearch:removeSelf()
 			Globals.txtSearch = nil
 		end
+	end
+	
+	--obtenemos el grupo de cada escena
+	function getScreen()
+		local currentScene = storyboard.getCurrentSceneName()
+		if currentScene == "src.Home" then
+			return getScreenH()
+		elseif currentScene == "src.Event" then
+			return getScreenE()
+		elseif currentScene == "src.Coupon" then
+			return getScreenC()
+		elseif currentScene == "src.Partner" then
+			return getScreenP()
+		elseif currentScene == "src.Mapa" then
+			return getScreenM()
+		elseif currentScene == "src.Notifications" then
+			return getScreenN()
+		elseif currentScene == "src.Wallet" then
+			return getScreenW()
+		end
+	end
+	
+	--mostramos el menu izquierdo
+	function showMenuLeft( event )
+		local screen = getScreen()
+		screen.alpha = .5
+		transition.to( screen, { x = 400, time = 400, transition = easing.outExpo } )
+		transition.to( menuScreenLeft, { x = 40, time = 400, transition = easing.outExpo } )
+		screen = nil
+	end
+	
+	--esconde el menuIzquierdo
+	function hideMenuLeft( event )
+		local screen = getScreen()
+		screen.alpha = 1
+		transition.to( menuScreenLeft, { x = -480, time = 400, transition = easing.outExpo } )
+		transition.to( screen, { x = 0, time = 400, transition = easing.outExpo } )
+		screen = nil
+		return true
+	end
+	
+	--muestra el menu Derecho
+	function showMenuRight( event )
+		local screen = getScreen()
+		screen.alpha = .5
+		transition.to( screen, { x = -400, time = 400, transition = easing.outExpo } )
+		transition.to( menuScreenRight, { x = 0, time = 400, transition = easing.outExpo } )
+		screen = nil
+	end
+	
+	--esconde el menu Derecho
+	function hideMenuRight( event )
+		local screen = getScreen()
+		screen.alpha = 1
+		transition.to( menuScreenRight, { x = 481, time = 400, transition = easing.outExpo } )
+		transition.to( screen, { x = 0, time = 400, transition = easing.outExpo } )
+		screen = nil
+		return true
 	end
     
     -- Temporal
@@ -148,12 +208,6 @@ function Header:new()
 		end
 	end
 	
-	--[[function SearchText( homeScreen )
-		--modalSeach(txtSearch.text,homeScreen)
-		modalSeach("Fish",homeScreen)
-		return true
-	end]]
-	
 	function onTxtFocusSearch(event)
 		if ( "submitted" == event.phase ) then
 			-- Hide Keyboard
@@ -177,27 +231,6 @@ function Header:new()
 			end
 		end
 	end
-	
-	--[[function getSceneSearch( event )
-	
-		native.setKeyboardFocus(nil)
-		local currentScene =  storyboard.getCurrentSceneName()
-		if currentScene == "src.Home" then
-			getSceneSearchH()
-		elseif currentScene == "src.Event" then
-			getSceneSearchE()
-		elseif currentScene == "src.Coupon" then
-			getSceneSearchC()
-		elseif currentScene == "src.Partner" then
-			getSceneSearchP()
-		elseif currentScene == "src.Mapa" then
-			getSceneSearchM()
-		elseif currentScene == "src.Notifications" then
-			getSceneSearchN()
-		elseif currentScene == "src.Wallet" then
-			getSceneSearchW()
-		end
-	end]]
 	
 	function SearchText( event )
 		
@@ -235,10 +268,14 @@ function Header:new()
         if #Globals.scene > 1 then
 			
             local previousScene = Globals.scene[#Globals.scene - 1]
+			local currentScene = Globals.scene[#Globals.scene]
             table.remove(Globals.scene, #Globals.scene)
             table.remove(Globals.scene, #Globals.scene)
+			table.remove(txtCiudad, #txtCiudad)
             -- Movemos a la escena anterior
+			txtCiudad[#txtCiudad].text = textoCiudad
             storyboard.gotoScene( previousScene, { time = 400, effect = "slideRight" })
+			
         end
 		
 		if #Globals.searchText > 0 then
@@ -256,8 +293,9 @@ function Header:new()
     end
     
     -- Creamos la el toolbar
-    function self:buildToolbar(desc)
+    function self:buildToolbar(homeScreen)
         -- Incluye botones que de se ocultaran en la bus
+		local poscCiu = #txtCiudad + 1
         
         local toolbar = display.newRect( 0, 0, display.contentWidth, 60 )
         toolbar.anchorX = 0
@@ -274,13 +312,17 @@ function Header:new()
         self:insert(grpTool)
         self:insert(grpSearch)
 
-        txtCiudad = display.newText( {
+        txtCiudad[poscCiu] = display.newText( {
             x = 135, y = 30,
 			align = "left", width = 100,
-            text = "CANCUN", font = "Lato-Bold", fontSize = 23,
+            text = textoCiudad, font = "Lato-Bold", fontSize = 23,
         })
-        txtCiudad:setFillColor( 1 )
-        grpTool:insert(txtCiudad)
+        txtCiudad[poscCiu]:setFillColor( 1 )
+        grpTool:insert(txtCiudad[poscCiu])
+		
+		if textoCiudad == "" then
+			RestManager.getCityById()
+		end
 
         local btnWallet = display.newImage( "img/btn/btnMenuWallet.png" )
         btnWallet:translate( display.contentWidth - 212, 30 )
@@ -329,13 +371,21 @@ function Header:new()
         bgSearch:translate(270, 50 )
         grpSearch:insert(bgSearch)
 		
+		--creamos la pantalla del menu
+		if menuScreenLeft == nil then
+			menuScreenLeft = MenuLeft:new()
+			menuScreenRight = MenuRight:new()
+		
+			menuScreenLeft:builScreenLeft()
+			menuScreenRight:builScreenRight()
+		end
+		
 		--verificamos notificaciones
 		RestManager.getNotificationsUnRead()
     end
     
     -- Creamos la pantalla del menu
     function self:buildNavBar(texto)
-        
         local menu = display.newRect( 0, 60, display.contentWidth, 65 )
         menu.anchorX = 0
         menu.anchorY = 0
@@ -357,8 +407,15 @@ function Header:new()
         
     end
 	
-	function changeCityName(txtMin)
-		txtCiudad.text = txtMin
+	function changeCityName(items)
+		textoCiudad = items.txtMin
+		txtCiudad[#txtCiudad].text = items.txtMin
+		DBManager.updateCity(items.id)
+	end
+	
+	function changeTxtcity(item)
+		textoCiudad = item
+		txtCiudad[#txtCiudad].text = item
 	end
     
     return self

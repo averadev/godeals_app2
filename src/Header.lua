@@ -286,6 +286,13 @@ function Header:new()
 		end
 		
     end
+	
+	-- regresamos a la escena de home
+	function returnHome()
+		Globals.scene = nil
+		Globals.scene = {}
+		storyboard.gotoScene( "src.Home", { time = 400, effect = "slideRight" })
+	end
     
     -- Envia elemento a la cartera
     function sendToWallet( event )
@@ -404,6 +411,12 @@ function Header:new()
         imgBtnBack.y = 92
         imgBtnBack:addEventListener( "tap", returnScene )
         self:insert( imgBtnBack )
+		
+		local imgBtnHome = display.newImage( "img/btn/btnMenuHome.png" )
+        imgBtnHome.x= 440
+        imgBtnHome.y = 92
+        imgBtnHome:addEventListener( "tap", returnHome )
+        self:insert( imgBtnHome )
         
     end
 	

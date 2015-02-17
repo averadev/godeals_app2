@@ -33,6 +33,7 @@ local itemObj
 local currentSv
 local settings
 local tmpRedimir
+local rctBtn
 
 local txtInfo, txtBtn, txtTitleInfo
 local info, promotions, gallery, MenuEventBar
@@ -62,7 +63,6 @@ end
 	end
 
 function showRedimir( event )
-	print("Redimir")
     if tmpRedimir then
         tmpRedimir:removeSelf()
         tmpRedimir = nil
@@ -91,21 +91,14 @@ function DownloadCoupon( event )
 	end, 1)
 	
 	RestManager.discountCoupon(event.target.idCoipon)
+	
+	
+	--
 end
 
 function changeButtonCoupon()
-	--[[btnDownloadCoupon:removeSelf();
-	
-	print(Deal)
-	
-	local btnCanjearCoupon = display.newImage( "img/btn/btnCanjearCoupon.png" )
-        btnCanjearCoupon.alpha = 1
-        btnCanjearCoupon.x= 240
-        btnCanjearCoupon.y = lastYCoupon
-        btnCanjearCoupon.width = 376
-        btnCanjearCoupon.height  = 58
-        svCoupon:insert( btnCanjearCoupon )
-        btnCanjearCoupon:addEventListener( "tap", showRedimir )]]
+	rctBtn:removeEventListener( "tap", DownloadCoupon )
+	rctBtn:addEventListener( "tap", showRedimir )
 end
 
 --obtenemos el grupo homeScreen de la escena actual
@@ -117,7 +110,6 @@ end
 
 --obtenemos el homeScreen de la escena
 function getScreenC()
-	print("hola")
 	return homeScreen
 end
 
@@ -262,7 +254,7 @@ function buildCoupon()
         txtInfo:setFillColor( 0 )
         svCoupon:insert( txtInfo )
         
-        local rctBtn = display.newRoundedRect( midW, 450, 400, 55, 5 )
+        rctBtn = display.newRoundedRect( midW, 450, 400, 55, 5 )
 		rctBtn.idCoipon = itemObj.id
         rctBtn:setFillColor( .2, .6 ,0 )
         svCoupon:insert(rctBtn)

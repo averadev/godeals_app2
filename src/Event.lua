@@ -252,7 +252,7 @@ function buildEvent(item)
 	svMenuTxt = widget.newScrollView
 	{
 		x = midW,
-		y = h + 145,
+		y = 145,
 		width = intW,
 		height = 60,
 		listener = ListenerChangeMenuEvent,
@@ -263,7 +263,7 @@ function buildEvent(item)
 	groupEvent:insert(svMenuTxt)
 	
 	local greenLine = display.newImage( "img/btn/greenLine.png" )
-	greenLine:translate( display.contentWidth * .5, h + 172)
+	greenLine:translate( display.contentWidth * .5, 172)
 	groupEvent:insert(greenLine)
 	
 	groupMenuEventText = display.newGroup()
@@ -477,7 +477,7 @@ function createScrollViewEvent(nameTxt)
 	
 	srvEventos[positionCurrent] = widget.newScrollView
 	{
-		top = h + 175,
+		top = 175,
 		left = positionScrollEvent,
 		width = intW,
 		height = intH - (h + 185),

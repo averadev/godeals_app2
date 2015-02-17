@@ -423,6 +423,14 @@ function ListenerChangeScrollHome( event )
 			else
 				nextTxt:setFillColor( 0 )
 			end
+			
+			if event.target.name == "scrViewMain" then
+				btnModal.name = "EVENTOS"
+			elseif event.target.name == "scrViewEventos" then
+				btnModal.name = "DEALS"
+			end
+			
+			
             showFilter(true)
 		elseif event.x  >= 380 and movimiento == "d" then
 			transition.to( event.target, { x = 720, time = 400, transition = easing.outExpo } )
@@ -437,6 +445,13 @@ function ListenerChangeScrollHome( event )
 			else
 				previousTxt:setFillColor( 0 )
 			end
+			
+			if event.target.name == "scrViewEventos" then
+				btnModal.name = ""
+			elseif event.target.name == "scrViewDeals" then
+				btnModal.name = "EVENTOS"
+			end
+			
             if event.target.name == "scrViewEventos" then
                 showFilter(false)
             end
@@ -548,9 +563,13 @@ function getFBData()
 end
 
 function openModal( event )
-	Modal(scrViewMain)
+	Modal(btnModal.name)
 	return true
 end	
+
+function openModalTouch( event )
+	return true
+end
 
 --obtenemos el grupo homeScreen de la escena actual
 function getSceneSearchH( event )
@@ -677,9 +696,10 @@ function scene:createScene( event )
 	btnModal = display.newImage( "img/btn/btnFilter.png" )
 	btnModal:translate( intW - 50, intH - 50)
 	btnModal.alpha = 0
+	btnModal.name = ""
 	homeScreen:insert(btnModal)
 	btnModal:addEventListener( "tap", openModal )
-	
+	btnModal:addEventListener( "touch", openModalTouch )
 	
 	btnModal:toFront()
     clearTempDir()

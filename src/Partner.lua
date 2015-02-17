@@ -247,7 +247,7 @@ function loadPartner(item)
 	svMenuTxt = widget.newScrollView
 	{
 		x = midW,
-		y = 168,
+		y = 163,
 		width = intW,
 		height = 73,
 		listener = ListenerChangeMenuPartner,
@@ -257,7 +257,7 @@ function loadPartner(item)
 	}
 	groupPartner:insert(svMenuTxt)
 	
-	MenuPartnerBar = display.newRect( midW, 205 , intW /3, 4 )
+	MenuPartnerBar = display.newRect( midW, 198 , intW /3, 4 )
 	MenuPartnerBar:setFillColor( 88/255, 188/255, 36/255 )
 	groupPartner:insert(MenuPartnerBar)
 	
@@ -456,7 +456,7 @@ function createScrollViewPartner(nameTxt)
 	
 	srvPartner[positionCurrent] = widget.newScrollView
 	{
-		top = 210,
+		top = 200,
 		left = positionScrollPartner,
 		width = intW,
 		height = intH,

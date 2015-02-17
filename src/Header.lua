@@ -415,6 +415,7 @@ function Header:new()
 		local imgBtnHome = display.newImage( "img/btn/btnMenuHome.png" )
         imgBtnHome.x= 440
         imgBtnHome.y = 92
+		imgBtnHome:setFillColor( .5 )
         imgBtnHome:addEventListener( "tap", returnHome )
         self:insert( imgBtnHome )
         

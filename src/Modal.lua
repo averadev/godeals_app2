@@ -1,4 +1,6 @@
 
+local RestManager = require('src.resources.RestManager')
+
 local intW = display.contentWidth
 local intH = display.contentHeight
 local h = display.topStatusBarContentHeight
@@ -9,6 +11,7 @@ local btnModal, bgModal
 local btnFilter = {}
 local txtFilter = {}
 local filterName = nil
+local typeF = ""
 
 function CloseModal( event )
 	btnModal:removeSelf()
@@ -24,6 +27,9 @@ function closeModalTouch( event )
 end
 
 function Showfilter( event )
+
+	RestManager.getFilter(event.target.id,typeF)
+	CloseModal()
 	return true
 end
 
@@ -34,16 +40,19 @@ function createFilters(filter)
 	local poscX = 0
 	local urlImage = ""
 	local poscTitle = 0
+	local numFilter = 0
 
 	--botones para filtrar
 	if filter == "EVENTOS" then
 		totalFilter = 6
 		urlImage = "img/btn/EVENTOS_iconos/"
 		poscTitle = intH / 2.85
+		numFilter = 0
 	else
 		totalFilter = 8
 		urlImage = "img/btn/DEALS_Iconos/"
 		poscTitle = intH/5.7
+		numFilter = 6
 	end
 	
 		for y = 1, totalFilter, 1 do
@@ -83,6 +92,7 @@ function createFilters(filter)
 			btnFilter[y] .width = intH * .14
 			btnFilter[y] .height = intH * .14
 			btnFilter[y] .isVisible = true
+			btnFilter[y].id = numFilter + y
 			btnFilter[y].name = filterName[y]
 			groupFilters:insert(btnFilter[y] )
 			btnFilter[y] :addEventListener( "tap", Showfilter )
@@ -115,7 +125,7 @@ end
 	bgModal:addEventListener( "tap", CloseModal )
 	bgModal:addEventListener( "touch", closeModalTouch )
  
-	local nameFilter = ""
+	typeF = filter
  
 	if filter == "EVENTOS" then
 		filterName = {"CONCIERTOS","DEPORTIVOS","CULTURALES","ANIVERSARIOS","COMPRAS","OTROS"}

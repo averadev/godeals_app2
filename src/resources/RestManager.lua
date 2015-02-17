@@ -512,4 +512,43 @@ local RestManager = {}
         network.request( url, "GET", callback )
 	end
 	
+	--obtiene los eventos o deals del filtro 
+	RestManager.getFilter = function(idFilter,typeF)
+		
+		local screen = ""
+		if typeF == "EVENTOS" then
+			typeF = 1
+			screen = "FilterEvent"
+			
+		else
+			typeF = 2
+			screen = "DealPanel"
+		end
+		
+		local url = settings.url
+        url = url.."api/getFilter/format/json/idApp/" .. settings.idApp .."/city/" .. settings.city .. "/idFilter/" .. idFilter .. "/type/" .. typeF
+    
+        local function callback(event)
+            if ( event.isError ) then
+            else
+				local data = json.decode(event.response)
+                if data.success then
+					if #data.items > 0 then
+						setElements(data.items)
+						loadImage({posc = 1, screen = screen})
+					else
+						if typeF == 1 then
+							buildItems("noFilterEvent")
+						else 
+							buildItems("noFilterCoupon")
+						end
+					end
+				end
+            end
+            return true
+        end
+        -- Do request
+        network.request( url, "GET", callback )
+	end
+	
 return RestManager

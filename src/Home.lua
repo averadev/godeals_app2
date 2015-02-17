@@ -25,6 +25,8 @@ grupoModal = display.newGroup()
 groupSearchModal = display.newGroup()
 local groupMenu, scrViewMain, scrViewEventos, scrViewDeals,svMenuTxt
 local currentSv
+local groupEvent
+local groupDeals
 
 -- Objetos
 local txtMenuInicio, txtMenuEventos, txtMenuDeals
@@ -199,7 +201,7 @@ function buildItems(screen)
                     -- Create title month
                     currentMonth = tonumber(v)
                     local title = MonthTitle:new()
-                    scrViewEventos:insert(title)
+                    groupEvent:insert(title)
                     title:build(Globals.Months[currentMonth].." del "..k)
                     title.y = lastY
                     lastY = lastY + 70
@@ -208,7 +210,7 @@ function buildItems(screen)
             
             -- Create noCallback = noCallback + 1
             local evento = Event:new()
-            scrViewEventos:insert(evento)
+            groupEvent:insert(evento)
             evento:build(true, elements[y], imageItems[y])
             evento.y = lastY
             
@@ -218,6 +220,11 @@ function buildItems(screen)
         RestManager.getAllCoupon()
         
     elseif screen == "DealPanel" then
+	
+		groupDeals:removeSelf()
+		groupDeals = nil
+		groupDeals = display.newGroup()
+		scrViewDeals:insert(groupDeals)
         
         local lastY = 20
         local currentMonth = 0
@@ -225,12 +232,74 @@ function buildItems(screen)
             
             -- Create container
             local deal = Deal:new()
-            scrViewDeals:insert(deal)
+            groupDeals:insert(deal)
             deal:build(true, elements[y], imageItems[y])
             deal.y = lastY
             
             lastY = lastY + 120
         end
+	elseif screen == "FilterEvent" then
+		groupEvent:removeSelf()
+		groupEvent = nil
+		groupEvent = display.newGroup()
+		scrViewEventos:insert(groupEvent)
+		
+		local lastY = 0
+        local currentMonth = 0
+        for y = 1, #elements, 1 do 
+            -- Verify month
+            for k, v, u in string.gmatch(elements[y].iniDate, "(%w+)-(%w+)-(%w+)") do
+                if not (currentMonth == tonumber(v)) then
+                    -- Create title month
+                    currentMonth = tonumber(v)
+                    local title = MonthTitle:new()
+                    groupEvent:insert(title)
+                    title:build(Globals.Months[currentMonth].." del "..k)
+                    title.y = lastY
+                    lastY = lastY + 70
+                end
+            end
+            
+            -- Create noCallback = noCallback + 1
+            local evento = Event:new()
+            groupEvent:insert(evento)
+            evento:build(true, elements[y], imageItems[y])
+            evento.y = lastY
+            
+            lastY = lastY + 120
+        end
+	elseif screen == "noFilterEvent" then
+	
+		groupEvent:removeSelf()
+		groupEvent = nil
+		groupEvent = display.newGroup()
+		scrViewEventos:insert(groupEvent)
+		
+		local txtNoFilterFound = display.newText( {
+			text = "Eventos con el filtro no disponible",     
+			x = intW/2, y = intH/2.5,
+			width = intW,
+			font = "Lato-Regular",  fontSize = 30, align = "center"
+		})
+		txtNoFilterFound:setFillColor( 0 )
+		groupEvent:insert(txtNoFilterFound)
+		
+	elseif screen == "noFilterCoupon" then
+	
+		groupDeals:removeSelf()
+		groupDeals = nil
+		groupDeals = display.newGroup()
+		scrViewDeals:insert(groupDeals)
+		
+		local txtNoFilterFound = display.newText( {
+			text = "Deals con el filtro no disponible",     
+			x = intW/2, y = intH/2.5,
+			width = intW,
+			font = "Lato-Regular",  fontSize = 30, align = "center"
+		})
+		txtNoFilterFound:setFillColor( 0 )
+		groupDeals:insert(txtNoFilterFound)
+	
     end
 end
 
@@ -656,6 +725,11 @@ function scene:createScene( event )
 	}
 	homeScreen:insert(scrViewDeals)
 	scrViewDeals.name = "scrViewDeals"
+	
+	groupEvent = display.newGroup()
+	scrViewEventos:insert(groupEvent)
+	groupDeals = display.newGroup()
+	scrViewDeals:insert(groupDeals)
 	
 	groupMenu = display.newGroup()
 	svMenuTxt:insert(groupMenu)

@@ -11,8 +11,8 @@ local DBManager = require('src.resources.DBManager')
 local isUser = DBManager.setupSquema()
 
 ------------------------ Delete before deploy
--- DBManager.updateUser(1, "mrfeto@gmail.com", '', 'Alberto Vera', '10152713865899218', '') -- Temporal
-DBManager.updateUser(1, "conomia_alfredo@hotmail.com", '', 'Alfredo chi Zum', '100001525033547', '')
+ --DBManager.updateUser(1, "mrfeto@gmail.com", '', 'Alberto Vera', '10152713865899218', '') -- Temporal
+--DBManager.updateUser(1, "conomia_alfredo@hotmail.com", '', 'Alfredo chi Zum', '100001525033547', '')
 
 
 --DBManager.clearUser()

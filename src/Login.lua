@@ -24,7 +24,7 @@ local midH = display.contentCenterY
 local currentShow = 0
 local fbCommand = 0
 local GET_USER_INFO = 1
-local fbAppID = "152313274803025" 
+local fbAppID = "750089858383563" 
 local txtSignEmail, txtSignPass, txtCreateEmail, txtCreatePass, txtCreateRePass
 local imgLogo, groupBtn, groupSign, groupCreate, loadingGrp, loadingL
 local hBar = display.topStatusBarContentHeight

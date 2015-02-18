@@ -56,6 +56,14 @@ function setElements(items)
     end
 end
 
+function setFilterEvent(items)
+	Globals.filterEvent = items
+end
+
+function setFilterDeals(items)
+	Globals.filterDeals = items
+end
+
 ---------------------------------------------------------------------------------
 -- FUNCIONES
 ---------------------------------------------------------------------------------

@@ -16,7 +16,11 @@ return {
 	
 	notBubble = {},
 	
-	txtBubble = {}
+	txtBubble = {},
+	
+	filterEvent = {},
+	
+	filterDeals = {}
 	
 	
 }

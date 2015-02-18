@@ -1,5 +1,6 @@
 
 local RestManager = require('src.resources.RestManager')
+local Globals = require('src.resources.Globals')
 
 local intW = display.contentWidth
 local intH = display.contentHeight
@@ -27,7 +28,6 @@ function closeModalTouch( event )
 end
 
 function Showfilter( event )
-
 	RestManager.getFilter(event.target.id,typeF)
 	CloseModal()
 	return true
@@ -41,6 +41,7 @@ function createFilters(filter)
 	local urlImage = ""
 	local poscTitle = 0
 	local numFilter = 0
+	local idFilter = {}
 
 	--botones para filtrar
 	if filter == "EVENTOS" then
@@ -48,14 +49,25 @@ function createFilters(filter)
 		urlImage = "img/btn/EVENTOS_iconos/"
 		poscTitle = intH / 2.85
 		numFilter = 0
+		idFilter = Globals.filterEvent
 	else
 		totalFilter = 8
 		urlImage = "img/btn/DEALS_Iconos/"
 		poscTitle = intH/5.7
 		numFilter = 6
+		idFilter = Globals.filterDeals
 	end
 	
 		for y = 1, totalFilter, 1 do
+		
+			local flagFilter = 0
+			
+			for h = 1, #idFilter, 1 do
+			
+				if (numFilter + y) == tonumber(idFilter[h].idFilter) then
+					flagFilter = 1
+				end
+			end
 			
 			if filter == "EVENTOS" then
 				if y < 4 then
@@ -95,7 +107,12 @@ function createFilters(filter)
 			btnFilter[y].id = numFilter + y
 			btnFilter[y].name = filterName[y]
 			groupFilters:insert(btnFilter[y] )
-			btnFilter[y] :addEventListener( "tap", Showfilter )
+			
+			if flagFilter == 0 then
+				btnFilter[y].alpha = .1
+			else
+				btnFilter[y] :addEventListener( "tap", Showfilter )
+			end
 			
 			txtFilter[y]  = display.newText( {
 				text = filterName[y],     

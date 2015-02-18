@@ -56,7 +56,7 @@ local RestManager = {}
 	end
 	
 	RestManager.getAllEvent = function()
-		local url = settings.url .. "api/getAllEvent/format/json" .. "/city/" .. settings.city
+		local url = settings.url .. "api/getAllEvent/format/json/idApp/" .. settings.idApp .. "/city/" .. settings.city
 	   
 	   local function callback(event)
             if ( event.isError ) then
@@ -64,6 +64,7 @@ local RestManager = {}
 				local data = json.decode(event.response)
                 if data.success then
                     setElements(data.items)
+					setFilterEvent(data.filter)
 					loadImage({posc = 1, screen = 'EventPanel'})
                 end
             end
@@ -76,12 +77,13 @@ local RestManager = {}
 	RestManager.getAllCoupon = function()
 		local url = settings.url .. "api/getAllDeal/format/json/idApp/" .. settings.idApp .. "/city/" .. settings.city
 	   
-	   local function callback(event)
+	    local function callback(event)
             if ( event.isError ) then
             else
 				local data = json.decode(event.response)
                 if data.success then
                     setElements(data.items)
+					setFilterDeals(data.filter)
 					loadImage({posc = 1, screen = 'DealPanel'})
                 end
             end
@@ -356,7 +358,6 @@ local RestManager = {}
 	end
 	
 	RestManager.getNotifications = function()
-		
 		local url = settings.url
         url = url.."api/getNotifications/format/json"
         url = url.."/idApp/"..settings.idApp
@@ -403,6 +404,7 @@ local RestManager = {}
         url = url.."api/getSearchEvent/format/json"
 		url = url.."/texto/"..text
         url = url.."/idApp/"..settings.idApp
+		url = url.."/city/"..settings.city
     
         local function callback(event)
             if ( event.isError ) then

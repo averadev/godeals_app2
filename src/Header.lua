@@ -3,6 +3,7 @@
 -- Encabezao general
 ---------------------------------------------------------------------------------
 require('src.Search')
+local Sprites = require('src.resources.Sprites')
 local Globals = require('src.resources.Globals')
 local storyboard = require( "storyboard" )
 local RestManager = require('src.resources.RestManager')
@@ -18,6 +19,7 @@ Header = {}
 
 function Header:new()
     -- Variables
+	local grpLoading
     local self = display.newGroup()
     local grpTool = display.newGroup()
     local grpSearch = display.newGroup()
@@ -286,6 +288,55 @@ function Header:new()
 		end
 		
     end
+	
+	function getNoContent(obj, txtData)
+		if not grpLoading then
+			grpLoading = display.newGroup()
+			obj:insert(grpLoading)
+			
+			local noData = display.newImage( "img/btn/noData.png" )
+			noData.x = display.contentWidth / 2
+			noData.y = (obj.height / 3) - 35
+			grpLoading:insert(noData) 
+			
+			local title = display.newText( txtData, 0, 30, "Chivo", 16)
+			title:setFillColor( .3, .3, .3 )
+			title.x = display.contentWidth / 2
+			title.y = (obj.height / 3) + 40
+			grpLoading:insert(title) 
+		end
+	end
+	
+	function endLoading()
+		if grpLoading then
+			grpLoading:removeSelf()
+			grpLoading = nil
+		end
+	end
+	
+	function getLoading(obj)
+		if not grpLoading then
+			grpLoading = display.newGroup()
+			obj:insert(grpLoading)
+			
+			-- Sprite and text
+			local sheet = graphics.newImageSheet(Sprites.loading.source, Sprites.loading.frames)
+			local loadingBottom = display.newSprite(sheet, Sprites.loading.sequences)
+			loadingBottom.x = display.contentWidth / 2
+			loadingBottom.y = obj.height / 3
+			grpLoading:insert(loadingBottom)
+			loadingBottom:setSequence("play")
+			loadingBottom:play()
+
+			local title = display.newText( "Cargando, por favor espere...", 0, 30, "Chivo", 16)
+			title:setFillColor( .3, .3, .3 )
+			title.x = display.contentWidth / 2
+			title.y = (obj.height / 3) + 40
+			grpLoading:insert(title) 
+		else
+			obj:insert(grpLoading)
+		end
+	end
 	
 	-- regresamos a la escena de home
 	function returnHome()

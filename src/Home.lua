@@ -188,6 +188,7 @@ function buildItems(screen)
         end
         
         -- Siguiente solicitud
+		getLoading(groupEvent)
         RestManager.getAllEvent()
         
     elseif screen == "EventPanel" then
@@ -217,7 +218,8 @@ function buildItems(screen)
             lastY = lastY + 120
         end
         -- Siguiente solicitud
-        RestManager.getAllCoupon()
+		getLoading(groupDeals)
+		RestManager.getAllCoupon()
         
     elseif screen == "DealPanel" then
 	
@@ -238,6 +240,7 @@ function buildItems(screen)
             
             lastY = lastY + 120
         end
+		endLoading()
 	elseif screen == "FilterEvent" then
 		groupEvent:removeSelf()
 		groupEvent = nil
@@ -777,7 +780,7 @@ function scene:createScene( event )
 	
 	btnModal:toFront()
     clearTempDir()
-    --RestManager.getAds()
+	getLoading(scrViewMain)
     RestManager.getRecommended()
 	
 	Globals.noCallbackGlobal = Globals.noCallbackGlobal + 1

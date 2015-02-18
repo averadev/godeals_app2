@@ -161,12 +161,6 @@ function buildCoupon()
     svCoupon:insert( imgCoupon )
     imgCoupon:setMask( mask )
     
-    local btnPartner = display.newImage( "img/btn/btnPartner.png" )
-	btnPartner.x= 430
-	btnPartner.y = 85
-    btnPartner:addEventListener( "tap", showPartner )
-    svCoupon:insert( btnPartner )
-	
 	local txtPartner = display.newText( {
         text = itemObj.partner,    
         x = 300, y = 80,
@@ -228,56 +222,55 @@ function buildCoupon()
     
     
     -- Descarga / Redime
-    if itemObj.stock == '0' then
-            local agotado = display.newImage( "img/btn/agotadoMax.png" )
-            agotado.x= 240
-            agotado.y = 450
-            agotado.alpha = .8
-            svCoupon:insert(agotado)
-    else
-        txtTitleInfo = display.newText( {
-            text = "¿Te interesa este Deal?",
-            x = 240, y = 340,
-            width = 400, height = 0,
-            font = "Lato-Bold", fontSize = 16, align = "left"
-        })
-        txtTitleInfo:setFillColor( 0 )
-        svCoupon:insert( txtTitleInfo )
+    
+	txtTitleInfo = display.newText( {
+		text = "¿Te interesa este Deal?",
+		x = 240, y = 340,
+		width = 400, height = 0,
+		font = "Lato-Bold", fontSize = 16, align = "left"
+	})
+	txtTitleInfo:setFillColor( 0 )
+	svCoupon:insert( txtTitleInfo )
 
-        txtInfo = display.newText( {
-            text =  "No lo pienses mas y descargalo, "..
-                    "se guardara en tu cartera para que lo uses en tu proxima visita.",
-            x = 240, y = 385,
-            width = 400, height = 60,
-            font = "Lato-Regular", fontSize = 16, align = "left"
-        })
-        txtInfo:setFillColor( 0 )
-        svCoupon:insert( txtInfo )
-        
-        rctBtn = display.newRoundedRect( midW, 450, 400, 55, 5 )
-		rctBtn.idCoipon = itemObj.id
-        rctBtn:setFillColor( .2, .6 ,0 )
-        svCoupon:insert(rctBtn)
-        
-        txtBtn = display.newText( {
-            text =  "DESCARGAR DEAL",
-            x = 240, y = 450,
-            width = 400, height = 0,
-            font = "Lato-Regular", fontSize = 26, align = "center"
-        })
-        txtBtn:setFillColor( 1 )
-        svCoupon:insert( txtBtn )
-        
-        if itemObj.assigned == 1 or itemObj.assigned == '1' then 
-            txtTitleInfo.text = "Redime este Deal!"
-            txtInfo.text =  "Deja presionado el boton mientras lo acercas a nuestro dispositivo GO> "..
-                            "disponible en todos los establecimientos afiliados. PREGUNTA POR EL!"
-            txtBtn.text = "REDIMIR DEAL"
-            rctBtn:addEventListener( "tap", showRedimir )
-        else
-            rctBtn:addEventListener( "tap", DownloadCoupon )
-        end
-    end
+	txtInfo = display.newText( {
+		text =  "No lo pienses mas y descargalo, "..
+				"se guardara en tu cartera para que lo uses en tu proxima visita.",
+		x = 240, y = 385,
+		width = 400, height = 60,
+		font = "Lato-Regular", fontSize = 16, align = "left"
+	})
+	txtInfo:setFillColor( 0 )
+	svCoupon:insert( txtInfo )
+
+	rctBtn = display.newRoundedRect( midW, 450, 400, 55, 5 )
+	rctBtn.idCoipon = itemObj.id
+	rctBtn:setFillColor( .2, .6 ,0 )
+	svCoupon:insert(rctBtn)
+
+	txtBtn = display.newText( {
+		text =  "DESCARGAR DEAL",
+		x = 240, y = 450,
+		width = 400, height = 0,
+		font = "Lato-Regular", fontSize = 26, align = "center"
+	})
+	txtBtn:setFillColor( 1 )
+	svCoupon:insert( txtBtn )
+
+	if itemObj.assigned == 1 or itemObj.assigned == '1' then 
+		txtTitleInfo.text = "Redime este Deal!"
+		txtInfo.text =  "Deja presionado el boton mientras lo acercas a nuestro dispositivo GO> "..
+						"disponible en todos los establecimientos afiliados. PREGUNTA POR EL!"
+		txtBtn.text = "REDIMIR DEAL"
+		rctBtn:addEventListener( "tap", showRedimir )
+	elseif itemObj.stock == '0' then
+		txtTitleInfo.text = "Lo sentimos."
+		txtInfo.text =  "Este Deal se ha agotado, pero no te preocupes "..itemObj.partner..
+						" y el equipo de GoDeals tienen mas promociones para ti!"
+		txtBtn.text = "AGOTADO"
+		rctBtn:setFillColor( .8, .6, .6 )
+    else
+		rctBtn:addEventListener( "tap", DownloadCoupon )
+	end
     
     
     -- Detail Clauses
@@ -301,9 +294,26 @@ function buildCoupon()
 	svCoupon:insert( txtClauses )
 	
 	txtClauses.height = txtClauses.height + 10
+	lastY = txtClauses.height + 620
+	
+	local txtAdditionalInformation = display.newText({
+		text = "Consultar comercio",
+		x = 230, y = lastY,
+		height = 40, width = 400,
+		font = "Chivo", fontSize = 22, align = "center"
+	})
+    txtAdditionalInformation.itemObj = itemObj
+	txtAdditionalInformation:setFillColor( .27, .5, .7 )
+	txtAdditionalInformation:addEventListener( "tap", showPartner )
+	svCoupon:insert( txtAdditionalInformation )
     
-    lastY = txtClauses.height + 620
-    local spc = display.newRect( 0, lastY, 1, 1 )
+    local lineLink = display.newRect( 50, lastY + 15, 360, 1 )
+	lineLink.anchorX = 0
+	lineLink.anchorY = 0
+	lineLink:setFillColor( .27, .5, .7 )
+	svCoupon:insert( lineLink )
+	
+    local spc = display.newRect( 0, lastY + 60, 1, 1 )
     spc:setFillColor( 0 )
     svCoupon:insert( spc )
     

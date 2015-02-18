@@ -299,11 +299,7 @@ function buildPartnerInfo(item)
 	txtPartner.y = txtPartner.y + txtPartner.height/2
 	lastY = lastY + txtPartner.height + 10
 	
-	local btnPartner = display.newImage( "img/btn/btnPartner.png" )
-	btnPartner.x= 430
-	btnPartner.y = lastY
-    btnPartner:addEventListener( "tap", showMapa )
-    srvPartner[#srvPartner]:insert( btnPartner )
+	
 	
 	local txtAddress = display.newText({
 		text = item.address,
@@ -349,7 +345,26 @@ function buildPartnerInfo(item)
     bgGeneralInformacion.y = (txtInfo.height / 2) + lastY + 10
     
     lastY = lastY + bgGeneralInformacion.height + 25
-	local spc = display.newRect( 0, lastY, 1, 1 )
+	
+	
+	local txtAdditionalInformation = display.newText({
+		text = "Consultar ubicación en el mapa",
+		x = 230, y = lastY,
+		height = 40, width = 400,
+		font = "Chivo", fontSize = 22, align = "center"
+	})
+    txtAdditionalInformation.itemObj = itemObj
+	txtAdditionalInformation:setFillColor( .27, .5, .7 )
+	txtAdditionalInformation:addEventListener( "tap", showMapa )
+	srvPartner[#srvPartner]:insert( txtAdditionalInformation )
+    
+    local lineLink = display.newRect( 50, lastY + 15, 360, 1 )
+	lineLink.anchorX = 0
+	lineLink.anchorY = 0
+	lineLink:setFillColor( .27, .5, .7 )
+	srvPartner[#srvPartner]:insert( lineLink )
+	
+	local spc = display.newRect( 0, lastY + 50, 1, 1 )
     spc:setFillColor( 0 )
     srvPartner[#srvPartner]:insert( spc )
 	

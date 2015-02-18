@@ -46,7 +46,6 @@ local RestManager = {}
 				local data = json.decode(event.response)
                 if data.success then
                     setWalletElements(data.items)
-					loadWalletImage({posc = 1, path = 'assets/img/app/deal/'})
                 end
             end
             return true
@@ -331,8 +330,6 @@ local RestManager = {}
 		
 	end
 	
-	-- se obtiene las notificaciones del usuarios
-	
 	RestManager.getNotifications = function()
 		
 		local url = settings.url
@@ -344,32 +341,7 @@ local RestManager = {}
             else
 				local data = json.decode(event.response)
                 if data.success then
-                    setNotificationsElements(data.items)
-					loadNotificationsImage({posc = 1})
-                end
-            end
-            return true
-        end
-        -- Do request
-        network.request( url, "GET", callback )
-		
-	end
-	
-	RestManager.getNotifications = function()
-		
-		local url = settings.url
-        url = url.."api/getNotifications/format/json"
-        url = url.."/idApp/"..settings.idApp
-    
-        local function callback(event)
-            if ( event.isError ) then
-            else
-				local data = json.decode(event.response)
-                if data.success then
-					if #data.items > 0 then
-                    setNotificationsElements(data.items)
-					loadNotificationsImage({posc = 1})
-					end
+					setNotificationsElements(data.items)
                 end
             end
             return true

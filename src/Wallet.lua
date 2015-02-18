@@ -41,6 +41,12 @@ local imageItems = {}
 ---------------------------------------------------------------------------------
 function setWalletElements(items)
     elements = items
+	if #elements > 0 then
+		getLoading(svContent)
+		loadWalletImage({posc = 1, path = 'assets/img/app/deal/'})
+	else
+		getNoContent(svContent, "En este momento no cuentas con Deals descargados")
+	end
 end
 
 --obtenemos el grupo homeScreen de la escena actual
@@ -99,6 +105,8 @@ end
 
 function buildWalletItems()
     yMain = 50
+	endLoading(svContent)
+	
     local separadorEventos = display.newImage( "img/btn/btnArrowGreen.png" )
     separadorEventos:translate( 41, yMain -3)
     separadorEventos.isVisible = true

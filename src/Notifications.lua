@@ -41,6 +41,12 @@ local noLeido = {}
 ---------------------------------------------------------------------------------
 function setNotificationsElements(items)
     elements = items
+	if #elements > 0 then
+		getLoading(svContent)
+		loadNotificationsImage({posc = 1})
+	else
+		getNoContent(svContent, "En este momento no cuentas con notificaciones")
+	end
 end
 
 ---------------------------------------------------------------------------------
@@ -49,7 +55,6 @@ end
 
 --obtenemos el grupo homeScreen de la escena actual
 function getSceneSearchN( event )
-	--modalSeach(txtSearch.text)
 	SearchText(homeScreen)
 	return true
 end
@@ -130,6 +135,8 @@ end
 function buildNotificationsItems(objScreen)
 
     yMain = 50
+	endLoading(svContent)
+	
     local separadorEventos = display.newImage( "img/btn/btnArrowGreen.png" )
     separadorEventos:translate( 41, yMain -3)
     separadorEventos.isVisible = true

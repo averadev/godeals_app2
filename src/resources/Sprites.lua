@@ -1,8 +1,6 @@
 
 local Sprites = {}
 
-
-
 Sprites.loading = {
   source = "img/btn/loading.png",
   frames = {width=48, height=48, numFrames=8},

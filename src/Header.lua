@@ -236,8 +236,8 @@ function Header:new()
 	
 	function SearchText( event )
 		
-		modalSeach(Globals.txtSearch.text)
-		--modalSeach("Fish")
+		--modalSeach(Globals.txtSearch.text,())
+		modalSeach("f",getScreen())
 		
 		return true
 	end
@@ -271,21 +271,21 @@ function Header:new()
 			
             local previousScene = Globals.scene[#Globals.scene - 1]
 			local currentScene = Globals.scene[#Globals.scene]
-            table.remove(Globals.scene, #Globals.scene)
-            table.remove(Globals.scene, #Globals.scene)
-			table.remove(txtCiudad, #txtCiudad)
-            -- Movemos a la escena anterior
-			txtCiudad[#txtCiudad].text = textoCiudad
+			
+			if previousScene == currentScene then
+				while previousScene == currentScene do
+					previousScene = Globals.scene[#Globals.scene - 1]
+					table.remove(Globals.scene, #Globals.scene)
+				end
+				
+			else
+				table.remove(Globals.scene, #Globals.scene)
+				table.remove(Globals.scene, #Globals.scene)
+			end
+			
             storyboard.gotoScene( previousScene, { time = 400, effect = "slideRight" })
 			
         end
-		
-		if #Globals.searchText > 0 then
-			modalSeach(Globals.searchText[#Globals.searchText])
-			createTxt(Globals.searchText[#Globals.searchText])
-			table.remove(Globals.searchText, #Globals.searchText)
-			--showSearch()
-		end
 		
     end
 	

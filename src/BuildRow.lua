@@ -152,12 +152,6 @@ function Deal:new()
 			storyboard.removeScene( "src.Coupon" )
 		end
 		
-		--Globals.getCouponDownload(event.target.item)
-		
-		--print(event.target.item.assigned)
-		
-		--print(assigned)
-		
         storyboard.gotoScene( "src.Coupon", {
             time = 400,
             effect = "crossFade",

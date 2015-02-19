@@ -214,53 +214,15 @@ function Header:new()
 		if ( "submitted" == event.phase ) then
 			-- Hide Keyboard
 			native.setKeyboardFocus(nil)
-			
-			local currentScene =  storyboard.getCurrentSceneName()
-			if currentScene == "src.Home" then
-				getSceneSearchH()
-			elseif currentScene == "src.Event" then
-				getSceneSearchE()
-			elseif currentScene == "src.Coupon" then
-				getSceneSearchC()
-			elseif currentScene == "src.Partner" then
-				getSceneSearchP()
-			elseif currentScene == "src.Mapa" then
-				getSceneSearchM()
-			elseif currentScene == "src.Notifications" then
-				getSceneSearchN()
-			elseif currentScene == "src.Wallet" then
-				getSceneSearchW()
-			end
+			modalSeach(Globals.txtSearch.text,getScreen())
 		end
 	end
 	
 	function SearchText( event )
-		
-		--modalSeach(Globals.txtSearch.text,())
-		modalSeach("f",getScreen())
-		
-		return true
-	end
-	
-	function getSceneSearch( event )
-	
 		native.setKeyboardFocus(nil)
-		local currentScene =  storyboard.getCurrentSceneName()
-		if currentScene == "src.Home" then
-			getSceneSearchH()
-		elseif currentScene == "src.Event" then
-			getSceneSearchE()
-		elseif currentScene == "src.Coupon" then
-			getSceneSearchC()
-		elseif currentScene == "src.Partner" then
-			getSceneSearchP()
-		elseif currentScene == "src.Mapa" then
-			getSceneSearchM()
-		elseif currentScene == "src.Notifications" then
-			getSceneSearchN()
-		elseif currentScene == "src.Wallet" then
-			getSceneSearchW()
-		end
+		modalSeach(Globals.txtSearch.text,getScreen())
+		--modalSeach("f",getScreen())
+		return true
 	end
     
     -- Return to last scene
@@ -349,6 +311,15 @@ function Header:new()
     function sendToWallet( event )
         
     end
+	
+	--cierra la sesion
+	function logout()
+		DBManager.clearUser()
+		storyboard.gotoScene( "src.Login", {
+			time = 400,
+			effect = "crossFade"
+    }	)
+	end
     
     -- Creamos la el toolbar
     function self:buildToolbar(homeScreen)

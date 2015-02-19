@@ -50,9 +50,14 @@ function getReturnButtons()
     if groupSign.x == 0 then
         transition.to( groupBtn, { x = 0, time = 400, transition = easing.outExpo } )
         transition.to( groupSign, { x = 480, time = 400, transition = easing.outExpo } )
+		txtSignEmail.text = ''
+		txtSignPass.text = ""
     else
         transition.to( groupBtn, { x = 0, time = 400, transition = easing.outExpo } )
         transition.to( groupCreate, { x = 480, time = 400, transition = easing.outExpo } )
+		txtCreateEmail.text = '' 
+		txtCreatePass.text = '' 
+		txtCreateRePass.text = ''
     end
 end
 
@@ -99,6 +104,7 @@ end
 -- FUNCTIONS
 ---------------------------------------------------------------------------------
 function gotoHome()
+	getReturnButtons()
     storyboard.gotoScene( "src.Home", { time = 400, effect = "crossFade" })
 end
 

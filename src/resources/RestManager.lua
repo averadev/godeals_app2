@@ -239,6 +239,7 @@ local RestManager = {}
                 --hideLoadLogin()
                 local data = json.decode(event.response)
                 if data.success then
+					DBManager.updateUser(data.items[1].id, data.items[1].email, data.items[1].password, data.items[1].name, '')
                     gotoHome()
                 else
                     native.showAlert( "Go Deals", data.message, { "OK"})

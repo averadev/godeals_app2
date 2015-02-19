@@ -140,8 +140,8 @@ function MenuRight:new()
 		selfR:insert(MenuLeftCiudad)
 		
 		local function cerrarSession( event )
-			saveBeacon()
 			hideMenuRight()
+			logout()
 		end
 		
 		-- Cerrar session

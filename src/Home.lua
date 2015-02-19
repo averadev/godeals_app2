@@ -401,6 +401,12 @@ function ListenerChangeMenuHome( event )
 				nextTxt:setFillColor( 0 )
 			end
 			
+			if currentSv.name == "scrViewEventos" then
+				btnModal.name = "EVENTOS"
+			elseif currentSv.name == "scrViewDeals" then
+				btnModal.name = "DEALS"
+			end
+			
 			showFilter(true)
 		elseif diferenciaX - event.x  <= -380 then
 			
@@ -415,6 +421,12 @@ function ListenerChangeMenuHome( event )
 				transition.to( groupMenu, { x = posicionMenu + 166, time = 400, transition = easing.outExpo } )
 				currentSv = previousSv
 				previousTxt:setFillColor( 0 )
+			end
+			
+			if currentSv.name == "scrViewMain" then
+				btnModal.name = ""
+			elseif currentSv.name == "scrViewEventos" then
+				btnModal.name = "EVENTOS"
 			end
 			
 			if currentSv.name == "scrViewMain" then
@@ -434,6 +446,8 @@ end
 --- scrollView functions
 
 function ListenerChangeScrollHome( event )
+
+	scrViewMain:setScrollWidth(480)
 
 	local nextSv
 	local previousSv
@@ -457,8 +471,11 @@ function ListenerChangeScrollHome( event )
 	end
 	
 	if event.phase == "began" then
+		xCurrent = 0
 		event.target:setScrollWidth(  480 )
+		
 		diferenciaX = event.x - event.target.x
+		xCurrent = event.x
 		posicionMenu = groupMenu.x
     elseif event.phase == "moved" then
 		if  event.direction == "left"  or event.direction == "right" then
@@ -491,7 +508,8 @@ function ListenerChangeScrollHome( event )
 		txtMenuDeals:setFillColor( 161/255, 161/255, 161/255 )
 		txtMenuEventos:setFillColor( 161/255, 161/255, 161/255 )
 	
-		if event.x <= 100 and movimiento == "i" then
+		--if event.x <= 100 and movimiento == "i" then
+		if xCurrent - event.x >= 160 and movimiento == "i" then
 			transition.to( event.target, { x = -240, time = 400, transition = easing.outExpo } )
 			transition.to( nextSv, { x = 240, time = 400, transition = easing.outExpo } )
 			transition.to( groupMenu, { x = posicionMenu - 166, time = 400, transition = easing.outExpo } )
@@ -512,7 +530,8 @@ function ListenerChangeScrollHome( event )
 			
 			
             showFilter(true)
-		elseif event.x  >= 380 and movimiento == "d" then
+		--elseif event.x  >= 380 and movimiento == "d" then
+		elseif xCurrent - event.x <= -160 and movimiento == "d" then
 			transition.to( event.target, { x = 720, time = 400, transition = easing.outExpo } )
 			transition.to( nextSv, { x = 720, time = 400, transition = easing.outExpo } )
 			transition.to( previousSv, { x = 240, time = 400, transition = easing.outExpo } )

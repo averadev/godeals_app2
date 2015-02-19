@@ -149,6 +149,7 @@ function ListenerChangeScrollPartner( event )
 	if event.phase == "began" then
 		diferenciaX = event.x - event.target.x
 		posicionMenu = groupMenuPartnerText.x
+		xCurrent = event.x
     elseif event.phase == "moved" then
 		if  event.direction == "left"  or event.direction == "right" then
 			posicionNueva = event.x-diferenciaX
@@ -175,7 +176,8 @@ function ListenerChangeScrollPartner( event )
 		end
 		
     elseif event.phase == "ended" or event.phase == "cancelled" then
-		if event.x <= 100 and movimiento == "i" then
+		--if event.x <= 100 and movimiento == "i" then
+		if xCurrent - event.x >= 160 and movimiento == "i" then
 			transition.to( event.target, { x = -240, time = 400, transition = easing.outExpo } )
 			transition.to( nextSv, { x = 240, time = 400, transition = easing.outExpo } )
 			transition.to( groupMenuPartnerText, { x = posicionMenu - 166, time = 400, transition = easing.outExpo } )
@@ -184,7 +186,8 @@ function ListenerChangeScrollPartner( event )
 				transition.to( event.target, { x = 240, time = 400, transition = easing.outExpo } )
 				transition.to( groupMenuPartnerText, { x = posicionMenu, time = 400, transition = easing.outExpo } )
 			end
-		elseif event.x  >= 380 and movimiento == "d" then
+		--elseif event.x  >= 380 and movimiento == "d" then
+		elseif xCurrent - event.x <= -160 and movimiento == "d" then
 			transition.to( event.target, { x = 720, time = 400, transition = easing.outExpo } )
 			transition.to( nextSv, { x = 720, time = 400, transition = easing.outExpo } )
 			transition.to( previousSv, { x = 240, time = 400, transition = easing.outExpo } )

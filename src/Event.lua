@@ -179,6 +179,7 @@ function ListenerChangeScrollEvent( event )
 		
 		diferenciaX = event.x - event.target.x
 		posicionMenu = groupMenuEventText.x
+		xCurrent = event.x
 		
     elseif event.phase == "moved" then
 		if  event.direction == "left"  or event.direction == "right" then
@@ -206,7 +207,8 @@ function ListenerChangeScrollEvent( event )
 		end
 		
     elseif event.phase == "ended" or event.phase == "cancelled" then
-		if event.x <= 100 and movimiento == "i" then
+		if xCurrent - event.x >= 160 and movimiento == "i" then
+		--if event.x <= 100 and movimiento == "i" then
 			transition.to( event.target, { x = -240, time = 400, transition = easing.outExpo } )
 			transition.to( nextSv, { x = 240, time = 400, transition = easing.outExpo } )
 			transition.to( groupMenuEventText, { x = posicionMenu - 168, time = 400, transition = easing.outExpo } )
@@ -216,7 +218,8 @@ function ListenerChangeScrollEvent( event )
 				transition.to( groupMenuEventText, { x = posicionMenu, time = 400, transition = easing.outExpo } )
 				currentSv = event.target
 			end
-		elseif event.x  >= 380 and movimiento == "d" then
+		--elseif event.x  >= 380 and movimiento == "d" then
+		elseif xCurrent - event.x <= -160 and movimiento == "d" then
 			transition.to( event.target, { x = 720, time = 400, transition = easing.outExpo } )
 			transition.to( nextSv, { x = 720, time = 400, transition = easing.outExpo } )
 			transition.to( previousSv, { x = 240, time = 400, transition = easing.outExpo } )

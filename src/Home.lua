@@ -789,6 +789,7 @@ function scene:createScene( event )
 	btnModal:toFront()
     clearTempDir()
 	getLoading(scrViewMain)
+    RestManager.getBeacons()
     RestManager.getRecommended()
 	
 	Globals.noCallbackGlobal = Globals.noCallbackGlobal + 1

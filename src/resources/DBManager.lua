@@ -106,7 +106,7 @@ local dbManager = {}
 		closeConnection( )
     end
     
-	dbManager.saveAds = function(items)
+	dbManager.saveBeacons = function(items)
 		openConnection( )
     
         -- Delete all
@@ -123,9 +123,9 @@ local dbManager = {}
 		end
     
         -- Save update
-        for z = 1, #items, 1 do 
+		for z = 1, #items, 1 do 
             if not (items[z] == nil) then
-                query = "INSERT INTO ads VALUES ("
+				query = "INSERT INTO ads VALUES ("
                         ..items[z].id..",'"
                         ..items[z].message.."','"
                         ..items[z].uuid.."','"
@@ -133,7 +133,10 @@ local dbManager = {}
                         ..items[z].longitude.."',"
                         ..items[z].distanceMin..","
                         ..items[z].distanceMax..","
-                        ..items[z].partnerId..", 1);"
+                        ..items[z].partnerId..","
+                        ..items[z].type..",'"
+                        ..items[z].image.."', 1);"
+				
                 db:exec( query )
             end
         end
@@ -149,7 +152,7 @@ local dbManager = {}
 		local query = "CREATE TABLE IF NOT EXISTS config (id INTEGER PRIMARY KEY, idApp INTEGER, email TEXT, password TEXT, name TEXT, fbId TEXT, idComer TEXT, url TEXT, city INTEGER);"
 		db:exec( query )
     
-        local query = "CREATE TABLE IF NOT EXISTS ads (id INTEGER PRIMARY KEY, message TEXT, uuid TEXT, latitude TEXT, longitude TEXT, distanceMin REAL, distanceMax REAL, partnerId INTEGER, status INTEGER);"
+        local query = "CREATE TABLE IF NOT EXISTS ads (id INTEGER PRIMARY KEY, message TEXT, uuid TEXT, latitude TEXT, longitude TEXT, distanceMin REAL, distanceMax REAL, partnerId INTEGER, type INTEGER, image TEXT, status INTEGER);"
 		db:exec( query )
 
         -- Return if have connection

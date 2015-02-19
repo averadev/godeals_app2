@@ -110,14 +110,14 @@ local RestManager = {}
         network.request( url, "GET", callback )
 	end
 
-    RestManager.getAds = function()
-        local url = settings.url .. "api/getAds/format/json"
+    RestManager.getBeacons = function()
+        local url = settings.url .. "api/getBeacons/format/json"
 
         local function callback(event)
             if ( event.isError ) then
             else
                 local data = json.decode(event.response)
-                DBManager.saveAds(data.items)
+                DBManager.saveBeacons(data.items)
             end
             return true
         end

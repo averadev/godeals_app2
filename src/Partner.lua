@@ -41,6 +41,18 @@ local itemPartner = {}
 
 local homeScreen = display.newGroup()
 
+-------------------------------------------------------
+---------Funciones-------------------------------------
+-------------------------------------------------------
+
+function callPhone( event )
+	
+end
+
+function openSocialNetwork( event )
+	--print(item.twitter)
+end
+
 --------listener scroll
 
 function ListenerChangeMenuPartner( event )
@@ -283,9 +295,23 @@ end
 
 function buildPartnerInfo(item)
 
-	lastY = 35
+	lastY = 50
 	
 	lastYImage = 166/2
+	
+	local txtWelcome = display.newText({
+		text = "BIENVENIDO A:",
+		x = 320,
+		y =  lastY,
+		font = "Lato-Regular",
+		width = 300,
+		fontSize = 20,
+		align = "left"
+	})
+	txtWelcome:setFillColor( 1 )
+	srvPartner[#srvPartner]:insert( txtWelcome )
+	
+	lastY = lastY + 20
 
 	local txtPartner = display.newText({
 		text = item.name,
@@ -302,23 +328,119 @@ function buildPartnerInfo(item)
 	txtPartner.y = txtPartner.y + txtPartner.height/2
 	lastY = lastY + txtPartner.height + 10
 	
+	lastY = lastY + 110
 	
+	local bgAddress = display.newRect( midW, lastY, 440, 80 )
+	bgAddress:setFillColor( 1 )
+	srvPartner[#srvPartner]:insert(bgAddress)
 	
 	local txtAddress = display.newText({
 		text = item.address,
-		x = 320,
-		y =  lastY,
+		x = 280,
+		y =  lastY - 15,
 		font = "Lato-Regular",
-		width = 300,
-		fontSize = 18,
+		width = 320,
+		fontSize = 20,
 		align = "left"
 	})
-	txtAddress:setFillColor( 1 )
+	txtAddress:setFillColor( 0 )
 	srvPartner[#srvPartner]:insert( txtAddress )
 	
-	txtAddress.y = txtAddress.y + txtAddress.height/2
+	local txtLocation = display.newText({
+		text = "¿Como llegar?",
+		x = 280,
+		y =  lastY,
+		font = "Lato-Regular",
+		width = 320,
+		fontSize = 20,
+		align = "left"
+	})
+	txtLocation:setFillColor( .3 )
+	txtLocation:addEventListener( "tap", showMapa )
+	srvPartner[#srvPartner]:insert( txtLocation )
 	
-	lastY = lastY + 150
+	bgAddress.height = txtAddress.height + 70
+	bgAddress.y = (txtAddress.height / 2) + lastY
+	
+	txtAddress.y = txtAddress.y + txtAddress.height/2
+	txtLocation.y = txtLocation.y + txtAddress.height
+	
+	local imgLocation = display.newImage( "img/btn/btnMenuNotification.png" )
+    imgLocation:translate( 70, lastY + txtAddress.height / 2 )
+	imgLocation.height = 40
+	imgLocation.width = 40
+    srvPartner[#srvPartner]:insert(imgLocation)
+	
+	lastY = lastY + bgAddress.height + 12
+	
+	local line1 = display.newRect( midW, lastY - 45, 440, 3 )
+	line1:setFillColor( .5 )
+	srvPartner[#srvPartner]:insert(line1)
+	
+	local bgPhome = display.newRect( midW, lastY, 440, 90 )
+	bgPhome:setFillColor( 1 )
+	srvPartner[#srvPartner]:insert(bgPhome)
+	
+	local txtCall = display.newText({
+		text = "Llamar:",
+		x = 280,
+		y =  lastY,
+		font = "Lato-Regular",
+		width = 320,
+		fontSize = 20,
+		align = "left"
+	})
+	txtCall:setFillColor( 0 )
+	srvPartner[#srvPartner]:insert( txtCall )
+	
+	local txtCall = display.newText({
+		text = item.phone,
+		x = 355,
+		y =  lastY,
+		font = "Lato-Black",
+		width = 320,
+		fontSize = 30,
+		align = "left"
+	})
+	txtCall:setFillColor( 0 )
+	txtCall:addEventListener( "tap", callPhone )
+	srvPartner[#srvPartner]:insert( txtCall )
+	
+	local imgPhone = display.newImage( "img/btn/btnMenuSearch.png" )
+    imgPhone:translate( 70, lastY )
+	imgPhone.height = 40
+	imgPhone.width = 40
+    srvPartner[#srvPartner]:insert(imgPhone)
+	
+	lastY = lastY + bgPhome.height
+	
+	local btnFacebook = display.newImage( "img/btn/facebook-logo.png" )
+    btnFacebook:translate( intW/4 + 10, lastY - 20 )
+	btnFacebook.height = 60
+	btnFacebook.width = 220
+	btnFacebook.url = item.facebook
+    srvPartner[#srvPartner]:insert(btnFacebook)
+	
+	if item.facebook ~= "" or item.facebook ~= nil then
+		btnFacebook:addEventListener( "tap", openSocialNetwork )
+	else
+		btnFacebook.alpha = .5
+	end
+	
+	local btnTwitter = display.newImage( "img/btn/twitter-logo.png" )
+    btnTwitter:translate( intW/2 + (intW/4) - 10, lastY - 20 )
+	btnTwitter.height = 60
+	btnTwitter.width = 220
+	btnTwitter.url = item.twitter
+    srvPartner[#srvPartner]:insert(btnTwitter)
+	
+	if item.twitter ~= "" or item.twitter ~= nil then
+		btnTwitter:addEventListener( "tap", openSocialNetwork )
+	else
+		btnTwitter.alpha = .5
+	end
+	
+	lastY = lastY + btnFacebook.height + 10
 	
 	-- Detail Event
 	local bgGeneralInformacion = display.newRect( midW, lastY, 440, 76 )
@@ -329,7 +451,7 @@ function buildPartnerInfo(item)
 		text = "Informacion Adicional:",
 		x = 230, y =  lastY + 5,
 		height = 20, width = 400,
-		font = "Lato-Bold", fontSize = 16, align = "left"
+		font = "Lato-Bold", fontSize = 20, align = "left"
 	})
 	txtGeneralInformacion:setFillColor( 0 )
 	srvPartner[#srvPartner]:insert(txtGeneralInformacion)
@@ -348,7 +470,6 @@ function buildPartnerInfo(item)
     bgGeneralInformacion.y = (txtInfo.height / 2) + lastY + 10
     
     lastY = lastY + bgGeneralInformacion.height + 25
-	
 	
 	local txtAdditionalInformation = display.newText({
 		text = "Consultar ubicación en el mapa",

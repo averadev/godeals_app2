@@ -79,32 +79,22 @@ function createTutorial(self)
 		self:insert(groupTutorial[y])
 		
 		local imgTutorial = display.newImage( txtTutorial[y] )
-		if y == 2 then
-		imgTutorial.x= intW/2 - 20
-		else
-		imgTutorial.x= intW/2
-		end
-		imgTutorial.y = intH/2 - 20
-		imgTutorial.width = 500
-		groupTutorial[y]:insert( imgTutorial ) 
+		imgTutorial:translate( intW/2, intH/2 + h )
+		imgTutorial.height = intH / 1.16
+		imgTutorial.width = intW
 		
-		--distancia entre circulos
-		--local poscCircle = (intW * .16) * y
-		--posicion
-		--[[poscCircle = poscCircle + (intW * .1875)
-		btnCirCle[y] = display.newCircle( poscCircle, intH - (intH/10), 10 )
-		btnCirCle[y].id = y
-		btnCirCle[y].status = 0
-		btnCirCle[y]:addEventListener( "tap", changeScreenCircle )
-		btnCirCle[y]:addEventListener( "touch", lockScrenn )
-		self:insert(btnCirCle[y])]]
+		if y == 2 then
+			imgTutorial.x= intW/2 - (intW * .0416)
+		end
+		
+		groupTutorial[y]:insert( imgTutorial )
 	end
 	
 	groupTutorial[1].alpha = 1
 	
 	self:insert(groupBtn)
 	
-	local btnNext = display.newRoundedRect( intW/2, intH/2 + intH/8.5, 400, 65, 11 )
+	local btnNext = display.newRoundedRect( intW/2, intH/2 + intH/6.1, 400, 70, 11 )
 	btnNext:addEventListener( "tap", changeScreen )
 	btnNext:setFillColor( 1 )
 	groupBtn:insert(btnNext)
@@ -112,21 +102,21 @@ function createTutorial(self)
 	
 	local txtNext = display.newText({
 		text = "CONTINUAR",
-		x = intW/2, y = intH/2 + intH/8.5,
+		x = intW/2, y = intH/2 + intH/6.1,
 		width = 420,
 		font = "Lato-Bold", fontSize = 30, align = "center"
 	})
 	txtNext:setFillColor( 145/255, 197/255, 115/255 )
 	groupBtn:insert( txtNext )
 		
-	local btnHide = display.newRoundedRect( intW/2, intH/2 + intH/4.25, 400, 65, 11 )
+	local btnHide = display.newRoundedRect( intW/2, intH/2 + intH/3.45, 400, 70, 11 )
 	btnHide:setFillColor( 120/255, 163/255, 95/255 )
 	btnHide:addEventListener( 'tap', closeTutorial )
 	groupBtn:insert(btnHide)
 	
 	local txtHide = display.newText({
 		text = "NO MOSTRAR",
-		x = intW/2, y = intH/2 + intH/4.25,
+		x = intW/2, y = intH/2 + intH/3.45,
 		width = 420,
 		font = "Lato-Bold", fontSize = 30, align = "center"
 	})

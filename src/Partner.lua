@@ -45,13 +45,17 @@ local homeScreen = display.newGroup()
 ---------Funciones-------------------------------------
 -------------------------------------------------------
 
+--llama al telefono del comercio
 function callPhone( event )
-	
+	system.openURL( "tel:" .. event.target.phone )
 end
 
+-- redireciona a la pagina del comercio
 function openSocialNetwork( event )
-	--print(item.twitter)
+	system.openURL( event.target.url )
 end
+
+
 
 --------listener scroll
 
@@ -393,7 +397,7 @@ function buildPartnerInfo(item)
 	txtCall:setFillColor( 0 )
 	srvPartner[#srvPartner]:insert( txtCall )
 	
-	local txtCall = display.newText({
+	local txtPhone = display.newText({
 		text = item.phone,
 		x = 355,
 		y =  lastY,
@@ -402,9 +406,10 @@ function buildPartnerInfo(item)
 		fontSize = 30,
 		align = "left"
 	})
-	txtCall:setFillColor( 0 )
-	txtCall:addEventListener( "tap", callPhone )
-	srvPartner[#srvPartner]:insert( txtCall )
+	txtPhone:setFillColor( 0 )
+	txtPhone.phone = item.phone
+	txtPhone:addEventListener( "tap", callPhone )
+	srvPartner[#srvPartner]:insert( txtPhone )
 	
 	local imgPhone = display.newImage( "img/btn/btnMenuSearch.png" )
     imgPhone:translate( 70, lastY )
@@ -421,7 +426,7 @@ function buildPartnerInfo(item)
 	btnFacebook.url = item.facebook
     srvPartner[#srvPartner]:insert(btnFacebook)
 	
-	if item.facebook ~= "" or item.facebook ~= nil then
+	if item.facebook ~= "" then
 		btnFacebook:addEventListener( "tap", openSocialNetwork )
 	else
 		btnFacebook.alpha = .5
@@ -434,7 +439,7 @@ function buildPartnerInfo(item)
 	btnTwitter.url = item.twitter
     srvPartner[#srvPartner]:insert(btnTwitter)
 	
-	if item.twitter ~= "" or item.twitter ~= nil then
+	if item.twitter ~= "" then
 		btnTwitter:addEventListener( "tap", openSocialNetwork )
 	else
 		btnTwitter.alpha = .5

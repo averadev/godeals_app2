@@ -161,7 +161,7 @@ local dbManager = {}
 		db:exec( query )
     
         local query = "CREATE TABLE IF NOT EXISTS ads (id INTEGER PRIMARY KEY, major INTEGER, type INTEGER, partnerId INTEGER, "..
-					"message TEXT, distanceMin REAL, distanceMax REAL, latitude REAL, longitude REAL, date as INTEGER, status INTEGER);"
+					"message TEXT, distanceMin REAL, distanceMax REAL, latitude REAL, longitude REAL, fecha INTEGER, status INTEGER);"
 		db:exec( query )
 
         -- Return if have connection

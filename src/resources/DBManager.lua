@@ -134,7 +134,7 @@ local dbManager = {}
                         ..items[z].distanceMin..","
                         ..items[z].distanceMax..","
                         ..items[z].latitude..","
-                        ..items[z].longitude..", 1);"
+                        ..items[z].longitude..", 0, 1);"
 				
 				print(query)
                 db:exec( query )
@@ -153,7 +153,7 @@ local dbManager = {}
 		db:exec( query )
     
         local query = "CREATE TABLE IF NOT EXISTS ads (id INTEGER PRIMARY KEY, major INTEGER, type INTEGER, partnerId INTEGER, "..
-					"message TEXT, distanceMin REAL, distanceMax REAL, latitude REAL, longitude REAL, status INTEGER);"
+					"message TEXT, distanceMin REAL, distanceMax REAL, latitude REAL, longitude REAL, date as INTEGER, status INTEGER);"
 		db:exec( query )
 
         -- Return if have connection

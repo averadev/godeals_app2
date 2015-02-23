@@ -126,17 +126,17 @@ local dbManager = {}
 		for z = 1, #items, 1 do 
             if not (items[z] == nil) then
 				query = "INSERT INTO ads VALUES ("
-                        ..items[z].id..",'"
-                        ..items[z].message.."','"
-                        ..items[z].uuid.."','"
-                        ..items[z].latitude.."','"
-                        ..items[z].longitude.."',"
+                        ..items[z].id..","
+                        ..items[z].major..","
+                        ..items[z].type..","
+                        ..items[z].partnerId..",'"
+                        ..items[z].message.."',"
                         ..items[z].distanceMin..","
                         ..items[z].distanceMax..","
-                        ..items[z].partnerId..","
-                        ..items[z].type..",'"
-                        ..items[z].image.."', 1);"
+                        ..items[z].latitude..","
+                        ..items[z].longitude..", 1);"
 				
+				print(query)
                 db:exec( query )
             end
         end
@@ -152,7 +152,8 @@ local dbManager = {}
 		local query = "CREATE TABLE IF NOT EXISTS config (id INTEGER PRIMARY KEY, idApp INTEGER, email TEXT, password TEXT, name TEXT, fbId TEXT, idComer TEXT, url TEXT, city INTEGER);"
 		db:exec( query )
     
-        local query = "CREATE TABLE IF NOT EXISTS ads (id INTEGER PRIMARY KEY, message TEXT, uuid TEXT, latitude TEXT, longitude TEXT, distanceMin REAL, distanceMax REAL, partnerId INTEGER, type INTEGER, image TEXT, status INTEGER);"
+        local query = "CREATE TABLE IF NOT EXISTS ads (id INTEGER PRIMARY KEY, major INTEGER, type INTEGER, partnerId INTEGER, "..
+					"message TEXT, distanceMin REAL, distanceMax REAL, latitude REAL, longitude REAL, status INTEGER);"
 		db:exec( query )
 
         -- Return if have connection

@@ -814,6 +814,11 @@ function scene:createScene( event )
 	Globals.noCallbackGlobal = Globals.noCallbackGlobal + 1
 	callbackCurrent = Globals.noCallbackGlobal
 	
+	if settings.tutorial == 1 then
+		DBManager.updateTutorial()
+		createTutorial(homeScreen)
+	end
+	
 end
 	
 -- Called immediately after scene has moved onscreen:

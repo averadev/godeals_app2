@@ -13,6 +13,8 @@ local txtTutorial = {"img/bgk/TUTORIAL1.png", "img/bgk/TUTORIAL2.png", "img/bgk/
 
 local bgTutorial = nil
 
+local groupBtn = display.newGroup()
+
 --bloqueamos el touth
 function lockScrenn( event )
 	return true
@@ -24,8 +26,13 @@ function closeTutorial()
 		end
 		groupTutorial =nil
 		groupTutorial = {}
+		
 		bgTutorial:removeSelf()
 		bgTutorial = nil
+		
+		groupBtn:removeSelf()
+		groupBtn = display.newGroup()
+		
 		poscCurrent = 1
 end
 
@@ -61,7 +68,7 @@ function createTutorial(self)
 	bgTutorial = display.newRect(  intW/2, intH/2 + h, intW, intH)
     bgTutorial:setFillColor( 0 )
 	bgTutorial.alpha = .3
-	bgTutorial:addEventListener( "tap", changeScreen )
+	bgTutorial:addEventListener( "tap", lockScrenn )
 	bgTutorial:addEventListener( "touch", lockScrenn )
 	self:insert(bgTutorial)
 	
@@ -72,10 +79,14 @@ function createTutorial(self)
 		self:insert(groupTutorial[y])
 		
 		local imgTutorial = display.newImage( txtTutorial[y] )
+		if y == 2 then
+		imgTutorial.x= intW/2 - 20
+		else
 		imgTutorial.x= intW/2
+		end
 		imgTutorial.y = intH/2 - 20
-		imgTutorial.width = 480
-		groupTutorial[y]:insert( imgTutorial )
+		imgTutorial.width = 500
+		groupTutorial[y]:insert( imgTutorial ) 
 		
 		--distancia entre circulos
 		--local poscCircle = (intW * .16) * y
@@ -89,24 +100,37 @@ function createTutorial(self)
 		self:insert(btnCirCle[y])]]
 	end
 	
-	--[[btnCirCle[1]:setFillColor( 0,150/255,0 )
-	btnCirCle[1].status = 1
-	poscCurrent = 1]]
-	
-	
-	
-	--[[local imgTutorial2 = display.newImage( "img/btn/logo.png" )
-    imgTutorial2.x= intW/2
-    imgTutorial2.y = intH/2
-    groupTutorial[2]:insert( imgTutorial2 )
-	
-	local imgTutorial3 = display.newImage( "img/btn/agotadoMax.png" )
-    imgTutorial3.x= intW/2
-    imgTutorial3.y = intH/2
-    groupTutorial[3]:insert( imgTutorial3 )]]
-	
 	groupTutorial[1].alpha = 1
 	
+	self:insert(groupBtn)
 	
+	local btnNext = display.newRoundedRect( intW/2, intH/2 + intH/8.5, 400, 65, 11 )
+	btnNext:addEventListener( "tap", changeScreen )
+	btnNext:setFillColor( 1 )
+	groupBtn:insert(btnNext)
+	btnNext:toFront()
+	
+	local txtNext = display.newText({
+		text = "CONTINUAR",
+		x = intW/2, y = intH/2 + intH/8.5,
+		width = 420,
+		font = "Lato-Bold", fontSize = 30, align = "center"
+	})
+	txtNext:setFillColor( 145/255, 197/255, 115/255 )
+	groupBtn:insert( txtNext )
+		
+	local btnHide = display.newRoundedRect( intW/2, intH/2 + intH/4.25, 400, 65, 11 )
+	btnHide:setFillColor( 120/255, 163/255, 95/255 )
+	btnHide:addEventListener( 'tap', closeTutorial )
+	groupBtn:insert(btnHide)
+	
+	local txtHide = display.newText({
+		text = "NO MOSTRAR",
+		x = intW/2, y = intH/2 + intH/4.25,
+		width = 420,
+		font = "Lato-Bold", fontSize = 30, align = "center"
+	})
+	txtHide:setFillColor( 145/255, 197/255, 115/255 )
+	groupBtn:insert( txtHide )
 	
 end

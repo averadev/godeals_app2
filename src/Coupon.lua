@@ -33,7 +33,10 @@ local itemObj
 local currentSv
 local settings
 local tmpRedimir
+local bgCode
+local txtCode
 local rctBtn
+local FlagCoupon = 0
 
 local txtInfo, txtBtn, txtTitleInfo
 local info, promotions, gallery, MenuEventBar
@@ -58,20 +61,57 @@ function showPartner( event )
 end
 
 	function AssignedCoupon(item)
-		itemObj.assigned = item
+	
+		if #item > 0 then
+			itemObj.assigned = 1
+			itemObj.code = item[1].code
+		else
+			itemObj.assigned = 0
+			
+		end
+		
+	if FlagCoupon == 0 then
 		createCoupon()
+	end
+		
 	end
 
 function showRedimir( event )
+
     if tmpRedimir then
         tmpRedimir:removeSelf()
         tmpRedimir = nil
+		bgCode:removeSelf()
+		bgCode = nil
+		txtCode:removeSelf()
+		txtCode = nil
     else
-        tmpRedimir = display.newImage( "img/bgk/tmpRedimir.png" )
-        tmpRedimir.x = midW
-        tmpRedimir.y = midH
-        tmpRedimir:addEventListener( "tap", showRedimir )
+		if itemObj.code ~= nil then
+			tmpRedimir = display.newImage( "img/bgk/redes.png" )
+			tmpRedimir.x = midW
+			tmpRedimir.y = midH
+			tmpRedimir.height = intH + h
+			tmpRedimir.width = intW
+			tmpRedimir:addEventListener( "tap", showRedimir )
+			tmpRedimir:addEventListener( "touch", lokedShowRedimir )
+		
+			bgCode = display.newRect(  intW/2, intH/6.3, intW, intH/11)
+			bgCode:setFillColor( 1 )
+		
+			txtCode = display.newText({
+			text = itemObj.code,
+			x = intW/2, y = intH/6.3,
+			width = 480,
+			font = "Lato-Black", fontSize = 50, align = "center"
+			})
+			txtCode:setFillColor( 5/255, 147/255, 0 )
+		end
+		
     end
+end
+
+function lokedShowRedimir( event )
+	return true
 end
 
 function DownloadCoupon( event )
@@ -92,11 +132,10 @@ function DownloadCoupon( event )
 	
 	RestManager.discountCoupon(event.target.idCoipon)
 	
-	
-	--
 end
 
 function changeButtonCoupon()
+	RestManager.getCouponDownload(itemObj.id)
 	rctBtn:removeEventListener( "tap", DownloadCoupon )
 	rctBtn:addEventListener( "tap", showRedimir )
 end
@@ -120,6 +159,7 @@ end
 
 --llama a la funcion para crear un cupon
 function createCoupon()
+	FlagCoupon = 1
 	buildCoupon()
 end
 

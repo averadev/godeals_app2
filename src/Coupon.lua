@@ -33,7 +33,6 @@ local itemObj
 local currentSv
 local settings
 local tmpRedimir
-local bgCode
 local txtCode
 local rctBtn
 local FlagCoupon = 0
@@ -81,8 +80,6 @@ function showRedimir( event )
     if tmpRedimir then
         tmpRedimir:removeSelf()
         tmpRedimir = nil
-		bgCode:removeSelf()
-		bgCode = nil
 		txtCode:removeSelf()
 		txtCode = nil
     else
@@ -95,9 +92,6 @@ function showRedimir( event )
 			tmpRedimir:addEventListener( "tap", showRedimir )
 			tmpRedimir:addEventListener( "touch", lokedShowRedimir )
 		
-			bgCode = display.newRect(  intW/2, intH/6.3, intW, intH/11)
-			bgCode:setFillColor( 1 )
-		
 			txtCode = display.newText({
 			text = itemObj.code,
 			x = intW/2, y = intH/6.3,
@@ -106,7 +100,6 @@ function showRedimir( event )
 			})
 			txtCode:setFillColor( 5/255, 147/255, 0 )
 		end
-		
     end
 end
 

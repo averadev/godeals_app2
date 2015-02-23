@@ -86,6 +86,14 @@ local dbManager = {}
         db:exec( query )
 		closeConnection( )
 	end
+	
+	dbManager.updateTutorial = function(city)
+		openConnection( )
+        local query = ''
+        query = "UPDATE config SET tutorial = 0;"
+        db:exec( query )
+		closeConnection( )
+	end
 
     dbManager.updateUser = function(idApp, email, password, name, fbId)
 		openConnection( )
@@ -149,7 +157,7 @@ local dbManager = {}
 	dbManager.setupSquema = function()
 		openConnection( )
 		
-		local query = "CREATE TABLE IF NOT EXISTS config (id INTEGER PRIMARY KEY, idApp INTEGER, email TEXT, password TEXT, name TEXT, fbId TEXT, idComer TEXT, url TEXT, city INTEGER);"
+		local query = "CREATE TABLE IF NOT EXISTS config (id INTEGER PRIMARY KEY, idApp INTEGER, email TEXT, password TEXT, name TEXT, fbId TEXT, idComer TEXT, url TEXT, city INTEGER, tutorial INTEGER);"
 		db:exec( query )
     
         local query = "CREATE TABLE IF NOT EXISTS ads (id INTEGER PRIMARY KEY, major INTEGER, type INTEGER, partnerId INTEGER, "..
@@ -168,7 +176,7 @@ local dbManager = {}
         
         -- Populate config
         --query = "INSERT INTO config VALUES (1, 0, '', '', '', '', 0, 'http://godeals.mx/');"
-        query = "INSERT INTO config VALUES (1, 0, '', '', '', '', 0, 'http://godeals.mx/4beta/',1);"
+        query = "INSERT INTO config VALUES (1, 0, '', '', '', '', 0, 'http://godeals.mx/4beta/',1,1);"
 
 		
 		db:exec( query )

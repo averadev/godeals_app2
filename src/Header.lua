@@ -2,6 +2,7 @@
 ---------------------------------------------------------------------------------
 -- Encabezao general
 ---------------------------------------------------------------------------------
+require('src.Tutorial')
 require('src.Search')
 local Sprites = require('src.resources.Sprites')
 local Globals = require('src.resources.Globals')
@@ -169,6 +170,12 @@ function Header:new()
 		transition.to( screen, { x = 0, time = 400, transition = easing.outExpo } )
 		screen = nil
 		return true
+	end
+	
+	--mostramos el tutorial
+	function showTutorial( event )
+		hideMenuRight()
+		createTutorial(getScreen())
 	end
     
     -- Temporal

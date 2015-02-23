@@ -132,35 +132,51 @@ function MenuRight:new()
 	end
 	
 	function createMenuRight()
-		local MenuLeftCiudad = display.newRect( 280, h + 30 , 400, 60 )
-		MenuLeftCiudad:setFillColor( .66 )
-		MenuLeftCiudad.alpha = 1
-		MenuLeftCiudad:addEventListener("tap",blockMenu)
-		MenuLeftCiudad:addEventListener("touch",blockMenu)
-		selfR:insert(MenuLeftCiudad)
+		local MenuLeftOthers = display.newRect( 280, h + 30 , 400, 60 )
+		MenuLeftOthers:setFillColor( .66 )
+		MenuLeftOthers.alpha = 1
+		MenuLeftOthers:addEventListener("tap",blockMenu)
+		MenuLeftOthers:addEventListener("touch",blockMenu)
+		selfR:insert(MenuLeftOthers)
 		
 		local function cerrarSession( event )
 			hideMenuRight()
 			logout()
 		end
 		
-		-- Cerrar session
-		local rectCancun = display.newRect(  280, 90 + h, 400, 60 )
-        rectCancun:setFillColor( .5 )
-		rectCancun.alpha = .1
-		rectCancun.txtMin = "CANCUN"
-		rectCancun:addEventListener( "tap", cerrarSession )
-		selfR:insert(rectCancun)
+		-- tutorial
+		local rectTutorial = display.newRect(  280, 90 + h, 400, 60 )
+        rectTutorial:setFillColor( .5 )
+		rectTutorial.alpha = .1
+		rectTutorial:addEventListener( "tap", showTutorial )
+		selfR:insert(rectTutorial)
 		
-		local txtCancun = display.newText( {    
-        x = 290, y = MenuLeftCiudad.height + 35 + h, align = "left", width = 300,
-        text = "Cerrar sessión",  font = "Lato-Light", fontSize = 25,
+		local txtTutorial = display.newText( {    
+        x = 290, y = MenuLeftOthers.height + 30 + h, align = "left", width = 300,
+        text = "Tutorial",  font = "Lato-Light", fontSize = 25,
 		})
-		txtCancun:setFillColor( 0 )
-		selfR:insert(txtCancun)
+		txtTutorial:setFillColor( 0 )
+		selfR:insert(txtTutorial)
 		
 		local line1 = display.newLine(80, 120 + h, 480, 120 + h)
 		selfR:insert(line1)
+		
+		-- Cerrar session
+		local rectSession = display.newRect(  280, 150 + h, 400, 60 )
+        rectSession:setFillColor( .5 )
+		rectSession.alpha = .1
+		rectSession:addEventListener( "tap", cerrarSession )
+		selfR:insert(rectSession)
+		
+		local txtSession = display.newText( {    
+        x = 290, y = MenuLeftOthers.height + 90 + h, align = "left", width = 300,
+        text = "Cerrar sessión",  font = "Lato-Light", fontSize = 25,
+		})
+		txtSession:setFillColor( 0 )
+		selfR:insert(txtSession)
+		
+		local line2 = display.newLine(80, 180 + h, 480, 180 + h)
+		selfR:insert(line2)
 				
 		-- Border Right
         local borderRight = display.newRect( 80, intH / 2, 4, intH )
@@ -170,7 +186,7 @@ function MenuRight:new()
             color2 = { .4, .4, .4, .2 },
             direction = "right"
         } ) 
-        borderRight:setFillColor( 0, 0, 0 ) 
+        borderRight:setFillColor( 0, 0, 0 )
         selfR:insert(borderRight)
 	end
 	

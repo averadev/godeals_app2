@@ -212,7 +212,7 @@ function scene:createScene( event )
 	background.y = midH
     screen:insert(background)
     
-    imgLogo = display.newImage("img/btn/logoLogin.png", true) 
+    imgLogo = display.newImage("img/btn/Logo_FondoBlanco.png", true) 
 	imgLogo.x = midW
 	imgLogo.y = midH / 2
 	screen:insert(imgLogo)  
@@ -226,11 +226,11 @@ function scene:createScene( event )
 	screen:insert(groupCreate)
 
     -- Bg TextFields
-    local bgSignEmail = display.newImage("img/btn/bgTxtEmail.png", true) 
+    local bgSignEmail = display.newImage("img/btn/usuario.png", true) 
     bgSignEmail.x = midW
     bgSignEmail.y = midH - 45
     groupSign:insert(bgSignEmail)
-    local bgSignPass = display.newImage("img/btn/bgTxtPass.png", true) 
+    local bgSignPass = display.newImage("img/btn/contraseña.png", true) 
     bgSignPass.x = midW
     bgSignPass.y = midH + 45
     groupSign:insert(bgSignPass)
@@ -268,15 +268,15 @@ function scene:createScene( event )
     groupSign.x = 480
         
     -- Bg TextFields
-    local bgCreateEmail = display.newImage("img/btn/bgTxtEmail.png", true) 
+    local bgCreateEmail = display.newImage("img/btn/usuario.png", true) 
     bgCreateEmail.x = midW
     bgCreateEmail.y = midH - 75
     groupCreate:insert(bgCreateEmail)
-    local bgCreatePass = display.newImage("img/btn/bgTxtPass.png", true) 
+    local bgCreatePass = display.newImage("img/btn/contraseña.png", true) 
     bgCreatePass.x = midW
     bgCreatePass.y = midH + 05
     groupCreate:insert(bgCreatePass)
-    local bgCreateRePass = display.newImage("img/btn/bgTxtPass.png", true) 
+    local bgCreateRePass = display.newImage("img/btn/contraseña.png", true) 
     bgCreateRePass.x = midW
     bgCreateRePass.y = midH + 85
     groupCreate:insert(bgCreateRePass)
@@ -320,7 +320,7 @@ function scene:createScene( event )
     groupCreate.x = 480
         
     -- Buttons
-    local btnFB = display.newImage("img/btn/btnLoginFaceBook.png", true) 
+    local btnFB = display.newImage("img/btn/facebook_login.png", true) 
 	btnFB.x = midW
 	btnFB.y = midH - 50
     btnFB.height = 62

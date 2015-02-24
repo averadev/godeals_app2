@@ -78,6 +78,9 @@ end
 function goBLE(event)
 	t = event.target
 	if t.enable then
+		-- Deshabilitar boton
+		t.enable = false
+		t:setFillColor( .4 )
 		
 		-- Validar estado del BT
 		local value = 0
@@ -86,18 +89,6 @@ function goBLE(event)
 		end
 		
 		if value == 1 then
-			-- Deshabilitar boton
-			t.enable = false
-			t:setFillColor( .4 )
-			-- Activamos loading
-			loadingRed.alpha = 1
-			loadingRed:setSequence("play")
-			loadingRed:play()
-			DBManager.setReden()
-			-- Desactivamos loading
-			loadingRed.alpha = 0
-			loadingRed:setSequence("stop")
-			loadingRed:play()
 			transition.to( txtInfoRedimir2, { alpha = 0, time = 200, 
 				onComplete=function()
 						txtInfoRedimir2.text = "Activa tu bluetooth y acerca tu telefono al dispositivo GO"
@@ -111,9 +102,6 @@ function goBLE(event)
 			getBeacon.redemption()
 			value = DBManager.getReden()
 			
-			-- Deshabilitar boton
-			t.enable = false
-			t:setFillColor( .4 )
 			-- Activamos loading
 			loadingRed.alpha = 1
 			loadingRed:setSequence("play")

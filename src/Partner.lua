@@ -417,7 +417,6 @@ function buildPartnerInfo(item)
 	
 	local btnFacebook = display.newImage( "img/btn/facebook.png" )
     btnFacebook:translate( intW/4 + 10, lastY - 20 )
-	btnFacebook.width = 220
 	btnFacebook.url = item.facebook
     srvPartner[#srvPartner]:insert(btnFacebook)
 	
@@ -429,7 +428,6 @@ function buildPartnerInfo(item)
 	
 	local btnTwitter = display.newImage( "img/btn/twitter.png" )
     btnTwitter:translate( intW/2 + (intW/4) - 10, lastY - 20 )
-	btnTwitter.width = 220
 	btnTwitter.url = item.twitter
     srvPartner[#srvPartner]:insert(btnTwitter)
 	

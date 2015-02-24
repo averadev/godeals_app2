@@ -142,8 +142,6 @@ function goBLE(event)
 		end
 	end
 	
-	
-	
 end
 
 function showRedimir( event )

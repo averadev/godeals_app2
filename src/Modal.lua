@@ -153,7 +153,7 @@ end
 		btnModal.height = intH / 2 + intH * .09
 		btnModal:translate( (intW / 2) + 10, intH / 1.7 )
 	else
-		filterName = {"RESTAURANTES","BARES","ANTROS","TURISMO","TECNOLOGIA","SERVICIOS","COMPRAS1","OTROS1"}
+		filterName = {"RESTAURANTES","BARES","ANTROS","TURISMO","TECNOLOGIA","SERVICIOS","COMPRAS","OTROS"}
 		
 		btnModal = display.newImage( "img/bgk/fondo_deals.png" )
 		btnModal.width = 440

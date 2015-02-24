@@ -39,15 +39,23 @@ local imageItems = {}
 ---------------------------------------------------------------------------------
 -- Setters
 ---------------------------------------------------------------------------------
-function setWalletElements(items)
-    elements = items
+function setWalletElements(obj)
+    elements = obj.items
 	if #elements > 0 then
-		getLoading(svContent)
-		loadWalletImage({posc = 1, path = 'assets/img/app/deal/'})
+		if obj.screen == "noRedimir" then
+			getLoading(svContent)
+		end
+		loadWalletImage(obj)
 	else
-		getNoContent(svContent, "En este momento no cuentas con Deals descargados")
+		if obj.screen == "noRedimir" then
+			RestManager.getDealsRedimir()
+		else
+			getNoContent(svContent, "En este momento no cuentas con Deals descargados")
+		end
 	end
 end
+
+
 
 --obtenemos el grupo homeScreen de la escena actual
 function getSceneSearchW( event )
@@ -103,32 +111,65 @@ function loadWalletImage(obj)
     end
 end
 
-function buildWalletItems()
-    yMain = 50
-	endLoading(svContent)
+function buildWalletItems(screen)
+
+	if screen == "noRedimir" then
+
+		yMain = 50
+		endLoading(svContent)
 	
-    local separadorEventos = display.newImage( "img/btn/btnArrowGreen.png" )
-    separadorEventos:translate( 41, yMain -3)
-    separadorEventos.isVisible = true
-    svContent:insert(separadorEventos)
+		local separadorEventos = display.newImage( "img/btn/btnArrowGreen.png" )
+		separadorEventos:translate( 41, yMain -3)
+		separadorEventos.isVisible = true
+		svContent:insert(separadorEventos)
 
-    local textSeparadorEventos = display.newText( {
-        text = "Estos son los Deals disponibles en tu cartera.",     
-        x = 300, y = yMain, width = intW, height = 20,
-        font = "Lato-Regular", fontSize = 14, align = "left"
-    })
-    textSeparadorEventos:setFillColor( 85/255, 85/255, 85/255 )
-    svContent:insert(textSeparadorEventos)
+		local textSeparadorEventos = display.newText( {
+			text = "Estos son los Deals disponibles en tu cartera.",     
+			x = 300, y = yMain, width = intW, height = 20,
+			font = "Lato-Regular", fontSize = 14, align = "left"
+		})
+		textSeparadorEventos:setFillColor( 85/255, 85/255, 85/255 )
+		svContent:insert(textSeparadorEventos)
 
-    yMain = yMain + 30
-    for y = 1, #elements, 1 do 
-        -- Create container
-        local deal = Deal:new()
-        svContent:insert(deal)
-        deal:build(true, elements[y], imageItems[y])
-        deal.y = yMain
-        yMain = yMain + 120
-    end
+		yMain = yMain + 30
+		for y = 1, #elements, 1 do 
+			-- Create container
+			local deal = Deal:new()
+			svContent:insert(deal)
+			deal:build(true, elements[y], imageItems[y])
+			deal.y = yMain
+			yMain = yMain + 120
+		end
+		
+		RestManager.getDealsRedimir()
+	elseif screen == "redimir" then
+	
+		yMain = yMain + 50
+	
+		local separadorRedimir = display.newImage( "img/btn/btnArrowGreen.png" )
+		separadorRedimir:translate( 41, yMain -3)
+		separadorRedimir.isVisible = true
+		svContent:insert(separadorRedimir)
+
+		local textSeparadorRedimir = display.newText( {
+			text = "Estos son los Deals redimidos.",     
+			x = 300, y = yMain, width = intW, height = 20,
+			font = "Lato-Regular", fontSize = 14, align = "left"
+		})
+		textSeparadorRedimir:setFillColor( 85/255, 85/255, 85/255 )
+		svContent:insert(textSeparadorRedimir)
+		
+		yMain = yMain + 30
+		for y = 1, #elements, 1 do 
+			-- Create container
+			local deal = Deal:new()
+			svContent:insert(deal)
+			deal:build(true, elements[y], imageItems[y])
+			deal.y = yMain
+			yMain = yMain + 120
+		end
+	
+	end
 end
 
 function scene:createScene( event )

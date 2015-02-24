@@ -369,10 +369,8 @@ function buildPartnerInfo(item)
 	txtAddress.y = txtAddress.y + txtAddress.height/2
 	txtLocation.y = txtLocation.y + txtAddress.height
 	
-	local imgLocation = display.newImage( "img/btn/btnMenuNotification.png" )
+	local imgLocation = display.newImage( "img/btn/menu.png" )
     imgLocation:translate( 70, lastY + txtAddress.height / 2 )
-	imgLocation.height = 40
-	imgLocation.width = 40
     srvPartner[#srvPartner]:insert(imgLocation)
 	
 	lastY = lastY + bgAddress.height + 12
@@ -411,17 +409,14 @@ function buildPartnerInfo(item)
 	txtPhone:addEventListener( "tap", callPhone )
 	srvPartner[#srvPartner]:insert( txtPhone )
 	
-	local imgPhone = display.newImage( "img/btn/btnMenuSearch.png" )
+	local imgPhone = display.newImage( "img/btn/telefono.png" )
     imgPhone:translate( 70, lastY )
-	imgPhone.height = 40
-	imgPhone.width = 40
     srvPartner[#srvPartner]:insert(imgPhone)
 	
 	lastY = lastY + bgPhome.height
 	
-	local btnFacebook = display.newImage( "img/btn/facebook-logo.png" )
+	local btnFacebook = display.newImage( "img/btn/facebook.png" )
     btnFacebook:translate( intW/4 + 10, lastY - 20 )
-	btnFacebook.height = 60
 	btnFacebook.width = 220
 	btnFacebook.url = item.facebook
     srvPartner[#srvPartner]:insert(btnFacebook)
@@ -432,9 +427,8 @@ function buildPartnerInfo(item)
 		btnFacebook.alpha = .5
 	end
 	
-	local btnTwitter = display.newImage( "img/btn/twitter-logo.png" )
+	local btnTwitter = display.newImage( "img/btn/twitter.png" )
     btnTwitter:translate( intW/2 + (intW/4) - 10, lastY - 20 )
-	btnTwitter.height = 60
 	btnTwitter.width = 220
 	btnTwitter.url = item.twitter
     srvPartner[#srvPartner]:insert(btnTwitter)

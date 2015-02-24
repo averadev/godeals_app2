@@ -230,7 +230,7 @@ function scene:createScene( event )
     bgSignEmail.x = midW
     bgSignEmail.y = midH - 45
     groupSign:insert(bgSignEmail)
-    local bgSignPass = display.newImage("img/btn/contraseña.png", true) 
+    local bgSignPass = display.newImage("img/btn/contrasenia.png", true) 
     bgSignPass.x = midW
     bgSignPass.y = midH + 45
     groupSign:insert(bgSignPass)

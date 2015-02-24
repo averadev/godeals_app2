@@ -255,7 +255,7 @@ function buildEvent(item)
 	svMenuTxt = widget.newScrollView
 	{
 		x = midW,
-		y = 145,
+		y = 155,
 		width = intW,
 		height = 60,
 		listener = ListenerChangeMenuEvent,
@@ -266,7 +266,7 @@ function buildEvent(item)
 	groupEvent:insert(svMenuTxt)
 	
 	local greenLine = display.newImage( "img/btn/greenLine.png" )
-	greenLine:translate( display.contentWidth * .5, 172)
+	greenLine:translate( display.contentWidth * .5, 183)
 	groupEvent:insert(greenLine)
 	
 	groupMenuEventText = display.newGroup()
@@ -373,7 +373,7 @@ function buildEventInfo(item)
 	txtAdditionalInformation:addEventListener( "tap", showMapa )
 	groupInfo:insert( txtAdditionalInformation )
     
-    local lineLink = display.newRect( 50, lastY + 15, 360, 1 )
+    local lineLink = display.newRect( 66, lastY + 15, 330, 1 )
 	lineLink.anchorX = 0
 	lineLink.anchorY = 0
 	lineLink:setFillColor( .27, .5, .7 )
@@ -476,7 +476,7 @@ function createScrollViewEvent(nameTxt)
 			text = nameTxt,
 			x = positionTxtMenu,
 			y =  -5,
-			font = "Lato-Regular",
+			font = "Lato-Light",
 			fontSize = 22
 	})
 	txtMenuEvent[positionCurrent]:setFillColor( 0 )
@@ -492,10 +492,10 @@ function createScrollViewEvent(nameTxt)
 	
 	srvEventos[positionCurrent] = widget.newScrollView
 	{
-		top = 175,
+		top = 185,
 		left = positionScrollEvent,
 		width = intW,
-		height = intH - (h + 185),
+		height = intH - (h + 190),
 		listener = ListenerChangeScrollEvent,
 		horizontalScrollDisabled = false,
 		verticalScrollDisabled = false,

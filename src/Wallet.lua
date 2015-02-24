@@ -28,6 +28,8 @@ local groupMenu, svContent
 local h = display.topStatusBarContentHeight
 local lastY = 200;
 local itemObj
+local contDeals = 0
+local yMain = 0
 
 local info, promotions, gallery, MenuEventBar
 local homeScreen = display.newGroup()
@@ -47,11 +49,17 @@ function setWalletElements(obj)
 		end
 		loadWalletImage(obj)
 	else
+		
+		contDeals = contDeals + 1
+		
 		if obj.screen == "noRedimir" then
 			RestManager.getDealsRedimir()
-		else
+		end
+		
+		if contDeals == 2 then
 			getNoContent(svContent, "En este momento no cuentas con Deals descargados")
 		end
+		
 	end
 end
 

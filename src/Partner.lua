@@ -487,7 +487,7 @@ function buildPartnerInfo(item)
 	txtAdditionalInformation:addEventListener( "tap", showMapa )
 	srvPartner[#srvPartner]:insert( txtAdditionalInformation )
     
-    local lineLink = display.newRect( 50, lastY + 15, 360, 1 )
+    local lineLink = display.newRect( 66, lastY + 15, 330, 1 )
 	lineLink.anchorX = 0
 	lineLink.anchorY = 0
 	lineLink:setFillColor( .27, .5, .7 )
@@ -584,7 +584,7 @@ function createScrollViewPartner(nameTxt)
 			text = nameTxt,
 			x = positionTxtMenu,
 			y =  0,
-			font = "Lato-Regular",
+			font = "Lato-Light",
 			fontSize = 22
 	})
 	txtMenuPartner[positionCurrent]:setFillColor( 0 )
@@ -603,7 +603,7 @@ function createScrollViewPartner(nameTxt)
 		top = 200,
 		left = positionScrollPartner,
 		width = intW,
-		height = intH,
+		height = intH - (h + 200),
 		listener = ListenerChangeScrollPartner,
 		horizontalScrollDisabled = false,
 		verticalScrollDisabled = false,

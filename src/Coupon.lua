@@ -52,6 +52,7 @@ local homeScreen = display.newGroup()
 
 --llama la pantalla del partner
 function showPartner( event )
+	storyboard.removeScene( "src.Partner" )
 	storyboard.gotoScene( "src.Partner", {
 		time = 400,
 		effect = "crossFade",
@@ -62,11 +63,16 @@ end
 function AssignedCoupon(item)
 	
 	if #item > 0 then
-		itemObj.assigned = 1
+		if item[1].status == '1' then
+			itemObj.assigned = 1
+		elseif item[1].status == '2' then
+			itemObj.assigned = 2
+		end
+			
 		itemObj.code = item[1].code
 	else
 		itemObj.assigned = 0
-
+			
 	end
 		
 	if FlagCoupon == 0 then
@@ -323,7 +329,7 @@ function buildCoupon()
 		top = h + 125,
 		left = 0,
 		width = intW,
-		height = intH - (h + 125),
+		height = intH - (h + 130),
 		listener = scrollListenerContent1,
 		horizontalScrollDisabled = true,
         verticalScrollDisabled = false,
@@ -459,7 +465,11 @@ function buildCoupon()
 						" y el equipo de GoDeals tienen mas promociones para ti!"
 		txtBtn.text = "AGOTADO"
 		rctBtn:setFillColor( .8, .6, .6 )
-    else
+    elseif itemObj.assigned == 2 or itemObj.assigned == '2' then
+		txtTitleInfo.text = "Deal redimido"
+		txtInfo.text =  "Usted ya ha redimido este Deals!"
+		txtBtn.text = "DEAL REDIMIDO"
+	else
 		rctBtn:addEventListener( "tap", DownloadCoupon )
 	end
     
@@ -497,7 +507,7 @@ function buildCoupon()
 	txtAdditionalInformation:addEventListener( "tap", showPartner )
 	svCoupon:insert( txtAdditionalInformation )
     
-    local lineLink = display.newRect( 50, lastY + 15, 360, 1 )
+    local lineLink = display.newRect( 125, lastY + 15, 210, 1 )
 	lineLink.anchorX = 0
 	lineLink.anchorY = 0
 	lineLink:setFillColor( .27, .5, .7 )

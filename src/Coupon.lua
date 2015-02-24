@@ -109,8 +109,8 @@ function goBLE(event)
 				end
 			})
 		elseif value == 2 then
-			getBeacon.verifyBLE()
-			value = DBManager.redemption()
+			getBeacon.redemption()
+			value = DBManager.getReden()
 			if value == 0 then
 				transition.to( txtInfoRedimir2, { alpha = 0, time = 200, 
 					onComplete=function()

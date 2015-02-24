@@ -92,7 +92,13 @@ local RestManager = {}
         network.request( url, "GET", callback )
 	end
 
-	 RestManager.getPartner = function(idPartner)
+	RestManager.redemptionDeal = function(code)
+		local url = settings.url .. "api/redemptionDeal/format/json/code/" .. code
+        -- Do request
+        network.request( url, "GET", callback )
+	end
+
+	RestManager.getPartner = function(idPartner)
 		local url = settings.url .. "api/getPartnertById/format/json/idPartner/" .. idPartner
 	   
 	   local function callback(event)

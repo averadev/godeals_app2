@@ -55,6 +55,25 @@ local dbManager = {}
 		return 1
 	end
 	
+	dbManager.getReden = function()
+		local result = {}
+		openConnection( )
+		for row in db:nrows("SELECT * FROM config;") do
+            local status = tonumber(row.reden)
+			closeConnection( )
+            return status
+		end
+		closeConnection( )
+		return 0
+	end
+
+    dbManager.setReden = function()
+		openConnection( )
+        local query = "UPDATE config SET reden = 0"
+        db:exec( query )
+		closeConnection( )
+	end
+	
 	dbManager.getIdComer = function()
 		local result = {}
 		openConnection( )
@@ -123,7 +142,6 @@ local dbManager = {}
     
         for row in db:nrows("SELECT id FROM ads;") do
             for z = 1, #items, 1 do 
-                print(items[z].id.." - "..row.id)
                 if tonumber(items[z].id) == tonumber(row.id) then
                     items[z] = nil;
                 end
@@ -144,7 +162,6 @@ local dbManager = {}
                         ..items[z].latitude..","
                         ..items[z].longitude..", 0, 1);"
 				
-				print(query)
                 db:exec( query )
             end
         end
@@ -157,7 +174,8 @@ local dbManager = {}
 	dbManager.setupSquema = function()
 		openConnection( )
 		
-		local query = "CREATE TABLE IF NOT EXISTS config (id INTEGER PRIMARY KEY, idApp INTEGER, email TEXT, password TEXT, name TEXT, fbId TEXT, idComer TEXT, url TEXT, city INTEGER, tutorial INTEGER);"
+		local query = "CREATE TABLE IF NOT EXISTS config (id INTEGER PRIMARY KEY, idApp INTEGER, email TEXT, password TEXT, name TEXT, "..
+					" fbId TEXT, idComer TEXT, url TEXT, city INTEGER, tutorial INTEGER, reden INTEGER);"
 		db:exec( query )
     
         local query = "CREATE TABLE IF NOT EXISTS ads (id INTEGER PRIMARY KEY, major INTEGER, type INTEGER, partnerId INTEGER, "..
@@ -176,7 +194,7 @@ local dbManager = {}
         
         -- Populate config
         --query = "INSERT INTO config VALUES (1, 0, '', '', '', '', 0, 'http://godeals.mx/');"
-        query = "INSERT INTO config VALUES (1, 0, '', '', '', '', 0, 'http://godeals.mx/4beta/',1,1);"
+        query = "INSERT INTO config VALUES (1, 0, '', '', '', '', 0, 'http://godeals.mx/4beta/',1,1,0);"
 
 		
 		db:exec( query )

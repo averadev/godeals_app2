@@ -16,6 +16,7 @@ local widget = require( "widget" )
 local scene = storyboard.newScene()
 local DBManager = require('src.resources.DBManager')
 local RestManager = require('src.resources.RestManager')
+local Sprites = require('src.resources.Sprites')
 
 -- Variables
 local intW = display.contentWidth
@@ -24,7 +25,7 @@ local midW = display.contentCenterX
 local midH = display.contentCenterY
 
 local toolbar, menu
-local groupMenu, groupEvent, groupMenuEventText
+local groupMenu, groupEvent, groupMenuEventText, grpRedem
 local svCoupon, svInfo, svPromotions, svGallery
 local h = display.topStatusBarContentHeight
 local lastY = 200
@@ -32,15 +33,14 @@ local lastYCoupon = 0
 local itemObj
 local currentSv
 local settings
-local tmpRedimir
-local txtCode
 local rctBtn
 local FlagCoupon = 0
 
-local txtInfo, txtBtn, txtTitleInfo
+local txtInfo, txtBtn, txtTitleInfo, loadingRed, txtInfoRedimir2
 local info, promotions, gallery, MenuEventBar
-
 local btnDownloadCoupon
+
+local fx = audio.loadStream( "fx/alert.wav" )
 
 --pantalla
 
@@ -59,46 +59,201 @@ function showPartner( event )
 	})
 end
 
-	function AssignedCoupon(item)
+function AssignedCoupon(item)
 	
-		if #item > 0 then
-			itemObj.assigned = 1
-			itemObj.code = item[1].code
-		else
-			itemObj.assigned = 0
-			
-		end
+	if #item > 0 then
+		itemObj.assigned = 1
+		itemObj.code = item[1].code
+	else
+		itemObj.assigned = 0
+
+	end
 		
 	if FlagCoupon == 0 then
 		createCoupon()
 	end
 		
+end
+
+function goBLE(event)
+	t = event.target
+	if t.enable then
+		-- Deshabilitar boton
+		t.enable = false
+		t:setFillColor( .4 )
+		-- Activamos loading
+		loadingRed.alpha = 1
+		loadingRed:setSequence("play")
+		loadingRed:play()
+		DBManager.setReden()
+
+		timer.performWithDelay(4000, function() 
+			-- Validar estado del BT
+			local value = 0
+			if getBeacon then
+				value = getBeacon.verifyBLE()
+			end
+			
+			-- Desactivamos loading
+			loadingRed.alpha = 0
+			loadingRed:setSequence("stop")
+			loadingRed:play()
+				
+			if value == 1 then
+				transition.to( txtInfoRedimir2, { alpha = 0, time = 200, 
+					onComplete=function()
+							txtInfoRedimir2.text = "Activa tu bluetooth y acerca tu telefono al dispositivo GO"
+							txtInfoRedimir2:setFillColor( 147/255, 0, 0 )
+							transition.to( txtInfoRedimir2, { alpha = 1, time = 200})
+							t.enable = true
+							t:setFillColor( .2, .6 ,0 )
+					end
+				})
+			elseif value == 2 then
+				value = DBManager.getReden()
+				if value == 0 then
+					transition.to( txtInfoRedimir2, { alpha = 0, time = 200, 
+						onComplete=function()
+								txtInfoRedimir2.text = "Acerca tu telefono al dispositivo GO"
+								txtInfoRedimir2:setFillColor( 147/255, 0, 0 )
+								transition.to( txtInfoRedimir2, { alpha = 1, time = 200})
+								t.enable = true
+								t:setFillColor( .2, .6 ,0 )
+						end
+					})
+				elseif value == 1 then
+					audio.play( fx )
+					DBManager.setReden()
+					RestManager.redemptionDeal(itemObj.code)
+					grpRedem:removeSelf()
+					grpRedem = nil
+				end
+			end
+		end, 1)
 	end
+	
+	
+	
+end
 
 function showRedimir( event )
 
-    if tmpRedimir then
-        tmpRedimir:removeSelf()
-        tmpRedimir = nil
-		txtCode:removeSelf()
-		txtCode = nil
+    if grpRedem then
+        grpRedem:removeSelf()
+        grpRedem = nil
     else
 		if itemObj.code ~= nil then
-			tmpRedimir = display.newImage( "img/bgk/redes.png" )
-			tmpRedimir.x = midW
-			tmpRedimir.y = midH
-			tmpRedimir.height = intH + h
-			tmpRedimir.width = intW
-			tmpRedimir:addEventListener( "tap", showRedimir )
-			tmpRedimir:addEventListener( "touch", lokedShowRedimir )
+			grpRedem = display.newGroup()
+			homeScreen:insert(grpRedem)
+			
+			
+			-- Creamos la mascara
+			local mask = display.newRect( midW, midH, intW, intH )
+			mask:setFillColor( 0 )
+			mask.alpha = .9
+			grpRedem:insert(mask)
+			
+			local bgRedimir = display.newImage( "img/bgk/redemption.png" )
+			bgRedimir.x = midW
+			bgRedimir.y = midH
+			grpRedem:insert(bgRedimir)
+			
+			local btnClose = display.newImage( "img/btn/btnClose.png" )
+			btnClose.x = intW - 25
+			btnClose.y = midH - 310
+			btnClose:addEventListener( "tap", showRedimir )
+			btnClose:addEventListener( "touch", lokedShowRedimir )
+			grpRedem:insert(btnClose)
 		
-			txtCode = display.newText({
-			text = itemObj.code,
-			x = intW/2, y = intH/6.3,
-			width = 480,
-			font = "Lato-Black", fontSize = 50, align = "center"
+			local txtCode = display.newText({
+				text = "CODIGO PARA CANJEAR",
+				x = midW, y = midH - 270,
+				width = 480,
+				font = "Lato-Black", fontSize = 30, align = "center"
+			})
+			txtCode:setFillColor( 0 )
+			grpRedem:insert(txtCode)
+		
+			local txtCode = display.newText({
+				text = itemObj.code,
+				x = midW, y = midH - 230,
+				width = 480,
+				font = "Lato-Black", fontSize = 50, align = "center"
 			})
 			txtCode:setFillColor( 5/255, 147/255, 0 )
+			grpRedem:insert(txtCode)
+			
+			local txtInfoRedimir = display.newText({
+				text = "* Proporciona al comercio este codigo para hacer valido tu Deal",
+				x = midW, y = midH - 160,
+				width = 400,
+				font = "Lato-Black", fontSize = 20, align = "left"
+			})
+			txtInfoRedimir:setFillColor( 0 )
+			grpRedem:insert(txtInfoRedimir)
+
+			local rctRed = display.newRoundedRect( midW, midH -70, 270, 55, 5 )
+			rctRed.enable = true
+			rctRed.idCoipon = itemObj.id
+			rctRed:setFillColor( .2, .6 ,0 )
+			grpRedem:insert(rctRed)
+
+			local txtRed = display.newText( {
+				text =  "CONTINUAR",
+				x = midW, y = midH -70,
+				width = 270, height = 0,
+				font = "Lato-Regular", fontSize = 25, align = "center"
+			})
+			txtRed:setFillColor( 1 )
+			grpRedem:insert(txtRed)
+			
+			-- Sprite and text
+			local sheet = graphics.newImageSheet(Sprites.loading.source, Sprites.loading.frames)
+			loadingRed = display.newSprite(sheet, Sprites.loading.sequences)
+			loadingRed.x = midW
+			loadingRed.y = midH + 20
+			loadingRed.alpha = 0
+			grpRedem:insert(loadingRed)
+			
+			-- Validar BLE y android => JellyBean
+			local value = 0
+			if getBeacon then
+				value = getBeacon.verifyBLE()
+			end
+			
+			if value == 0 then
+				rctRed:addEventListener( "tap", showRedimir )
+			elseif value == 1 then
+				txtInfoRedimir2 = display.newText({
+					text = "* O simplemente activa tu bluetooth y solicita al comercio su dispositivo GO",
+					x = midW, y = midH - 100,
+					width = 400,
+					font = "Lato-Black", fontSize = 20, align = "left"
+				})
+				txtInfoRedimir2:setFillColor( 0 )
+				grpRedem:insert(txtInfoRedimir2)
+				
+				rctRed.y = midH - 30
+				txtRed.y = midH - 30
+				rctRed:addEventListener( "tap", goBLE )
+				
+			elseif value == 2 then
+				txtInfoRedimir2 = display.newText({
+					text = "* O simplemente solicita al comercio su dispositivo GO",
+					x = midW, y = midH - 100,
+					width = 380,
+					font = "Lato-Black", fontSize = 20, align = "left"
+				})
+				txtInfoRedimir2:setFillColor( 0 )
+				grpRedem:insert(txtInfoRedimir2)
+				
+				rctRed.y = midH - 30
+				txtRed.y = midH - 30
+				rctRed:addEventListener( "tap", goBLE )
+			end	
+			
+			
+			
 		end
     end
 end
@@ -255,7 +410,6 @@ function buildCoupon()
     
     
     -- Descarga / Redime
-    
 	txtTitleInfo = display.newText( {
 		text = "¿Te interesa este Deal?",
 		x = 240, y = 340,
@@ -304,7 +458,6 @@ function buildCoupon()
     else
 		rctBtn:addEventListener( "tap", DownloadCoupon )
 	end
-    
     
     -- Detail Clauses
     local txtAdditionalInformation = display.newText({

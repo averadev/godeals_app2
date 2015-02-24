@@ -86,50 +86,49 @@ function goBLE(event)
 		loadingRed:setSequence("play")
 		loadingRed:play()
 		DBManager.setReden()
+		
+		-- Validar estado del BT
+		local value = 0
+		if getBeacon then
+			value = getBeacon.verifyBLE()
+		end
 
-		timer.performWithDelay(4000, function() 
-			-- Validar estado del BT
-			local value = 0
-			if getBeacon then
-				value = getBeacon.verifyBLE()
-			end
-			
-			-- Desactivamos loading
-			loadingRed.alpha = 0
-			loadingRed:setSequence("stop")
-			loadingRed:play()
-				
-			if value == 1 then
+		-- Desactivamos loading
+		loadingRed.alpha = 0
+		loadingRed:setSequence("stop")
+		loadingRed:play()
+
+		if value == 1 then
+			transition.to( txtInfoRedimir2, { alpha = 0, time = 200, 
+				onComplete=function()
+						txtInfoRedimir2.text = "Activa tu bluetooth y acerca tu telefono al dispositivo GO"
+						txtInfoRedimir2:setFillColor( 147/255, 0, 0 )
+						transition.to( txtInfoRedimir2, { alpha = 1, time = 200})
+						t.enable = true
+						t:setFillColor( .2, .6 ,0 )
+				end
+			})
+		elseif value == 2 then
+			getBeacon.verifyBLE()
+			value = DBManager.redemption()
+			if value == 0 then
 				transition.to( txtInfoRedimir2, { alpha = 0, time = 200, 
 					onComplete=function()
-							txtInfoRedimir2.text = "Activa tu bluetooth y acerca tu telefono al dispositivo GO"
+							txtInfoRedimir2.text = "Acerca tu telefono al dispositivo GO"
 							txtInfoRedimir2:setFillColor( 147/255, 0, 0 )
 							transition.to( txtInfoRedimir2, { alpha = 1, time = 200})
 							t.enable = true
 							t:setFillColor( .2, .6 ,0 )
 					end
 				})
-			elseif value == 2 then
-				value = DBManager.getReden()
-				if value == 0 then
-					transition.to( txtInfoRedimir2, { alpha = 0, time = 200, 
-						onComplete=function()
-								txtInfoRedimir2.text = "Acerca tu telefono al dispositivo GO"
-								txtInfoRedimir2:setFillColor( 147/255, 0, 0 )
-								transition.to( txtInfoRedimir2, { alpha = 1, time = 200})
-								t.enable = true
-								t:setFillColor( .2, .6 ,0 )
-						end
-					})
-				elseif value == 1 then
-					audio.play( fx )
-					DBManager.setReden()
-					RestManager.redemptionDeal(itemObj.code)
-					grpRedem:removeSelf()
-					grpRedem = nil
-				end
+			elseif value == 1 then
+				audio.play( fx )
+				DBManager.setReden()
+				RestManager.redemptionDeal(itemObj.code)
+				grpRedem:removeSelf()
+				grpRedem = nil
 			end
-		end, 1)
+		end
 	end
 	
 	

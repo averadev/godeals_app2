@@ -150,7 +150,6 @@ function showRedimir( event )
 			grpRedem = display.newGroup()
 			homeScreen:insert(grpRedem)
 			
-			
 			-- Creamos la mascara
 			local mask = display.newRect( midW, midH, intW, intH )
 			mask:setFillColor( 0 )

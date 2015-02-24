@@ -272,11 +272,11 @@ function scene:createScene( event )
     bgCreateEmail.x = midW
     bgCreateEmail.y = midH - 75
     groupCreate:insert(bgCreateEmail)
-    local bgCreatePass = display.newImage("img/btn/contraseña.png", true) 
+    local bgCreatePass = display.newImage("img/btn/contrasenia.png", true) 
     bgCreatePass.x = midW
     bgCreatePass.y = midH + 05
     groupCreate:insert(bgCreatePass)
-    local bgCreateRePass = display.newImage("img/btn/contraseña.png", true) 
+    local bgCreateRePass = display.newImage("img/btn/contrasenia.png", true) 
     bgCreateRePass.x = midW
     bgCreateRePass.y = midH + 85
     groupCreate:insert(bgCreateRePass)

@@ -104,32 +104,35 @@ function goBLE(event)
 			loadingRed:setSequence("play")
 			loadingRed:play()
 			DBManager.setReden()
-			-- Check Beacon
-			getBeacon.redemption()
-			value = DBManager.getReden()
 			
-			-- Desactivamos loading
-			loadingRed.alpha = 0
-			loadingRed:setSequence("stop")
-			loadingRed:play()
-			
-			if value == 0 then
-				transition.to( txtInfoRedimir2, { alpha = 0, time = 200, 
-					onComplete=function()
-							txtInfoRedimir2.text = "Acerca tu telefono al dispositivo GO"
-							txtInfoRedimir2:setFillColor( 147/255, 0, 0 )
-							transition.to( txtInfoRedimir2, { alpha = 1, time = 200})
-							t.enable = true
-							t:setFillColor( .2, .6 ,0 )
-					end
-				})
-			elseif value == 1 then
-				audio.play( fx )
-				DBManager.setReden()
-				RestManager.redemptionDeal(itemObj.code)
-				grpRedem:removeSelf()
-				grpRedem = nil
-			end
+			timer.performWithDelay(500, function() 
+				-- Check Beacon
+				getBeacon.redemption()
+				value = DBManager.getReden()
+
+				-- Desactivamos loading
+				loadingRed.alpha = 0
+				loadingRed:setSequence("stop")
+				loadingRed:play()
+
+				if value == 0 then
+					transition.to( txtInfoRedimir2, { alpha = 0, time = 200, 
+						onComplete=function()
+								txtInfoRedimir2.text = "Acerca tu telefono al dispositivo GO"
+								txtInfoRedimir2:setFillColor( 147/255, 0, 0 )
+								transition.to( txtInfoRedimir2, { alpha = 1, time = 200})
+								t.enable = true
+								t:setFillColor( .2, .6 ,0 )
+						end
+					})
+				elseif value == 1 then
+					audio.play( fx )
+					DBManager.setReden()
+					RestManager.redemptionDeal(itemObj.code)
+					grpRedem:removeSelf()
+					grpRedem = nil
+				end
+			end)
 		end
 	end
 	

@@ -104,13 +104,14 @@ function goBLE(event)
 			loadingRed:setSequence("play")
 			loadingRed:play()
 			DBManager.setReden()
+			-- Check Beacon
+			getBeacon.redemption()
+			value = DBManager.getReden()
+			
 			-- Desactivamos loading
 			loadingRed.alpha = 0
 			loadingRed:setSequence("stop")
 			loadingRed:play()
-			
-			getBeacon.redemption()
-			value = DBManager.getReden()
 			
 			if value == 0 then
 				transition.to( txtInfoRedimir2, { alpha = 0, time = 200, 

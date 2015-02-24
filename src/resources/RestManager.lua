@@ -45,7 +45,7 @@ local RestManager = {}
             else
 				local data = json.decode(event.response)
                 if data.success then
-                    setWalletElements(data.items)
+                    setWalletElements({items = data.items, screen = "noRedimir", posc = 1, path = 'assets/img/app/deal/'})
                 end
             end
             return true
@@ -526,6 +526,24 @@ local RestManager = {}
 						end
 					end
 				end
+            end
+            return true
+        end
+        -- Do request
+        network.request( url, "GET", callback )
+	end
+	
+	RestManager.getDealsRedimir = function()
+		
+		local url = settings.url .. "api/getDealsRedimir/format/json/idApp/" .. settings.idApp .. "/city/" .. settings.city
+	   
+	   local function callback(event)
+            if ( event.isError ) then
+            else
+				local data = json.decode(event.response)
+                if data.success then
+                    setWalletElements({items = data.items, screen = "redimir", posc = 1, path = 'assets/img/app/deal/'})
+                end
             end
             return true
         end

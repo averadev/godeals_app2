@@ -137,6 +137,9 @@ function goBLE(event)
 					RestManager.redemptionDeal(itemObj.code)
 					grpRedem:removeSelf()
 					grpRedem = nil
+					txtBtn.text = "DEAL REDIMIDO"
+					rctBtn:setFillColor( .72, .82, .93 )
+					rctBtn:removeEventListener( "tap", showRedimir )
 				end
 			end)
 		end
@@ -462,10 +465,12 @@ function buildCoupon()
 						" y el equipo de GoDeals tienen mas promociones para ti!"
 		txtBtn.text = "AGOTADO"
 		rctBtn:setFillColor( .8, .6, .6 )
+		txtStock:setFillColor( .8, .5, .5 )
     elseif itemObj.assigned == 2 or itemObj.assigned == '2' then
 		txtTitleInfo.text = "Deal redimido"
 		txtInfo.text =  "Usted ya ha redimido este Deals!"
 		txtBtn.text = "DEAL REDIMIDO"
+		rctBtn:setFillColor( .72, .82, .93 )
 	else
 		rctBtn:addEventListener( "tap", DownloadCoupon )
 	end

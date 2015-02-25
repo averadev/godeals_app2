@@ -37,6 +37,8 @@ local RestManager = {}
 	end
 
     RestManager.getMyDeals = function()
+	
+		settings = DBManager.getSettings()
 		
 		local url = settings.url .. "api/getMyDeals/format/json/idApp/" .. settings.idApp .. "/city/" .. settings.city
 	   

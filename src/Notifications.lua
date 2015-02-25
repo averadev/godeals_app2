@@ -143,7 +143,7 @@ function buildNotificationsItems(objScreen)
     svContent:insert(separadorEventos)
 
     local textSeparadorEventos = display.newText( {
-        text = "Estas son tus notificaciones.",     
+        text = "ESTAS SON TUS NOTIFICACIONES.",     
         x = 300, y = yMain, width = intW, height = 20,
         font = "Lato-Regular", fontSize = 14, align = "left"
     })

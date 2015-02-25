@@ -504,7 +504,7 @@ function buildCoupon()
 	txtAdditionalInformation:addEventListener( "tap", showPartner )
 	svCoupon:insert( txtAdditionalInformation )
     
-    local lineLink = display.newRect( 125, lastY + 15, 210, 1 )
+    local lineLink = display.newRect( 130, lastY + 15, 200, 1 )
 	lineLink.anchorX = 0
 	lineLink.anchorY = 0
 	lineLink:setFillColor( .27, .5, .7 )

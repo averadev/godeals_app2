@@ -265,15 +265,20 @@ function buildEvent(item)
 	}
 	groupEvent:insert(svMenuTxt)
 	
-	local greenLine = display.newImage( "img/btn/greenLine.png" )
+	--[[local greenLine = display.newImage( "img/btn/greenLine.png" )
+	greenLine.width = 100
 	greenLine:translate( display.contentWidth * .5, 183)
-	groupEvent:insert(greenLine)
+	groupEvent:insert(greenLine)]]
+	
+	MenuEventBar = display.newRect( midW, 182 , intW /3, 4 )
+	MenuEventBar:setFillColor( 88/255, 188/255, 36/255 )
+	groupEvent:insert(MenuEventBar)
 	
 	groupMenuEventText = display.newGroup()
 	groupMenuEventText.y = 35
 	svMenuTxt:insert(groupMenuEventText)
 		
-	createScrollViewEvent("Info")
+	createScrollViewEvent("INFO")
 	
 	srvEventos[#srvEventos]:setIsLocked( true, "horizontal" )
 	svMenuTxt:setIsLocked( true, "horizontal" )
@@ -373,7 +378,7 @@ function buildEventInfo(item)
 	txtAdditionalInformation:addEventListener( "tap", showMapa )
 	groupInfo:insert( txtAdditionalInformation )
     
-    local lineLink = display.newRect( 66, lastY + 15, 330, 1 )
+    local lineLink = display.newRect( 72, lastY + 15, 320, 1 )
 	lineLink.anchorX = 0
 	lineLink.anchorY = 0
 	lineLink:setFillColor( .27, .5, .7 )
@@ -403,7 +408,7 @@ function buildEventPromociones(items)
 	
         srvEventos[1]:setIsLocked( false, "horizontal" )
         svMenuTxt:setIsLocked( false, "horizontal" )
-        createScrollViewEvent("promociones")
+        createScrollViewEvent("PROMO")
 	
 		lastY = 25
 		for y = 1, #items, 1 do 
@@ -435,7 +440,7 @@ function buildEventGaleria(items)
     lastY = 75
     srvEventos[1]:setIsLocked( false, "horizontal" )
     svMenuTxt:setIsLocked( false, "horizontal" )
-    createScrollViewEvent("Galeria")
+    createScrollViewEvent("GALERIA")
 
     for y = 1, #items, 1 do 
         -- Add image

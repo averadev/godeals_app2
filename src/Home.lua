@@ -766,7 +766,7 @@ function scene:createScene( event )
 	
 	txtMenuInicio = display.newText( {    
         x = display.contentWidth * .5, y = 30,
-        text = "Inicio",  font = "Lato-Light", fontSize = 30,
+        text = "INICIO",  font = "Lato-Light", fontSize = 30,
 	})
 	txtMenuInicio:setFillColor( 0 )
 	groupMenu:insert(txtMenuInicio)
@@ -774,7 +774,7 @@ function scene:createScene( event )
 	
 	txtMenuEventos = display.newText( {
         x = display.contentWidth * .85, y = 30,
-        text = "Eventos", font = "Lato-Light", fontSize = 30,
+        text = "EVENTOS", font = "Lato-Light", fontSize = 30,
 	})
 	txtMenuEventos:setFillColor( 161/255, 161/255, 161/255 )
 	groupMenu:insert(txtMenuEventos)
@@ -782,7 +782,7 @@ function scene:createScene( event )
 	
 	txtMenuDeals = display.newText( {
         x = display.contentWidth * 1.2, y = 30,
-        text = "Deals", font = "Lato-Light", fontSize = 30,
+        text = "DEALS", font = "Lato-Light", fontSize = 30,
 	})
 	txtMenuDeals:setFillColor( 161/255, 161/255, 161/255 )
 	groupMenu:insert(txtMenuDeals)

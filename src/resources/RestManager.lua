@@ -56,8 +56,7 @@ local RestManager = {}
 	
 	RestManager.getAllEvent = function()
 		local url = settings.url .. "api/getAllEvent/format/json/idApp/" .. settings.idApp .. "/city/" .. settings.city
-		print(url)
-	   
+		
 	   local function callback(event)
             if ( event.isError ) then
             else

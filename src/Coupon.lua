@@ -329,7 +329,7 @@ function buildCoupon()
 		top = h + 125,
 		left = 0,
 		width = intW,
-		height = intH - (h + 130),
+		height = intH - (h + 125),
 		listener = scrollListenerContent1,
 		horizontalScrollDisabled = true,
         verticalScrollDisabled = false,

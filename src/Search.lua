@@ -168,7 +168,7 @@ function buildSearchItems(screen)
 		
 	end
 	
-	scrViewSearch[#scrViewSearch]:setScrollHeight(yMain + 160)
+	scrViewSearch[#scrViewSearch]:setScrollHeight(yMain + 20)
 	
 end
 
@@ -218,7 +218,7 @@ function modalSeach(text,self)
 		top = h + 65,
 		left = 0,
 		width = intW,
-		height = intH,
+		height = intH - (h + 65),
 		horizontalScrollDisabled = true,
         verticalScrollDisabled = false,
 		backgroundColor = { .92, .92, .92 }

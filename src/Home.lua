@@ -198,7 +198,7 @@ function buildItems(screen)
         -- Siguiente solicitud
 		getLoading(groupEvent)
 		
-		--scrViewMain:setScrollHeight(lastY -100)
+		scrViewMain:setScrollHeight(yMain + 20)
         RestManager.getAllEvent()
         
     elseif screen == "EventPanel" then
@@ -733,7 +733,7 @@ function scene:createScene( event )
 		top = h + 125,
 		left = 0,
 		width = display.contentWidth,
-		height = intH - 125,
+		height = intH - (h + 125),
 		listener = ListenerChangeScrollHome,
 		horizontalScrollDisabled = false,
         verticalScrollDisabled = false,
@@ -747,7 +747,7 @@ function scene:createScene( event )
 		top = h + 125,
 		left = 480,
 		width = intW,
-		height = intH - 125,
+		height = intH - (h + 125),
 		listener = ListenerChangeScrollHome,
 		backgroundColor = { .92 }
 	}
@@ -758,8 +758,8 @@ function scene:createScene( event )
 	{
 		top = h + 125,
 		left = 480,
-		width = display.contentWidth,
-		height = display.contentHeight - 125,
+		width = intW,
+		height = intH - (h + 125),
 		listener = ListenerChangeScrollHome,
 		backgroundColor = { .92 }
 	}

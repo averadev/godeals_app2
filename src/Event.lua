@@ -500,7 +500,7 @@ function createScrollViewEvent(nameTxt)
 		top = 185,
 		left = positionScrollEvent,
 		width = intW,
-		height = intH - (h + 190),
+		height = intH - 185,
 		listener = ListenerChangeScrollEvent,
 		horizontalScrollDisabled = false,
 		verticalScrollDisabled = false,

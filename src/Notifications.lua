@@ -187,6 +187,9 @@ function buildNotificationsItems(objScreen)
 		end
 		
     end
+	
+	svContent:setScrollHeight(yMain + 20)
+	
 end
 
 function scene:createScene( event )
@@ -211,7 +214,7 @@ function scene:createScene( event )
 		top = h + 125,
 		left = 0,
 		width = intW,
-		height = intH - 46,
+		height = intH - (h + 125),
 		horizontalScrollDisabled = true,
 		backgroundColor = { 245/255, 245/255, 245/255 }
 	}

@@ -598,7 +598,7 @@ function createScrollViewPartner(nameTxt)
 		top = 200,
 		left = positionScrollPartner,
 		width = intW,
-		height = intH - (h + 200),
+		height = intH - 200,
 		listener = ListenerChangeScrollPartner,
 		horizontalScrollDisabled = false,
 		verticalScrollDisabled = false,

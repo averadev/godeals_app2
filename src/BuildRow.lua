@@ -93,8 +93,8 @@ function Event:new()
         -- Agregamos textos
         local txtTitle = display.newText( {
             text = item.name,     
-            x = 40, y = -5,
-            width = 300, height =60,
+            x = 40, y = -20,
+            width = 300, height = 0,
             font = "Lato-Regular", fontSize = 24, align = "left"
         })
         txtTitle:setFillColor( 0 )
@@ -117,6 +117,14 @@ function Event:new()
         })
         txtPlace:setFillColor( .3 )
         container:insert(txtPlace)
+		
+		-- Fix Height
+		if txtTitle.height > 35 then
+			txtTitle.height = 60
+			txtTitle.y = -23
+			txtDate.y = 35
+			txtPlace.y = 55
+		end
     end
 
     return self
@@ -190,8 +198,8 @@ function Deal:new()
         -- Agregamos textos
         local txtTitle = display.newText( {
             text = item.name ,     
-            x = 40, y = -5,
-            width = 300, height = 60,
+            x = 40, y = -20,
+            width = 300, height = 0,
             font = "Lato-Regular", fontSize = 24, align = "left"
         })
         txtTitle:setFillColor( 0 )
@@ -219,7 +227,14 @@ function Deal:new()
         end
         container:insert(txtStock)
         
-        
+		-- Fix Height
+		if txtTitle.height > 35 then
+			txtTitle.height = 60
+			txtTitle.y = -23
+			txtPartner.y = 35
+			txtStock.y = 55
+		end
+			
         
     end
 

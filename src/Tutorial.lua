@@ -9,7 +9,7 @@ local poscCurrent = 1
 
 local groupTutorial = {}
 
-local txtTutorial = {"img/bgk/TUTORIAL1.png", "img/bgk/TUTORIAL2.png", "img/bgk/TUTORIAL3.png"}
+local txtTutorial = {"img/bgk/TUTORIAL1.png", "img/bgk/TUTORIAL2.png", "img/bgk/TUTORIAL3.png","img/bgk/TUTORIAL4.png"}
 
 local bgTutorial = nil
 
@@ -38,7 +38,7 @@ end
 
 --cambiamos a la siguiente grupo
 function changeScreen( event )
-	if poscCurrent ~= 3 then
+	if poscCurrent ~= 4 then
 		--[[btnCirCle[poscCurrent]:setFillColor( 1 )
 		btnCirCle[poscCurrent + 1]:setFillColor( 0,150/255,0 )]]
 		groupTutorial[poscCurrent].alpha = 0
@@ -72,19 +72,19 @@ function createTutorial(self)
 	bgTutorial:addEventListener( "touch", lockScrenn )
 	self:insert(bgTutorial)
 	
-	for y = 1, 3, 1 do
+	for y = 1, 4, 1 do
 	
 		groupTutorial[y] = display.newGroup()
 		groupTutorial[y].alpha = 0
 		self:insert(groupTutorial[y])
 		
 		local imgTutorial = display.newImage( txtTutorial[y] )
-		imgTutorial:translate( intW/2, intH/2 + h )
-		imgTutorial.height = intH / 1.16
-		imgTutorial.width = intW
+		imgTutorial:translate( intW/2, (intH/2 -intH/30.5) + h )
+		--[[imgTutorial.height = intH / 1.16
+		imgTutorial.width = intW]]
 		
-		if y == 2 then
-			imgTutorial.x= intW/2 - (intW * .0416)
+		if y == 3 then
+			--imgTutorial.x= intW/2 - (intW * .0416)
 		end
 		
 		groupTutorial[y]:insert( imgTutorial )
@@ -94,7 +94,7 @@ function createTutorial(self)
 	
 	self:insert(groupBtn)
 	
-	local btnNext = display.newRoundedRect( intW/2, intH/2 + intH/6.1, 400, 70, 11 )
+	local btnNext = display.newRoundedRect( intW/2, intH/2 + intH/5.4, 380, 70, 11 )
 	btnNext:addEventListener( "tap", changeScreen )
 	btnNext:setFillColor( 1 )
 	groupBtn:insert(btnNext)
@@ -102,21 +102,21 @@ function createTutorial(self)
 	
 	local txtNext = display.newText({
 		text = "CONTINUAR",
-		x = intW/2, y = intH/2 + intH/6.1,
+		x = intW/2, y = intH/2 + intH/5.4,
 		width = 420,
 		font = "Lato-Bold", fontSize = 30, align = "center"
 	})
 	txtNext:setFillColor( 145/255, 197/255, 115/255 )
 	groupBtn:insert( txtNext )
 		
-	local btnHide = display.newRoundedRect( intW/2, intH/2 + intH/3.45, 400, 70, 11 )
+	local btnHide = display.newRoundedRect( intW/2, intH/2 + intH/3.3, 380, 70, 11 )
 	btnHide:setFillColor( 120/255, 163/255, 95/255 )
 	btnHide:addEventListener( 'tap', closeTutorial )
 	groupBtn:insert(btnHide)
 	
 	local txtHide = display.newText({
 		text = "NO MOSTRAR",
-		x = intW/2, y = intH/2 + intH/3.45,
+		x = intW/2, y = intH/2 + intH/3.3,
 		width = 420,
 		font = "Lato-Bold", fontSize = 30, align = "center"
 	})

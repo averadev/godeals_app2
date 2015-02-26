@@ -481,7 +481,7 @@ function createScrollViewEvent(nameTxt)
 			text = nameTxt,
 			x = positionTxtMenu,
 			y =  -5,
-			font = "Lato-Light",
+			font = "Lato-Hairline",
 			fontSize = 22
 	})
 	txtMenuEvent[positionCurrent]:setFillColor( 0 )

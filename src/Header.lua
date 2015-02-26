@@ -430,7 +430,7 @@ function Header:new()
         
         txtTitle = display.newText( {
             x = (display.contentWidth/2), y = 95,
-            text = texto, font = "Lato-Light", fontSize = 22,
+            text = texto, font = "Lato-Hairline", fontSize = 22,
         })
         txtTitle:setFillColor( .2 )
         self:insert(txtTitle)

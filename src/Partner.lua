@@ -420,7 +420,7 @@ function buildPartnerInfo(item)
 	btnFacebook.url = item.facebook
     srvPartner[#srvPartner]:insert(btnFacebook)
 	
-	if item.facebook ~= "" then
+	if #item.facebook > 1 then
 		btnFacebook:addEventListener( "tap", openSocialNetwork )
 	else
 		btnFacebook.alpha = .5
@@ -431,7 +431,10 @@ function buildPartnerInfo(item)
 	btnTwitter.url = item.twitter
     srvPartner[#srvPartner]:insert(btnTwitter)
 	
-	if item.twitter ~= "" then
+	print(#item.twitter)
+	
+	--if item.twitter ~= "" or item.twitter ~= nil or #item.twitter > 1 then
+	if #item.twitter > 1 then
 		btnTwitter:addEventListener( "tap", openSocialNetwork )
 	else
 		btnTwitter.alpha = .5
@@ -576,7 +579,7 @@ function createScrollViewPartner(nameTxt)
 			text = nameTxt,
 			x = positionTxtMenu,
 			y =  0,
-			font = "Lato-Light",
+			font = "Lato-Hairline",
 			fontSize = 22
 	})
 	txtMenuPartner[positionCurrent]:setFillColor( 0 )
@@ -692,6 +695,8 @@ function loadImagePartner(typeImage)
 			imageName = itemPartner.banner
 		end
         
+		print(imageName)
+		
         -- Descargamos de la nube
         display.loadRemoteImage( imageUrl, "GET", loadImagePartnerListener, imageName, system.TemporaryDirectory ) 
     end

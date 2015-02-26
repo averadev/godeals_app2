@@ -44,9 +44,7 @@ local imageItems = {}
 function setWalletElements(obj)
     elements = obj.items
 	if #elements > 0 then
-		if obj.screen == "noRedimir" then
 			getLoading(svContent)
-		end
 		loadWalletImage(obj)
 	else
 		
@@ -58,6 +56,7 @@ function setWalletElements(obj)
 		
 		if contDeals == 2 then
 			getNoContent(svContent, "En este momento no cuentas con Deals descargados")
+			endLoading()
 		end
 		
 	end
@@ -148,7 +147,7 @@ function buildWalletItems(screen)
 			deal.y = yMain
 			yMain = yMain + 120
 		end
-		
+		endLoading()
 		RestManager.getDealsRedimir()
 	elseif screen == "redimir" then
 	
@@ -176,8 +175,11 @@ function buildWalletItems(screen)
 			deal.y = yMain
 			yMain = yMain + 120
 		end
-	
+		endLoading()
 	end
+	
+	svContent:setScrollHeight(yMain + 20)
+	
 end
 
 function scene:createScene( event )
@@ -203,7 +205,7 @@ function scene:createScene( event )
 		top = h + 125,
 		left = 0,
 		width = intW,
-		height = intH - 46,
+		height = intH - (h + 125),
 		horizontalScrollDisabled = true,
 		backgroundColor = { 245/255, 245/255, 245/255 }
 	}

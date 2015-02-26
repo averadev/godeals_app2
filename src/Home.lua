@@ -197,6 +197,8 @@ function buildItems(screen)
         
         -- Siguiente solicitud
 		getLoading(groupEvent)
+		
+		--scrViewMain:setScrollHeight(lastY -100)
         RestManager.getAllEvent()
         
     elseif screen == "EventPanel" then
@@ -225,6 +227,10 @@ function buildItems(screen)
             
             lastY = lastY + 120
         end
+		
+			
+		scrViewEventos:setScrollHeight(lastY + 20)
+		
         -- Siguiente solicitud
 		getLoading(groupDeals)
 		RestManager.getAllCoupon()
@@ -248,6 +254,9 @@ function buildItems(screen)
             
             lastY = lastY + 120
         end
+		
+		scrViewDeals:setScrollHeight(lastY + 20)
+		
 		endLoading()
 	elseif screen == "FilterEvent" then
 		groupEvent:removeSelf()
@@ -279,6 +288,7 @@ function buildItems(screen)
             
             lastY = lastY + 120
         end
+		
 	elseif screen == "noFilterEvent" then
 	
 		groupEvent:removeSelf()
@@ -722,8 +732,8 @@ function scene:createScene( event )
 	{
 		top = h + 125,
 		left = 0,
-		width = intW,
-		height = intH,
+		width = display.contentWidth,
+		height = intH - 125,
 		listener = ListenerChangeScrollHome,
 		horizontalScrollDisabled = false,
         verticalScrollDisabled = false,
@@ -736,8 +746,8 @@ function scene:createScene( event )
 	{
 		top = h + 125,
 		left = 480,
-		width = display.contentWidth,
-		height = display.contentHeight,
+		width = intW,
+		height = intH - 125,
 		listener = ListenerChangeScrollHome,
 		backgroundColor = { .92 }
 	}
@@ -749,7 +759,7 @@ function scene:createScene( event )
 		top = h + 125,
 		left = 480,
 		width = display.contentWidth,
-		height = display.contentHeight,
+		height = display.contentHeight - 125,
 		listener = ListenerChangeScrollHome,
 		backgroundColor = { .92 }
 	}
@@ -766,7 +776,7 @@ function scene:createScene( event )
 	
 	txtMenuInicio = display.newText( {    
         x = display.contentWidth * .5, y = 30,
-        text = "INICIO",  font = "Lato-Light", fontSize = 30,
+        text = "INICIO",  font = "Lato-Hairline", fontSize = 30,
 	})
 	txtMenuInicio:setFillColor( 0 )
 	groupMenu:insert(txtMenuInicio)

@@ -132,7 +132,7 @@ function buildWalletItems(screen)
 		svContent:insert(separadorEventos)
 
 		local textSeparadorEventos = display.newText( {
-			text = "Estos son los Deals disponibles en tu cartera.",     
+			text = "ESTOS SON LOS DEALS DISPONIBLES EN TU CARTERA.",     
 			x = 300, y = yMain, width = intW, height = 20,
 			font = "Lato-Regular", fontSize = 14, align = "left"
 		})
@@ -160,7 +160,7 @@ function buildWalletItems(screen)
 		svContent:insert(separadorRedimir)
 
 		local textSeparadorRedimir = display.newText( {
-			text = "Estos son los Deals redimidos.",     
+			text = "ESTOS SON LOS DEALS REDIMIDOS.",     
 			x = 300, y = yMain, width = intW, height = 20,
 			font = "Lato-Regular", fontSize = 14, align = "left"
 		})

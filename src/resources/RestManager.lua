@@ -57,6 +57,7 @@ local RestManager = {}
 	end
 	
 	RestManager.getAllEvent = function()
+		settings = DBManager.getSettings()
 		local url = settings.url .. "api/getAllEvent/format/json/idApp/" .. settings.idApp .. "/city/" .. settings.city
 		
 	   local function callback(event)
@@ -76,6 +77,7 @@ local RestManager = {}
 	end
 	
 	RestManager.getAllCoupon = function()
+		settings = DBManager.getSettings()
 		local url = settings.url .. "api/getAllDeal/format/json/idApp/" .. settings.idApp .. "/city/" .. settings.city
 	   
 	    local function callback(event)
@@ -95,12 +97,14 @@ local RestManager = {}
 	end
 
 	RestManager.redemptionDeal = function(code)
+		settings = DBManager.getSettings()
 		local url = settings.url .. "api/redemptionDeal/format/json/code/" .. code
         -- Do request
         network.request( url, "GET", callback )
 	end
 
 	RestManager.getPartner = function(idPartner)
+		settings = DBManager.getSettings()
 		local url = settings.url .. "api/getPartnertById/format/json/idPartner/" .. idPartner
 	   
 	   local function callback(event)
@@ -119,6 +123,7 @@ local RestManager = {}
 	end
 
     RestManager.getBeacons = function()
+		settings = DBManager.getSettings()
         local url = settings.url .. "api/getBeacons/format/json"
 
         local function callback(event)
@@ -134,6 +139,7 @@ local RestManager = {}
 	end
 	
 	RestManager.getDealsByPartner = function(idPartner,typeInfo)
+		settings = DBManager.getSettings()
 		local url = settings.url .. "api/getDealsByPartner/format/json/idPartner/" .. idPartner .. "/city/" .. settings.city
 	   
 	   local function callback(event)
@@ -156,6 +162,7 @@ local RestManager = {}
 	end
 	
 	RestManager.getGallery = function(idPartner,typeGallery,typeInfo)
+		settings = DBManager.getSettings()
 		local url = settings.url .. "api/getGallery/format/json/idPartner/" .. idPartner .. "/type/" .. typeGallery
 	   
 	   local function callback(event)
@@ -180,6 +187,7 @@ local RestManager = {}
 	-- obtenemos cupon por id
 	
 	RestManager.getCouponById = function(idCoupon)
+		settings = DBManager.getSettings()
 		local url = settings.url .. "api/getCouponById/format/json/idCoupon/" .. idCoupon
 	   
 	   local function callback(event)
@@ -204,7 +212,7 @@ local RestManager = {}
 	RestManager.createUser = function(email, password, name, fbId)
         --local settings = DBManager.getSettings()
         -- Set url
-		
+		settings = DBManager.getSettings()
         password = crypto.digest(crypto.md5, password)
         local url = settings.url
         url = url.."api/createUser/format/json"
@@ -261,6 +269,7 @@ local RestManager = {}
 	
 	--pensar en un nombre para el metodo
 	RestManager.couponDowload = function(email, password)
+		settings = DBManager.getSettings()
         local settings = DBManager.getSettings()
         -- Set url
         password = crypto.digest(crypto.md5, password)
@@ -288,6 +297,7 @@ local RestManager = {}
     end
 	
 	RestManager.discountCoupon = function(idCoupon)
+		settings = DBManager.getSettings()
 	
 		local settings = DBManager.getSettings()
         local url = settings.url
@@ -316,6 +326,7 @@ local RestManager = {}
 	-- se obtiene el total de notificaciones no leidas
 	
 	RestManager.getNotificationsUnRead = function()
+		settings = DBManager.getSettings()
 		
 		local url = settings.url
         url = url.."api/getNotificationsUnRead/format/json"
@@ -342,6 +353,7 @@ local RestManager = {}
 	end
 	
 	RestManager.getNotifications = function()
+		settings = DBManager.getSettings()
 		
 		local url = settings.url
         url = url.."api/getNotifications/format/json"
@@ -365,6 +377,7 @@ local RestManager = {}
 	---marca la notificacion como leida
 	
 	RestManager.notificationRead = function(idNotification)
+		settings = DBManager.getSettings()
 		
 		local url = settings.url
         url = url.."api/notificationRead/format/json"
@@ -381,6 +394,7 @@ local RestManager = {}
 	-- obtiene los eventos de la busqueda
 	
 	RestManager.getSearchEvent = function(text)
+		settings = DBManager.getSettings()
 		
 		local url = settings.url
         url = url.."api/getSearchEvent/format/json"
@@ -409,6 +423,7 @@ local RestManager = {}
 	
 	--obtiene los deals de la busqueda
 	RestManager.getSearchCoupon = function(text)
+		settings = DBManager.getSettings()
 		
 		local url = settings.url
         url = url.."api/getSearchCoupon/format/json/city/" .. settings.city
@@ -434,6 +449,7 @@ local RestManager = {}
 	
 	--obtiene si el cupon esta descargado
 	RestManager.getCouponDownload = function(idCoupon)
+		settings = DBManager.getSettings()
 		
 		local url = settings.url
         url = url.."api/getCouponDownload/format/json"
@@ -458,6 +474,7 @@ local RestManager = {}
 	
 	--obtiene las ciudades
 	RestManager.getCity = function()
+		settings = DBManager.getSettings()
 		
 		local url = settings.url
         url = url.."api/getCity/format/json"
@@ -478,6 +495,7 @@ local RestManager = {}
 	
 	--obtiene la ciudad
 	RestManager.getCityById = function()
+		settings = DBManager.getSettings()
 		
 		local url = settings.url
         url = url.."api/getCityById/format/json/city/" .. settings.city
@@ -498,6 +516,7 @@ local RestManager = {}
 	
 	--obtiene los eventos o deals del filtro 
 	RestManager.getFilter = function(idFilter,typeF)
+		settings = DBManager.getSettings()
 		
 		local screen = ""
 		if typeF == "EVENTOS" then
@@ -536,6 +555,7 @@ local RestManager = {}
 	end
 	
 	RestManager.getDealsRedimir = function()
+		settings = DBManager.getSettings()
 		
 		local url = settings.url .. "api/getDealsRedimir/format/json/idApp/" .. settings.idApp .. "/city/" .. settings.city
 	   

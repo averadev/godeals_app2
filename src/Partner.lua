@@ -284,7 +284,7 @@ function loadPartner(item)
 	groupMenuPartnerText.y = 35
 	svMenuTxt:insert(groupMenuPartnerText)
 	
-	createScrollViewPartner("Info")
+	createScrollViewPartner("INFO")
 	
 	srvPartner[#srvPartner]:setIsLocked( true, "horizontal" )
 	svMenuTxt:setIsLocked( true, "horizontal" )
@@ -503,7 +503,7 @@ function buildPartnerPromociones(items)
 	srvPartner[1]:setIsLocked( false, "horizontal" )
 	svMenuTxt:setIsLocked( false, "horizontal" )
 	
-	createScrollViewPartner("Promociones")
+	createScrollViewPartner("PROMO")
 	
 		lastY = 25
 	
@@ -535,7 +535,7 @@ function buildPartnerGaleria(items)
 		srvPartner[1]:setIsLocked( false, "horizontal" )
 		svMenuTxt:setIsLocked( false, "horizontal" )
 	
-		createScrollViewPartner("Galeria")
+		createScrollViewPartner("GALERIA")
 	
 		for y = 1, #items, 1 do 
             -- Create container

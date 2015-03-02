@@ -56,10 +56,11 @@ function setWalletElements(obj)
 		
 		if contDeals == 2 then
 			getNoContent(svContent, "En este momento no cuentas con Deals descargados")
-			endLoading()
+			--endLoading()
 		end
 		
 	end
+	
 end
 
 

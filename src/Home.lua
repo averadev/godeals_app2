@@ -237,6 +237,8 @@ function buildItems(screen)
         
     elseif screen == "DealPanel" then
 	
+		scrViewDeals:scrollTo( "top", { time=400 } )
+	
 		groupDeals:removeSelf()
 		groupDeals = nil
 		groupDeals = display.newGroup()
@@ -259,6 +261,9 @@ function buildItems(screen)
 		
 		endLoading()
 	elseif screen == "FilterEvent" then
+	
+		scrViewEventos:scrollTo( "top", { time=400 } )
+	
 		groupEvent:removeSelf()
 		groupEvent = nil
 		groupEvent = display.newGroup()

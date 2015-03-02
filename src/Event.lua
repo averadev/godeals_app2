@@ -330,11 +330,25 @@ function buildEventInfo(item)
 	groupInfo:insert( txtAddress )
     
 	txtAddress.y = txtAddress.y + txtAddress.height/2
-	bgPartnerInfo.height = txtPartner.height + txtAddress.height + 40
-	bgPartnerInfo.y = bgPartnerInfo.height/2 + lastY - txtPartner.height - 20
+	
+	lastY = lastY + txtAddress.height
+	
+	local txtDate = display.newText( {
+            text = getDate(itemObj.iniDate),     
+            x = 320, y = lastY + 20,
+            width = 300,
+            font = "Lato-Regular", fontSize = 18, align = "left"
+    })
+    txtDate:setFillColor( .2 )
+    groupInfo:insert(txtDate)
+	
+	txtDate.y = txtDate.y + txtDate.height/2
+	
+	
+	bgPartnerInfo.height = txtPartner.height + txtAddress.height + txtDate.height + 60
+	bgPartnerInfo.y = bgPartnerInfo.height/2 + lastY - txtPartner.height - txtDate.height - 20
 	lastYImage = bgPartnerInfo.y
 	lastY = lastY + 120
-	
     
     -- Detail Event
 	local bgGeneralInformacion = display.newRect( midW, lastY, 440, 76 )

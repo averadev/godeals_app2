@@ -176,7 +176,7 @@ function buildItems(screen)
         scrViewMain:insert(separadorEventos)
         
         local textSeparadorEventos = display.newText( {
-            text = "RECOMENDACIONES DE EVENTOS Y ACTIVIDADES.",     
+            text = "DEALS RECOMENDADOS PARA TI.",     
             x = 300, y = yMain, width = intW, height = 20,
             font = "Lato-Regular", fontSize = 14, align = "left"
         })

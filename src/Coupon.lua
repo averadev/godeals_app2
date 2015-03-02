@@ -161,6 +161,8 @@ function showRedimir( event )
 			local mask = display.newRect( midW, midH, intW, intH )
 			mask:setFillColor( 0 )
 			mask.alpha = .9
+			mask:addEventListener( "tap", lokedShowRedimir )
+			mask:addEventListener( "touch", lokedShowRedimir )
 			grpRedem:insert(mask)
 			
 			local bgRedimir = display.newImage( "img/bgk/redemption.png" )

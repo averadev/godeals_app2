@@ -201,7 +201,16 @@ function scene:createScene( event )
     header:buildToolbar()
     header:buildNavBar("Deals Descargados")
 	
-    svContent = widget.newScrollView
+end
+
+-- Called immediately after scene has moved onscreen:
+function scene:enterScene( event )
+	if svContent then
+		svContent:removeSelf()
+        svContent = nil
+	end
+		
+	svContent = widget.newScrollView
 	{
 		top = h + 125,
 		left = 0,
@@ -211,11 +220,8 @@ function scene:createScene( event )
 		backgroundColor = { 245/255, 245/255, 245/255 }
 	}
 	homeScreen:insert(svContent)
+	getLoading(svContent)
 	RestManager.getMyDeals()
-end
-
--- Called immediately after scene has moved onscreen:
-function scene:enterScene( event )
     Globals.scene[#Globals.scene + 1] = storyboard.getCurrentSceneName()
 end
 

@@ -17,6 +17,7 @@ local scene = storyboard.newScene()
 local DBManager = require('src.resources.DBManager')
 local RestManager = require('src.resources.RestManager')
 local Sprites = require('src.resources.Sprites')
+local redimirObj = require( "plugin.redimir" )
 
 -- Variables
 local intW = display.contentWidth
@@ -36,8 +37,8 @@ local settings
 local rctBtn
 local FlagCoupon = 0
 
-local txtInfo, txtBtn, txtTitleInfo, loadingRed, txtInfoRedimir2
-local info, promotions, gallery, MenuEventBar
+local txtInfo, txtBtn, txtTitleInfo, loadingRed, rctRed, txtRed
+local info, promotions, gallery, MenuEventBar, txtInfoRedimir2
 local btnDownloadCoupon
 
 local fx = audio.loadStream( "fx/alert.wav" )
@@ -60,6 +61,66 @@ function showPartner( event )
 	})
 end
 
+local function listenerBeaconIOS( event )
+    if txtInfoRedimir2.text == "" then
+        
+        rctRed.y = midH - 30
+		txtRed.y = midH - 30
+        rctRed:removeEventListener( "tap", showRedimir )
+        rctRed:addEventListener( "tap", goBLEIos )
+        
+        if event.message == "1" then
+            txtInfoRedimir2.text = "* O simplemente activa tu bluetooth y solicita al comercio su dispositivo GO"
+        elseif event.message == "2" then
+            txtInfoRedimir2.text = "* O simplemente solicita al comercio su dispositivo GO"
+        end
+    else
+        -- Desactivamos loading
+        loadingRed.alpha = 0
+        loadingRed:setSequence("stop")
+        loadingRed:play()
+        
+        rctRed.enable = true
+        rctRed:setFillColor( .2, .6 ,0 )
+        txtInfoRedimir2:setFillColor( 147/255, 0, 0 )
+        
+        if event.message == "1" then
+            txtInfoRedimir2.text = "* Activa tu bluetooth y acerca tu telefono al dispositivo GO"
+        elseif event.message == "2" then
+            txtInfoRedimir2.text = "* Acerca tu telefono al dispositivo GO"
+        end
+        
+        if  DBManager.getReden() == 1 then
+            DBManager.setReden()
+        else
+            audio.play( fx )
+            RestManager.redemptionDeal(itemObj.code)
+            txtBtn.text = "DEAL REDIMIDO"
+            rctBtn:setFillColor( .72, .82, .93 )
+            rctBtn:removeEventListener( "tap", showRedimir )
+            showRedimir()
+        end
+    end
+end
+
+function goBLEIos(event)
+	t = event.target
+	if t.enable then
+		-- Deshabilitar boton
+		t.enable = false
+		t:setFillColor( .4 )
+        -- Redencion
+        DBManager.updateReden();
+        loadingRed.alpha = 1
+        loadingRed:setSequence("play")
+        loadingRed:play()
+        DBManager.updateReden()
+        timer.performWithDelay(3000, function() 
+            redimirObj.getRed()
+        end)
+    end
+end
+
 function AssignedCoupon(item)
 	
 	if #item > 0 then
@@ -68,11 +129,9 @@ function AssignedCoupon(item)
 		elseif item[1].status == '2' then
 			itemObj.assigned = 2
 		end
-			
 		itemObj.code = item[1].code
 	else
 		itemObj.assigned = 0
-			
 	end
 		
 	if FlagCoupon == 0 then
@@ -135,11 +194,11 @@ function goBLE(event)
 					audio.play( fx )
 					DBManager.setReden()
 					RestManager.redemptionDeal(itemObj.code)
-					grpRedem:removeSelf()
-					grpRedem = nil
+					
 					txtBtn.text = "DEAL REDIMIDO"
 					rctBtn:setFillColor( .72, .82, .93 )
 					rctBtn:removeEventListener( "tap", showRedimir )
+                    showRedimir()
 				end
 			end)
 		end
@@ -150,6 +209,8 @@ end
 function showRedimir( event )
 
     if grpRedem then
+        txtInfoRedimir2:removeSelf()
+        txtInfoRedimir2 = nil
         grpRedem:removeSelf()
         grpRedem = nil
     else
@@ -204,13 +265,13 @@ function showRedimir( event )
 			txtInfoRedimir:setFillColor( 0 )
 			grpRedem:insert(txtInfoRedimir)
 
-			local rctRed = display.newRoundedRect( midW, midH -70, 270, 55, 5 )
+			rctRed = display.newRoundedRect( midW, midH -70, 270, 55, 5 )
 			rctRed.enable = true
 			rctRed.idCoipon = itemObj.id
 			rctRed:setFillColor( .2, .6 ,0 )
 			grpRedem:insert(rctRed)
 
-			local txtRed = display.newText( {
+			txtRed = display.newText( {
 				text =  "CONTINUAR",
 				x = midW, y = midH -70,
 				width = 270, height = 0,
@@ -264,7 +325,19 @@ function showRedimir( event )
 				rctRed:addEventListener( "tap", goBLE )
 			end	
 			
-			
+            -- Verify for Android
+			if redimirObj then
+                txtInfoRedimir2 = display.newText({
+                    text = "",
+                    x = midW, y = midH - 100,
+                    width = 400,
+                    font = "Lato-Black", fontSize = 20, align = "left"
+                })
+                txtInfoRedimir2:setFillColor( 0 )
+                grpRedem:insert(txtInfoRedimir2)
+                
+                redimirObj.getStatus()
+            end
 			
 		end
     end
@@ -521,6 +594,7 @@ function buildCoupon()
     spc:setFillColor( 0 )
     svCoupon:insert( spc )
     
+    
 end
 
 ----------------------------------------------------------
@@ -532,6 +606,10 @@ function scene:createScene( event )
 	screen = self.view
 	screen:insert(homeScreen)
 	
+    if redimirObj then
+        redimirObj.init( listenerBeaconIOS )
+    end
+    
 	-- Build Component Header
 	local header = Header:new()
     homeScreen:insert(header)

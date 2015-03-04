@@ -43,6 +43,13 @@ local btnDownloadCoupon
 
 local fx = audio.loadStream( "fx/alert.wav" )
 
+
+local TEXTA1 = "* O simplemente activa tu bluetooth y solicita al comercio su dispositivo GO"
+local TEXTA2 = "* O simplemente solicita al comercio su dispositivo GO"
+local TEXTB1 = "* Activa tu bluetooth y acerca tu telefono al dispositivo GO"
+local TEXTB2 = "* Acerca tu telefono al dispositivo GO"
+
+
 --pantalla
 
 local homeScreen = display.newGroup()
@@ -70,9 +77,9 @@ local function listenerBeaconIOS( event )
         rctRed:addEventListener( "tap", goBLEIos )
         
         if event.message == "1" then
-            txtInfoRedimir2.text = "* O simplemente activa tu bluetooth y solicita al comercio su dispositivo GO"
+            txtInfoRedimir2.text = TEXTA1
         elseif event.message == "2" then
-            txtInfoRedimir2.text = "* O simplemente solicita al comercio su dispositivo GO"
+            txtInfoRedimir2.text = TEXTA2
         end
     else
         -- Desactivamos loading
@@ -85,9 +92,9 @@ local function listenerBeaconIOS( event )
         txtInfoRedimir2:setFillColor( 147/255, 0, 0 )
         
         if event.message == "1" then
-            txtInfoRedimir2.text = "* Activa tu bluetooth y acerca tu telefono al dispositivo GO"
+            txtInfoRedimir2.text = TEXTB1
         elseif event.message == "2" then
-            txtInfoRedimir2.text = "* Acerca tu telefono al dispositivo GO"
+            txtInfoRedimir2.text = TEXTB2
         end
         
         if  DBManager.getReden() == 1 then
@@ -156,7 +163,7 @@ function goBLE(event)
 		if value == 1 then
 			transition.to( txtInfoRedimir2, { alpha = 0, time = 200, 
 				onComplete=function()
-						txtInfoRedimir2.text = "Activa tu bluetooth y acerca tu telefono al dispositivo GO"
+						txtInfoRedimir2.text = TEXTB1
 						txtInfoRedimir2:setFillColor( 147/255, 0, 0 )
 						transition.to( txtInfoRedimir2, { alpha = 1, time = 200})
 						t.enable = true
@@ -183,7 +190,7 @@ function goBLE(event)
 				if value == 0 then
 					transition.to( txtInfoRedimir2, { alpha = 0, time = 200, 
 						onComplete=function()
-								txtInfoRedimir2.text = "Acerca tu telefono al dispositivo GO"
+								txtInfoRedimir2.text = TEXTB2
 								txtInfoRedimir2:setFillColor( 147/255, 0, 0 )
 								transition.to( txtInfoRedimir2, { alpha = 1, time = 200})
 								t.enable = true
@@ -298,7 +305,7 @@ function showRedimir( event )
 				rctRed:addEventListener( "tap", showRedimir )
 			elseif value == 1 then
 				txtInfoRedimir2 = display.newText({
-					text = "* O simplemente activa tu bluetooth y solicita al comercio su dispositivo GO",
+					text = TEXTA1,
 					x = midW, y = midH - 100,
 					width = 400,
 					font = "Lato-Black", fontSize = 20, align = "left"
@@ -312,7 +319,7 @@ function showRedimir( event )
 				
 			elseif value == 2 then
 				txtInfoRedimir2 = display.newText({
-					text = "* O simplemente solicita al comercio su dispositivo GO",
+					text = TEXTA2,
 					x = midW, y = midH - 100,
 					width = 380,
 					font = "Lato-Black", fontSize = 20, align = "left"

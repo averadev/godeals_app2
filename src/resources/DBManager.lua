@@ -181,6 +181,30 @@ local dbManager = {}
         local query = "CREATE TABLE IF NOT EXISTS ads (id INTEGER PRIMARY KEY, major INTEGER, type INTEGER, partnerId INTEGER, "..
 					"message TEXT, distanceMin REAL, distanceMax REAL, latitude REAL, longitude REAL, fecha INTEGER, status INTEGER);"
 		db:exec( query )
+	
+		-- Verify Version APP
+		local oldVersion = true
+		for row in db:nrows("PRAGMA table_info(config);") do
+			if row.name == 'tutorial' then
+                oldVersion = false
+            end
+		end
+		if oldVersion then 
+		
+			local query = "DROP TABLE config;"
+			db:exec( query )
+			
+			local query = "DROP TABLE ads;"
+			db:exec( query )
+		
+			local query = "CREATE TABLE IF NOT EXISTS config (id INTEGER PRIMARY KEY, idApp INTEGER, email TEXT, password TEXT, name TEXT, "..
+						" fbId TEXT, idComer TEXT, url TEXT, city INTEGER, tutorial INTEGER, reden INTEGER);"
+			db:exec( query )
+
+			local query = "CREATE TABLE IF NOT EXISTS ads (id INTEGER PRIMARY KEY, major INTEGER, type INTEGER, partnerId INTEGER, "..
+						"message TEXT, distanceMin REAL, distanceMax REAL, latitude REAL, longitude REAL, fecha INTEGER, status INTEGER);"
+			db:exec( query )
+		end
 
         -- Return if have connection
 		for row in db:nrows("SELECT idApp FROM config;") do

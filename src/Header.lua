@@ -430,6 +430,7 @@ function Header:new()
         
         txtTitle = display.newText( {
             x = (display.contentWidth/2), y = 95,
+			width = 400, align = "center",
             text = texto, font = "Lato-Hairline", fontSize = 22,
         })
         txtTitle:setFillColor( .2 )

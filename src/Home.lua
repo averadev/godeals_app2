@@ -196,8 +196,10 @@ function buildItems(screen)
             end
         end
         
+		endLoading()
+		
         -- Siguiente solicitud
-		getLoading(groupEvent)
+		getLoading(scrViewEventos)
 		
 		scrViewMain:setScrollHeight(yMain + 20)
         RestManager.getAllEvent()
@@ -233,7 +235,7 @@ function buildItems(screen)
 		scrViewEventos:setScrollHeight(lastY + 20)
 		
         -- Siguiente solicitud
-		getLoading(groupDeals)
+		getLoading(scrViewDeals)
 		RestManager.getAllCoupon()
         
     elseif screen == "DealPanel" then
@@ -260,7 +262,7 @@ function buildItems(screen)
 		
 		scrViewDeals:setScrollHeight(lastY + 20)
 		
-		endLoading()
+		--endLoading()
 	elseif screen == "FilterEvent" then
 	
 		scrViewEventos:scrollTo( "top", { time=400 } )

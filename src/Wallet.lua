@@ -14,6 +14,7 @@ require('src.BuildRow')
 local storyboard = require( "storyboard" )
 local Globals = require('src.resources.Globals')
 local RestManager = require('src.resources.RestManager')
+local DBManager = require('src.resources.DBManager')
 local widget = require( "widget" )
 local scene = storyboard.newScene()
 
@@ -23,6 +24,7 @@ local intH = display.contentHeight
 local midW = display.contentCenterX
 local midH = display.contentCenterY
 
+local settings = DBManager.getSettings()
 local toolbar, menu
 local groupMenu, svContent
 local h = display.topStatusBarContentHeight
@@ -209,7 +211,8 @@ function scene:enterScene( event )
 		svContent:removeSelf()
         svContent = nil
 	end
-		
+    
+    yMain = 0
 	svContent = widget.newScrollView
 	{
 		top = h + 125,

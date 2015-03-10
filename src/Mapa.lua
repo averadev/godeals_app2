@@ -68,7 +68,7 @@ function scene:createScene( event )
     homeScreen:insert(header)
     header.y = h
     header:buildToolbar()
-    header:buildNavBar("Ubicacion")
+    header:buildNavBar("Ubicación")
     
     lastY = h + 130
     

@@ -74,6 +74,13 @@ local dbManager = {}
 		closeConnection( )
 	end
 	
+    dbManager.updateReden = function()
+		openConnection( )
+        local query = "UPDATE config SET reden = 1"
+        db:exec( query )
+		closeConnection( )
+	end
+
 	dbManager.getIdComer = function()
 		local result = {}
 		openConnection( )

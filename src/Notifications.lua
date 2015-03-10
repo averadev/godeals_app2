@@ -68,7 +68,10 @@ end
 
 function markRead( event )
 
+
 	if elements[event.target.posci].leido == "1" then
+	
+		print(elements[event.target.posci].idNotification)
 	
 		elements[event.target.posci].leido = 0
 	
@@ -84,7 +87,7 @@ function markRead( event )
 			end
 		end
 		noLeido[event.target.posci]:removeSelf()
-		RestManager.notificationRead( event.target.id )
+		RestManager.notificationRead( elements[event.target.posci].idNotification )
 	end
 
 end

@@ -52,7 +52,7 @@ local callbackCurrent = 0
 function setElements(items)
     elements = items
 	for y = 1, #items, 1 do 
-        elements[y].callback = callbackCurrent
+        elements[y].callback = Globals.noCallbackGlobal
     end
 end
 
@@ -87,16 +87,17 @@ end
 -- Carga de la imagen del servidor o de TemporaryDirectory
 function loadImage(obj)
 
+	
     -- Determinamos si la imagen existe
     local path = system.pathForFile( elements[obj.posc].image, system.TemporaryDirectory )
     local fhd = io.open( path )
     if fhd then
         fhd:close()
-		
 		if elements[obj.posc].callback == Globals.noCallbackGlobal then
 			imageItems[obj.posc] = display.newImage( elements[obj.posc].image, system.TemporaryDirectory )
 			imageItems[obj.posc].alpha = 0
 			if obj.posc < #elements then
+				
 				obj.posc = obj.posc + 1
 				loadImage(obj)
 			else

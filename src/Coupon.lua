@@ -44,15 +44,15 @@ local btnDownloadCoupon
 local fx = audio.loadStream( "fx/alert.wav" )
 
 
-local TEXTA1 = "* O simplemente activa tu bluetooth y solicita al comercio su dispositivo GO"
-local TEXTA2 = "* O simplemente solicita al comercio su dispositivo GO"
-local TEXTB1 = "* Activa tu bluetooth y acerca tu telefono al dispositivo GO"
-local TEXTB2 = "* Acerca tu telefono al dispositivo GO"
+local TEXTA1 = "* O activa tu bluetooth y solicita al comercio su dispositivo GO"
+local TEXTA2 = "* O solicita al comercio su dispositivo GO"
+local TEXTB1 = "* Activa tu bluetooth y acerca tu teléfono al dispositivo GO"
+local TEXTB2 = "* Acerca tu teléfono al dispositivo GO"
 
 
 --pantalla
 
-local homeScreen = display.newGroup()
+local wallScreen = display.newGroup()
 
 ----------------------------------------------------------
 -- Funciones
@@ -68,9 +68,9 @@ function showPartner( event )
 	})
 end
 
-local function listenerBeaconIOS( event )
-    if txtInfoRedimir2.text == "" then
-        
+function listenerBeaconIOS( event )
+    if grpRedem.isInit then
+        grpRedem.isInit = false
         rctRed.y = midH - 30
 		txtRed.y = midH - 30
         rctRed:removeEventListener( "tap", showRedimir )
@@ -80,6 +80,8 @@ local function listenerBeaconIOS( event )
             txtInfoRedimir2.text = TEXTA1
         elseif event.message == "2" then
             txtInfoRedimir2.text = TEXTA2
+        else
+            rctRed:addEventListener( "tap", showRedimir )
         end
     else
         -- Desactivamos loading
@@ -102,6 +104,8 @@ local function listenerBeaconIOS( event )
         else
             audio.play( fx )
             RestManager.redemptionDeal(itemObj.code)
+            txtTitleInfo.text = "Deal redimido"
+            txtInfo.text =  "No olvides consultar los otros Deals que "..itemObj.partner.." te ofrece."
             txtBtn.text = "DEAL REDIMIDO"
             rctBtn:setFillColor( .72, .82, .93 )
             rctBtn:removeEventListener( "tap", showRedimir )
@@ -216,14 +220,12 @@ end
 function showRedimir( event )
 
     if grpRedem then
-        txtInfoRedimir2:removeSelf()
-        txtInfoRedimir2 = nil
         grpRedem:removeSelf()
         grpRedem = nil
     else
 		if itemObj.code ~= nil then
 			grpRedem = display.newGroup()
-			homeScreen:insert(grpRedem)
+			wallScreen:insert(grpRedem)
 			
 			-- Creamos la mascara
 			local mask = display.newRect( midW, midH, intW, intH )
@@ -264,7 +266,7 @@ function showRedimir( event )
 			grpRedem:insert(txtCode)
 			
 			local txtInfoRedimir = display.newText({
-				text = "* Proporciona al comercio este codigo para hacer valido tu Deal",
+				text = "* Proporciona este código al comercio para hacer válido tu Deal",
 				x = midW, y = midH - 160,
 				width = 400,
 				font = "Lato-Black", fontSize = 20, align = "left"
@@ -342,8 +344,12 @@ function showRedimir( event )
                 })
                 txtInfoRedimir2:setFillColor( 0 )
                 grpRedem:insert(txtInfoRedimir2)
+                grpRedem.isInit = true
                 
-                redimirObj.getStatus()
+                timer.performWithDelay(300, function() 
+                    redimirObj.getStatus()
+                end)
+                
             end
 			
 		end
@@ -361,7 +367,7 @@ function DownloadCoupon( event )
 	
 	timer.performWithDelay(200, function() 
 		txtTitleInfo.text = "Redime este Deal!"
-		txtInfo.text = "Deja presionado el boton mientras lo acercas a nuestro dispositivo GO> "..
+		txtInfo.text = "Deja presionado el botón mientras lo acercas a nuestro dispositivo GO> "..
                             "disponible en todos los establecimientos afiliados. PREGUNTA POR EL!"
 		txtBtn.text = "REDIMIR DEAL"
 			
@@ -380,16 +386,16 @@ function changeButtonCoupon()
 	rctBtn:addEventListener( "tap", showRedimir )
 end
 
---obtenemos el grupo homeScreen de la escena actual
+--obtenemos el grupo wallScreen de la escena actual
 function getSceneSearchC( event )
 	--modalSeach(txtSearch.text)
-	SearchText(homeScreen)
+	SearchText(wallScreen)
 	return true
 end
 
---obtenemos el homeScreen de la escena
+--obtenemos el wallScreen de la escena
 function getScreenC()
-	return homeScreen
+	return wallScreen
 end
 
 function setCouponId( item )
@@ -417,7 +423,7 @@ function buildCoupon()
         verticalScrollDisabled = false,
 		backgroundColor = { .96 }
 	}
-	homeScreen:insert(svCoupon)
+	wallScreen:insert(svCoupon)
 	
 	grupoSvCoupon = display.newGroup()
 	svCoupon:insert(grupoSvCoupon)
@@ -443,8 +449,8 @@ function buildCoupon()
     
 	local txtPartner = display.newText( {
         text = itemObj.partner,    
-        x = 300, y = 80,
-        width = 240, height =0,
+        x = 320, y = 80,
+        width = 280, height =0,
         font = "Lato-Regular", fontSize = 30, align = "left"
     })
     txtPartner:setFillColor( 0 )
@@ -512,8 +518,8 @@ function buildCoupon()
 	svCoupon:insert( txtTitleInfo )
 
 	txtInfo = display.newText( {
-		text =  "No lo pienses mas y descargalo, "..
-				"se guardara en tu cartera para que lo uses en tu proxima visita.",
+		text =  "No lo pienses más y descárgalo, "..
+				"se guardará en tu cartera para que lo uses en tu próxima visita.",
 		x = 240, y = 385,
 		width = 400, height = 60,
 		font = "Lato-Regular", fontSize = 16, align = "left"
@@ -550,7 +556,7 @@ function buildCoupon()
 		txtStock:setFillColor( .8, .5, .5 )
     elseif itemObj.assigned == 2 or itemObj.assigned == '2' then
 		txtTitleInfo.text = "Deal redimido"
-		txtInfo.text =  "Usted ya ha redimido este Deals!"
+		txtInfo.text =  "No olvides consultar los otros Deals que "..itemObj.partner.." te ofrece."
 		txtBtn.text = "DEAL REDIMIDO"
 		rctBtn:setFillColor( .72, .82, .93 )
 	else
@@ -611,15 +617,11 @@ end
 function scene:createScene( event )
 
 	screen = self.view
-	screen:insert(homeScreen)
+	screen:insert(wallScreen)
 	
-    if redimirObj then
-        redimirObj.init( listenerBeaconIOS )
-    end
-    
 	-- Build Component Header
 	local header = Header:new()
-    homeScreen:insert(header)
+    wallScreen:insert(header)
     header.y = h
     header:buildToolbar()
     header:buildNavBar(event.params.item.name)
@@ -633,7 +635,7 @@ function scene:createScene( event )
 		RestManager.getCouponDownload(itemObj.id)
 		--createCoupon()
 	end
-	
+    
 end
 
 -- Called immediately after scene has moved onscreen:

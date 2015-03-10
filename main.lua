@@ -8,9 +8,16 @@ display.setStatusBar( display.DarkStatusBar )
 
 local storyboard = require "storyboard"
 local DBManager = require('src.resources.DBManager')
-local redimirObj = require( "plugin.redimir" )
-local isUser = DBManager.setupSquema()
 
+local redimirObj;
+local platformName = system.getInfo( "platformName" )
+if platformName == "iPhone OS" then
+	redimirObj = require( "plugin.redimir" )
+end
+
+
+
+local isUser = DBManager.setupSquema()
 ------------------------ Delete before deploy
 --DBManager.updateUser(1, "mrfeto@gmail.com", '', 'Alberto Vera', '10152713865899218', '') -- Temporal
 --DBManager.updateUser(1, "conomia_alfredo@hotmail.com", '', 'Alfredo chi Zum', '100001525033547', '')

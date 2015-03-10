@@ -356,7 +356,7 @@ function buildEventInfo(item)
 	groupInfo:insert(bgGeneralInformacion)
     
     local txtGeneralInformacion = display.newText({
-		text = "Informacion Adicional:",
+		text = "Información Adicional:",
 		x = 230, y =  lastY + 5,
 		height = 20, width = 400,
 		font = "Lato-Bold", fontSize = 16, align = "left"

@@ -8,6 +8,7 @@ display.setStatusBar( display.DarkStatusBar )
 
 local storyboard = require "storyboard"
 local DBManager = require('src.resources.DBManager')
+local redimirObj = require( "plugin.redimir" )
 local isUser = DBManager.setupSquema()
 
 ------------------------ Delete before deploy
@@ -39,6 +40,13 @@ local function notificationListener( event )
 end
 Runtime:addEventListener( "notification", notificationListener )
 
+
+if redimirObj then
+    local function listenerBconIOS( event )
+        listenerBeaconIOS(event)
+    end
+    redimirObj.init( listenerBconIOS )
+end
 
 if partnerId > 0 then
     storyboard.gotoScene("src.Partner", {params = { idPartner = partnerId }})

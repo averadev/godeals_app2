@@ -252,6 +252,9 @@ function Header:new()
 				table.remove(Globals.scene, #Globals.scene)
 			end
 			
+			table.remove(txtCiudad, #txtCiudad)
+			txtCiudad[#txtCiudad].text = textoCiudad
+			
             storyboard.gotoScene( previousScene, { time = 400, effect = "slideRight" })
 			
         end
@@ -285,6 +288,7 @@ function Header:new()
 	
 	function getLoading(obj)
 		if not grpLoading then
+		
 			grpLoading = display.newGroup()
 			obj:insert(grpLoading)
 			
@@ -301,7 +305,7 @@ function Header:new()
 			title:setFillColor( .3, .3, .3 )
 			title.x = display.contentWidth / 2
 			title.y = (obj.height / 3) + 40
-			grpLoading:insert(title) 
+			grpLoading:insert(title)
 		else
 			obj:insert(grpLoading)
 		end
@@ -455,6 +459,7 @@ function Header:new()
 		textoCiudad = items.txtMin
 		txtCiudad[#txtCiudad].text = items.txtMin
 		DBManager.updateCity(items.id)
+		removeItemsGroupHome()
 	end
 	
 	function changeTxtcity(item)

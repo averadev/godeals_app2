@@ -27,6 +27,7 @@ local groupMenu, scrViewMain, scrViewEventos, scrViewDeals,svMenuTxt
 local currentSv
 local groupEvent
 local groupDeals
+local groupInicio
 
 -- Objetos
 local txtMenuInicio, txtMenuEventos, txtMenuDeals
@@ -49,6 +50,7 @@ local callbackCurrent = 0
 ---------------------------------------------------------------------------------
 -- Setters
 ---------------------------------------------------------------------------------
+
 function setElements(items)
     elements = items
 	for y = 1, #items, 1 do 
@@ -135,15 +137,18 @@ end
 function buildItems(screen)    
     
     if screen == "MainScreen" then
+	
+		yMain = 215
+		
         -- Eventos
         local maxShape = display.newRect( intW/2, yMain, intW, 50 )
         maxShape:setFillColor( .87 )
-        scrViewMain:insert( maxShape )
+        groupInicio:insert( maxShape )
         
         local separadorEventos = display.newImage( "img/btn/btnArrowGreen.png" )
         separadorEventos:translate( 41, yMain - 2 )
         separadorEventos.isVisible = true
-        scrViewMain:insert(separadorEventos)
+        groupInicio:insert(separadorEventos)
         
         local textSeparadorEventos = display.newText( {
             text = "RECOMENDACIONES DE EVENTOS Y ACTIVIDADES.",     
@@ -151,14 +156,14 @@ function buildItems(screen)
             font = "Lato-Regular", fontSize = 14, align = "left"
         })
         textSeparadorEventos:setFillColor( 0 )
-        scrViewMain:insert(textSeparadorEventos)
+        groupInicio:insert(textSeparadorEventos)
         
         yMain = yMain + 40
         for y = 1, #elements, 1 do 
             -- Create event
             if not (elements[y].rowType == 'deal') then
                 local evento = Event:new()
-                scrViewMain:insert(evento)
+                groupInicio:insert(evento)
                 evento:build(false, elements[y], imageItems[y])
                 evento.y = yMain
                 yMain = yMain + 120
@@ -169,12 +174,12 @@ function buildItems(screen)
         yMain = yMain + 40
         local maxShape = display.newRect( intW/2, yMain, intW, 50 )
         maxShape:setFillColor( .87 )
-        scrViewMain:insert( maxShape )
+        groupInicio:insert( maxShape )
         
         local separadorEventos = display.newImage( "img/btn/btnArrowGreen.png" )
         separadorEventos:translate( 41, yMain - 2 )
         separadorEventos.isVisible = true
-        scrViewMain:insert(separadorEventos)
+        groupInicio:insert(separadorEventos)
         
         local textSeparadorEventos = display.newText( {
             text = "DEALS RECOMENDADOS PARA TI.",     
@@ -182,14 +187,14 @@ function buildItems(screen)
             font = "Lato-Regular", fontSize = 14, align = "left"
         })
         textSeparadorEventos:setFillColor( 0 )
-        scrViewMain:insert(textSeparadorEventos)
+        groupInicio:insert(textSeparadorEventos)
         
         yMain = yMain + 40
         for y = 1, #elements, 1 do 
             -- Create event
             if elements[y].rowType == 'deal' then
                 local deal = Deal:new()
-                scrViewMain:insert(deal)
+                groupInicio:insert(deal)
                 deal:build(false, elements[y], imageItems[y])
                 deal.y = yMain
                 yMain = yMain + 120
@@ -262,7 +267,7 @@ function buildItems(screen)
 		
 		scrViewDeals:setScrollHeight(lastY + 20)
 		
-		--endLoading()
+		endLoading()
 	elseif screen == "FilterEvent" then
 	
 		scrViewEventos:scrollTo( "top", { time=400 } )
@@ -344,6 +349,25 @@ end
 --obtenemos el homeScreen de la escena
 function getScreenH()
 	return homeScreen
+end
+
+function removeItemsGroupHome()
+
+	getLoading(scrViewMain)
+	
+	groupInicio:removeSelf()
+	groupInicio = display.newGroup()
+	scrViewMain:insert(groupInicio)
+	
+	groupEvent:removeSelf()
+	groupEvent = display.newGroup()
+	scrViewEventos:insert(groupEvent)
+	
+	groupDeals:removeSelf()
+	groupDeals = display.newGroup()
+	scrViewDeals:insert(groupDeals)
+	
+	RestManager.getRecommended()
 end
 
 ---------------------------------------------------------------------------------
@@ -774,6 +798,8 @@ function scene:createScene( event )
 	homeScreen:insert(scrViewDeals)
 	scrViewDeals.name = "scrViewDeals"
 	
+	groupInicio = display.newGroup()
+	scrViewMain:insert(groupInicio)
 	groupEvent = display.newGroup()
 	scrViewEventos:insert(groupEvent)
 	groupDeals = display.newGroup()

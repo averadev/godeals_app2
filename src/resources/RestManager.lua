@@ -19,6 +19,7 @@ local RestManager = {}
     end
 	
 	RestManager.getRecommended = function()
+		settings = DBManager.getSettings()
 		local url = settings.url .. "api/getRecommended/format/json/idApp/" .. settings.idApp .. "/city/" .. settings.city
 	   
 	   local function callback(event)

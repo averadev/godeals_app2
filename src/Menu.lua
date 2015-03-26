@@ -170,7 +170,7 @@ function MenuRight:new()
 		
 		local txtSession = display.newText( {    
         x = 290, y = MenuLeftOthers.height + 90 + h, align = "left", width = 300,
-        text = "Cerrar sessión",  font = "Lato-Light", fontSize = 25,
+        text = "Cerrar sesión",  font = "Lato-Light", fontSize = 25,
 		})
 		txtSession:setFillColor( 0 )
 		selfR:insert(txtSession)

@@ -317,10 +317,21 @@ function buildEventInfo(item)
 	txtPartner.y = txtPartner.y + txtPartner.height/2
 	lastY = lastY + txtPartner.height + 10
 	
+	local txtDate = display.newText( {
+            text = getDate(itemObj.iniDate),     
+            x = 320, y = lastY,
+            width = 300,
+            font = "Lato-Regular", fontSize = 18, align = "left"
+    })
+    txtDate:setFillColor( .2 )
+    groupInfo:insert(txtDate)
+	
+	txtDate.y = txtDate.y + txtDate.height/2
+	
 	local txtAddress = display.newText({
 		text =itemObj.address,
 		x = 320,
-		y =  lastY,
+		y =  lastY + 35,
 		font = "Lato-Regular",
 		width = 300,
 		fontSize = 18,
@@ -332,18 +343,6 @@ function buildEventInfo(item)
 	txtAddress.y = txtAddress.y + txtAddress.height/2
 	
 	lastY = lastY + txtAddress.height
-	
-	local txtDate = display.newText( {
-            text = getDate(itemObj.iniDate),     
-            x = 320, y = lastY + 20,
-            width = 300,
-            font = "Lato-Regular", fontSize = 18, align = "left"
-    })
-    txtDate:setFillColor( .2 )
-    groupInfo:insert(txtDate)
-	
-	txtDate.y = txtDate.y + txtDate.height/2
-	
 	
 	bgPartnerInfo.height = txtPartner.height + txtAddress.height + txtDate.height + 60
 	bgPartnerInfo.y = bgPartnerInfo.height/2 + lastY - txtPartner.height - txtDate.height - 20
@@ -422,7 +421,7 @@ function buildEventPromociones(items)
 	
         srvEventos[1]:setIsLocked( false, "horizontal" )
         svMenuTxt:setIsLocked( false, "horizontal" )
-        createScrollViewEvent("PROMO")
+        createScrollViewEvent("DEALS")
 	
 		lastY = 25
 		for y = 1, #items, 1 do 

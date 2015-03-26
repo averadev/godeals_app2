@@ -42,9 +42,9 @@ local noLeido = {}
 function setNotificationsElements(items)
     elements = items
 	if #elements > 0 then
-		getLoading(svContent)
 		loadNotificationsImage({posc = 1})
 	else
+		endLoading(svContent)
 		getNoContent(svContent, "En este momento no cuentas con notificaciones")
 	end
 end
@@ -222,6 +222,7 @@ function scene:createScene( event )
 		backgroundColor = { 245/255, 245/255, 245/255 }
 	}
 	homeScreen:insert(svContent)
+	getLoading(svContent)
 	RestManager.getNotifications()
 end
 

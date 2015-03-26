@@ -182,7 +182,7 @@ function buildItems(screen)
         groupInicio:insert(separadorEventos)
         
         local textSeparadorEventos = display.newText( {
-            text = "DEALS RECOMENDADOS PARA TI.",     
+            text = "RECOMENDACIONES DE DEALS.",     
             x = 300, y = yMain, width = intW, height = 20,
             font = "Lato-Regular", fontSize = 14, align = "left"
         })
@@ -399,6 +399,7 @@ function ListenerChangeMenuHome( event )
 	end
 	
 	if event.phase == "began" then
+		movimiento = "c"
 		svMenuTxt:setScrollWidth(  480 )
 		diferenciaX = event.x - event.target.x
 		posicionMenu = groupMenu.x
@@ -422,6 +423,14 @@ function ListenerChangeMenuHome( event )
 			
 			groupMenu.x = (( posicionNueva - 240) / 3) + posicionMenu
 			
+			movimiento = "c"
+			if(event.direction == "left") then
+				movimiento = "i"
+			elseif event.direction == "right" then
+				movimiento = "d"
+			end
+			
+			
 		end
 		
     elseif event.phase == "ended" or event.phase == "cancelled" then
@@ -430,7 +439,8 @@ function ListenerChangeMenuHome( event )
 		txtMenuDeals:setFillColor( 161/255, 161/255, 161/255 )
 		txtMenuEventos:setFillColor( 161/255, 161/255, 161/255 )
 	
-		if diferenciaX - event.x >= -100 then
+		if diferenciaX - event.x >= -100 and movimiento == "i"  then
+		
 			if nextSv == nil then
 				transition.to( currentSv, { x = 240, time = 400, transition = easing.outExpo } )
 				transition.to( groupMenu, { x = posicionMenu, time = 400, transition = easing.outExpo } )
@@ -450,8 +460,7 @@ function ListenerChangeMenuHome( event )
 			end
 			
 			showFilter(true)
-		elseif diferenciaX - event.x  <= -380 then
-			
+		elseif diferenciaX - event.x  <= -380 and movimiento == "d"  then
 			if previousSv == nil then 
 				transition.to( currentSv, { x = 240, time = 400, transition = easing.outExpo } )
 				transition.to( groupMenu, { x = posicionMenu, time = 400, transition = easing.outExpo } )
@@ -478,7 +487,9 @@ function ListenerChangeMenuHome( event )
 			transition.to( currentSv, { x = 240, time = 400, transition = easing.outExpo } )
 			transition.to( nextSv, { x = 720, time = 400, transition = easing.outExpo } )
 			transition.to( previousSv, { x = -240, time = 400, transition = easing.outExpo } )
-			transition.to( groupMenu, { x = posicionMenu, time = 400, transition = easing.outExpo } )
+			if movimiento ~= "c" then
+				transition.to( groupMenu, { x = posicionMenu, time = 400, transition = easing.outExpo } )
+			end
 			currentTxt:setFillColor( 0 )
 		end
     end
@@ -555,13 +566,13 @@ function ListenerChangeScrollHome( event )
 			transition.to( event.target, { x = -240, time = 400, transition = easing.outExpo } )
 			transition.to( nextSv, { x = 240, time = 400, transition = easing.outExpo } )
 			transition.to( groupMenu, { x = posicionMenu - 166, time = 400, transition = easing.outExpo } )
-			currentSv = nextSv
 			if nextSv == nil then
 				transition.to( event.target, { x = 240, time = 400, transition = easing.outExpo } )
 				transition.to( groupMenu, { x = posicionMenu, time = 400, transition = easing.outExpo } )
 				currentTxt:setFillColor( 0 )
 			else
 				nextTxt:setFillColor( 0 )
+				currentSv = nextSv
 			end
 			
 			if event.target.name == "scrViewMain" then
@@ -578,13 +589,14 @@ function ListenerChangeScrollHome( event )
 			transition.to( nextSv, { x = 720, time = 400, transition = easing.outExpo } )
 			transition.to( previousSv, { x = 240, time = 400, transition = easing.outExpo } )
 			transition.to( groupMenu, { x = posicionMenu + 166, time = 400, transition = easing.outExpo } )
-			currentSv = previousSv
+			
 			if previousSv == nil then 
 				transition.to( event.target, { x = 240, time = 400, transition = easing.outExpo } )
 				transition.to( groupMenu, { x = posicionMenu, time = 400, transition = easing.outExpo } )
 				currentTxt:setFillColor( 0 )
 			else
 				previousTxt:setFillColor( 0 )
+				currentSv = previousSv
 			end
 			
 			if event.target.name == "scrViewEventos" then
@@ -596,17 +608,58 @@ function ListenerChangeScrollHome( event )
             if event.target.name == "scrViewEventos" then
                 showFilter(false)
             end
+			
 		else
 			transition.to( event.target, { x = 240, time = 400, transition = easing.outExpo } )
 			transition.to( nextSv, { x = 720, time = 400, transition = easing.outExpo } )
 			transition.to( previousSv, { x = -240, time = 400, transition = easing.outExpo } )
-			transition.to( groupMenu, { x = posicionMenu, time = 400, transition = easing.outExpo } )
+			--transition.to( groupMenu, { x = posicionMenu, time = 400, transition = easing.outExpo } )
 			currentTxt:setFillColor( 0 )
 			currentSv = event.target
 		end
 		
     end
 	
+end
+
+---funcion para cambiar los scroll con un tap
+function changeScrollTap( event )
+
+	if event.numTaps == 1 then
+
+	txtMenuInicio:setFillColor( 161/255, 161/255, 161/255 )
+	txtMenuDeals:setFillColor( 161/255, 161/255, 161/255 )
+	txtMenuEventos:setFillColor( 161/255, 161/255, 161/255 )
+
+	if event.target.name == "inicio" then
+		transition.to( scrViewDeals, { x = 720, time = 400, transition = easing.outExpo } )
+		transition.to( scrViewEventos, { x = 720, time = 400, transition = easing.outExpo } )
+		transition.to( scrViewMain, { x = 240, time = 400, transition = easing.outExpo } )
+		transition.to( groupMenu, { x = 0, time = 400, transition = easing.outExpo } )
+		currentSv = scrViewMain
+		btnModal.name = ""
+		txtMenuInicio:setFillColor( 0 )
+		showFilter(false)
+	elseif event.target.name == "eventos" then
+		transition.to( scrViewMain, { x = -240, time = 400, transition = easing.outExpo } )
+		transition.to( scrViewDeals, { x = 720, time = 400, transition = easing.outExpo } )
+		transition.to( scrViewEventos, { x = 240, time = 400, transition = easing.outExpo } )
+		transition.to( groupMenu, { x = -166, time = 400, transition = easing.outExpo } )
+		currentSv = scrViewEventos
+		btnModal.name = "EVENTOS"
+		txtMenuEventos:setFillColor( 0 )
+		showFilter(true)
+	elseif event.target.name == "deals" then
+		transition.to( scrViewMain, { x = -240, time = 400, transition = easing.outExpo } )
+		transition.to( scrViewEventos, { x = -240, time = 400, transition = easing.outExpo } )
+		transition.to( scrViewDeals, { x = 240, time = 400, transition = easing.outExpo } )
+		transition.to( groupMenu, { x = -332, time = 400, transition = easing.outExpo } )
+		currentSv = scrViewDeals
+		btnModal.name = "DEALS"
+		txtMenuDeals:setFillColor( 0 )
+		showFilter(true)
+	end
+	end
 end
 
 ---------------------------------------------------
@@ -815,6 +868,7 @@ function scene:createScene( event )
 	txtMenuInicio:setFillColor( 0 )
 	groupMenu:insert(txtMenuInicio)
 	txtMenuInicio.name = "inicio"
+	txtMenuInicio:addEventListener("tap", changeScrollTap)
 	
 	txtMenuEventos = display.newText( {
         x = display.contentWidth * .85, y = 30,
@@ -823,6 +877,7 @@ function scene:createScene( event )
 	txtMenuEventos:setFillColor( 161/255, 161/255, 161/255 )
 	groupMenu:insert(txtMenuEventos)
 	txtMenuEventos.name = "eventos"
+	txtMenuEventos:addEventListener("tap", changeScrollTap)
 	
 	txtMenuDeals = display.newText( {
         x = display.contentWidth * 1.2, y = 30,
@@ -831,6 +886,7 @@ function scene:createScene( event )
 	txtMenuDeals:setFillColor( 161/255, 161/255, 161/255 )
 	groupMenu:insert(txtMenuDeals)
 	txtMenuDeals.name = "deals"
+	txtMenuDeals:addEventListener("tap", changeScrollTap)
 	
 	local grupoSeparadorEventos = display.newGroup()
 	scrViewMain:insert(grupoSeparadorEventos)

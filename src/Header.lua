@@ -274,7 +274,7 @@ function Header:new()
 			local title = display.newText( txtData, 0, 30, "Chivo", 16)
 			title:setFillColor( .3, .3, .3 )
 			title.x = display.contentWidth / 2
-			title.y = (obj.height / 3) + 40
+			title.y = (obj.height / 3) + 80
 			grpLoading:insert(title) 
 		end
 	end

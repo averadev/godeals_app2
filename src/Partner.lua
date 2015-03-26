@@ -506,7 +506,7 @@ function buildPartnerPromociones(items)
 	srvPartner[1]:setIsLocked( false, "horizontal" )
 	svMenuTxt:setIsLocked( false, "horizontal" )
 	
-	createScrollViewPartner("PROMO")
+	createScrollViewPartner("DEALS")
 	
 		lastY = 25
 	

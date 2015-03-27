@@ -431,8 +431,6 @@ function buildPartnerInfo(item)
 	btnTwitter.url = item.twitter
     srvPartner[#srvPartner]:insert(btnTwitter)
 	
-	print(#item.twitter)
-	
 	--if item.twitter ~= "" or item.twitter ~= nil or #item.twitter > 1 then
 	if #item.twitter > 1 then
 		btnTwitter:addEventListener( "tap", openSocialNetwork )
@@ -508,6 +506,8 @@ function buildPartnerPromociones(items)
 	
 	createScrollViewPartner("DEALS")
 	
+	getLoading(srvPartner[#srvPartner])
+	
 		lastY = 25
 	
 		for y = 1, #items, 1 do 
@@ -524,6 +524,8 @@ function buildPartnerPromociones(items)
         end
 	
 	end
+	
+	endLoading()
 	
 	--llamamos a la galeria
 	RestManager.getGallery(idPartner,1,"partner")

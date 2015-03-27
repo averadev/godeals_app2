@@ -422,6 +422,8 @@ function buildEventPromociones(items)
         srvEventos[1]:setIsLocked( false, "horizontal" )
         svMenuTxt:setIsLocked( false, "horizontal" )
         createScrollViewEvent("DEALS")
+		
+		getLoading(srvEventos[#srvEventos])
 	
 		lastY = 25
 		for y = 1, #items, 1 do 
@@ -441,6 +443,8 @@ function buildEventPromociones(items)
         spc:setFillColor( 0 )
         srvEventos[#srvEventos]:insert( spc )
 	end
+	
+	endLoading()
 	
 	--llamamos a la galeria
 	RestManager.getGallery(itemObj.typeId,1,"event")

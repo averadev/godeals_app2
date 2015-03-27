@@ -71,8 +71,6 @@ function markRead( event )
 
 	if elements[event.target.posci].leido == "1" then
 	
-		print(elements[event.target.posci].idNotification)
-	
 		elements[event.target.posci].leido = 0
 	
 		for y = 1, #Globals.txtBubble, 1 do

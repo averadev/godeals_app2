@@ -24,6 +24,8 @@ local ScreenScene = {}
 local currentScene = ""
 local nextScene = ""
 
+local contSearch = 0;
+
 GroupSearch = display.newGroup()
 
 function setSearchElements(items)
@@ -103,6 +105,10 @@ function loadSearchImage(obj)
 end
 
 function buildSearchItems(screen)
+
+	contSearch = contSearch + 1
+
+	endLoading()
 	
 	if screen == "event" then
 	
@@ -131,10 +137,11 @@ function buildSearchItems(screen)
             evento.y = yMain
 			evento.name = "src.Evento"
 			evento:addEventListener( 'tap', hideModalSearch)
-            yMain = yMain + 102
+            yMain = yMain + 120
 			
         end
-		
+		--getLoading()
+		getLoading(scrViewSearch[#scrViewSearch])
 		RestManager.getSearchCoupon(texto)
 	elseif screen == "deal" then
 	
@@ -162,7 +169,7 @@ function buildSearchItems(screen)
             deal:build(true, elements[y], imageItems[y])
             deal.y = yMain
 			deal:addEventListener( 'tap', hideModalSearch)
-            yMain = yMain + 102
+            yMain = yMain + 120
 			
         end
 		
@@ -170,6 +177,15 @@ function buildSearchItems(screen)
 	
 	scrViewSearch[#scrViewSearch]:setScrollHeight(yMain + 20)
 	
+end
+
+function noSearchFind()
+	endLoading()
+	
+	if contSearch == 0 then
+		getNoContent(scrViewSearch[#scrViewSearch], "No hay resultados, intente con otra palabra")
+		contSearch = 0
+	end
 end
 
 ---------------------------------------------------------
@@ -221,11 +237,15 @@ function modalSeach(text,self)
 		height = intH - (h + 65),
 		horizontalScrollDisabled = true,
         verticalScrollDisabled = false,
+		listener = blockModalSearch,
 		backgroundColor = { .92, .92, .92 }
 	}
 	self:insert(scrViewSearch[poscSRV])
 	scrViewSearch[poscSRV].name = "scrViewSearch"
 	scrViewSearch[poscSRV]:toFront()
+	scrViewSearch[poscSRV]:addEventListener( 'tap',blockModalSearch)
+	
+	getLoading(scrViewSearch[poscSRV])
 	
 	texto = text
 	

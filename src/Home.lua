@@ -28,6 +28,7 @@ local currentSv
 local groupEvent
 local groupDeals
 local groupInicio
+local groupNoConection
 
 -- Objetos
 local txtMenuInicio, txtMenuEventos, txtMenuDeals
@@ -370,6 +371,53 @@ function removeItemsGroupHome()
 	RestManager.getRecommended()
 end
 
+--comprueba si existe conexion a internet
+function networkConnection()
+    local netConn = require('socket').connect('www.google.com', 80)
+    if netConn == nil then
+		notConnection()
+        return false
+    end
+	netConn:close()
+    return true
+end
+
+function notConnection()
+
+	endLoading()
+	
+	groupNoConection = display.newGroup()
+	scrViewMain:insert( groupNoConection )
+	
+	local imgDisconnected = display.newImage( "img/btn/errorSad.png" )
+	imgDisconnected:translate( intW/2, intH/4)
+	groupNoConection:insert( imgDisconnected )
+
+	local txtNoConection = display.newText( {
+		text = "¡conexión no disponible, intentelo de nuevo!",     
+		x = 240, y = scrViewMain.height/2,
+		width = 480,
+		font = "Lato-Regular",  fontSize = 22, align = "center"
+	})
+	txtNoConection:setFillColor( 0 )
+	groupNoConection:insert(txtNoConection)
+	txtNoConection:addEventListener( 'tap', reloadHome)
+	
+end
+
+function reloadHome()
+	groupNoConection:removeSelf()
+	groupNoConection = nil
+	getLoading(scrViewMain)
+	
+	if networkConnection() then
+		getFBData()
+		RestManager.getBeacons()
+		RestManager.getRecommended()
+	end
+	
+end
+
 ---------------------------------------------------------------------------------
 -- LISTENERS
 ---------------------------------------------------------------------------------
@@ -625,8 +673,6 @@ end
 ---funcion para cambiar los scroll con un tap
 function changeScrollTap( event )
 
-	if event.numTaps == 1 then
-
 	txtMenuInicio:setFillColor( 161/255, 161/255, 161/255 )
 	txtMenuDeals:setFillColor( 161/255, 161/255, 161/255 )
 	txtMenuEventos:setFillColor( 161/255, 161/255, 161/255 )
@@ -658,7 +704,6 @@ function changeScrollTap( event )
 		btnModal.name = "DEALS"
 		txtMenuDeals:setFillColor( 0 )
 		showFilter(true)
-	end
 	end
 end
 
@@ -894,8 +939,6 @@ function scene:createScene( event )
 	currentSv = scrViewMain
 	
 	settings = DBManager.getSettings()
-	
-	getFBData()
 		
 	btnModal = display.newImage( "img/btn/btnFilter.png" )
 	btnModal:translate( intW - 50, intH - 50)
@@ -908,8 +951,12 @@ function scene:createScene( event )
 	btnModal:toFront()
     clearTempDir()
 	getLoading(scrViewMain)
-    RestManager.getBeacons()
-    RestManager.getRecommended()
+	
+	if networkConnection() then
+		getFBData()
+		RestManager.getBeacons()
+		RestManager.getRecommended()
+	end
 	
 	Globals.noCallbackGlobal = Globals.noCallbackGlobal + 1
 	callbackCurrent = Globals.noCallbackGlobal

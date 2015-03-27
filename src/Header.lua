@@ -227,8 +227,12 @@ function Header:new()
 	
 	function SearchText( event )
 		native.setKeyboardFocus(nil)
-		modalSeach(Globals.txtSearch.text,getScreen())
-		--modalSeach("f",getScreen())
+		--modalSeach(Globals.txtSearch.text,getScreen())
+		if Globals.txtSearch.text == "" then
+			modalSeach(" ",getScreen())
+		else
+			modalSeach(Globals.txtSearch.text,getScreen())
+		end
 		return true
 	end
     

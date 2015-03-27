@@ -437,8 +437,10 @@ local RestManager = {}
 				local data = json.decode(event.response)
                 if data.success then
 					if #data.items > 0 then
-                    setSearchElements(data.items)
-					loadSearchImage({posc = 1,path = "assets/img/app/deal/",screen = "deal"})
+						setSearchElements(data.items)
+						loadSearchImage({posc = 1,path = "assets/img/app/deal/",screen = "deal"})
+					else
+						noSearchFind()
 					end
                 end
             end

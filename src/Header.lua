@@ -268,6 +268,8 @@ function Header:new()
     -- Return to last scene
     function returnScene( event )
 	
+		print(#Globals.scene)
+	
         -- Obtenemos escena anterior y eliminamos del arreglo
         if #Globals.scene > 1 then
 			
@@ -291,7 +293,10 @@ function Header:new()
             storyboard.gotoScene( previousScene, { time = 400, effect = "slideRight" })
 			
 			showModalSearch()
-			
+		else
+			Globals.scene = nil
+			Globals.scene = {}
+			storyboard.gotoScene( "src.Home", { time = 400, effect = "slideRight" })
         end
 		
     end

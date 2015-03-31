@@ -661,7 +661,7 @@ function ListenerChangeScrollHome( event )
 			transition.to( event.target, { x = 240, time = 400, transition = easing.outExpo } )
 			transition.to( nextSv, { x = 720, time = 400, transition = easing.outExpo } )
 			transition.to( previousSv, { x = -240, time = 400, transition = easing.outExpo } )
-			--transition.to( groupMenu, { x = posicionMenu, time = 400, transition = easing.outExpo } )
+			transition.to( groupMenu, { x = posicionMenu, time = 400, transition = easing.outExpo } )
 			currentTxt:setFillColor( 0 )
 			currentSv = event.target
 		end

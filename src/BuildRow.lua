@@ -43,7 +43,11 @@ function Event:new()
         local storyboard = require( "storyboard" )
         Globals.noCallbackGlobal = Globals.noCallbackGlobal + 1
 		
-		--hideSearch2()
+		if event.target.item.identificador then
+			--hideModalSearch()
+		end
+		
+		hideSearch2()
 		deleteTxt()
 		
         local current = storyboard.getCurrentSceneName()
@@ -62,7 +66,7 @@ function Event:new()
     
     -- Creamos la pantalla del menu
     function self:build(isBg, item, image)
-        
+		
         -- Generamos contenedor
         local container = display.newContainer( 480, 120 )
         container.x = 240
@@ -149,7 +153,7 @@ function Deal:new()
         local storyboard = require( "storyboard" )
         Globals.noCallbackGlobal = Globals.noCallbackGlobal + 1
 		
-		--hideSearch2()
+		hideSearch2()
 		deleteTxt()
 		
         local current = storyboard.getCurrentSceneName()

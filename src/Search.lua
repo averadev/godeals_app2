@@ -13,9 +13,12 @@ local yMain = 0
 local texto = ""
 local callbackCurrent = 0
 
+local poscSRV = 0
+
 local btnModal, bgModal
 
-local scrViewSearch = {}
+local scrViewSearch = nil
+local groupSearch = {}
 
 local elements = {}
 local imageItems = {}
@@ -25,41 +28,65 @@ local currentScene = ""
 local nextScene = ""
 
 local contSearch = 0;
+local contSearchActive = 0
 
 GroupSearch = display.newGroup()
 
 function setSearchElements(items)
 	elements = items
+	for y=1, #elements, 1 do
+		elements[y].identificador = 1
+	end
 end
 
 function hideModalSearch( event )
 
-	nextScene = storyboard.getCurrentSceneName()
-	
-	for y = 1, #Globals.scene, 1 do
-		if Globals.scene[y] == nextScene then
-			table.remove(Globals.scene, y)
-			table.remove(scrViewSearch, y)
-			table.remove(ScreenScene, y)
-		end
-	end
-	
-	for y = 1, #Globals.scene, 1 do
-		if Globals.scene[y] == nextScene then
-			table.remove(Globals.scene, y)
-		end
-	end
-	
-	if currentScene == nextScene then
-		closeModalSearch()
-	end
-
-	deleteTxt()
-
 	Globals.noCallbackGlobal = Globals.noCallbackGlobal + 1
-	local pSearch = #Globals.searchText + 1
-	Globals.searchText[pSearch] = texto
+
+	groupSearch[poscSRV].x = 480
+	scrViewSearch.x = 720
 	
+	deleteTxt()
+	
+	contSearchActive = contSearchActive + 1
+
+	endLoading()
+	
+end
+
+function showModalSearch()
+	
+	local SceneCurrent = ScreenScene[#ScreenScene]
+	local SceneCurrent2 = storyboard.getCurrentSceneName()
+	local contScene = #ScreenScene
+	local SceneCurrent3 = ScreenScene[#ScreenScene]
+	
+	while SceneCurrent == SceneCurrent3 do
+			if SceneCurrent then
+				if #SceneCurrent > 0 then
+					SceneCurrent3 = ScreenScene[contScene]
+				
+					contScene = contScene - 1
+				else
+					SceneCurrent3 = nil
+				end
+			else
+				SceneCurrent3 = 0
+			end
+	end
+
+	if scrViewSearch ~= nil and SceneCurrent ==  SceneCurrent2 then
+		showSearch()
+		scrViewSearch.x = 240
+		groupSearch[#groupSearch].x = 0
+		
+	elseif scrViewSearch ~= nil and SceneCurrent2 ==  SceneCurrent3 then
+		showSearch()
+		scrViewSearch.x = 240
+		groupSearch[#groupSearch].x = 0
+	else
+		hideSearch2()
+	end
 end
 
 function loadSearchImage(obj)
@@ -114,76 +141,86 @@ function buildSearchItems(screen)
 	
 	yMain = yMain + 30
 	
-		local separadorEventos = display.newImage( "img/btn/btnArrowGreen.png" )
-        separadorEventos:translate( 41, yMain)
-        separadorEventos.isVisible = true
-        scrViewSearch[#scrViewSearch]:insert(separadorEventos)
+		
+	
+			local separadorEventos = display.newImage( "img/btn/btnArrowGreen.png" )
+			separadorEventos:translate( 41, yMain)
+			separadorEventos.isVisible = true
+			groupSearch[poscSRV]:insert(separadorEventos)
 
-        local textSeparadorEventos = display.newText( {
-            text = "Eventos y actividades.",     
-            x = 300, y = yMain + 30, width = intW, height = 80,
-            font = "Lato-Regular", fontSize = 19, align = "left"
-        })
-        textSeparadorEventos:setFillColor( 85/255, 85/255, 85/255 )
-        scrViewSearch[#scrViewSearch]:insert(textSeparadorEventos)
+			local textSeparadorEventos = display.newText( {
+				text = "Eventos y actividades.",     
+				x = 300, y = yMain + 30, width = intW, height = 80,
+				font = "Lato-Regular", fontSize = 19, align = "left"
+			})
+			textSeparadorEventos:setFillColor( 85/255, 85/255, 85/255 )
+			groupSearch[poscSRV]:insert(textSeparadorEventos)
+		
+		if callbackCurrent == Globals.noCallbackGlobal then
 	
 		yMain = yMain + 30
         for y = 1, #elements, 1 do 
             -- Create container
 			
-			local evento = Event:new()
-            scrViewSearch[#scrViewSearch]:insert(evento)
-            evento:build(true,elements[y], imageItems[y])
-            evento.y = yMain
-			evento.name = "src.Evento"
-			evento:addEventListener( 'tap', hideModalSearch)
-            yMain = yMain + 120
-			
-        end
-		--getLoading()
-		getLoading(scrViewSearch[#scrViewSearch])
-		RestManager.getSearchCoupon(texto)
-	elseif screen == "deal" then
-	
-		yMain = yMain + 50
-        local separadorEventos = display.newImage( "img/btn/btnArrowGreen.png" )
-        separadorEventos:translate( 41, yMain -3)
-        separadorEventos.isVisible = true
-        scrViewSearch[#scrViewSearch]:insert(separadorEventos)
-
-        local textSeparadorEventos = display.newText( {
-            text = "Promociones para ti.",     
-            x = 300, y = yMain + 27, width = intW, height = 80,
-            font = "Lato-Regular", fontSize = 19, align = "left"
-        })
-        textSeparadorEventos:setFillColor( 85/255, 85/255, 85/255 )
-        scrViewSearch[#scrViewSearch]:insert(textSeparadorEventos)
-	
-	
-		yMain = yMain + 30
-        for y = 1, #elements, 1 do 
-            -- Create container
-			
-			local deal = Deal:new()
-            scrViewSearch[#scrViewSearch]:insert(deal)
-            deal:build(true, elements[y], imageItems[y])
-            deal.y = yMain
-			deal:addEventListener( 'tap', hideModalSearch)
-            yMain = yMain + 120
+				local evento = Event:new()
+				groupSearch[poscSRV]:insert(evento)
+				evento:build(true,elements[y], imageItems[y])
+				evento.y = yMain
+				evento.name = "src.Evento"
+				evento:addEventListener( 'tap', hideModalSearch)
+				yMain = yMain + 120
 			
         end
 		
-	end
+		--getLoading(scrViewSearch)
+		RestManager.getSearchCoupon(texto)
+		
+		end
+	elseif screen == "deal" then
 	
-	scrViewSearch[#scrViewSearch]:setScrollHeight(yMain + 20)
+		yMain = yMain + 50
+			local separadorEventos = display.newImage( "img/btn/btnArrowGreen.png" )
+			separadorEventos:translate( 41, yMain -3)
+			separadorEventos.isVisible = true
+			groupSearch[poscSRV]:insert(separadorEventos)
+
+			local textSeparadorEventos = display.newText( {
+				text = "Promociones para ti.",     
+				x = 300, y = yMain + 27, width = intW, height = 80,
+				font = "Lato-Regular", fontSize = 19, align = "left"
+			})
+			textSeparadorEventos:setFillColor( 85/255, 85/255, 85/255 )
+			groupSearch[poscSRV]:insert(textSeparadorEventos)
+		
+		if callbackCurrent == Globals.noCallbackGlobal then
+	
+			yMain = yMain + 30
+			for y = 1, #elements, 1 do 
+				-- Create container
+			
+				local deal = Deal:new()
+				groupSearch[poscSRV]:insert(deal)
+				deal:build(true, elements[y], imageItems[y])
+				deal.y = yMain
+				deal:addEventListener( 'tap', hideModalSearch)
+				yMain = yMain + 120
+			
+			end
+		
+		end
+	
+		scrViewSearch:setScrollHeight(yMain + 20)
+	
+	end
 	
 end
 
 function noSearchFind()
 	endLoading()
 	
-	if contSearch == 0 then
-		getNoContent(scrViewSearch[#scrViewSearch], "No hay resultados, intente con otra palabra")
+	if contSearch == 0 and scrViewSearch ~= nil then
+		
+		getNoContent(scrViewSearch, "No hay resultados, intente con otra palabra")
 		contSearch = 0
 	end
 end
@@ -194,28 +231,67 @@ end
 
 function closeModalSearch()
 
-	if #scrViewSearch ~= 0 then
-		
+	Globals.noCallbackGlobal = Globals.noCallbackGlobal + 1
+
+	if scrViewSearch ~= nil and scrViewSearch.x == 240 then
 		Globals.noCallbackGlobal = Globals.noCallbackGlobal + 1
-		local previuScreen = ScreenScene[#ScreenScene - 1]
-		local currentScreen = ScreenScene[#ScreenScene]
-		--elimina las busquedas si estan repetidas
-		if previuScreen == currentScreen then
-			while previuScreen == currentScreen  do
-				previuScreen = ScreenScene[#ScreenScene - 1]
-				if #scrViewSearch > 0 then
-					scrViewSearch[#scrViewSearch]:removeSelf()
-					table.remove(scrViewSearch,#scrViewSearch)
+		if #groupSearch > 1 then
+			scrViewSearch.x = 720
+			
+			local previuScreen = ScreenScene[#ScreenScene - 1]
+			local currentScreen = ScreenScene[#ScreenScene]
+			local sceneCurrent = storyboard.getCurrentSceneName()
+			
+			--elimina las busquedas si estan repetidas
+			if #groupSearch == contSearchActive then
+				if previuScreen == currentScreen then
+					while previuScreen == currentScreen  do
+						previuScreen = ScreenScene[#ScreenScene - 1]
+						if #groupSearch > 0 then
+							groupSearch[#groupSearch]:removeSelf()
+							table.remove(groupSearch,#groupSearch)
+							table.remove(ScreenScene, #ScreenScene)
+							contSearchActive = contSearchActive - 1
+						else
+						
+						end
+					end
+				
+					if sceneCurrent ~= currentScreen then
+						groupSearch[#groupSearch]:removeSelf()
+						table.remove(groupSearch,#groupSearch)
+						table.remove(ScreenScene, #ScreenScene)
+					end
+				else
+					groupSearch[#groupSearch]:removeSelf()
+					table.remove(groupSearch,#groupSearch)
 					table.remove(ScreenScene, #ScreenScene)
 				end
+				--elimina solo una busqueda
+			else
+				groupSearch[#groupSearch]:removeSelf()
+				table.remove(groupSearch,#groupSearch)
+				table.remove(ScreenScene, #ScreenScene)
+				GroupSearch = nil
+				contSearchActive = contSearchActive - 1
 			end
-			--elimina solo una busqueda
+			
+			scrViewSearch:setScrollHeight(groupSearch[#groupSearch].height + 50)
+			
 		else
-			scrViewSearch[#scrViewSearch]:removeSelf()
-			table.remove(scrViewSearch,#scrViewSearch)
+			groupSearch[#groupSearch]:removeSelf()
+			table.remove(groupSearch,#groupSearch)
 			table.remove(ScreenScene, #ScreenScene)
+			scrViewSearch:removeSelf()
+			scrViewSearch = nil
+			contSearchActive = contSearchActive - 1
 		end
 	end
+	
+	deleteTxt()
+	
+	
+	print(#groupSearch)
 	
 	return true
 end
@@ -224,28 +300,36 @@ function modalSeach(text,self)
 
 	yMain = 0
 	
-	local poscSRV = #scrViewSearch + 1
+	poscSRV = #groupSearch + 1
 	
 	currentScene = storyboard.getCurrentSceneName()
 	ScreenScene[#ScreenScene + 1] = currentScene
 	
-	scrViewSearch[poscSRV] = widget.newScrollView
-	{
-		top = h + 65,
-		left = 0,
-		width = intW,
-		height = intH - (h + 65),
-		horizontalScrollDisabled = true,
-        verticalScrollDisabled = false,
-		listener = blockModalSearch,
-		backgroundColor = { .92, .92, .92 }
-	}
-	self:insert(scrViewSearch[poscSRV])
-	scrViewSearch[poscSRV].name = "scrViewSearch"
-	scrViewSearch[poscSRV]:toFront()
-	scrViewSearch[poscSRV]:addEventListener( 'tap',blockModalSearch)
+	if scrViewSearch == nil then
+		scrViewSearch = widget.newScrollView
+		{
+			top = h + 65,
+			left = 0,
+			width = intW,
+			height = intH - (h + 65),
+			horizontalScrollDisabled = true,
+			verticalScrollDisabled = false,
+			backgroundColor = { .92, .92, .92 }
+		}
+		--self:insert(scrViewSearch)
+		scrViewSearch.name = "scrViewSearch"
+		scrViewSearch:toFront()
+		scrViewSearch:addEventListener( 'tap',blockModalSearch)
+	else
+		scrViewSearch.x = 240
+	end
 	
-	getLoading(scrViewSearch[poscSRV])
+		groupSearch[poscSRV] = display.newGroup()
+		scrViewSearch:insert(groupSearch[poscSRV])
+	
+	if scrViewSearch then
+		getLoading(scrViewSearch)
+	end
 	
 	texto = text
 	
@@ -258,5 +342,7 @@ function modalSeach(text,self)
 end
 
 function blockModalSearch( event )
-	return true
+	if(scrViewSearch[poscSRV]) then
+		return true
+	end
 end

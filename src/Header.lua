@@ -15,6 +15,7 @@ local txtCiudad = {}
 local textoCiudad = ""
 local menuScreenLeft = nil
 local menuScreenRight = nil
+ local groupSearchTool = display.newGroup()
 
 Header = {}
 
@@ -53,52 +54,47 @@ function Header:new()
         end
     end
     
+	-- esconde la busqueda y el modal
     function hideSearch( event )
 		native.setKeyboardFocus(nil)
-        event.target.alpha = 0
 		
-        if Globals.txtSearch ~= nil then
-			Globals.txtSearch:removeSelf()
-			Globals.txtSearch = nil
-		end
-        transition.to( imgSearch, { x = display.contentWidth - 90, time = 400, transition = easing.outExpo, 
-			onComplete=function()
-                    grpSearch.alpha = 0
-					grpTool.alpha = 1
-            end
-        })
+		groupSearchTool:removeSelf()
+		groupSearchTool = nil
+		grpTool.alpha = 1
+		groupSearchTool = display.newGroup()
+		
+		
 		closeModalSearch()
     end
 	
+	--esconde la busqueda
 	function hideSearch2( event )
 	
 		native.setKeyboardFocus(nil)
-		btnClose.alpha = 0
-		if Globals.txtSearch ~= nil then
-			Globals.txtSearch:removeSelf()
-			Globals.txtSearch = nil
-		end
-        transition.to( imgSearch, { x = display.contentWidth - 90, time = 400, transition = easing.outExpo, 
-			onComplete=function()
-                    grpSearch.alpha = 0
-					grpTool.alpha = 1
-            end
-        })
+		
+		groupSearchTool:removeSelf()
+		groupSearchTool = nil
+		groupSearchTool = display.newGroup()
+		
+		grpTool.alpha = 1
 		
     end
     
+	--muestra el formulario de busqueda
     function showSearch( event )
         grpTool.alpha = 0
-        grpSearch.alpha = 1
+       --[[ grpSearch.alpha = 1
         --txtSearch.y = 37
         transition.to( imgSearch, { x = 150, time = 400, transition = easing.outExpo, 
 			onComplete=function() btnClose.alpha = 1 end
-        })
+        })]]
+		createSearch()
 		createTxt("")
     end
 	
+	--instancia el textField de busqueda
 	function createTxt(text)
-		Globals.txtSearch = native.newTextField( 300, 37 + h, 250, 60 )
+		Globals.txtSearch = native.newTextField( 290, 30 + h, 250, 60 )
 		Globals.txtSearch:setTextColor(1)
         Globals.txtSearch.method = "create"
         Globals.txtSearch.size = 18
@@ -107,11 +103,44 @@ function Header:new()
 		Globals.txtSearch.text = text
 	end
 	
+	--intsancia los componentes de la busquesda
+	function createSearch()
+		
+		bgSearchA = display.newRect( 85, 1 + h, display.contentWidth, 50 )
+        bgSearchA.anchorX = 0
+        bgSearchA.anchorY = 0
+        bgSearchA:setFillColor( .2, .2, .2 )
+		groupSearchTool:insert( bgSearchA )
+		bgSearchA:addEventListener( 'tap', lockedSearch)
+		bgSearchA:addEventListener( 'touch', lockedSearch)
+		
+		imgSearch = display.newImage( "img/btn/btnMenuSearch.png" )
+        imgSearch:translate( display.contentWidth/4, 30 + h )
+		imgSearch:addEventListener('tap', SearchText)
+		groupSearchTool:insert( imgSearch )
+        
+        btnClose = display.newImage( "img/btn/btnMenuClose.png" )
+        btnClose:translate( display.contentWidth - 30, 30 + h )
+        btnClose:addEventListener( "tap", hideSearch )
+		groupSearchTool:insert(btnClose)
+        
+        bgSearch = display.newImage( "img/btn/bgTxtSearch.png" )
+        bgSearch:translate(290, 40 + h )
+		groupSearchTool:insert( bgSearch )
+		
+		
+	end
+	
+	--elimina el txtField de busqueda
 	function deleteTxt()
 		if Globals.txtSearch ~= nil then
 			Globals.txtSearch:removeSelf()
 			Globals.txtSearch = nil
 		end
+	end
+	
+	function lockedSearch( event )
+		return true
 	end
 	
 	--obtenemos el grupo de cada escena
@@ -261,6 +290,8 @@ function Header:new()
 			
             storyboard.gotoScene( previousScene, { time = 400, effect = "slideRight" })
 			
+			showModalSearch()
+			
         end
 		
     end
@@ -391,16 +422,8 @@ function Header:new()
                 
         -- Search Elements
         grpSearch.alpha = 0
-		
-        --[[txtSearch = native.newTextField( 300, -100, 250, 60 )
-		txtSearch:setTextColor(1)
-        txtSearch.method = "create"
-        txtSearch.size = 18
-        txtSearch.hasBackground = false 
-		txtSearch:addEventListener( "userInput", onTxtFocusSearch )
-        grpSearch:insert(txtSearch)]]
         
-        imgSearch = display.newImage( "img/btn/btnMenuSearch.png" )
+        --[[imgSearch = display.newImage( "img/btn/btnMenuSearch.png" )
         imgSearch:translate( display.contentWidth - 90, 30 )
         grpSearch:insert(imgSearch)
 		--imgSearch:addEventListener('tap',getSceneSearch)
@@ -413,7 +436,7 @@ function Header:new()
         
         bgSearch = display.newImage( "img/btn/bgTxtSearch.png" )
         bgSearch:translate(270, 50 )
-        grpSearch:insert(bgSearch)
+        grpSearch:insert(bgSearch)]]
 		
 		--creamos la pantalla del menu
 		if menuScreenLeft == nil then

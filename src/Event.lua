@@ -401,6 +401,10 @@ function buildEventInfo(item)
     spc:setFillColor( 0 )
     groupInfo:insert( spc )
 	
+	--groupInfo.height + 
+	
+	srvEventos[#srvEventos]:setScrollHeight(groupInfo.height + lastY + 250)
+	
 	--decidimos si el evento es por un comercio o por un lugar
 	if callbackCurrent == Globals.noCallbackGlobal then
 		if itemObj.type == "partner" then
@@ -446,6 +450,8 @@ function buildEventPromociones(items)
 	
 	endLoading()
 	
+	srvEventos[#srvEventos]:setScrollHeight(lastY + 50)
+	
 	--llamamos a la galeria
 	RestManager.getGallery(itemObj.typeId,1,"event")
 	
@@ -474,6 +480,8 @@ function buildEventGaleria(items)
     local spc = display.newRect( 0, lastY, 1, 1 )
     spc:setFillColor( 0 )
     srvEventos[#srvEventos]:insert( spc )
+	
+	srvEventos[#srvEventos]:setScrollHeight(lastY + 50)
 end
 
 --llamas al metodo para cargar las imagenes

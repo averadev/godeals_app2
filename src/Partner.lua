@@ -490,6 +490,8 @@ function buildPartnerInfo(item)
     spc:setFillColor( 0 )
     srvPartner[#srvPartner]:insert( spc )
 	
+	srvPartner[#srvPartner]:setScrollHeight(lastY + 50)
+	
 	if callbackCurrent == Globals.noCallbackGlobal then
 		RestManager.getDealsByPartner(idPartner,"partner")
 	end
@@ -526,6 +528,8 @@ function buildPartnerPromociones(items)
 	end
 	
 	endLoading()
+	
+	srvPartner[#srvPartner]:setScrollHeight(lastY + 50)
 	
 	--llamamos a la galeria
 	RestManager.getGallery(idPartner,1,"partner")

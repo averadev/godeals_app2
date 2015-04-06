@@ -611,6 +611,8 @@ function buildCoupon()
     local spc = display.newRect( 0, lastY + 60, 1, 1 )
     spc:setFillColor( 0 )
     svCoupon:insert( spc )
+	
+	svCoupon:setScrollHeight(lastY + 50)
     
     
 end

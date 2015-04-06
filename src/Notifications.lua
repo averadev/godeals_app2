@@ -13,6 +13,7 @@ require('src.BuildRow')
 local storyboard = require( "storyboard" )
 local Globals = require('src.resources.Globals')
 local RestManager = require('src.resources.RestManager')
+local DBManager = require('src.resources.DBManager')
 local widget = require( "widget" )
 local scene = storyboard.newScene()
 
@@ -30,6 +31,8 @@ local itemObj
 
 local info, promotions, gallery, MenuEventBar
 local homeScreen = display.newGroup()
+
+local settings
 
 -- Arreglos
 local elements = {}
@@ -96,6 +99,8 @@ end
 
 -- Carga de la imagen del servidor o de TemporaryDirectory
 function loadNotificationsImage(obj)
+
+	print(settings.url)
 
     -- Determinamos si la imagen existe
     local path = system.pathForFile( elements[obj.posc].image, system.TemporaryDirectory )
@@ -222,6 +227,8 @@ function scene:createScene( event )
 	homeScreen:insert(svContent)
 	getLoading(svContent)
 	RestManager.getNotifications()
+	
+	settings = DBManager.getSettings()
 end
 
 -- Called immediately after scene has moved onscreen:

@@ -24,7 +24,7 @@ local intH = display.contentHeight
 local midW = display.contentCenterX
 local midH = display.contentCenterY
 
-local settings = DBManager.getSettings()
+local settings
 local toolbar, menu
 local groupMenu, svContent
 local h = display.topStatusBarContentHeight
@@ -203,6 +203,8 @@ function scene:createScene( event )
     header.y = h
     header:buildToolbar()
     header:buildNavBar("Deals Descargados")
+	
+	settings = DBManager.getSettings()
 	
 end
 

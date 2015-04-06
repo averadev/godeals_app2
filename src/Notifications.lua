@@ -100,8 +100,6 @@ end
 -- Carga de la imagen del servidor o de TemporaryDirectory
 function loadNotificationsImage(obj)
 
-	print(settings.url)
-
     -- Determinamos si la imagen existe
     local path = system.pathForFile( elements[obj.posc].image, system.TemporaryDirectory )
     local fhd = io.open( path )
@@ -202,6 +200,8 @@ function scene:createScene( event )
 	screen = self.view
 	screen:insert(homeScreen)
 	
+	settings = DBManager.getSettings()
+	
 	local bg = display.newRect( 0, h, display.contentWidth, display.contentHeight )
 	bg.anchorX = 0
 	bg.anchorY = 0
@@ -227,8 +227,6 @@ function scene:createScene( event )
 	homeScreen:insert(svContent)
 	getLoading(svContent)
 	RestManager.getNotifications()
-	
-	settings = DBManager.getSettings()
 end
 
 -- Called immediately after scene has moved onscreen:

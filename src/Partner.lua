@@ -227,6 +227,26 @@ function ListenerChangeScrollPartner( event )
 	
 end
 
+--cambia el menu con un tap
+function changeMenuPartnerTap( event )
+	
+	local posiM = (event.target.name - 1) * -168
+	transition.to( groupMenuPartnerText, { x = posiM, time = 400, transition = easing.outExpo } )
+	
+	if event.target.name == 1 then
+		transition.to( srvPartner[1], { x = 240, time = 400, transition = easing.outExpo } )
+		transition.to( srvPartner[2], { x = 720, time = 400, transition = easing.outExpo } )
+	elseif event.target.name == #srvPartner then
+		transition.to( srvPartner[#srvPartner], { x = 240, time = 400, transition = easing.outExpo } )
+		transition.to( srvPartner[#srvPartner - 1], { x = -240, time = 400, transition = easing.outExpo } )
+	else
+		transition.to( srvPartner[event.target.name - 1], { x = -240, time = 400, transition = easing.outExpo } )
+		transition.to( srvPartner[event.target.name], { x = 240, time = 400, transition = easing.outExpo } )
+		transition.to( srvPartner[event.target.name + 1], { x = 720, time = 400, transition = easing.outExpo } )
+	end
+	
+end
+
 
 function showMapa( event )
     storyboard.removeScene( "src.Mapa" )
@@ -269,8 +289,8 @@ function loadPartner(item)
 		y = 163,
 		width = intW,
 		height = 73,
-		listener = ListenerChangeMenuPartner,
-		horizontalScrollDisabled = false,
+		--listener = ListenerChangeMenuPartner,
+		horizontalScrollDisabled = true,
         verticalScrollDisabled = true,
 		backgroundColor = { 1 }
 	}
@@ -287,7 +307,7 @@ function loadPartner(item)
 	createScrollViewPartner("INFO")
 	
 	srvPartner[#srvPartner]:setIsLocked( true, "horizontal" )
-	svMenuTxt:setIsLocked( true, "horizontal" )
+	--svMenuTxt:setIsLocked( true, "horizontal" )
 	
 	currentSv = srvPartner[#srvPartner]
 	
@@ -504,7 +524,7 @@ function buildPartnerPromociones(items)
 	if #items > 0 then
 	
 	srvPartner[1]:setIsLocked( false, "horizontal" )
-	svMenuTxt:setIsLocked( false, "horizontal" )
+	--svMenuTxt:setIsLocked( false, "horizontal" )
 	
 	createScrollViewPartner("DEALS")
 	
@@ -542,7 +562,7 @@ function buildPartnerGaleria(items)
 		lastY = 75
 	
 		srvPartner[1]:setIsLocked( false, "horizontal" )
-		svMenuTxt:setIsLocked( false, "horizontal" )
+		--svMenuTxt:setIsLocked( false, "horizontal" )
 	
 		createScrollViewPartner("GALERIA")
 	
@@ -591,6 +611,7 @@ function createScrollViewPartner(nameTxt)
 	txtMenuPartner[positionCurrent]:setFillColor( 0 )
 	groupMenuPartnerText:insert( txtMenuPartner[positionCurrent] )
 	txtMenuPartner[positionCurrent].name = positionCurrent
+	txtMenuPartner[positionCurrent]:addEventListener( 'tap', changeMenuPartnerTap )
 	
 	local positionScrollPartner
 	if #srvPartner == 0 then

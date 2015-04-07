@@ -242,6 +242,25 @@ function ListenerChangeScrollEvent( event )
 		
     end
 	
+end
+
+--cambia el menu con un tap
+function changeMenuEventTap( event )
+
+	local posiM = (event.target.name - 1) * -168
+	transition.to( groupMenuEventText, { x = posiM, time = 400, transition = easing.outExpo } )
+	
+	if event.target.name == 1 then
+		transition.to( srvEventos[1], { x = 240, time = 400, transition = easing.outExpo } )
+		transition.to( srvEventos[2], { x = 720, time = 400, transition = easing.outExpo } )
+	elseif event.target.name == #srvEventos then
+		transition.to( srvEventos[#srvEventos], { x = 240, time = 400, transition = easing.outExpo } )
+		transition.to( srvEventos[#srvEventos - 1], { x = -240, time = 400, transition = easing.outExpo } )
+	else
+		transition.to( srvEventos[event.target.name - 1], { x = -240, time = 400, transition = easing.outExpo } )
+		transition.to( srvEventos[event.target.name], { x = 240, time = 400, transition = easing.outExpo } )
+		transition.to( srvEventos[event.target.name + 1], { x = 720, time = 400, transition = easing.outExpo } )
+	end
 	
 end
 
@@ -258,7 +277,7 @@ function buildEvent(item)
 		y = 155,
 		width = intW,
 		height = 60,
-		listener = ListenerChangeMenuEvent,
+		--listener = ListenerChangeMenuEvent,
 		horizontalScrollDisabled = true,
         verticalScrollDisabled = true,
 		backgroundColor = { 1 }
@@ -281,7 +300,7 @@ function buildEvent(item)
 	createScrollViewEvent("INFO")
 	
 	srvEventos[#srvEventos]:setIsLocked( true, "horizontal" )
-	svMenuTxt:setIsLocked( true, "horizontal" )
+	--svMenuTxt:setIsLocked( true, "horizontal" )
 	
 	currentSv = srvEventos[1]
 	
@@ -424,7 +443,7 @@ function buildEventPromociones(items)
 	if #items > 0 then
 	
         srvEventos[1]:setIsLocked( false, "horizontal" )
-        svMenuTxt:setIsLocked( false, "horizontal" )
+        --svMenuTxt:setIsLocked( false, "horizontal" )
         createScrollViewEvent("DEALS")
 		
 		getLoading(srvEventos[#srvEventos])
@@ -462,7 +481,7 @@ function buildEventGaleria(items)
 	
     lastY = 75
     srvEventos[1]:setIsLocked( false, "horizontal" )
-    svMenuTxt:setIsLocked( false, "horizontal" )
+    --svMenuTxt:setIsLocked( false, "horizontal" )
     createScrollViewEvent("GALERIA")
 
     for y = 1, #items, 1 do 
@@ -512,6 +531,7 @@ function createScrollViewEvent(nameTxt)
 	txtMenuEvent[positionCurrent]:setFillColor( 0 )
 	groupMenuEventText:insert( txtMenuEvent[positionCurrent] )
 	txtMenuEvent[positionCurrent].name = positionCurrent
+	txtMenuEvent[positionCurrent]:addEventListener( 'tap', changeMenuEventTap )
 	
 	local positionScrollEvent
 	if #srvEventos == 0 then

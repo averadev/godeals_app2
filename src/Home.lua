@@ -425,6 +425,18 @@ end
 --- scrollView functions
 
 function ListenerChangeMenuHome( event )
+
+	print(event.time )
+
+	--[[if event.phase == "began" then --Pressing the button
+		print("A");
+	elseif event.phase == "canceled" then --sliding your finger off
+		print("B");
+	elseif event.phase == "ended" then --Releasing the button
+		print("C");
+	end]]
+	
+	--[[local phase = event.phase
 	
 	local nextSv
 	local previousSv
@@ -454,7 +466,16 @@ function ListenerChangeMenuHome( event )
 		
 		event.target:setScrollWidth(480)
 		
+		--display.getCurrentStage():setFocus( event.target )
+		
     elseif event.phase == "moved" then
+	
+	--	event.target:takeFocus( event )
+		
+		if  event.direction == "up" then
+			--groupMenu.y = 0
+		end
+	
 		if  event.direction == "left"  or event.direction == "right" then
 			
 			posicionNueva = event.x-diferenciaX 
@@ -481,7 +502,13 @@ function ListenerChangeMenuHome( event )
 			
 		end
 		
+		--event.target:takeFocus( event )
+		
     elseif event.phase == "ended" or event.phase == "cancelled" then
+	
+		print("asdfgh")
+	
+		--display.getCurrentStage():setFocus( nil )
 	
 		txtMenuInicio:setFillColor( 161/255, 161/255, 161/255 )
 		txtMenuDeals:setFillColor( 161/255, 161/255, 161/255 )
@@ -542,6 +569,20 @@ function ListenerChangeMenuHome( event )
 		end
     end
 	
+	if ( event.limitReached ) then
+        if ( event.direction == "up" ) then print( "Reached top limit" )
+        elseif ( event.direction == "down" ) then print( "Reached bottom limit" )
+        elseif ( event.direction == "left" ) then print( "Reached left limit" )
+        elseif ( event.direction == "right" ) then print( "Reached right limit" )
+        end
+    end
+	
+	
+	if event.phase == "canceled" then --sliding your finger off
+		print("hola")
+	end--]]
+	
+	return true
 end
 
 --- scrollView functions
@@ -608,6 +649,10 @@ function ListenerChangeScrollHome( event )
 		txtMenuInicio:setFillColor( 161/255, 161/255, 161/255 )
 		txtMenuDeals:setFillColor( 161/255, 161/255, 161/255 )
 		txtMenuEventos:setFillColor( 161/255, 161/255, 161/255 )
+		
+		if xCurrent == nil then
+			xCurrent = 0;
+		end
 	
 		--if event.x <= 100 and movimiento == "i" then
 		if xCurrent - event.x >= 160 and movimiento == "i" then
@@ -667,6 +712,10 @@ function ListenerChangeScrollHome( event )
 		end
 		
     end
+	
+	if event.phase == "cancelled" then
+		print("hola")
+	end
 	
 end
 
@@ -847,8 +896,9 @@ function scene:createScene( event )
 		y = h + 92,
 		width = intW,
 		height = 65,
-		listener = ListenerChangeMenuHome,
-		horizontalScrollDisabled = false,
+		scrollHeight = 10,
+		--listener = ListenerChangeMenuHome,
+		horizontalScrollDisabled = true,
         verticalScrollDisabled = true,
 		backgroundColor = { .87 }
 	}
@@ -861,6 +911,7 @@ function scene:createScene( event )
 	scrViewMain = widget.newScrollView
 	{
 		top = h + 125,
+		--top = 500,
 		left = 0,
 		width = display.contentWidth,
 		height = intH - (h + 125),

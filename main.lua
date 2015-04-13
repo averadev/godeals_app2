@@ -25,27 +25,36 @@ local isUser = DBManager.setupSquema()
 -- isUser = true
 ------------------------
 
+-- Verify is Beacon
 local partnerId = 0
-if launchArgs then
-    if launchArgs.androidIntent then
-        if launchArgs.androidIntent.extras then
-            if launchArgs.androidIntent.extras.type then
-                partnerId = launchArgs.androidIntent.extras.partnerId
+local function isBeacon(args)
+    if args.androidIntent then
+        if args.androidIntent.extras then
+            local optsExtras = args.androidIntent.extras
+            if optsExtras.type then
+                if optsExtras.type == "beacon" then
+                    -- Send Alert
+                    local typeTxt = "StartApp"
+                    if args.type then typeTxt = args.type end
+                    
+                    partnerId = optsExtras.partnerId
+                    storyboard.gotoScene("src.Partner", {params = { idPartner = partnerId }})
+                end
             end
         end
     end
 end
-
-
--- Read from local notification
-local function notificationListener( event )
-    if ( event.type == "local" ) then
-        -- Handle the local notification
-        print("On local notif")
-        partnerId = native.getProperty( "partnerId" )
-    end
+if launchArgs then 
+    isBeacon(launchArgs)
 end
-Runtime:addEventListener( "notification", notificationListener )
+-- Verify on App running
+local function onSystemEvent(event)
+	if (event.type == "applicationOpen") then
+		isBeacon(event)
+	end
+end
+Runtime:addEventListener("system", onSystemEvent) 
+
 
 
 if redimirObj then
@@ -56,7 +65,7 @@ if redimirObj then
 end
 
 if partnerId > 0 then
-    storyboard.gotoScene("src.Partner", {params = { idPartner = partnerId }})
+    -- Do nothing
 elseif isUser then
 		storyboard.gotoScene("src.Home")
 else

@@ -210,9 +210,10 @@ local RestManager = {}
 	
 	--crear usuarios
 	
-	RestManager.createUser = function(email, password, name, fbId)
+	RestManager.createUser = function(email, password, name, fbId, birthday)
         --local settings = DBManager.getSettings()
         -- Set url
+		
 		settings = DBManager.getSettings()
         password = crypto.digest(crypto.md5, password)
         local url = settings.url
@@ -221,6 +222,7 @@ local RestManager = {}
         url = url.."/password/"..password
         url = url.."/name/"..urlencode(name)
         url = url.."/fbId/"..fbId
+		url = url.."/birthday/"..urlencode(birthday)
         
         local function callback(event)
             if ( event.isError ) then
@@ -574,6 +576,48 @@ local RestManager = {}
         end
         -- Do request
         network.request( url, "GET", callback )
+	end
+	
+	--comparte el deals por face
+	RestManager.shareDealsByFace = function(idFriend, idCoupon)
+		settings = DBManager.getSettings()
+		
+		local url = settings.url .. "api/shareDealsByFace/format/json/idApp/" .. settings.idApp .. "/idFriend/" .. idFriend .. "/idCoupon/" .. idCoupon
+	   
+		local function callback(event)
+            if ( event.isError ) then
+            else
+				local data = json.decode(event.response)
+                if data.success then
+                    native.showAlert( "Go Deals", data.message, { "OK"})
+					CloseListFriends()
+                end
+            end
+            return true
+		end
+		-- Do request
+		network.request( url, "GET", callback )
+	end
+	
+	--comparte el deals por email
+	RestManager.shareDealsByEmail = function(email, idCoupon)
+		settings = DBManager.getSettings()
+		
+		local url = settings.url .. "api/shareDealsByEmail/format/json/idApp/" .. settings.idApp .. "/email/" .. urlencode(email) .. "/idCoupon/" .. idCoupon
+	   
+		local function callback(event)
+            if ( event.isError ) then
+            else
+				local data = json.decode(event.response)
+                if data.success then
+                    native.showAlert( "Go Deals", data.message, { "OK"})
+					CloseListFriends()
+                end
+            end
+            return true
+		end
+		-- Do request
+		network.request( url, "GET", callback )
 	end
 	
 return RestManager

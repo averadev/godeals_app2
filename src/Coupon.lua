@@ -10,6 +10,7 @@
 
 require('src.Menu')
 require('src.Header')
+require('src.Friends')
 local storyboard = require( "storyboard" )
 local Globals = require('src.resources.Globals')
 local widget = require( "widget" )
@@ -71,6 +72,15 @@ function showPartner( event )
 		effect = "crossFade",
 		params = { idPartner = itemObj.partnerId, name = itemObj.partner }
 	})
+end
+
+--muestra la lista de amigos
+function showFriends( event )
+
+	
+
+	showListFriends(event.target.id)
+	return true;
 end
 
 function listenerBeaconIOS( event )
@@ -433,14 +443,16 @@ function buildCoupon()
 	grupoSvCoupon = display.newGroup()
 	svCoupon:insert(grupoSvCoupon)
 
-	local imgShape = display.newRoundedRect( midW, 260, 450, 470,12 )
+	local imgShape = display.newRoundedRect( midW, 300, 450, 520,12 )
 	imgShape:setFillColor( 1 )
 	svCoupon:insert(imgShape)
 	
 	local imgBgCoupon = display.newImage( "img/bgk/bgCoupon.png" )
 	imgBgCoupon.alpha = 1
     imgBgCoupon.x= midW
-	imgBgCoupon.y = 260
+	--imgBgCoupon.y = 260
+	imgBgCoupon.y = 300
+	imgBgCoupon.height = 530
     svCoupon:insert( imgBgCoupon )
     
     local mask = graphics.newMask( "img/bgk/maskBig.jpg" )
@@ -567,29 +579,51 @@ function buildCoupon()
 	else
 		rctBtn:addEventListener( "tap", DownloadCoupon )
 	end
+	
+	--boton para mostrar lista de amigos
+	btnFriends = display.newRoundedRect( midW, 520, 400, 55, 5 )
+	btnFriends:setFillColor( .2, .6 ,0 )
+	btnFriends.id = itemObj.id
+	svCoupon:insert(btnFriends)
+	btnFriends:addEventListener( 'tap', showFriends )
+	
+	txtTitleFriend = display.newText( {
+		text = "COMPARTIR DEAL",
+		x = 240, y = 520,
+		width = 400, height = 0,
+		font = "Lato-Regular", fontSize = 26, align = "center"
+	})
+	txtTitleFriend:setFillColor( 1 )
+	svCoupon:insert( txtTitleFriend )
+	
+	lastY = lastY + imgBgCoupon.height - 120
     
     -- Detail Clauses
     local txtAdditionalInformation = display.newText({
 		text = "Informacion Adicional:",
-		x = 230, y =  560,
+		--x = 230, y =  560,
+		x = 230, y =  lastY,
 		height = 20, width = 400,
 		font = "Lato-Bold", fontSize = 16, align = "left"
 	})
 	txtAdditionalInformation:setFillColor( 0 )
 	svCoupon:insert(txtAdditionalInformation)
 	
+	lastY = lastY + txtAdditionalInformation.height + 10
+	
 	local txtClauses = display.newText({
 		text = itemObj.clauses,
-		x = midW, y = 580,
+		--x = midW, y = 580,
+		x = midW, y = lastY,
 		width = 420,
 		font = "Lato-Regular", fontSize = 16, align = "left"
 	})
 	txtClauses:setFillColor( 0 )
-    txtClauses.y = txtClauses.height/2 + 580
+    txtClauses.y = txtClauses.height/2 + txtClauses.y
 	svCoupon:insert( txtClauses )
 	
 	txtClauses.height = txtClauses.height + 10
-	lastY = txtClauses.height + 620
+	lastY = lastY + txtClauses.height + 40
 	
 	local txtAdditionalInformation = display.newText({
 		text = "Consultar comercio",
@@ -602,7 +636,7 @@ function buildCoupon()
 	txtAdditionalInformation:addEventListener( "tap", showPartner )
 	svCoupon:insert( txtAdditionalInformation )
     
-    local lineLink = display.newRect( 130, lastY + 15, 200, 1 )
+	local lineLink = display.newRect( 130, lastY + 10, 200, 1 )
 	lineLink.anchorX = 0
 	lineLink.anchorY = 0
 	lineLink:setFillColor( .27, .5, .7 )

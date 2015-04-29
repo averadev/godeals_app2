@@ -696,19 +696,6 @@ function buildCoupon()
     spc:setFillColor( 0 )
     svCoupon:insert( spc )
 	
-	local bgFixed = display.newRect( midW, intH - 35, intW, 70,12 )
-	bgFixed:setFillColor( 231/255, 231/255, 231/255 )
-	bgFixed.alpha = .7
-	wallScreen:insert(bgFixed)
-	
-	local imgBgOther = display.newImage( "img/btn/btnFilter.png" )
-	imgBgOther.alpha = 1
-    imgBgOther.x= intW - imgBgOther.height
-	imgBgOther.y = intH - 35
-    wallScreen:insert( imgBgOther )
-	
-	lastY = lastY + bgFixed.height
-	
 	svCoupon:setScrollHeight(lastY + 50)
     
 end

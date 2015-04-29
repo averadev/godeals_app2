@@ -233,6 +233,7 @@ end
 
 -- Remove Listener
 function scene:exitScene( event )
+	contDeals = 0
 end
 
 scene:addEventListener("createScene", scene )

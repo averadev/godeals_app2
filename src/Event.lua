@@ -420,9 +420,7 @@ function buildEventInfo(item)
     spc:setFillColor( 0 )
     groupInfo:insert( spc )
 	
-	--groupInfo.height + 
-	
-	srvEventos[#srvEventos]:setScrollHeight(groupInfo.height + lastY + 250)
+	srvEventos[#srvEventos]:setScrollHeight(groupInfo.height + 670)
 	
 	--decidimos si el evento es por un comercio o por un lugar
 	if callbackCurrent == Globals.noCallbackGlobal then

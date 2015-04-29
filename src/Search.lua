@@ -290,9 +290,6 @@ function closeModalSearch()
 	
 	deleteTxt()
 	
-	
-	print(#groupSearch)
-	
 	return true
 end
 

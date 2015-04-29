@@ -42,6 +42,7 @@ local currentSv
 local settings
 local rctBtn
 local FlagCoupon = 0
+local imgBtnShare = ""
 
 local txtInfo, txtBtn, txtTitleInfo, loadingRed, rctRed, txtRed
 local info, promotions, gallery, MenuEventBar, txtInfoRedimir2
@@ -76,9 +77,6 @@ end
 
 --muestra la lista de amigos
 function showFriends( event )
-
-	
-
 	showListFriends(event.target.id)
 	return true;
 end
@@ -150,10 +148,13 @@ end
 function AssignedCoupon(item)
 	
 	if #item > 0 then
+	
 		if item[1].status == '1' then
 			itemObj.assigned = 1
 		elseif item[1].status == '2' then
 			itemObj.assigned = 2
+		elseif item[1].status == '3' then
+			itemObj.assigned = 3
 		end
 		itemObj.code = item[1].code
 	else
@@ -399,6 +400,8 @@ function changeButtonCoupon()
 	RestManager.getCouponDownload(itemObj.id)
 	rctBtn:removeEventListener( "tap", DownloadCoupon )
 	rctBtn:addEventListener( "tap", showRedimir )
+	imgBtnShare:removeEventListener( 'tap', showFriends )
+	imgBtnShare.alpha = .2
 end
 
 --obtenemos el grupo wallScreen de la escena actual
@@ -424,8 +427,35 @@ function createCoupon()
 	buildCoupon()
 end
 
+--cambia el boton a deals compartido
+function changeBtnShare()
+
+	transition.to( txtTitleInfo, { alpha = 0, time = 200, transition = easing.outExpo } )
+	transition.to( txtInfo, { alpha = 0, time = 200, transition = easing.outExpo } )
+	transition.to( txtBtn, { alpha = 0, time = 200, transition = easing.outExpo } )
+	
+	imgBtnShare:removeEventListener( 'tap', showFriends )
+	rctBtn:removeEventListener( "tap", DownloadCoupon )
+	
+	timer.performWithDelay(200, function() 
+		txtTitleInfo.text = "Ha compartido este deals!"
+		txtInfo.text = "No olvides consultar los otros Deals que "..itemObj.partner.." te ofrece"
+		txtBtn.text = "DEAL COMPARTIDO"
+		
+		rctBtn:setFillColor( .72, .82, .93 )
+		imgBtnShare.alpha = .2
+			
+		transition.to( txtBtn, { alpha = 1, time = 200, delay = 200, transition = easing.outExpo } )
+		transition.to( txtInfo, { alpha = 1, time = 200, delay = 200, transition = easing.outExpo } )
+		transition.to( txtTitleInfo, { alpha = 1, time = 200, delay = 200, transition = easing.outExpo } )
+	end, 1)
+
+end
+
 --crea un cupon
 function buildCoupon()
+
+	lastY = 55;
 
 	svCoupon = widget.newScrollView
 	{
@@ -442,23 +472,30 @@ function buildCoupon()
 	
 	grupoSvCoupon = display.newGroup()
 	svCoupon:insert(grupoSvCoupon)
+	
+	--[[local imgBtnShare = display.newImage( "img/btn/share.png" )
+	imgBtnShare.alpha = 1
+    imgBtnShare.x= intW - imgBtnShare.height
+	imgBtnShare.y = lastY
+    svCoupon:insert( imgBtnShare )
+	imgBtnShare:addEventListener( 'tap', showFriends )]]
 
-	local imgShape = display.newRoundedRect( midW, 300, 450, 520,12 )
+	local imgShape = display.newRoundedRect( midW, 296, 450, 528,12 )
 	imgShape:setFillColor( 1 )
 	svCoupon:insert(imgShape)
 	
 	local imgBgCoupon = display.newImage( "img/bgk/bgCoupon.png" )
 	imgBgCoupon.alpha = 1
     imgBgCoupon.x= midW
-	--imgBgCoupon.y = 260
-	imgBgCoupon.y = 300
+	imgBgCoupon.y =  295
+	--imgBgCoupon.y = 300
 	imgBgCoupon.height = 530
     svCoupon:insert( imgBgCoupon )
     
     local mask = graphics.newMask( "img/bgk/maskBig.jpg" )
 	local imgCoupon = display.newImage( itemObj.image, system.TemporaryDirectory )
     imgCoupon.x= 100
-	imgCoupon.y = 122
+	imgCoupon.y = lastY + 122
     imgCoupon.width = 140
     imgCoupon.height  = 140
     svCoupon:insert( imgCoupon )
@@ -466,7 +503,7 @@ function buildCoupon()
     
 	local txtPartner = display.newText( {
         text = itemObj.partner,    
-        x = 320, y = 80,
+        x = 320, y = lastY + 80,
         width = 280, height =0,
         font = "Lato-Regular", fontSize = 30, align = "left"
     })
@@ -475,7 +512,7 @@ function buildCoupon()
     
 	local txtTotalDeals = display.newText( {
         text = itemObj.total.." Deals",
-        x = 300, y = 115,
+        x = 300, y = lastY + 115,
         width = 240, height =25,
         font = "Lato-Regular", fontSize = 20, align = "left"
     })
@@ -484,16 +521,34 @@ function buildCoupon()
     
     local txtStock = display.newText( {
         text = itemObj.stock.." Disponibles",
-        x = 300, y = 140,
+        x = 300, y = lastY + 140,
         width = 240, height =25,
         font = "Lato-Regular", fontSize = 20, align = "left"
     })
     txtStock:setFillColor( .2, .6 ,0 )
     svCoupon:insert( txtStock )
+	
+	--img info--
+	
+	--[[local imgBtnInfo = display.newImage( "img/btn/info.png" )
+	imgBtnInfo.alpha = 1
+    imgBtnInfo.x= intW - imgBtnInfo.height
+	imgBtnInfo.y = lastY + 70
+    svCoupon:insert( imgBtnInfo )]]
+	
+	--btn de compartir
+	imgBtnShare = display.newImage( "img/btn/share.png" )
+	imgBtnShare.alpha = .2
+    imgBtnShare.x= intW - imgBtnShare.height
+	imgBtnShare.y = lastY + 20
+	imgBtnShare.id = itemObj.id
+    svCoupon:insert( imgBtnShare )
+	
+	----------
     
     local txtValidity = display.newText( {
         text = "VIGENCIA: "..itemObj.validity,
-        x = 300, y = 172,
+        x = 300, y = lastY + 172,
         width = 240, height = 34 ,
         font = "Lato-Regular", fontSize = 14, align = "left"
     })
@@ -510,13 +565,13 @@ function buildCoupon()
     
     
     -- Max Desc
-    local bgMaxDesc = display.newRect( midW, 260, 444, 80 )
+    local bgMaxDesc = display.newRect( midW, lastY + 260, 444, 80 )
 	bgMaxDesc:setFillColor( .89 )
 	svCoupon:insert(bgMaxDesc)
     
     local txtMaxDesc = display.newText( {
         text = itemObj.detail,
-        x = 240, y = 260,
+        x = 240, y = lastY + 260,
         width = 410, height = 0,
         font = "Lato-Regular", fontSize = 20, align = "center"
     })
@@ -527,7 +582,7 @@ function buildCoupon()
     -- Descarga / Redime
 	txtTitleInfo = display.newText( {
 		text = "¿Te interesa este Deal?",
-		x = 240, y = 340,
+		x = 240, y = lastY + 340,
 		width = 400, height = 0,
 		font = "Lato-Bold", fontSize = 16, align = "left"
 	})
@@ -537,21 +592,21 @@ function buildCoupon()
 	txtInfo = display.newText( {
 		text =  "No lo pienses más y descárgalo, "..
 				"se guardará en tu cartera para que lo uses en tu próxima visita.",
-		x = 240, y = 385,
+		x = 240, y = lastY + 385,
 		width = 400, height = 60,
 		font = "Lato-Regular", fontSize = 16, align = "left"
 	})
 	txtInfo:setFillColor( 0 )
 	svCoupon:insert( txtInfo )
 
-	rctBtn = display.newRoundedRect( midW, 450, 400, 55, 5 )
+	rctBtn = display.newRoundedRect( midW, lastY + 450, 400, 55, 5 )
 	rctBtn.idCoipon = itemObj.id
 	rctBtn:setFillColor( .2, .6 ,0 )
 	svCoupon:insert(rctBtn)
 
 	txtBtn = display.newText( {
 		text =  "DESCARGAR DEAL",
-		x = 240, y = 450,
+		x = 240, y = lastY + 450,
 		width = 400, height = 0,
 		font = "Lato-Regular", fontSize = 26, align = "center"
 	})
@@ -564,6 +619,11 @@ function buildCoupon()
 						"disponible en todos los establecimientos afiliados. PREGUNTA POR EL!"
 		txtBtn.text = "REDIMIR DEAL"
 		rctBtn:addEventListener( "tap", showRedimir )
+	elseif itemObj.assigned == 3 or itemObj.assigned == '3' then
+		txtTitleInfo.text = "Deal compartido"
+		txtInfo.text =  "No olvides consultar los otros Deals que "..itemObj.partner.." te ofrece."
+		txtBtn.text = "DEAL COMPARTIDO"
+		rctBtn:setFillColor( .72, .82, .93 )
 	elseif itemObj.stock == '0' then
 		txtTitleInfo.text = "Lo sentimos."
 		txtInfo.text =  "Este Deal se ha agotado, pero no te preocupes "..itemObj.partner..
@@ -578,23 +638,13 @@ function buildCoupon()
 		rctBtn:setFillColor( .72, .82, .93 )
 	else
 		rctBtn:addEventListener( "tap", DownloadCoupon )
+		imgBtnShare.alpha = 1
+		imgBtnShare:addEventListener( 'tap', showFriends )
 	end
 	
-	--boton para mostrar lista de amigos
-	btnFriends = display.newRoundedRect( midW, 520, 400, 55, 5 )
-	btnFriends:setFillColor( .2, .6 ,0 )
-	btnFriends.id = itemObj.id
-	svCoupon:insert(btnFriends)
-	btnFriends:addEventListener( 'tap', showFriends )
+	--btnFriends:addEventListener( 'tap', showFriends )
 	
-	txtTitleFriend = display.newText( {
-		text = "COMPARTIR DEAL",
-		x = 240, y = 520,
-		width = 400, height = 0,
-		font = "Lato-Regular", fontSize = 26, align = "center"
-	})
-	txtTitleFriend:setFillColor( 1 )
-	svCoupon:insert( txtTitleFriend )
+	lastY = 150 + lastY
 	
 	lastY = lastY + imgBgCoupon.height - 120
     
@@ -646,8 +696,20 @@ function buildCoupon()
     spc:setFillColor( 0 )
     svCoupon:insert( spc )
 	
+	local bgFixed = display.newRect( midW, intH - 35, intW, 70,12 )
+	bgFixed:setFillColor( 231/255, 231/255, 231/255 )
+	bgFixed.alpha = .7
+	wallScreen:insert(bgFixed)
+	
+	local imgBgOther = display.newImage( "img/btn/btnFilter.png" )
+	imgBgOther.alpha = 1
+    imgBgOther.x= intW - imgBgOther.height
+	imgBgOther.y = intH - 35
+    wallScreen:insert( imgBgOther )
+	
+	lastY = lastY + bgFixed.height
+	
 	svCoupon:setScrollHeight(lastY + 50)
-    
     
 end
 

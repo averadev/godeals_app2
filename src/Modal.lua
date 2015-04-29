@@ -28,6 +28,7 @@ function closeModalTouch( event )
 end
 
 function Showfilter( event )
+	print(event.target.id)
 	RestManager.getFilter(event.target.id,typeF)
 	CloseModal()
 	return true
@@ -45,13 +46,13 @@ function createFilters(filter)
 
 	--botones para filtrar
 	if filter == "EVENTOS" then
-		totalFilter = 6
+		totalFilter = 7
 		urlImage = "img/btn/EVENTOS_iconos/"
-		poscTitle = intH / 2.85
+		poscTitle = intH/5.7
 		numFilter = 0
 		idFilter = Globals.filterEvent
 	else
-		totalFilter = 8
+		totalFilter = 9
 		urlImage = "img/btn/DEALS_Iconos/"
 		poscTitle = intH/5.7
 		numFilter = 6
@@ -63,19 +64,32 @@ function createFilters(filter)
 			local flagFilter = 0
 			
 			for h = 1, #idFilter, 1 do
-			
-				if (numFilter + y) == tonumber(idFilter[h].idFilter) then
-					flagFilter = 1
+				
+				if y ~= 1 then
+				
+					if (numFilter + y - 1) == tonumber(idFilter[h].idFilter) then
+						flagFilter = 1
+					end
 				end
 			end
 			
 			if filter == "EVENTOS" then
-				if y < 4 then
+				--[[if y < 4 then
 					poscX = 130 * y - 10
 					poscY = intH / 2
 				else
 					poscX = (130 * (y - 3)) - 10
 					poscY = intH/1.45
+				end]]
+				if y < 4 then
+					poscX = 130 * y - 10
+					poscY = intH / 3
+				elseif y > 3 and y < 7 then
+					poscX = (130 * (y - 3)) - 10
+					poscY = intH/1.9
+				else
+					poscX = (130 * (y - 6)) - 10
+					poscY = intH /1.4
 				end
 			else
 				if y < 4 then
@@ -104,14 +118,18 @@ function createFilters(filter)
 			btnFilter[y] .width = intH * .14
 			btnFilter[y] .height = intH * .14
 			btnFilter[y] .isVisible = true
-			btnFilter[y].id = numFilter + y
+			btnFilter[y].id = numFilter + y - 1
 			btnFilter[y].name = filterName[y]
 			groupFilters:insert(btnFilter[y] )
 			
 			if flagFilter == 0 then
-				btnFilter[y].alpha = .1
+				if y ~= 1 then
+					btnFilter[y].alpha = .1
+				else
+					btnFilter[y]:addEventListener( "tap", Showfilter )
+				end
 			else
-				btnFilter[y] :addEventListener( "tap", Showfilter )
+				btnFilter[y]:addEventListener( "tap", Showfilter )
 			end
 			
 			txtFilter[y]  = display.newText( {
@@ -145,15 +163,15 @@ end
 	typeF = filter
  
 	if filter == "EVENTOS" then
-		filterName = {"CONCIERTOS","DEPORTIVOS","CULTURALES","ANIVERSARIOS","COMPRAS","OTROS"}
+		filterName = {"TODOS","CONCIERTOS","DEPORTIVOS","CULTURALES","ANIVERSARIOS","COMPRAS","OTROS"}
 		
-		btnModal = display.newImage( "img/bgk/fpndp_eventos.png" )
+		btnModal = display.newImage( "img/bgk/fondo_deals.png" )
 		btnModal.width = 440
 		--btnModal.height = 500
-		btnModal.height = intH / 2 + intH * .09
-		btnModal:translate( (intW / 2) + 10, intH / 1.7 )
+		btnModal.height = intH - intH / 4.2
+		btnModal:translate( intW / 2 + 10, intH / 2)
 	else
-		filterName = {"RESTAURANTES","BARES","ANTROS","TURISMO","TECNOLOGIA","SERVICIOS","COMPRAS","OTROS"}
+		filterName = {"TODOS","RESTAURANTES","BARES","ANTROS","TURISMO","TECNOLOGIA","SERVICIOS","COMPRAS","OTROS"}
 		
 		btnModal = display.newImage( "img/bgk/fondo_deals.png" )
 		btnModal.width = 440

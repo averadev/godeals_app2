@@ -16,6 +16,7 @@ local lastY = 40
 local previousFriend = 1
 local idCoupon = 0
 local contFriendlist = 0
+local lockInput = 0;
 
 local btnAceptF
 
@@ -133,6 +134,7 @@ function CloseListFriends( event )
 	groupFriendsList = display.newGroup()
 	lastY = 50
 	maxShape = {}
+	lockInput = 0
 	
 	return true;
 end
@@ -232,6 +234,7 @@ function BuildItemsFriends(items)
 			y =  0,
 			time = 200
 		}
+		maxShape = {}
 		
 		scvFriends:insert( groupFriendsList )
 	
@@ -283,6 +286,9 @@ end
 
 --se hace la peticion para compartir el deals
 function sendDealsFriend( event )
+
+	--print(event.target.id);
+	--print(idCoupo);
 	
 	native.setKeyboardFocus(nil)
 	if event.target.id ~= 0 then
@@ -328,18 +334,14 @@ function onTxtFocusFriend( event )
 	elseif ( "submitted" == event.phase ) then
 		native.setKeyboardFocus(nil)
 		
-		if txtSendEmail.text ~= "" then
-			RestManager.shareDealsByEmail( txtSendEmail.text, idCoupon )
-		else
-			RestManager.shareDealsByEmail( " ", idCoupon )
+		if lockInput == 0 then
+			lockInput = 1
+			if txtSendEmail.text ~= "" then
+				RestManager.shareDealsByEmail( txtSendEmail.text, idCoupon )
+			else
+				RestManager.shareDealsByEmail( " ", idCoupon )
+			end
 		end
-	
-	elseif( "ended" == event.phase ) then
-		scvFriends:setScrollHeight(lastY)
-		scvFriends:scrollToPosition{
-			y =  yscv,
-			time = 200
-		}
 		
 	elseif ( event.phase == "editing" ) then
 	
@@ -355,6 +357,13 @@ function onTxtFocusFriend( event )
 			btnAceptF:addEventListener( 'tap', sendDealsFriend )
 		
 		end
+		
+	elseif( "ended" == event.phase ) then
+		scvFriends:setScrollHeight(lastY)
+		scvFriends:scrollToPosition{
+			y =  yscv,
+			time = 200
+	}
 	
 	end
 	

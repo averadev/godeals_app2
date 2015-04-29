@@ -426,7 +426,6 @@ end
 
 function ListenerChangeMenuHome( event )
 
-	print(event.time )
 
 	--[[if event.phase == "began" then --Pressing the button
 		print("A");
@@ -714,7 +713,6 @@ function ListenerChangeScrollHome( event )
     end
 	
 	if event.phase == "cancelled" then
-		print("hola")
 	end
 	
 end

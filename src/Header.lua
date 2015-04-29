@@ -56,6 +56,7 @@ function Header:new()
     
 	-- esconde la busqueda y el modal
     function hideSearch( event )
+		
 		native.setKeyboardFocus(nil)
 		
 		groupSearchTool:removeSelf()
@@ -82,7 +83,7 @@ function Header:new()
     
 	--muestra el formulario de busqueda
     function showSearch( event )
-        grpTool.alpha = 0
+       -- grpTool.alpha = 0
        --[[ grpSearch.alpha = 1
         --txtSearch.y = 37
         transition.to( imgSearch, { x = 150, time = 400, transition = easing.outExpo, 
@@ -109,7 +110,7 @@ function Header:new()
 		bgSearchA = display.newRect( 85, 1 + h, display.contentWidth, 50 )
         bgSearchA.anchorX = 0
         bgSearchA.anchorY = 0
-        bgSearchA:setFillColor( .2, .2, .2 )
+		bgSearchA:setFillColor( .2, .2, .2 )
 		groupSearchTool:insert( bgSearchA )
 		bgSearchA:addEventListener( 'tap', lockedSearch)
 		bgSearchA:addEventListener( 'touch', lockedSearch)
@@ -286,6 +287,8 @@ function Header:new()
 				table.remove(Globals.scene, #Globals.scene)
 				table.remove(Globals.scene, #Globals.scene)
 			end
+			
+			deleteTxt()
 			
 			table.remove(txtCiudad, #txtCiudad)
 			txtCiudad[#txtCiudad].text = textoCiudad

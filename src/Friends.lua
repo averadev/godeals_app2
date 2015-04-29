@@ -205,10 +205,19 @@ function refreshFriend( event )
 end
 
 function facebookListener2( event )
+
     if ( "session" == event.type ) then
         if ( "login" == event.phase ) then
 			local params = { fields = "email,name,id" }
             facebook.request( "me/friends", "GET",params )
+		elseif ( "loginCancelled" == event.phase) then
+			groupFriendsList:removeSelf()
+			groupFriendsList = display.newGroup()
+			lastY = 40
+			groupFriendsList = display.newGroup()
+			scvFriends:insert( groupFriendsList )
+			faceActive = 0
+			printTextFriend()
         end
     elseif ( "request" == event.type ) then
 		

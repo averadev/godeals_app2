@@ -146,30 +146,11 @@ end
 
 --crea los items de amigos
 function createListFriends()
-	
-	--[[items2 = {
-		['id'] = "10152713865899218",
-		['name'] = "Alberto Vera abc def ghij klmn opqry "
-	}
-	
-	items3 = {
-		['id'] = "796558400404987",
-		['name'] = "Alfredo Chi Zum"
-	}
-	
-	loadImageFriend(items2)
-	loadImageFriend(items3)
-	loadImageFriend(items3)
-	loadImageFriend(items3)
-	
-	printTextFriend()]]
-	
-	--scvFriends:setScrollHeight(lastY)
 
 	if faceActive == 0 then
 		
 		faceActive = 1
-		facebook.login( fbAppID, facebookListener2, {} )
+		facebook.login( fbAppID, facebookListener2, {"public_profile", "email", "user_birthday", "user_friends"} )
 		
 	elseif faceActive == 1 then
 		
@@ -177,8 +158,6 @@ function createListFriends()
         facebook.request( "me/friends", "GET",params )
 		
 	end
-	
-	-- Create container
 			
 	scvFriends:setScrollHeight(lastY + 20)
 	
@@ -186,15 +165,6 @@ end
 
 --actualiza la lista de amigos
 function refreshFriend( event )
-
-	--[[native.setKeyboardFocus(nil)
-	groupFriendsList:removeSelf()
-	groupFriendsList = display.newGroup()
-	lastY = 40
-	scvFriends:scrollToPosition{
-		y =  0,
-		time = 200
-	}]]
 	
 	native.setKeyboardFocus(nil)
 	
@@ -295,9 +265,6 @@ end
 
 --se hace la peticion para compartir el deals
 function sendDealsFriend( event )
-
-	--print(event.target.id);
-	--print(idCoupo);
 	
 	native.setKeyboardFocus(nil)
 	if event.target.id ~= 0 then

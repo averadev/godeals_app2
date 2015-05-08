@@ -606,7 +606,7 @@ function createScrollViewPartner(nameTxt)
 			x = positionTxtMenu,
 			y =  0,
 			font = "Lato-Hairline",
-			fontSize = 22
+			fontSize = 18
 	})
 	txtMenuPartner[positionCurrent]:setFillColor( 0 )
 	groupMenuPartnerText:insert( txtMenuPartner[positionCurrent] )

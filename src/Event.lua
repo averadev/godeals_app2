@@ -524,7 +524,7 @@ function createScrollViewEvent(nameTxt)
 			x = positionTxtMenu,
 			y =  -5,
 			font = "Lato-Hairline",
-			fontSize = 22
+			fontSize = 18
 	})
 	txtMenuEvent[positionCurrent]:setFillColor( 0 )
 	groupMenuEventText:insert( txtMenuEvent[positionCurrent] )

@@ -61,6 +61,34 @@ function openSocialNetwork( event )
 	system.openURL( event.target.url )
 end
 
+------cargamos las imagen full
+function loadWelcomeFull(imageName)
+     -- Determinamos si la imagen existe
+    local path = system.pathForFile( imageName, system.TemporaryDirectory )
+    local fhd = io.open( path )
+    if fhd then
+        fhd:close()
+        endLoading()
+        buildPartner(itemPartner)
+    else
+        -- Listener de la carga de la imagen del servidor
+        local function loadImageListener( event )
+            if ( event.isError ) then
+                native.showAlert( "Go Deals", "Network error :(", { "OK"})
+            else
+                event.target:removeSelf()
+                event.target = nil
+                endLoading()
+                buildPartner(itemPartner)
+            end
+        end
+        
+        -- Descargamos de la nube
+        display.loadRemoteImage( settings.url.."assets/img/app/message/"..imageName, 
+        "GET", loadImageListener, imageName, system.TemporaryDirectory ) 
+    end
+end
+
 ---------------------------------------------------------
 ---------build Partner
 ---------------------------------------------------------
@@ -70,12 +98,13 @@ function loadPartner(item)
 	
 	groupPartner = display.newGroup()
 	homeScreen:insert( groupPartner )
-	
     header:buildNavBar(itemPartner.name)
+    
+    loadWelcomeFull(itemPartner.displayImage)
+    
 	
-	endLoading()
-	
-	buildPartner(itemPartner)
+	--endLoading()
+	--
 	
 end
 
@@ -154,7 +183,7 @@ function buildPartner(item)
 	lastY = lastY + 30
 	
 	local txtWelcomeIntro = display.newText({
-		text = item.welcomeIntro,
+		text = item.displayInfo,
 		x = 240,
 		y =  lastY,
 		font = "Lato-Regular",
@@ -169,16 +198,17 @@ function buildPartner(item)
 	
 	lastY = lastY + txtWelcomeIntro.height
 	
-	local imgPartner = display.newRect( midW, lastY, 400, 300 )
-	imgPartner:setFillColor( 0 )
-	srvPartner[#srvPartner]:insert(imgPartner)
+    local imgPartner = display.newImage( item.displayImage, system.TemporaryDirectory )
+    imgPartner.x = midW
+    imgPartner.y = lastY
+    srvPartner[#srvPartner]:insert( imgPartner )
 	
 	imgPartner.y = lastY + imgPartner.height/2 + 30
 	
 	lastY = lastY + imgPartner.height + 60
 	
 	local txtWelcomeFooter = display.newText({
-		text = item.welcomeFooter,
+		text = item.info,
 		x = 240,
 		y =  lastY,
 		font = "Lato-Regular",
@@ -193,47 +223,7 @@ function buildPartner(item)
 	
 	lastY = lastY + txtWelcomeFooter.height + 30
 	
-	local btnShowDeals = display.newRect( 120, lastY, 150, 100 )
-	btnShowDeals:setFillColor( .8 )
-	srvPartner[#srvPartner]:insert(btnShowDeals)
-	
-	btnShowDeals.y = btnShowDeals.y + btnShowDeals.height/2
-	
-	local txtbtnShowDeals = display.newText({
-		text = "Ver Deals",
-		x = 120,
-		y =  lastY + 40,
-		font = "Lato-Regular",
-		width = 100,
-		fontSize = 19,
-		align = "center"
-	})
-	txtbtnShowDeals:setFillColor( 0 )
-	srvPartner[#srvPartner]:insert( txtbtnShowDeals )
-	
-	txtbtnShowDeals.y = txtbtnShowDeals.y + txtbtnShowDeals.height/2
-	
-	local btnShowPromo = display.newRect( 360, lastY, 150, 100 )
-	btnShowPromo:setFillColor( .8 )
-	srvPartner[#srvPartner]:insert(btnShowPromo)
-	
-	btnShowPromo.y = btnShowPromo.y + btnShowPromo.height/2
-	
-	local txtbtnShowPromo = display.newText({
-		text = "Ver Promo",
-		x = 360,
-		y =  lastY + 40,
-		font = "Lato-Regular",
-		width = 100,
-		fontSize = 19,
-		align = "center"
-	})
-	txtbtnShowPromo:setFillColor( 0 )
-	srvPartner[#srvPartner]:insert( txtbtnShowPromo )
-	
-	txtbtnShowPromo.y = txtbtnShowPromo.y + txtbtnShowPromo.height/2
-	
-	bgPartner.height = txtWelcomeIntro.height + imgPartner.height + btnShowPromo.height + txtWelcomeFooter.height + 140
+	bgPartner.height = txtWelcomeIntro.height + imgPartner.height + txtWelcomeFooter.height + 120
 	
 	bgPartner.y = bgPartner.y + bgPartner.height/2
 	
@@ -241,7 +231,7 @@ function buildPartner(item)
 	
 	--lastY = lastY + txtbtnShowPromo.height
 	
-	lastY = lastY + 150
+	lastY = lastY + 50
 	
 	srvPartner[#srvPartner]:setScrollHeight(lastY)
 	
@@ -269,7 +259,7 @@ function createScrollViewPartner()
 		width = intW,
 		height = intH - (h + 120),
 		--listener = ListenerChangeScrollPartner,
-		horizontalScrollDisabled = false,
+		horizontalScrollDisabled = true,
 		verticalScrollDisabled = false,
 		backgroundColor = { 245/255, 245/255, 245/255 }
 		--backgroundColor = { .1,.5,.3 }
@@ -340,7 +330,7 @@ end
 
 function scene:createScene( event )
 	screen = self.view   
-	idPartner = event.params.idPartner
+	idAd = event.params.idAd
 	screen:insert(homeScreen)
 	
 	homeScreen.y = h
@@ -362,7 +352,7 @@ function scene:createScene( event )
 	callbackCurrent = Globals.noCallbackGlobal
 	
     settings = DBManager.getSettings()
-	RestManager.getPartner(idPartner)
+	RestManager.getAdPartner(idAd)
 end
 
 -- Called immediately after scene has moved onscreen:

@@ -16,7 +16,6 @@ if platformName == "iPhone OS" then
 end
 
 
-
 local isUser = DBManager.setupSquema()
 ------------------------ Delete before deploy
 --DBManager.updateUser(1, "mrfeto@gmail.com", '', 'Alberto Vera', '10152713865899218', '') -- Temporal
@@ -37,8 +36,16 @@ local function isBeacon(args)
                     local typeTxt = "StartApp"
                     if args.type then typeTxt = args.type end
                     
-                    partnerId = optsExtras.partnerId
-                    storyboard.gotoScene("src.Partner", {params = { idPartner = partnerId }})
+                    if optsExtras.partnerId then
+                        partnerId = optsExtras.partnerId
+                        storyboard.gotoScene("src.Partner", {params = { idPartner = partnerId }})
+                    end
+                    
+                    if optsExtras.adId then
+                        adId = optsExtras.adId
+                        storyboard.gotoScene("src.WelcomePartner", {params = { idAd = adId }})
+                    end
+                    
                 end
             end
         end

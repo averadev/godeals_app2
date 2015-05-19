@@ -104,6 +104,25 @@ local RestManager = {}
         network.request( url, "GET", callback )
 	end
 
+	RestManager.getAdPartner = function(idAd)
+		settings = DBManager.getSettings()
+		local url = settings.url .. "api/getAdPartner/format/json/idAd/" .. idAd
+	   
+	   local function callback(event)
+            if ( event.isError ) then
+            else
+				local data = json.decode(event.response)
+                if data.success then
+                    loadPartner(data.items[1])
+                else
+                end
+            end
+            return true
+        end
+        -- Do request
+        network.request( url, "GET", callback )
+	end
+
 	RestManager.getPartner = function(idPartner)
 		settings = DBManager.getSettings()
 		local url = settings.url .. "api/getPartnertById/format/json/idPartner/" .. idPartner

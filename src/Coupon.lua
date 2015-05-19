@@ -33,7 +33,7 @@ local midH = display.contentCenterY
 
 local toolbar, menu
 local groupMenu, groupEvent, groupMenuEventText, grpRedem
-local svCoupon, svInfo, svPromotions, svGallery
+local svCoupon, svInfo, svPromotions, svGallery, sprCheck
 local h = display.topStatusBarContentHeight
 local lastY = 200
 local lastYCoupon = 0
@@ -225,7 +225,13 @@ function goBLE(event)
 					txtBtn.text = "DEAL REDIMIDO"
 					rctBtn:setFillColor( .72, .82, .93 )
 					rctBtn:removeEventListener( "tap", showRedimir )
-                    showRedimir()
+                    
+                    sprCheck.alpha = .7
+                    sprCheck:setSequence("play")
+                    sprCheck:play()
+                    timer.performWithDelay(1000, function() 
+                        showRedimir()
+                    end)
 				end
 			end)
 		end
@@ -367,7 +373,15 @@ function showRedimir( event )
                 end)
                 
             end
-			
+			            
+            --DoneReden
+            local sheetCheck = graphics.newImageSheet(Sprites.check.source, Sprites.check.frames)
+            sprCheck = display.newSprite(sheetCheck, Sprites.check.sequences)
+            sprCheck.x = midW
+            sprCheck.y = intH / 3
+            sprCheck.alpha = 0
+            grpRedem:insert(sprCheck)
+            
 		end
     end
 end
@@ -450,6 +464,10 @@ function changeBtnShare()
 		transition.to( txtTitleInfo, { alpha = 1, time = 200, delay = 200, transition = easing.outExpo } )
 	end, 1)
 
+end
+
+--cambia el boton a deals compartido
+function doneReden()
 end
 
 --crea un cupon
@@ -695,7 +713,7 @@ function buildCoupon()
     local spc = display.newRect( 0, lastY + 60, 1, 1 )
     spc:setFillColor( 0 )
     svCoupon:insert( spc )
-	
+    
 	svCoupon:setScrollHeight(lastY + 50)
     
 end

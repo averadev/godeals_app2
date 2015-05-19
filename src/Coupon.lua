@@ -122,7 +122,13 @@ function listenerBeaconIOS( event )
             txtBtn.text = "DEAL REDIMIDO"
             rctBtn:setFillColor( .72, .82, .93 )
             rctBtn:removeEventListener( "tap", showRedimir )
-            showRedimir()
+            
+            sprCheck.alpha = .7
+            sprCheck:setSequence("play")
+            sprCheck:play()
+            timer.performWithDelay(1000, function() 
+                showRedimir()
+            end)
         end
     end
 end

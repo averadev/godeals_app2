@@ -378,6 +378,13 @@ function Header:new()
     
     -- Creamos la el toolbar
     function self:buildToolbar(homeScreen)
+        
+        -- Verificamos Wifi y BLE
+        if getBeacon then
+            isWifiBle = getBeacon.verifyWifiBLE()
+        end
+        
+        
         -- Incluye botones que de se ocultaran en la bus
 		local poscCiu = #txtCiudad + 1
         
@@ -462,7 +469,7 @@ function Header:new()
     
     -- Creamos la pantalla del menu
     function self:buildWifiBle()
-        if isWifiBle then
+        if not (isWifiBle) then
             local toolWifiBLE = display.newRect( 0, 60, display.contentWidth, 30 )
             toolWifiBLE.anchorX = 0
             toolWifiBLE.anchorY = 0
@@ -487,7 +494,7 @@ function Header:new()
     function self:buildNavBar(texto)
         
         local hWB = 0
-        if isWifiBle then hWB = 30 end
+        if not (isWifiBle) then hWB = 30 end
         
         local menu = display.newRect( 0, 60, display.contentWidth, 65 + hWB )
         menu.anchorX = 0

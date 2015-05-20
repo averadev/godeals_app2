@@ -47,6 +47,13 @@ function MenuLeft:new()
 		MenuLeftCiudad:addEventListener("tap",blockMenu)
 		MenuLeftCiudad:addEventListener("touch",blockMenu)
 		selfL:insert(MenuLeftCiudad)
+        
+        titleLeft = display.newText( {    
+            x = 150, y = h + 30, align = "left", width = 300,
+            text = "Seleccione una Ciudad",  font = "Lato-Light", fontSize = 25,
+        })
+        titleLeft:setFillColor( 1 )
+        selfL:insert(titleLeft)
 		
 		local function changeCity( event )
 			hideMenuLeft()
@@ -66,9 +73,13 @@ function MenuLeft:new()
 			rectCity[y].id = items[y].idCity
 			rectCity[y]:addEventListener( "tap", changeCity )
 			selfL:insert(rectCity[y])
+            
+            local icoMenuCity = display.newImage( "img/btn/icoMenuCity.png" )
+            icoMenuCity:translate( 25, MenuLeftCiudad.height + lastY - 60 + h)
+            selfL:insert(icoMenuCity)
 			
 			txtCity = display.newText( {    
-			x = 150, y = MenuLeftCiudad.height + lastY - 55 + h, align = "left", width = 300,
+			x = 165, y = MenuLeftCiudad.height + lastY - 60 + h, align = "left", width = 220,
 			text = items[y].name,  font = "Lato-Light", fontSize = 25,
 			})
 			txtCity:setFillColor( 0 )
@@ -138,6 +149,13 @@ function MenuRight:new()
 		MenuLeftOthers:addEventListener("tap",blockMenu)
 		MenuLeftOthers:addEventListener("touch",blockMenu)
 		selfR:insert(MenuLeftOthers)
+        
+        titleR = display.newText( {    
+            x = 290, y = h + 30, align = "left", width = 300,
+            text = "Opciónes",  font = "Lato-Light", fontSize = 25,
+        })
+        titleR:setFillColor( 1 )
+        selfR:insert(titleR)
 		
 		local function cerrarSession( event )
 			hideMenuRight()
@@ -150,10 +168,14 @@ function MenuRight:new()
 		rectTutorial.alpha = .1
 		rectTutorial:addEventListener( "tap", showTutorial )
 		selfR:insert(rectTutorial)
+        
+        local icoMenuTuto = display.newImage( "img/btn/icoOptTuto.png" )
+        icoMenuTuto:translate( 160, MenuLeftOthers.height + 30 + h)
+        selfR:insert(icoMenuTuto)
 		
 		local txtTutorial = display.newText( {    
-        x = 290, y = MenuLeftOthers.height + 30 + h, align = "left", width = 300,
-        text = "Tutorial",  font = "Lato-Light", fontSize = 25,
+            x = 300, y = MenuLeftOthers.height + 30 + h, align = "left", width = 200,
+            text = "Tutorial",  font = "Lato-Light", fontSize = 25,
 		})
 		txtTutorial:setFillColor( 0 )
 		selfR:insert(txtTutorial)
@@ -167,10 +189,14 @@ function MenuRight:new()
 		rectSession.alpha = .1
 		rectSession:addEventListener( "tap", cerrarSession )
 		selfR:insert(rectSession)
+        
+        local icoMenuSess = display.newImage( "img/btn/icoOptSess.png" )
+        icoMenuSess:translate( 160, MenuLeftOthers.height + 90 + h)
+        selfR:insert(icoMenuSess)
 		
 		local txtSession = display.newText( {    
-        x = 290, y = MenuLeftOthers.height + 90 + h, align = "left", width = 300,
-        text = "Cerrar sesión",  font = "Lato-Light", fontSize = 25,
+            x = 300, y = MenuLeftOthers.height + 90 + h, align = "left", width = 200,
+            text = "Cerrar sesión",  font = "Lato-Light", fontSize = 25,
 		})
 		txtSession:setFillColor( 0 )
 		selfR:insert(txtSession)

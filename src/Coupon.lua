@@ -43,6 +43,7 @@ local settings
 local rctBtn
 local FlagCoupon = 0
 local imgBtnShare = ""
+local hWCup = 0
 
 local txtInfo, txtBtn, txtTitleInfo, loadingRed, rctRed, txtRed
 local info, promotions, gallery, MenuEventBar, txtInfoRedimir2
@@ -480,13 +481,12 @@ end
 function buildCoupon()
 
 	lastY = 55;
-
 	svCoupon = widget.newScrollView
 	{
-		top = h + 125,
+		top = h + 125 + hWCup,
 		left = 0,
 		width = intW,
-		height = intH - (h + 125),
+		height = intH - (h + 125 + hWCup),
 		listener = scrollListenerContent1,
 		horizontalScrollDisabled = true,
         verticalScrollDisabled = false,
@@ -739,6 +739,7 @@ function scene:createScene( event )
     header.y = h
     header:buildToolbar()
     header:buildNavBar(event.params.item.name)
+    hWCup = header:buildWifiBle()
 	
 	--obtenemos los parametros del cupon
 	if event.params.item == nil then

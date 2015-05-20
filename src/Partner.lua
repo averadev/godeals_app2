@@ -23,6 +23,7 @@ local lastYImage
 local idPartner
 local settings
 local timeMarker
+local hWBPar = 0
 
 local info, promotions, gallery, MenuPartnerBar
 
@@ -279,14 +280,10 @@ function loadPartner(item)
 	groupPartner = display.newGroup()
 	homeScreen:insert( groupPartner )
 	
-	local imgBgPartner = display.newRect( midW, 170, intW, 76 )
-	imgBgPartner:setFillColor( 217/255, 217/255, 217/255 )
-	groupPartner:insert(imgBgPartner)
-	
 	svMenuTxt = widget.newScrollView
 	{
 		x = midW,
-		y = 163,
+		y = 163 + hWBPar,
 		width = intW,
 		height = 73,
 		--listener = ListenerChangeMenuPartner,
@@ -296,7 +293,7 @@ function loadPartner(item)
 	}
 	groupPartner:insert(svMenuTxt)
 	
-	MenuPartnerBar = display.newRect( midW, 198 , intW /3, 4 )
+	MenuPartnerBar = display.newRect( midW, 198 + hWBPar, intW /3, 4 )
 	MenuPartnerBar:setFillColor( 88/255, 188/255, 36/255 )
 	groupPartner:insert(MenuPartnerBar)
 	
@@ -622,10 +619,10 @@ function createScrollViewPartner(nameTxt)
 	
 	srvPartner[positionCurrent] = widget.newScrollView
 	{
-		top = 200,
+		top = 200 + hWBPar,
 		left = positionScrollPartner,
 		width = intW,
-		height = intH - (h + 200),
+		height = intH - (h + 200 + hWBPar),
 		listener = ListenerChangeScrollPartner,
 		horizontalScrollDisabled = false,
 		verticalScrollDisabled = false,
@@ -790,6 +787,7 @@ function scene:createScene( event )
     homeScreen:insert(header)
     header:buildToolbar()
     header:buildNavBar(title)
+    hWBPar = header:buildWifiBle()
 	
 	Globals.noCallbackGlobal = Globals.noCallbackGlobal + 1
 	callbackCurrent = Globals.noCallbackGlobal

@@ -36,6 +36,7 @@ local settings
 local dealsPartner = {}
 local timeMarker
 local callbackCurrent = 0
+local hWBE = 0
 
 local info, promotions, gallery, MenuEventBar
 --pantalla
@@ -265,7 +266,7 @@ function changeMenuEventTap( event )
 end
 
 --creamos el evento
-function buildEvent(item)
+function buildEvent(item, hWB)
 
 	groupEvent = display.newGroup()
 	groupEvent.y = h
@@ -274,7 +275,7 @@ function buildEvent(item)
 	svMenuTxt = widget.newScrollView
 	{
 		x = midW,
-		y = 155,
+		y = 155 + hWBE,
 		width = intW,
 		height = 60,
 		--listener = ListenerChangeMenuEvent,
@@ -289,7 +290,7 @@ function buildEvent(item)
 	greenLine:translate( display.contentWidth * .5, 183)
 	groupEvent:insert(greenLine)]]
 	
-	MenuEventBar = display.newRect( midW, 182 , intW /3, 4 )
+	MenuEventBar = display.newRect( midW, 182 + hWBE , intW /3, 4 )
 	MenuEventBar:setFillColor( 88/255, 188/255, 36/255 )
 	groupEvent:insert(MenuEventBar)
 	
@@ -540,10 +541,10 @@ function createScrollViewEvent(nameTxt)
 	
 	srvEventos[positionCurrent] = widget.newScrollView
 	{
-		top = 185,
+		top = 185 + hWBE,
 		left = positionScrollEvent,
 		width = intW,
-		height = intH - (h + 185),
+		height = intH - (h + 185 + hWBE),
 		listener = ListenerChangeScrollEvent,
 		horizontalScrollDisabled = false,
 		verticalScrollDisabled = false,
@@ -710,6 +711,7 @@ function scene:createScene( event )
     header.y = h
     header:buildToolbar()
     header:buildNavBar(itemObj.name)
+    hWBE = header:buildWifiBle()
 	
 	Globals.noCallbackGlobal = Globals.noCallbackGlobal + 1
 	callbackCurrent = Globals.noCallbackGlobal

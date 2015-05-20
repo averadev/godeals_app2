@@ -213,12 +213,12 @@ function scene:createScene( event )
 	screen = self.view
     
     -- Background
-    local background = display.newImage("img/bgk/login.jpg", true) 
+    local background = display.newImage("img/bgk/bgLogin.png", true) 
 	background.x = midW
 	background.y = midH
     screen:insert(background)
     
-    imgLogo = display.newImage("img/btn/Logo_FondoBlanco.png", true) 
+    imgLogo = display.newImage("img/btn/logoLogin2.png", true) 
 	imgLogo.x = midW
 	imgLogo.y = midH / 2
 	screen:insert(imgLogo)  
@@ -258,16 +258,12 @@ function scene:createScene( event )
     local btnReturn1 = display.newImage("img/btn/btnLoginRegresar.png", true) 
 	btnReturn1.x = midW - 122
 	btnReturn1.y = midH + 130
-    btnReturn1.height = 58
-    btnReturn1.width = 215
 	groupSign:insert(btnReturn1)
     btnReturn1:addEventListener( "tap", getReturnButtons )
     
     local btnDoSignIn = display.newImage("img/btn/btnLoginSignIn.png", true) 
 	btnDoSignIn.x = midW + 122
 	btnDoSignIn.y = midH + 130
-    btnDoSignIn.height = 58
-    btnDoSignIn.width = 215
 	groupSign:insert(btnDoSignIn)
     btnDoSignIn:addEventListener( "tap", doSignIn )
     
@@ -310,16 +306,12 @@ function scene:createScene( event )
     local btnReturn2 = display.newImage("img/btn/btnLoginRegresar.png", true) 
 	btnReturn2.x = midW - 122
 	btnReturn2.y = midH + 170
-    btnReturn2.height = 58
-    btnReturn2.width = 215
 	groupCreate:insert(btnReturn2)
     btnReturn2:addEventListener( "tap", getReturnButtons )
     
     local btnDoCreate = display.newImage("img/btn/btnLoginSignIn.png", true) 
 	btnDoCreate.x = midW + 122
 	btnDoCreate.y = midH + 170
-    btnDoCreate.height = 58
-    btnDoCreate.width = 215
 	groupCreate:insert(btnDoCreate)
     btnDoCreate:addEventListener( "tap", doCreate )
     
@@ -328,33 +320,25 @@ function scene:createScene( event )
     -- Buttons
     local btnFB = display.newImage("img/btn/facebook_login.png", true) 
 	btnFB.x = midW
-	btnFB.y = midH - 50
-    btnFB.height = 62
-    btnFB.width = 468
+	btnFB.y = midH - 40
 	groupBtn:insert(btnFB)
     btnFB:addEventListener( "tap", loginFaceBook )
     
     local btnCreate = display.newImage("img/btn/btnLoginCreate.png", true) 
-	btnCreate.x = midW - 122
+	btnCreate.x = midW - 80
 	btnCreate.y = midH + 50
-    btnCreate.height = 58
-    btnCreate.width = 215
 	groupBtn:insert(btnCreate)
     btnCreate:addEventListener( "tap", showCreate )
     
     local btnSignIn = display.newImage("img/btn/btnLoginSignIn.png", true) 
-	btnSignIn.x = midW + 122
+	btnSignIn.x = midW + 110
 	btnSignIn.y = midH + 50
-    btnSignIn.height = 58
-    btnSignIn.width = 215
 	groupBtn:insert(btnSignIn)
     btnSignIn:addEventListener( "tap", showSignIn )
     
     -- Lines
     local line = {}
-    line[1] = display.newLine(15, midH +1, intW - 15, midH +1)
-	groupBtn:insert(line[1])
-    line[2] = display.newLine(midW+1, midH + 70, midW+1, midH + 20)
+    line[2] = display.newLine(midW+35, midH + 30, midW+35, midH + 65)
 	groupBtn:insert(line[2])
     
 end

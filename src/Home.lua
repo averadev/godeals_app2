@@ -887,11 +887,12 @@ function scene:createScene( event )
     homeScreen:insert(header)
     header.y = h
     header:buildToolbar()
+    local hWB = header:buildWifiBle()
         
 	svMenuTxt = widget.newScrollView
 	{
 		x = 240,
-		y = h + 92,
+		y = h + 92 + hWB,
 		width = intW,
 		height = 65,
 		scrollHeight = 10,
@@ -903,16 +904,16 @@ function scene:createScene( event )
 	homeScreen:insert(svMenuTxt)
 	
 	local greenLine = display.newImage( "img/btn/greenLine.png" )
-	greenLine:translate( display.contentWidth * .5, 123 + h)
+	greenLine:translate( display.contentWidth * .5, 123 + h + hWB)
 	homeScreen:insert(greenLine)
 	
 	scrViewMain = widget.newScrollView
 	{
-		top = h + 125,
+		top = h + 125 + hWB,
 		--top = 500,
 		left = 0,
 		width = display.contentWidth,
-		height = intH - (h + 125),
+		height = intH - (h + 125 + hWB),
 		listener = ListenerChangeScrollHome,
 		horizontalScrollDisabled = false,
         verticalScrollDisabled = false,
@@ -923,10 +924,10 @@ function scene:createScene( event )
 	
 	scrViewEventos = widget.newScrollView
 	{
-		top = h + 125,
+		top = h + 125 + hWB,
 		left = 480,
 		width = intW,
-		height = intH - (h + 125),
+		height = intH - (h + 125 + hWB),
 		listener = ListenerChangeScrollHome,
 		backgroundColor = { .92 }
 	}
@@ -935,10 +936,10 @@ function scene:createScene( event )
     
 	scrViewDeals = widget.newScrollView
 	{
-		top = h + 125,
+		top = h + 125 + hWB,
 		left = 480,
 		width = intW,
-		height = intH - (h + 125),
+		height = intH - (h + 125 + hWB),
 		listener = ListenerChangeScrollHome,
 		backgroundColor = { .92 }
 	}

@@ -21,7 +21,7 @@ local midW = display.contentCenterX
 local midH = display.contentCenterY
 
 local h = display.topStatusBarContentHeight
-local lastY = 0;
+local lastY = 0
 local myMap
 local homeScreen = display.newGroup()
 
@@ -69,12 +69,13 @@ function scene:createScene( event )
     header.y = h
     header:buildToolbar()
     header:buildNavBar("Ubicación")
+    local hWBMap = header:buildWifiBle()
     
     lastY = h + 130
     
     -- Cocinar el mapa
-    local mh = intH - lastY
-    myMap = native.newMapView( midW, lastY + (mh / 2) - 4, intW, mh )
+    local mh = intH - (lastY + hWBMap)
+    myMap = native.newMapView( midW, (lastY + hWBMap) + (mh / 2) - 4, intW, mh )
     if myMap then
         local mh = intH - lastY
         myMap:setCenter( tonumber(itemObj.latitude), tonumber(itemObj.longitude), 0.02, 0.02 )
@@ -91,7 +92,7 @@ function scene:createScene( event )
             myMap:addMarker( tonumber(itemObj.latitude), tonumber(itemObj.longitude), options )
         end, 1 )
     else
-        local bg = display.newRect( midW, lastY + (mh / 2) - 4, intW, mh )
+        local bg = display.newRect( midW, (lastY + hWBMap) + (mh / 2) - 4, intW, mh )
         bg:setFillColor( .7 )
         homeScreen:insert(bg)
     end

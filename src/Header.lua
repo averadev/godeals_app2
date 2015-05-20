@@ -22,6 +22,7 @@ Header = {}
 function Header:new()
     -- Variables
 	local grpLoading
+    local isWifiBle = true
     local self = display.newGroup()
     local grpTool = display.newGroup()
     local grpSearch = display.newGroup()
@@ -394,7 +395,7 @@ function Header:new()
         -- Grupo que se oculta en la busqueda
         self:insert(grpTool)
         self:insert(grpSearch)
-
+        
         txtCiudad[poscCiu] = display.newText( {
             x = 135, y = 30,
 			align = "left", width = 100,
@@ -460,15 +461,42 @@ function Header:new()
     end
     
     -- Creamos la pantalla del menu
+    function self:buildWifiBle()
+        if isWifiBle then
+            local toolWifiBLE = display.newRect( 0, 60, display.contentWidth, 30 )
+            toolWifiBLE.anchorX = 0
+            toolWifiBLE.anchorY = 0
+            toolWifiBLE:setFillColor( .2, .5, .2 )
+            self:insert(toolWifiBLE)
+
+            local txtWifiBLE = display.newText( {
+                x = 220, y = 75,
+                align = "left", width = 400,
+                text = "Para obtener mejores beneficios active su Wifi y/o bluetooth", font = "Lato-Bold", fontSize = 14,
+            })
+            txtWifiBLE:setFillColor( 1 )
+            self:insert(txtWifiBLE)
+            return 30
+        else
+            return 0
+        end
+        
+    end
+    
+    -- Creamos la pantalla del menu
     function self:buildNavBar(texto)
-        local menu = display.newRect( 0, 60, display.contentWidth, 65 )
+        
+        local hWB = 0
+        if isWifiBle then hWB = 30 end
+        
+        local menu = display.newRect( 0, 60, display.contentWidth, 65 + hWB )
         menu.anchorX = 0
         menu.anchorY = 0
         menu:setFillColor( .87 )
         self:insert(menu)
         
         txtTitle = display.newText( {
-            x = (display.contentWidth/2), y = 95,
+            x = (display.contentWidth/2), y = 95 + hWB,
 			width = 400, align = "center",
             text = texto, font = "Lato-Hairline", fontSize = 22,
         })
@@ -477,13 +505,13 @@ function Header:new()
 
         local imgBtnBack = display.newImage( "img/btn/btnBackward.png" )
         imgBtnBack.x= 30
-        imgBtnBack.y = 92
+        imgBtnBack.y = 92 + hWB
         imgBtnBack:addEventListener( "tap", returnScene )
         self:insert( imgBtnBack )
 		
 		local imgBtnHome = display.newImage( "img/btn/btnMenuHome.png" )
         imgBtnHome.x= 440
-        imgBtnHome.y = 92
+        imgBtnHome.y = 92 + hWB
 		imgBtnHome:setFillColor( .5 )
         imgBtnHome:addEventListener( "tap", returnHome )
         self:insert( imgBtnHome )

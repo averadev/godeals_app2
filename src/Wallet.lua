@@ -32,6 +32,7 @@ local lastY = 200;
 local itemObj
 local contDeals = 0
 local yMain = 0
+local hWBW = 0
 
 local info, promotions, gallery, MenuEventBar
 local homeScreen = display.newGroup()
@@ -203,6 +204,7 @@ function scene:createScene( event )
     header.y = h
     header:buildToolbar()
     header:buildNavBar("Deals Descargados")
+    hWBW = header:buildWifiBle()
 	
 	settings = DBManager.getSettings()
 	
@@ -218,10 +220,10 @@ function scene:enterScene( event )
     yMain = 0
 	svContent = widget.newScrollView
 	{
-		top = h + 125,
+		top = h + 125 + hWBW,
 		left = 0,
 		width = intW,
-		height = intH - (h + 125),
+		height = intH - (h + 125 + hWBW),
 		horizontalScrollDisabled = true,
 		backgroundColor = { 245/255, 245/255, 245/255 }
 	}

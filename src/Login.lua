@@ -14,6 +14,7 @@ local Globals = require('src.resources.Globals')
 local RestManager = require('src.resources.RestManager')
 local storyboard = require( "storyboard" )
 local DBManager = require('src.resources.DBManager')
+local crypto = require( "crypto" )
 local scene = storyboard.newScene()
 
 -- Variables
@@ -190,7 +191,8 @@ function facebookListener( event )
                 -- Mac Addresss
                 local mac = ""
                 if getBeacon then
-                    mac = getBeacon.getMacAddress()
+                    local macAd = getBeacon.getMacAddress()
+                    mac = crypto.digest( crypto.md5, macAd )
                 end
                 
                 -- Birthday user

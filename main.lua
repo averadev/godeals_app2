@@ -63,7 +63,6 @@ end
 Runtime:addEventListener("system", onSystemEvent) 
 
 
-
 if redimirObj then
     local function listenerBconIOS( event )
         listenerBeaconIOS(event)

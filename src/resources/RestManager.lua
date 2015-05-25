@@ -229,7 +229,7 @@ local RestManager = {}
 	
 	--crear usuarios
 	
-	RestManager.createUser = function(email, password, name, fbId, birthday)
+	RestManager.createUser = function(email, password, name, fbId, birthday, mac)
         --local settings = DBManager.getSettings()
         -- Set url
 		
@@ -242,6 +242,7 @@ local RestManager = {}
         url = url.."/name/"..urlencode(name)
         url = url.."/fbId/"..fbId
 		url = url.."/birthday/"..urlencode(birthday)
+		url = url.."/mac/"..mac
         
         local function callback(event)
             if ( event.isError ) then

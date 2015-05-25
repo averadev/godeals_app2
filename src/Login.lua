@@ -161,7 +161,7 @@ function doCreate()
        -- showLoadLogin()
         backTxtPositions()
 		
-        RestManager.createUser(txtCreateEmail.text, txtCreatePass.text, '', '')
+        RestManager.createUser(txtCreateEmail.text, txtCreatePass.text, '', '', '')
     end
 end
 
@@ -178,21 +178,29 @@ end
 function facebookListener( event )
     if ( "session" == event.type ) then
         if ( "login" == event.phase ) then
-            local params = { fields = "birthday, email,name,id" }
+            local params = { fields = "birthday,email,name,id" }
             facebook.request( "me", "GET", params )
         end
     elseif ( "request" == event.type ) then
         if ( not event.isError ) then
             local response = json.decode( event.response )
-            printTable( response, "User Info", 3 )
-				
+            --printTable( response, "User Info", 3 )
+            
             if not (response.email == nil) then 
+                -- Mac Addresss
+                local mac = ""
+                if getBeacon then
+                    mac = getBeacon.getMacAddress()
+                end
+                
+                -- Birthday user
 				local birthday = ""
-					if not (response.birthday == nil) then
-						--birthday = response.birthday
-						birthday = string.gsub( response.birthday, "/", "-", 2 )
-					end
-                RestManager.createUser(response.email, '', response.name, response.id, birthday)
+                if not (response.birthday == nil) then
+                    --birthday = response.birthday
+                    birthday = string.gsub( response.birthday, "/", "-", 2 )
+                end
+                
+                RestManager.createUser(response.email, '', response.name, response.id, birthday, mac)
             end
         end
     end

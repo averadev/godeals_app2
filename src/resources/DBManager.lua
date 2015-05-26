@@ -176,6 +176,27 @@ local dbManager = {}
 		closeConnection( )
 		return 1
 	end
+    
+	dbManager.lealtad = function()
+		openConnection( )
+    
+        local result, idx = {}, 1
+    
+        -- Get All
+        for row in db:nrows("SELECT * FROM beaconday WHERE status = 1;") do
+            result[idx] = row
+            idx = idx + 1
+        end
+    
+        -- Delete all
+        query = "UPDATE beaconday SET status = 0 WHERE status = 1;"
+        db:exec( query )
+    
+        closeConnection( )
+        return result
+    
+        
+	end
 
 	--Setup squema if it doesn't exist
 	dbManager.setupSquema = function()
@@ -187,6 +208,9 @@ local dbManager = {}
     
         local query = "CREATE TABLE IF NOT EXISTS ads (id INTEGER PRIMARY KEY, major INTEGER, type INTEGER, partnerId INTEGER, "..
 					"message TEXT, distanceMin REAL, distanceMax REAL, latitude REAL, longitude REAL, fecha INTEGER, status INTEGER);"
+		db:exec( query )
+    
+        local query = "CREATE TABLE IF NOT EXISTS beaconday (fecha INTEGER, major INTEGER, status INTEGER);"
 		db:exec( query )
 	
 		-- Verify Version APP

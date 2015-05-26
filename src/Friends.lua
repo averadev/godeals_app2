@@ -9,6 +9,7 @@ require('src.BuildRow')
 --variables
 local intW = display.contentWidth
 local intH = display.contentHeight
+local midH = display.contentHeight / 2
 local h = display.topStatusBarContentHeight
 local faceActive = 0
 local fbAppID = "750089858383563"
@@ -46,60 +47,64 @@ function showListFriends(idC)
 	bgFriend:addEventListener( "tap", CloseListFriends )
 	bgFriend:addEventListener( "touch", CloseListFriends )
 	
-	local imgBgFriends = display.newImage( "img/bgk/fondo_deals.png" )
-	imgBgFriends.width = 440
-	--btnModal.height = 500
-	imgBgFriends.height = intH - intH / 4.2
-	imgBgFriends:translate( (intW / 2), (intH / 1.8) + h )
+	local imgBgFriends = display.newImage( "img/bgk/bgShare.png" )
+	imgBgFriends:translate( (intW / 2), midH )
 	groupFriends:insert(imgBgFriends)
 	imgBgFriends:addEventListener( 'tap', lockedModalFriend )
 	imgBgFriends:addEventListener( 'touch', lockedModalFriend )
 	
 	local friendsTitle = display.newText( {
-		text = "Lista de amigos",     
-		x = intW/2, y = intH/4.2 + h,
-		width = 400,
-		font = "Lato-Regular",  fontSize = 40, align = "center"
+		text = "Compartir DEAL con:",     
+		x = 200, y = midH - 235,
+		width = 300,
+		font = "Lato-Regular",  fontSize = 20
 	})
 	friendsTitle:setFillColor( 1 )
 	groupFriends:insert(friendsTitle)
 	
-	local btnRefreshFriend = display.newRoundedRect(intW/2,intH/2.9 + h ,380,60,10)
-	btnRefreshFriend:setFillColor(54/255, 138/255, 85/255)
+	local btnRefreshFriend = display.newRoundedRect(370, midH - 235, 140, 46, 5)
+	btnRefreshFriend:setFillColor({
+        type = 'gradient',
+        color1 = { 0, 179/255, 0 }, 
+        color2 = { 0, 138/255, 0 },
+        direction = "bottom"
+    })
 	groupFriends:insert(btnRefreshFriend)
 	btnRefreshFriend:addEventListener( 'tap', refreshFriend )
+    
+    local friendRefresh = display.newImage( "img/btn/friendRefresh.png" )
+	friendRefresh:translate( 320, midH - 235 )
+	groupFriends:insert(friendRefresh)
 	
 	local txtRefreshFriend = display.newText( {
-		text = "Actualizar amigos",     
-		x = intW/2, y = intH/2.9 + h,
-		width = 200,
-		font = "Lato-Regular",  fontSize = 22, align = "center"
+		text = "ACTUALIZAR AMIGOS",     
+		x = 385, y = midH - 235, width = 110,
+		font = "Lato-Regular",  fontSize = 14, align = "center"
 	})
 	txtRefreshFriend:setFillColor( 1 )
 	groupFriends:insert(txtRefreshFriend)
 	
-	btnAceptF = display.newRoundedRect(intW/1.4,intH/1.2 + h ,170,50,10)
-	btnAceptF:setFillColor(0,148/255,186/255)
-	btnAceptF.alpha = .5
+	btnAceptF = display.newRoundedRect(350, midH + 210, 170, 50, 5)
+	btnAceptF:setFillColor(0/255, 149/255, 186/255)
 	groupFriends:insert(btnAceptF)
 	
 	local txtAceptF = display.newText( {
-		text = "Aceptar",     
-		x = intW/1.4, y = intH/1.2 + h,
+		text = "Compartir",     
+		x = 350, y = midH + 210,
 		width = 200,
 		font = "Lato-Regular",  fontSize = 20, align = "center"
 	})
 	txtAceptF:setFillColor( 1 )
 	groupFriends:insert(txtAceptF)
 	
-	local btnCancelF = display.newRoundedRect(intW/3.5,intH/1.2 + h,170,50,10)
-	btnCancelF:setFillColor(1,0,0)
+	local btnCancelF = display.newRoundedRect(130, midH + 210, 170, 50, 5)
+	btnCancelF:setFillColor(241/255, 151/255, 151/255)
 	groupFriends:insert(btnCancelF)
 	btnCancelF:addEventListener( "tap", CloseListFriends )
 	
 	local txtCancelF = display.newText( {
 		text = "Cancelar",     
-		x = intW/3.5, y = intH/1.2 + h,
+		x = 130, y = midH + 210,
 		width = 200,
 		font = "Lato-Regular",  fontSize = 20, align = "center"
 	})
@@ -108,10 +113,10 @@ function showListFriends(idC)
 	
 	scvFriends = widget.newScrollView
 	{
-		top = h + intH/2.5,
+		top = midH - 185,
 		left = 40,
 		width = 400,
-		height = intH/2.7,
+		height = 360,
 		listener = ScrollListenerFriends,
 		horizontalScrollDisabled = true,
         verticalScrollDisabled = false,
@@ -361,12 +366,6 @@ function ScrollListenerFriends( event )
 		
 		if txtSendEmail then
 			local pointMail = scvFriends.height - txtSendEmail.y - 14
-		
-			if yy >= pointMail then
-				txtSendEmail.x = intW * 2 - 42
-			else
-				txtSendEmail.x = intW/2 - 42
-			end
 		end
 		
     elseif "ended" == phase then
@@ -374,30 +373,11 @@ function ScrollListenerFriends( event )
 		local xx, yy = event.target:getContentPosition()
 		
 		if txtSendEmail then
-		
 			local pointMail = scvFriends.height - txtSendEmail.y - 14
-		
-			if yy >= pointMail then
-				txtSendEmail.x = intW * 2 - 42
-			else
-				txtSendEmail.x = intW/2 - 42
-			end
-		
 		end
 		
     end
 	
-	 if ( event.limitReached ) then
-		if txtSendEmail then
-			if ( event.direction == "up" ) then
-				txtSendEmail.x = intW/2 - 42
-			elseif ( event.direction == "down" ) then
-				if txtSendEmail.y > scvFriends.height then
-					txtSendEmail.x = intW * 2
-				end
-			end
-		end
-    end
 
     return true
 	
@@ -443,37 +423,43 @@ end
 function friendList(items)
 
 	local contLF = #maxShape + 1
+    
+    local lineSeparator = display.newRect( 200, lastY, 400, 74 )
+	lineSeparator:setFillColor( .5 )
+    lineSeparator.alpha = .1
+	groupFriendsList:insert( lineSeparator )
+	lineSeparator:toFront()
 
 	maxShape[contLF] = display.newRect( 200, lastY, 400, 80 )
-    
 	maxShape[contLF].id = items.id
 	maxShape[contLF].name = items.name
 	maxShape[contLF].num = contLF
 	groupFriendsList:insert( maxShape[contLF] )
 	maxShape[contLF]:toBack()
 	maxShape[contLF]:addEventListener( 'tap', selectFriend)
+    
+    local logoFace = display.newImage( "img/btn/logoFace.png" )
+	logoFace:translate( 110, lastY )
+	groupFriendsList:insert(logoFace)
 	
 	local txtNameFriend = display.newText({
 		text = items.name,     
-		x = 240, y = lastY,
+		x = 270, y = lastY,
 		width = 270,
-		height = 24,
+		height = 28,
 		font = "Lato-Regular", fontSize = 24, align = "left"
 	})
 	txtNameFriend:setFillColor( 0 )
     groupFriendsList:insert(txtNameFriend)
 	
 	local avatar = display.newImage("avatarFriend"..items.id, system.TemporaryDirectory )
-	avatar.x = 60
+	avatar.x = 40
 	avatar.y = lastY
 	avatar.width = 70
 	avatar.height  = 70
 	groupFriendsList:insert(avatar)
 	
-	local lineSeparator = display.newRect( 200, lastY + 40, 400, 1)
-	lineSeparator:setFillColor( 0 )
-	groupFriendsList:insert( lineSeparator )
-	lineSeparator:toFront()
+	
 	
 	lastY = lastY + 80
 	
@@ -490,7 +476,7 @@ function printTextFriend()
 
 	local contLF = #maxShape + 1
 
-	maxShape[contLF] = display.newRect( 200, lastY, 400, 100 )
+	maxShape[contLF] = display.newRect( 200, lastY, 400, 80 )
     maxShape[contLF].num = contLF
 	groupFriendsList:insert( maxShape[contLF] )
 	maxShape[contLF]:toBack()
@@ -502,12 +488,12 @@ function printTextFriend()
 	groupFriendsList:insert( lineSeparator )
 	lineSeparator:toFront()
 	
-	bgEmailFriend = display.newImage( "img/btn/bgTxtSearch.png" )
-    bgEmailFriend:translate(200, lastY - 20 )
+	bgEmailFriend = display.newImage( "img/btn/email.png" )
+    bgEmailFriend:translate(200, lastY - 40 )
 	bgEmailFriend.width = 360
 	groupFriendsList:insert( bgEmailFriend )
 	
-	txtSendEmail = native.newTextField( 200, lastY - 40, 340, 60 )
+	txtSendEmail = native.newTextField( 225, lastY - 40, 300, 60 )
     txtSendEmail.method = "sendEmail"
     txtSendEmail.inputType = "email"
 	txtSendEmail.placeholder = "Correo del amigo"

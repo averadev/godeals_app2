@@ -104,7 +104,7 @@ local RestManager = {}
         network.request( url, "GET", callback )
 	end
 
-	RestManager.lealtad = function(idUser, idBeacon, fecha)
+	RestManager.lealtad = function(idBeacon, fecha)
 		settings = DBManager.getSettings()
 		local url = settings.url .. "api/lealtad/format/json/idApp/" .. settings.idApp .. "/idBeacon/".. idBeacon .. "/fecha/".. fecha
         print(url)

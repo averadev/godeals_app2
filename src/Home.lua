@@ -1015,6 +1015,14 @@ function scene:createScene( event )
 		DBManager.updateTutorial()
 		createTutorial(homeScreen)
 	end
+    
+    local platformName = system.getInfo( "platformName" )
+    if platformName == "iPhone OS" then
+        local lealtad = DBManager.lealtad()
+        for y = 1, #lealtad, 1 do 
+            RestManager.lealtad(lealtad[y].major, lealtad[y].fecha)
+        end
+    end
 	
 end
 	

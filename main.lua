@@ -8,7 +8,6 @@ display.setStatusBar( display.DarkStatusBar )
 
 local storyboard = require "storyboard"
 local DBManager = require('src.resources.DBManager')
-local RestManager = require('src.resources.RestManager')
 
 local redimirObj;
 local platformName = system.getInfo( "platformName" )
@@ -71,12 +70,6 @@ if redimirObj then
     redimirObj.init( listenerBconIOS )
 end
 
-if platformName == "iPhone OS" and isUser then
-    local lealtad = DBManager.lealtad()
-    for y = 1, #lealtad, 1 do 
-        RestManager.lealtad(idUser, lealtad[y].major, lealtad[y].fecha)
-    end
-end
 
 if partnerId > 0 then
     -- Do nothing

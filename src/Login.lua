@@ -185,7 +185,6 @@ function facebookListener( event )
     elseif ( "request" == event.type ) then
         if ( not event.isError ) then
             local response = json.decode( event.response )
-            --printTable( response, "User Info", 3 )
             
             if not (response.email == nil) then 
                 -- Mac Addresss
@@ -196,7 +195,7 @@ function facebookListener( event )
                 end
                 
                 -- Birthday user
-				local birthday = ""
+				local birthday = "0"
                 if not (response.birthday == nil) then
                     --birthday = response.birthday
                     birthday = string.gsub( response.birthday, "/", "-", 2 )

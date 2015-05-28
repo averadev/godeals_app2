@@ -488,12 +488,11 @@ function printTextFriend()
 	groupFriendsList:insert( lineSeparator )
 	lineSeparator:toFront()
 	
-	bgEmailFriend = display.newImage( "img/btn/email.png" )
-    bgEmailFriend:translate(200, lastY - 40 )
-	bgEmailFriend.width = 360
+	bgEmailFriend = display.newImage( "img/btn/txtEmail.png" )
+    bgEmailFriend:translate(200, lastY - 43 )
 	groupFriendsList:insert( bgEmailFriend )
 	
-	txtSendEmail = native.newTextField( 225, lastY - 40, 300, 60 )
+	txtSendEmail = native.newTextField( 200, lastY - 40, 370, 60 )
     txtSendEmail.method = "sendEmail"
     txtSendEmail.inputType = "email"
 	txtSendEmail.placeholder = "Correo del amigo"

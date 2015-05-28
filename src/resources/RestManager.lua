@@ -267,6 +267,7 @@ local RestManager = {}
             return true
         end
         -- Do request
+        print(url)
         network.request( url, "GET", callback ) 
     end
 	
@@ -611,7 +612,7 @@ local RestManager = {}
 		settings = DBManager.getSettings()
 		
 		local url = settings.url .. "api/shareDealsByFace/format/json/idApp/" .. settings.idApp .. "/idFriend/" .. idFriend .. "/idCoupon/" .. idCoupon
-	   
+	    print(url)
 		local function callback(event)
             if ( event.isError ) then
             else
@@ -635,7 +636,7 @@ local RestManager = {}
 		settings = DBManager.getSettings()
 		
 		local url = settings.url .. "api/shareDealsByEmail/format/json/idApp/" .. settings.idApp .. "/email/" .. urlencode(email) .. "/idCoupon/" .. idCoupon
-	   
+	    print(url)
 		local function callback(event)
             if ( event.isError ) then
             else

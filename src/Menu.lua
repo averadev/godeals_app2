@@ -48,8 +48,12 @@ function MenuLeft:new()
 		MenuLeftCiudad:addEventListener("touch",blockMenu)
 		selfL:insert(MenuLeftCiudad)
         
+        local icoMenuCity = display.newImage( "img/btn/icoMenuCity.png" )
+        icoMenuCity:translate( 0, h + 30)
+        selfL:insert(icoMenuCity)
+        
         titleLeft = display.newText( {    
-            x = 150, y = h + 30, align = "left", width = 300,
+            x = 175, y = h + 32, align = "left", width = 300,
             text = "Seleccione una Ciudad",  font = "Lato-Light", fontSize = 25,
         })
         titleLeft:setFillColor( 1 )
@@ -74,12 +78,8 @@ function MenuLeft:new()
 			rectCity[y]:addEventListener( "tap", changeCity )
 			selfL:insert(rectCity[y])
             
-            local icoMenuCity = display.newImage( "img/btn/icoMenuCity.png" )
-            icoMenuCity:translate( 25, MenuLeftCiudad.height + lastY - 60 + h)
-            selfL:insert(icoMenuCity)
-			
 			txtCity = display.newText( {    
-			x = 165, y = MenuLeftCiudad.height + lastY - 60 + h, align = "left", width = 220,
+			x = 130, y = MenuLeftCiudad.height + lastY - 60 + h, align = "left", width = 220,
 			text = items[y].name,  font = "Lato-Light", fontSize = 25,
 			})
 			txtCity:setFillColor( 0 )

@@ -495,7 +495,7 @@ function printTextFriend()
 	txtSendEmail = native.newTextField( 200, lastY - 40, 370, 60 )
     txtSendEmail.method = "sendEmail"
     txtSendEmail.inputType = "email"
-	txtSendEmail.placeholder = "Correo del amigo"
+	txtSendEmail.placeholder = "Enviar correo a un amigo"
     txtSendEmail.hasBackground = false
 	txtSendEmail:setReturnKey(  "send"  )
 	txtSendEmail.num = contLF

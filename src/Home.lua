@@ -1016,6 +1016,10 @@ function scene:createScene( event )
 		createTutorial(homeScreen)
 	end
     
+    -- Registramos uso del app
+    RestManager.initApp()
+    
+    -- Para IOS envia actualizaciones de lealtad a comercios
     local platformName = system.getInfo( "platformName" )
     if platformName == "iPhone OS" then
         local lealtad = DBManager.lealtad()

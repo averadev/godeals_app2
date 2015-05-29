@@ -104,10 +104,17 @@ local RestManager = {}
         network.request( url, "GET", callback )
 	end
 
-	RestManager.lealtad = function(idBeacon, fecha)
+	RestManager.initApp = function(idBeacon, fecha)
 		settings = DBManager.getSettings()
-		local url = settings.url .. "api/lealtad/format/json/idApp/" .. settings.idApp .. "/idBeacon/".. idBeacon .. "/fecha/".. fecha
+		local url = settings.url .. "api/initApp/format/json/idApp/" .. settings.idApp
         print(url)
+        -- Do request
+        network.request( url, "GET", callback )
+	end
+
+    RestManager.lealtad = function(idBeacon, fecha)
+		settings = DBManager.getSettings()
+		local url = settings.url .. "api/lealtadIOS/format/json/idApp/" .. settings.idApp .. "/idBeacon/".. idBeacon .. "/fecha/".. fecha
         -- Do request
         network.request( url, "GET", callback )
 	end
@@ -267,7 +274,6 @@ local RestManager = {}
             return true
         end
         -- Do request
-        print(url)
         network.request( url, "GET", callback ) 
     end
 	
@@ -564,6 +570,13 @@ local RestManager = {}
 		
 		local url = settings.url
         url = url.."api/getFilter/format/json/idApp/" .. settings.idApp .."/city/" .. settings.city .. "/idFilter/" .. idFilter .. "/type/" .. typeF
+        
+        if typeF == "EVENTOS" and idFilter == 0 then
+			url = settings.url .. "api/getAllEvent/format/json/idApp/" .. settings.idApp .. "/city/" .. settings.city
+		elseif not (typeF == "EVENTOS") and idFilter == 6 then
+			url = settings.url .. "api/getAllDeal/format/json/idApp/" .. settings.idApp .. "/city/" .. settings.city
+		end
+    
     
         local function callback(event)
             if ( event.isError ) then
@@ -612,7 +625,7 @@ local RestManager = {}
 		settings = DBManager.getSettings()
 		
 		local url = settings.url .. "api/shareDealsByFace/format/json/idApp/" .. settings.idApp .. "/idFriend/" .. idFriend .. "/idCoupon/" .. idCoupon
-	    print(url)
+	    
 		local function callback(event)
             if ( event.isError ) then
             else
@@ -636,7 +649,7 @@ local RestManager = {}
 		settings = DBManager.getSettings()
 		
 		local url = settings.url .. "api/shareDealsByEmail/format/json/idApp/" .. settings.idApp .. "/email/" .. urlencode(email) .. "/idCoupon/" .. idCoupon
-	    print(url)
+	    
 		local function callback(event)
             if ( event.isError ) then
             else

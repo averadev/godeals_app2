@@ -42,8 +42,8 @@ local function isBeacon(args)
                     end
                     
                     if optsExtras.adId then
-                        adId = optsExtras.adId
-                        storyboard.gotoScene("src.WelcomePartner", {params = { idAd = adId }})
+                        partnerId = optsExtras.adId
+                        storyboard.gotoScene("src.WelcomePartner", {params = { idAd = partnerId }})
                     end
                     
                 end
@@ -72,6 +72,7 @@ end
 
 
 if partnerId > 0 then
+    storyboard.gotoScene("src.Partner", {params = { idPartner = 11 }})
     -- Do nothing
 elseif isUser then
 	storyboard.gotoScene("src.Home")

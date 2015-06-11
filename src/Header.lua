@@ -388,33 +388,106 @@ function Header:new()
         -- Incluye botones que de se ocultaran en la bus
 		local poscCiu = #txtCiudad + 1
         
-        local toolbar = display.newRect( 0, 0, display.contentWidth, 60 )
+        local toolbar = display.newRect( 0, 0, display.contentWidth, 80 )
         toolbar.anchorX = 0
         toolbar.anchorY = 0
         toolbar:setFillColor( .2, .2, .2 )
         self:insert(toolbar)
         
-        local logo = display.newImage( "img/btn/logo.png" )
-        logo:translate( 45, 30 )
-		logo:addEventListener("tap",showMenuLeft)
-        self:insert(logo)
+        local iconTool1 = display.newImage( "img/btn/iconTool1.png" )
+        iconTool1:translate( 47, 35 )
+		iconTool1:addEventListener("tap",showMenuLeft)
+        self:insert(iconTool1)
+        
+        txtCiudad[poscCiu] = display.newText( {
+            x = 47, y = 65,
+			align = "center", width = 95,
+            text = textoCiudad, font = "Lato-Bold", fontSize = 10,
+        })
+        txtCiudad[poscCiu]:setFillColor( 1 )
+        self:insert(txtCiudad[poscCiu])
+        if textoCiudad == "" then
+			RestManager.getCityById()
+		end
         
         -- Grupo que se oculta en la busqueda
         self:insert(grpTool)
         self:insert(grpSearch)
         
-        txtCiudad[poscCiu] = display.newText( {
-            x = 135, y = 30,
-			align = "left", width = 100,
-            text = textoCiudad, font = "Lato-Bold", fontSize = 23,
+        -- Draw lines
+        local line1 = display.newRect( 95, 40, 1, 80)
+        line1.alpha = .1
+		grpTool:insert(line1)
+        local line2 = display.newRect( 190, 40, 1, 80)
+        line2.alpha = .1
+		grpTool:insert(line2)
+        local line3 = display.newRect( 285, 40, 1, 80)
+        line3.alpha = .1
+		grpTool:insert(line3)
+        local line4 = display.newRect( 380, 40, 1, 80)
+        line4.alpha = .1
+		grpTool:insert(line4)
+        local bgToolB = display.newRect( 237, 40, 95, 80 )
+        bgToolB:setFillColor( 64/255 )
+        grpTool:insert(bgToolB)
+        local bgToolD = display.newRect( 332, 40, 95, 80 )
+        bgToolD:setFillColor( 50/255, 150/255, 0 )
+        grpTool:insert(bgToolD)
+        
+        local iconTool2 = display.newImage( "img/btn/iconTool2.png" )
+        iconTool2:translate( 142, 35 )
+		--iconTool2:addEventListener("tap",showMenuLeft)
+        grpTool:insert(iconTool2)
+        local iconTool3 = display.newImage( "img/btn/iconTool3.png" )
+        iconTool3:translate( 237, 35 )
+		iconTool3:addEventListener("tap",showNotifications)
+        grpTool:insert(iconTool3)
+        local iconTool4 = display.newImage( "img/btn/iconTool4.png" )
+        iconTool4:translate( 332, 35 )
+		iconTool4:addEventListener("tap",showWallet)
+        grpTool:insert(iconTool4)
+        local iconTool5 = display.newImage( "img/btn/iconTool5.png" )
+        iconTool5:translate( 425, 37 )
+		iconTool5:addEventListener("tap",showSearch)
+        self:insert(iconTool5)
+        
+        local txtTool2 = display.newText( {
+            x = 142, y = 65,
+			align = "center", width = 95,
+            text = "CERCANOS", font = "Lato-Bold", fontSize = 10,
         })
-        txtCiudad[poscCiu]:setFillColor( 1 )
-        grpTool:insert(txtCiudad[poscCiu])
-		
-		if textoCiudad == "" then
-			RestManager.getCityById()
-		end
+        txtTool2:setFillColor( 1 )
+        grpTool:insert(txtTool2)
+        
+        local txtTool3 = display.newText( {
+            x = 237, y = 65,
+			align = "center", width = 95,
+            text = "MI BANDEJA", font = "Lato-Bold", fontSize = 10,
+        })
+        txtTool3:setFillColor( 1 )
+        grpTool:insert(txtTool3)
+        
+        local txtTool4 = display.newText( {
+            x = 332, y = 65,
+			align = "center", width = 95,
+            text = "MIS DESCARGAS", font = "Lato-Bold", fontSize = 10,
+        })
+        txtTool4:setFillColor( 1 )
+        grpTool:insert(txtTool4)
+        
+        local txtTool5 = display.newText( {
+            x = 425, y = 65,
+			align = "center", width = 95,
+            text = "BUSCADOR", font = "Lato-Bold", fontSize = 10,
+        })
+        txtTool5:setFillColor( 1 )
+        grpTool:insert(txtTool5)
+        
+        
+        
+        
 
+        --[[
         local btnWallet = display.newImage( "img/btn/btnMenuWallet.png" )
         btnWallet:translate( display.contentWidth - 212, 30 )
         btnWallet:addEventListener( "tap", showWallet )
@@ -435,25 +508,11 @@ function Header:new()
         --btnUser:addEventListener( "tap", saveBeacon )
 		btnUser:addEventListener( "tap", showMenuRight )
         grpTool:insert(btnUser)
+        ]]--
                 
         -- Search Elements
         grpSearch.alpha = 0
         
-        --[[imgSearch = display.newImage( "img/btn/btnMenuSearch.png" )
-        imgSearch:translate( display.contentWidth - 90, 30 )
-        grpSearch:insert(imgSearch)
-		--imgSearch:addEventListener('tap',getSceneSearch)
-		imgSearch:addEventListener('tap', SearchText)
-        
-        btnClose = display.newImage( "img/btn/btnMenuClose.png" )
-        btnClose:translate( display.contentWidth - 30, 30 )
-        btnClose:addEventListener( "tap", hideSearch )
-        grpSearch:insert(btnClose)
-        
-        bgSearch = display.newImage( "img/btn/bgTxtSearch.png" )
-        bgSearch:translate(270, 50 )
-        grpSearch:insert(bgSearch)]]
-		
 		--creamos la pantalla del menu
 		if menuScreenLeft == nil then
 			menuScreenLeft = MenuLeft:new()

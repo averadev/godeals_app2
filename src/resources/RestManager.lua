@@ -28,7 +28,7 @@ local RestManager = {}
 				local data = json.decode(event.response)
                 if data.success then
                     setElements(data.items)
-					loadImage({posc = 1, screen = 'MainScreen'})
+					loadImageLogos({posc = 1, screen = 'MainScreen'})
                 end
             end
             return true
@@ -539,7 +539,7 @@ local RestManager = {}
 		
 		local url = settings.url
         url = url.."api/getCityById/format/json/city/" .. settings.city
-    
+        print(url)
         local function callback(event)
             if ( event.isError ) then
             else

@@ -2,7 +2,8 @@ MenuLeft = {}
 MenuRight = {}
 
 function MenuLeft:new()
-
+    
+    local DBManager = require('src.resources.DBManager')
 	local RestManager = require('src.resources.RestManager')
 	
 	local intW = display.contentWidth
@@ -12,6 +13,7 @@ function MenuLeft:new()
 	local lineLeft = {}
 
 	local selfL = display.newGroup()
+    local grpCity = display.newGroup()
 	
 	selfL.x = -480
 	
@@ -25,7 +27,7 @@ function MenuLeft:new()
 		selfL:insert(bgMenuLeft)
 		
 		local MenuLeft = display.newRect( display.contentCenterX - 80, display.contentCenterY + h, 400, intH )
-		MenuLeft:setFillColor( .92, .92, .92 )
+		MenuLeft:setFillColor( .168, .168, .168 )
 		MenuLeft.alpha = 1
 		MenuLeft:addEventListener("tap",blockMenu)
 		MenuLeft:addEventListener("touch",blockMenu)
@@ -36,28 +38,138 @@ function MenuLeft:new()
 	end
 	
 	function createMenuLeft(items)
-	
+        
+        local settings = DBManager.getSettings()
+        local sizeAvatar = 'width=200&height=200'
+        
+		if settings.fbId == "" then
+            local mask = graphics.newMask( "img/bgk/maskBig.jpg" )
+			local avatar = display.newImage( "img/bgk/user.png" )
+            avatar:setMask( mask )
+			avatar.x = 150
+            avatar.y = h + 160
+            avatar.width = 200
+            avatar.height  = 200
+			selfL:insert(avatar)
+		else
+			local path = system.pathForFile( "avatarFb"..settings.fbId, system.TemporaryDirectory )
+			local fhd = io.open( path )
+			if fhd then
+				fhd:close()
+                local avatar = display.newImage("avatarFb"..settings.fbId, system.TemporaryDirectory )
+                avatar:translate( 150, h + 160)
+                avatar.width = 200
+                avatar.height  = 200
+				selfL:insert(avatar)
+                local mask = display.newImage( "img/bgk/bgAvatar.png" )
+                mask:translate( 150, h + 160)
+				selfL:insert(mask)
+			else
+				local function networkListenerFB( event )
+					-- Verificamos el callback activo
+					if ( event.isError ) then
+					else
+                        local mask = graphics.newMask( "img/bgk/maskBig.jpg" )
+						event.target:setMask( mask )
+                        event.target.x = 150
+                        event.target.y = h + 160
+                        event.target.height = 200
+                        event.target.width = 200
+						selfL:insert( event.target )
+					end
+				end
+				display.loadRemoteImage( "http://graph.facebook.com/".. settings.fbId .."/picture?type=large&"..sizeAvatar, 
+					"GET", networkListenerFB, "avatarFb"..settings.fbId, system.TemporaryDirectory )
+			end
+		end
+        
+        local textSaludo = display.newText( {
+            text = "HOLA",     
+            x = 225, y = h + 280,
+            width = 350, height =20,
+            font = "Lato-Regular",  fontSize = 16, align = "left"
+        })
+        textSaludo:setFillColor( 1 )
+        selfL:insert(textSaludo)
+
+        local textNombre = display.newText( {
+            text = settings.name,     
+            x = 225, y = h + 310,
+            width = 350, height = 30,
+            font = "Lato-Bold",  fontSize = 30, align = "left"
+        })
+        textNombre:setFillColor( 1 )
+        selfL:insert(textNombre)
+        if settings.fbId == "" then
+            textNombre.text = settings.email
+        end
+        
+        -- Menu Buttons
+        local lineTop = display.newRect( 160, h + 350, 400, 1)
+        lineTop.alpha = .5
+		selfL:insert(lineTop)
+        local lineBottom = display.newRect( 160, h + 450, 400, 1)
+        lineBottom.alpha = .5
+		selfL:insert(lineBottom)
+        local lineH1 = display.newRect( 85, h + 400, 2, 100)
+        lineH1.alpha = .5
+		selfL:insert(lineH1)
+        local lineH2 = display.newRect( 230, h + 400, 2, 100)
+        lineH2.alpha = .5
+		selfL:insert(lineH2)
+        
+        local icoMenu1 = display.newImage( "img/btn/icoMenu1.png" )
+        icoMenu1:translate( 20, h + 390 )
+		selfL:insert(icoMenu1)
+        local icoMenu2 = display.newImage( "img/btn/icoMenu2.png" )
+        icoMenu2:translate( 160, h + 390 )
+		selfL:insert(icoMenu2)
+        local icoMenu3 = display.newImage( "img/btn/icoMenu3.png" )
+        icoMenu3:translate( 295, h + 390 )
+		selfL:insert(icoMenu3)
+        
+        local txtMenu1 = display.newText( {
+            text = "Tutorial",
+            x = 20, y = h + 440,
+            width = 100, height = 30,
+            font = "Lato-Bold",  fontSize = 14, align = "center"
+        })
+		selfL:insert(txtMenu1)
+        local txtMenu2 = display.newText( {
+            text = "Configuración",
+            x = 160, y = h + 440,
+            width = 100, height = 30,
+            font = "Lato-Bold",  fontSize = 14, align = "center"
+        })
+		selfL:insert(txtMenu2)
+        local txtMenu3 = display.newText( {
+            text = "Cerrar Sesión",
+            x = 295, y = h + 440,
+            width = 100, height = 30,
+            font = "Lato-Bold",  fontSize = 14, align = "center"
+        })
+		selfL:insert(txtMenu3)
+        
+        -- Menu Ciudades
 		local lastY = 90
-	
 		local rectCity = {}
+        selfL:insert(grpCity)
+        grpCity.y = intH - 60
 		
-		local MenuLeftCiudad = display.newRect( display.contentCenterX - 80, h + 30 , 400, 60 )
-		MenuLeftCiudad:setFillColor( .66 )
-		MenuLeftCiudad.alpha = 1
-		MenuLeftCiudad:addEventListener("tap",blockMenu)
-		MenuLeftCiudad:addEventListener("touch",blockMenu)
-		selfL:insert(MenuLeftCiudad)
+		local MenuLeftCiudad = display.newRect( display.contentCenterX - 80, 30 , 400, 60 )
+		MenuLeftCiudad:setFillColor( .56 )
+		grpCity:insert(MenuLeftCiudad)
         
         local icoMenuCity = display.newImage( "img/btn/icoMenuCity.png" )
-        icoMenuCity:translate( 0, h + 30)
-        selfL:insert(icoMenuCity)
+        icoMenuCity:translate( 320, 30)
+        grpCity:insert(icoMenuCity)
         
         titleLeft = display.newText( {    
-            x = 175, y = h + 32, align = "left", width = 300,
-            text = "Seleccione una Ciudad",  font = "Lato-Light", fontSize = 25,
+            x = 150, y = 32, align = "left", width = 300,
+            text = "CAMBIAR CIUDAD",  font = "Lato-Bold", fontSize = 18,
         })
         titleLeft:setFillColor( 1 )
-        selfL:insert(titleLeft)
+        grpCity:insert(titleLeft)
 		
 		local function changeCity( event )
 			hideMenuLeft()
@@ -70,23 +182,23 @@ function MenuLeft:new()
 		--creamos los botones del menu
 		
 		for y = 1, #items, 1 do
-			rectCity[y] = display.newRect(  display.contentCenterX - 80, lastY + h, 400, 60 )
+			rectCity[y] = display.newRect(  display.contentCenterX - 80, lastY, 400, 60 )
 			rectCity[y]:setFillColor( .5 )
 			rectCity[y].alpha = .1
 			rectCity[y].txtMin = items[y].name
 			rectCity[y].id = items[y].idCity
 			rectCity[y]:addEventListener( "tap", changeCity )
-			selfL:insert(rectCity[y])
+			grpCity:insert(rectCity[y])
             
 			txtCity = display.newText( {    
-			x = 130, y = MenuLeftCiudad.height + lastY - 60 + h, align = "left", width = 220,
+			x = 130, y = MenuLeftCiudad.height + lastY - 60, align = "left", width = 220,
 			text = items[y].name,  font = "Lato-Light", fontSize = 25,
 			})
 			txtCity:setFillColor( 0 )
-			selfL:insert(txtCity)
+			grpCity:insert(txtCity)
 			
-			lineLeft[y] = display.newLine(-40, lastY + 30 + h, 360, lastY + 30 + h)
-			selfL:insert(lineLeft[y])
+			lineLeft[y] = display.newLine(-40, lastY + 30, 360, lastY + 30)
+			grpCity:insert(lineLeft[y])
 			
 			lastY = lastY + 60
 		end
@@ -96,7 +208,7 @@ function MenuLeft:new()
         borderRight:setFillColor( {
             type = 'gradient',
             color1 = { .1, .1, .1, .7 }, 
-            color2 = { .4, .4, .4, .2 },
+            color2 = { .9, .9, .9, .4 },
             direction = "left"
         } ) 
         borderRight:setFillColor( 0, 0, 0 ) 

@@ -155,7 +155,7 @@ function buildNotificationsItems(objScreen)
     textSeparadorEventos:setFillColor( 85/255, 85/255, 85/255 )
     svContent:insert(textSeparadorEventos)
 	
-    yMain = yMain + 30
+    yMain = yMain + 50
     for y = 1, #elements, 1 do
 	
         -- Create container
@@ -168,7 +168,7 @@ function buildNotificationsItems(objScreen)
 			evento.id = elements[y].idRelacional
 			evento.posci = y
 			evento:addEventListener('tap', markRead)
-			yMain = yMain + 120
+			yMain = yMain + 180
 		
 		elseif elements[y].tipo == "2" then
 		
@@ -179,7 +179,7 @@ function buildNotificationsItems(objScreen)
 			deal.id = elements[y].idRelacional
 			deal.posci = y
 			deal:addEventListener('tap', markRead)
-			yMain = yMain + 120
+			yMain = yMain + 180
 		
 		end
 		

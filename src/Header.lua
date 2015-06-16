@@ -529,14 +529,14 @@ function Header:new()
     -- Creamos la pantalla del menu
     function self:buildWifiBle()
         if not (isWifiBle) then
-            local toolWifiBLE = display.newRect( 0, 60, display.contentWidth, 30 )
+            local toolWifiBLE = display.newRect( 0, 80, display.contentWidth, 30 )
             toolWifiBLE.anchorX = 0
             toolWifiBLE.anchorY = 0
             toolWifiBLE:setFillColor( .2, .5, .2 )
             self:insert(toolWifiBLE)
 
             local txtWifiBLE = display.newText( {
-                x = 220, y = 75,
+                x = 220, y = 95,
                 align = "left", width = 400,
                 text = "Para obtener mejores beneficios active su Wifi y/o bluetooth", font = "Lato-Bold", fontSize = 14,
             })
@@ -552,10 +552,10 @@ function Header:new()
     -- Creamos la pantalla del menu
     function self:buildNavBar(texto)
         
-        local hWB = 0
-        if not (isWifiBle) then hWB = 30 end
+        local hWB = 20
+        if not (isWifiBle) then hWB = 50 end
         
-        local menu = display.newRect( 0, 60, display.contentWidth, 65 + hWB )
+        local menu = display.newRect( 0, 60 + hWB, display.contentWidth, 65 )
         menu.anchorX = 0
         menu.anchorY = 0
         menu:setFillColor( .87 )

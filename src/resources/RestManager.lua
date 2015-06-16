@@ -47,7 +47,7 @@ local RestManager = {}
             if ( event.isError ) then
             else
 				local data = json.decode(event.response)
-                if data.success then
+                if data.success and #data.items > 0 then
                     setWalletElements({items = data.items, screen = "noRedimir", posc = 1, path = 'assets/img/app/deal/'})
                 end
             end
@@ -65,7 +65,7 @@ local RestManager = {}
             if ( event.isError ) then
             else
 				local data = json.decode(event.response)
-                if data.success then
+                if data.success and #data.items > 0 then
                     setElements(data.items)
 					setFilterEvent(data.filter)
 					loadImage({posc = 1, screen = 'EventPanel'})

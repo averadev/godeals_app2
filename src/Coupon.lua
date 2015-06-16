@@ -423,6 +423,7 @@ function changeButtonCoupon()
 	rctBtn:addEventListener( "tap", showRedimir )
 	imgBtnShare:removeEventListener( 'tap', showFriends )
 	imgBtnShare.alpha = .2
+    imgBtnShareB.alpha = .2
 end
 
 --obtenemos el grupo wallScreen de la escena actual
@@ -465,6 +466,7 @@ function changeBtnShare()
 		
 		rctBtn:setFillColor( .72, .82, .93 )
 		imgBtnShare.alpha = .2
+        imgBtnShareB.alpha = .2
 			
 		transition.to( txtBtn, { alpha = 1, time = 200, delay = 200, transition = easing.outExpo } )
 		transition.to( txtInfo, { alpha = 1, time = 200, delay = 200, transition = easing.outExpo } )
@@ -496,117 +498,169 @@ function buildCoupon()
 	
 	grupoSvCoupon = display.newGroup()
 	svCoupon:insert(grupoSvCoupon)
-	
-	--[[local imgBtnShare = display.newImage( "img/btn/share.png" )
-	imgBtnShare.alpha = 1
-    imgBtnShare.x= intW - imgBtnShare.height
-	imgBtnShare.y = lastY
-    svCoupon:insert( imgBtnShare )
-	imgBtnShare:addEventListener( 'tap', showFriends )]]
 
-	local imgShape = display.newRoundedRect( midW, 296, 450, 528,12 )
+	local imgShape = display.newRoundedRect( midW, 32, 450, 528,12 )
+    imgShape.anchorY = 0
 	imgShape:setFillColor( 1 )
 	svCoupon:insert(imgShape)
 	
 	local imgBgCoupon = display.newImage( "img/bgk/bgCoupon.png" )
 	imgBgCoupon.alpha = 1
     imgBgCoupon.x= midW
-	imgBgCoupon.y =  295
-	--imgBgCoupon.y = 300
+	imgBgCoupon.y =  30
+    imgBgCoupon.anchorY = 0
 	imgBgCoupon.height = 530
     svCoupon:insert( imgBgCoupon )
     
-    local mask = graphics.newMask( "img/bgk/maskBig.jpg" )
-	local imgCoupon = display.newImage( itemObj.image, system.TemporaryDirectory )
-    imgCoupon.x= 100
-	imgCoupon.y = lastY + 122
-    imgCoupon.width = 140
-    imgCoupon.height  = 140
+    local imgCoupon = display.newImage( itemObj.image, system.TemporaryDirectory )
+    imgCoupon.x= 135
+	imgCoupon.y = lastY + 96
+    imgCoupon.width = 220
+    imgCoupon.height  = 220
     svCoupon:insert( imgCoupon )
-    imgCoupon:setMask( mask )
+    
+    local bgDesc0 = display.newImage( "img/bgk/maskCoupon.png" )
+    bgDesc0.x = 135
+    bgDesc0.y = lastY + 96
+    svCoupon:insert(bgDesc0)
+    
+    local bgDesc1 = display.newRoundedRect( 353, lastY + 96, 200, 220, 5 )
+    bgDesc1:setFillColor( .79 )
+    svCoupon:insert(bgDesc1)
+    
+    local bgDesc2 = display.newRoundedRect( 353, lastY + 96, 198, 218, 5 )
+    bgDesc2:setFillColor( 1 )
+    svCoupon:insert(bgDesc2)
     
 	local txtPartner = display.newText( {
         text = itemObj.partner,    
-        x = 320, y = lastY + 80,
-        width = 280, height =0,
-        font = "Lato-Regular", fontSize = 30, align = "left"
+        x = 355, y = lastY + 20,
+        width = 180, height =0,
+        font = "Lato-Bold", fontSize = 23, align = "left"
     })
     txtPartner:setFillColor( 0 )
     svCoupon:insert( txtPartner )
     
 	local txtTotalDeals = display.newText( {
         text = itemObj.total.." Deals",
-        x = 300, y = lastY + 115,
-        width = 240, height =25,
-        font = "Lato-Regular", fontSize = 20, align = "left"
+        x = 355, y = lastY + 85,
+        width = 180, height =25,
+        font = "Lato-Bold", fontSize = 20, align = "left"
     })
-    txtTotalDeals:setFillColor( 0 )
+    txtTotalDeals:setFillColor( .58 )
     svCoupon:insert( txtTotalDeals )
+    
+    local iconReady = display.newImage( "img/btn/iconReady.png" )
+    iconReady.x = 275
+    iconReady.y = lastY + 110
+    svCoupon:insert(iconReady)
     
     local txtStock = display.newText( {
         text = itemObj.stock.." Disponibles",
-        x = 300, y = lastY + 140,
-        width = 240, height =25,
-        font = "Lato-Regular", fontSize = 20, align = "left"
+        x = 383, y = lastY + 110,
+        width = 180, height =25,
+        font = "Lato-Bold", fontSize = 20, align = "left"
     })
     txtStock:setFillColor( .2, .6 ,0 )
     svCoupon:insert( txtStock )
-	
-	--img info--
-	
-	--[[local imgBtnInfo = display.newImage( "img/btn/info.png" )
-	imgBtnInfo.alpha = 1
-    imgBtnInfo.x= intW - imgBtnInfo.height
-	imgBtnInfo.y = lastY + 70
-    svCoupon:insert( imgBtnInfo )]]
-	
-	--btn de compartir
-	imgBtnShare = display.newImage( "img/btn/share.png" )
+    
+    local imgBtnShare = display.newRoundedRect( 355, lastY + 175, 180, 45, 5 )
 	imgBtnShare.alpha = .2
-    imgBtnShare.x= intW - imgBtnShare.height
-	imgBtnShare.y = lastY + 20
 	imgBtnShare.id = itemObj.id
-    svCoupon:insert( imgBtnShare )
+	imgBtnShare:setFillColor( 8/255, 108/255, 160/255 )
+	imgBtnShare:addEventListener( "tap", showPartner )
+	svCoupon:insert( imgBtnShare )
+    
+    local imgBtnShareB = display.newRoundedRect( 355, lastY + 190, 180, 20, 5 )
+	imgBtnShareB.alpha = .2
+    imgBtnShareB:setFillColor( {
+        type = 'gradient',
+        color1 = { 8/255, 108/255, 160/255 }, 
+        color2 = { 0, 78/255, 130/255 },
+        direction = "bottom"
+    } ) 
+    svCoupon:insert(imgBtnShareB)
+
+	local txtBtnComer = display.newText( {
+		text =  "COMPARTIR DEAL",
+		x = 340, y = lastY + 175, width = 210,
+		font = "Lato-Bold", fontSize = 14, align = "center"
+	})
+	txtBtnComer:setFillColor( 1 )
+	svCoupon:insert( txtBtnComer )
 	
-	----------
-    
-    local txtValidity = display.newText( {
-        text = "VIGENCIA: "..itemObj.validity,
-        x = 300, y = lastY + 172,
-        width = 240, height = 34 ,
-        font = "Lato-Regular", fontSize = 14, align = "left"
-    })
-    txtValidity:setFillColor( 0 )
-    svCoupon:insert( txtValidity )
-    
-    -- Reasigna posicion en textos grandes
-    if txtPartner.contentHeight > 50 then
-        txtPartner.y = txtPartner.y + 5
-        txtTotalDeals.y = txtTotalDeals.y + 20
-        txtStock.y = txtStock.y + 20
-        txtValidity.y = txtValidity.y + 20
-    end
-    
-    
+	iconShare = display.newImage( "img/btn/iconShare.png" )
+	iconShare.x = 420
+	iconShare.y = lastY + 175
+    svCoupon:insert( iconShare )
+	
     -- Max Desc
-    local bgMaxDesc = display.newRect( midW, lastY + 260, 444, 80 )
-	bgMaxDesc:setFillColor( .89 )
+    local bgMaxDesc = display.newRoundedRect( midW, lastY + 270, 430, 100, 8 )
+	bgMaxDesc:setFillColor( .20 )
 	svCoupon:insert(bgMaxDesc)
     
     local txtMaxDesc = display.newText( {
         text = itemObj.detail,
-        x = 240, y = lastY + 260,
+        x = 240, y = lastY + 270,
         width = 410, height = 0,
         font = "Lato-Regular", fontSize = 20, align = "center"
     })
-    txtMaxDesc:setFillColor( 0 )
+    txtMaxDesc:setFillColor( 1 )
     svCoupon:insert( txtMaxDesc )
     
     
     -- Descarga / Redime
+    
+    local rctBtnComer = display.newRoundedRect( 130, lastY + 360, 210, 55, 5 )
+	rctBtnComer.idCoipon = itemObj.id
+	rctBtnComer:setFillColor( .4 )
+	rctBtnComer:addEventListener( "tap", showPartner )
+	svCoupon:insert(rctBtnComer)
+    
+    local rctBtnComerB = display.newRoundedRect( 130, lastY + 378, 210, 22, 5 )
+    rctBtnComerB:setFillColor( {
+        type = 'gradient',
+        color1 = { .4 }, 
+        color2 = { .3 },
+        direction = "bottom"
+    } ) 
+    svCoupon:insert(rctBtnComerB)
+
+	local txtBtnComer = display.newText( {
+		text =  "IR A COMERCIO",
+		x = 130, y = lastY + 360,
+		width = 210, height = 0,
+		font = "Lato-Bold", fontSize = 18, align = "center"
+	})
+	txtBtnComer:setFillColor( 1 )
+	svCoupon:insert( txtBtnComer )
+
+	rctBtn = display.newRoundedRect( 350, lastY + 360, 210, 55, 5 )
+	rctBtn.idCoipon = itemObj.id
+	rctBtn:setFillColor( .2, .6, 0 )
+	svCoupon:insert(rctBtn)
+    
+    local rctBtnB = display.newRoundedRect( 350, lastY + 378, 210, 22, 5 )
+    rctBtnB:setFillColor( {
+        type = 'gradient',
+        color1 = { .2, .6, 0 }, 
+        color2 = { .1, .5, 0 },
+        direction = "bottom"
+    } ) 
+    svCoupon:insert(rctBtnB)
+
+	txtBtn = display.newText( {
+		text =  "DESCARGAR DEAL",
+		x = 350, y = lastY + 360,
+		width = 210, height = 0,
+		font = "Lato-Bold", fontSize = 18, align = "center"
+	})
+	txtBtn:setFillColor( 1 )
+	svCoupon:insert( txtBtn )
+    
 	txtTitleInfo = display.newText( {
 		text = "¿Te interesa este Deal?",
-		x = 240, y = lastY + 340,
+		x = 240, y = lastY + 420,
 		width = 400, height = 0,
 		font = "Lato-Bold", fontSize = 16, align = "left"
 	})
@@ -616,26 +670,59 @@ function buildCoupon()
 	txtInfo = display.newText( {
 		text =  "No lo pienses más y descárgalo, "..
 				"se guardará en tu cartera para que lo uses en tu próxima visita.",
-		x = 240, y = lastY + 385,
+		x = 240, y = lastY + 465,
 		width = 400, height = 60,
 		font = "Lato-Regular", fontSize = 16, align = "left"
 	})
 	txtInfo:setFillColor( 0 )
 	svCoupon:insert( txtInfo )
-
-	rctBtn = display.newRoundedRect( midW, lastY + 450, 400, 55, 5 )
-	rctBtn.idCoipon = itemObj.id
-	rctBtn:setFillColor( .2, .6 ,0 )
-	svCoupon:insert(rctBtn)
-
-	txtBtn = display.newText( {
-		text =  "DESCARGAR DEAL",
-		x = 240, y = lastY + 450,
-		width = 400, height = 0,
-		font = "Lato-Regular", fontSize = 26, align = "center"
+    
+    local txtValidity = display.newText( {
+        text = "Vigencia: ",
+        x = 240, y = lastY + 510,
+        width = 400, height = 20 ,
+        font = "Lato-Bold", fontSize = 16, align = "left"
+    })
+    txtValidity:setFillColor( 0 )
+    svCoupon:insert( txtValidity )
+    
+    local txtValidityInfo = display.newText( {
+		text =  itemObj.validity,
+		x = 240, y = lastY + 540,
+		width = 400, height = 40,
+		font = "Lato-Regular", fontSize = 16, align = "left"
 	})
-	txtBtn:setFillColor( 1 )
-	svCoupon:insert( txtBtn )
+	txtValidityInfo:setFillColor( 0 )
+	svCoupon:insert( txtValidityInfo )
+    
+    -- Detail Clauses
+    local txtAdditionalInformation = display.newText({
+		text = "Informacion Adicional:",
+		--x = 230, y =  560,
+		x = 240, y =  lastY + 565,
+		height = 20, width = 400,
+		font = "Lato-Bold", fontSize = 16, align = "left"
+	})
+	txtAdditionalInformation:setFillColor( 0 )
+	svCoupon:insert(txtAdditionalInformation)
+	
+	lastY = lastY + 550
+	local txtClauses = display.newText({
+		text = itemObj.clauses,
+		x = 230, y = 600,
+		x = midW, y = lastY + 15,
+		width = 400,
+		font = "Lato-Regular", fontSize = 16, align = "left"
+	})
+	txtClauses:setFillColor( 0 )
+    txtClauses.y = txtClauses.height/2 + txtClauses.y + 10
+	svCoupon:insert( txtClauses )
+    
+    txtClauses.height = txtClauses.height + 10
+	lastY = lastY + txtClauses.height + 20
+    imgBgCoupon.height = lastY
+    imgShape.height = lastY + 5
+    
 
 	if itemObj.assigned == 1 or itemObj.assigned == '1' then 
 		txtTitleInfo.text = "Redime este Deal!"
@@ -663,58 +750,19 @@ function buildCoupon()
 	else
 		rctBtn:addEventListener( "tap", DownloadCoupon )
 		imgBtnShare.alpha = 1
+        imgBtnShareB.alpha = 1
 		imgBtnShare:addEventListener( 'tap', showFriends )
 	end
 	
 	--btnFriends:addEventListener( 'tap', showFriends )
 	
-	lastY = 150 + lastY
 	
-	lastY = lastY + imgBgCoupon.height - 120
     
-    -- Detail Clauses
-    local txtAdditionalInformation = display.newText({
-		text = "Informacion Adicional:",
-		--x = 230, y =  560,
-		x = 230, y =  lastY,
-		height = 20, width = 400,
-		font = "Lato-Bold", fontSize = 16, align = "left"
-	})
-	txtAdditionalInformation:setFillColor( 0 )
-	svCoupon:insert(txtAdditionalInformation)
-	
-	lastY = lastY + txtAdditionalInformation.height + 10
-	
-	local txtClauses = display.newText({
-		text = itemObj.clauses,
-		--x = midW, y = 580,
-		x = midW, y = lastY,
-		width = 420,
-		font = "Lato-Regular", fontSize = 16, align = "left"
-	})
-	txtClauses:setFillColor( 0 )
-    txtClauses.y = txtClauses.height/2 + txtClauses.y
-	svCoupon:insert( txtClauses )
-	
-	txtClauses.height = txtClauses.height + 10
-	lastY = lastY + txtClauses.height + 40
-	
-	local txtAdditionalInformation = display.newText({
-		text = "Consultar comercio",
-		x = 230, y = lastY,
-		height = 40, width = 400,
-		font = "Chivo", fontSize = 22, align = "center"
-	})
-    txtAdditionalInformation.itemObj = itemObj
-	txtAdditionalInformation:setFillColor( .27, .5, .7 )
-	txtAdditionalInformation:addEventListener( "tap", showPartner )
-	svCoupon:insert( txtAdditionalInformation )
     
-	local lineLink = display.newRect( 130, lastY + 10, 200, 1 )
-	lineLink.anchorX = 0
-	lineLink.anchorY = 0
-	lineLink:setFillColor( .27, .5, .7 )
-	svCoupon:insert( lineLink )
+    
+    
+	
+	
 	
     local spc = display.newRect( 0, lastY + 60, 1, 1 )
     spc:setFillColor( 0 )
@@ -739,7 +787,7 @@ function scene:createScene( event )
     header.y = h
     header:buildToolbar()
     header:buildNavBar(event.params.item.name)
-    hWCup = header:buildWifiBle()
+    hWCup = 20 + header:buildWifiBle()
 	
 	--obtenemos los parametros del cupon
 	if event.params.item == nil then

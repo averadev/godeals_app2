@@ -787,7 +787,7 @@ function scene:createScene( event )
     homeScreen:insert(header)
     header:buildToolbar()
     header:buildNavBar(title)
-    hWBPar = header:buildWifiBle()
+    hWBPar = 20 + header:buildWifiBle()
 	
 	Globals.noCallbackGlobal = Globals.noCallbackGlobal + 1
 	callbackCurrent = Globals.noCallbackGlobal

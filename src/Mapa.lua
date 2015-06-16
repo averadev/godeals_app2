@@ -69,7 +69,7 @@ function scene:createScene( event )
     header.y = h
     header:buildToolbar()
     header:buildNavBar("Ubicación")
-    local hWBMap = header:buildWifiBle()
+    local hWBMap = 20 + header:buildWifiBle()
     
     lastY = h + 130
     

@@ -129,8 +129,13 @@ function loadImageLogos(obj)
             "GET", loadImageListener, elements[obj.posc].partnerImage, system.TemporaryDirectory ) 
         end
     else
-        obj.posc = obj.posc + 1
-        loadImageLogos(obj)
+        if obj.posc < #elements then
+            obj.posc = obj.posc + 1
+            loadImageLogos(obj)
+        else
+            loadImage({posc = 1, screen = 'MainScreen'})
+        end
+        
     end
 end
 
@@ -147,7 +152,6 @@ function loadImage(obj)
 			imageItems[obj.posc] = display.newImage( elements[obj.posc].image, system.TemporaryDirectory )
 			imageItems[obj.posc].alpha = 0
 			if obj.posc < #elements then
-				
 				obj.posc = obj.posc + 1
 				loadImage(obj)
 			else
@@ -330,6 +334,9 @@ function buildItems(screen)
 		groupDeals:insert(txtNoFilterFound)
 	
     end
+end
+
+function downloadDeal(event)
 end
 
 -- Genera la fecha en formato

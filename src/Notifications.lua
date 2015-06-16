@@ -215,7 +215,7 @@ function scene:createScene( event )
     header.y = h
     header:buildToolbar()
     header:buildNavBar("Notificaciones")
-    hWBN = header:buildWifiBle()
+    hWBN = 20 + header:buildWifiBle()
 	
     svContent = widget.newScrollView
 	{

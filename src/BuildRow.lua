@@ -73,7 +73,7 @@ function Event:new()
         container.y = 60
 		container.item = item
         self:insert( container )
-		container:addEventListener( "tap", showCoupon )
+		container:addEventListener( "tap", showEvent )
 
         local maxShape = display.newRect( 0, 0, 460, 170 )
         maxShape:setFillColor( .84 )
@@ -218,9 +218,28 @@ function Deal:new()
         txtPartner:setFillColor( .3 )
         container:insert(txtPartner)
         
-        local btnDescargarDes = display.newImage( "img/btn/btnDescargarDes.png" )
-        btnDescargarDes:translate( 165, 55 )
-        container:insert(btnDescargarDes)
+        local imgBtnDown = display.newRoundedRect( 165, 55, 120, 40, 5 )
+        imgBtnDown.id = item.id
+        imgBtnDown:setFillColor( 68/255, 177/255, 13/255 )
+        imgBtnDown:addEventListener( "tap", downloadDeal )
+        container:insert( imgBtnDown )
+        
+        local imgBtnShareB = display.newRoundedRect( 165, 65, 120, 20, 5 )
+        imgBtnShareB:setFillColor( {
+            type = 'gradient',
+            color1 = { 68/255, 177/255, 13/255 }, 
+            color2 = { 38/255, 147/255, 0 },
+            direction = "bottom"
+        } ) 
+        container:insert(imgBtnShareB)
+        
+        local txtDescargar = display.newText( {
+            text = "DESCARGAR",     
+            x = 165, y = 55, width = 120,
+            font = "Lato-Bold", fontSize = 14, align = "center"
+        })
+        txtDescargar:setFillColor( 1 )
+        container:insert(txtDescargar)
         
         local iconReady = display.newImage( "img/btn/iconReady.png" )
         iconReady:translate( -30, 60 )
@@ -350,9 +369,29 @@ function DealMain:new()
         txtDealDes:setFillColor( .3 )
         container:insert(txtDealDes)
         
-        local btnDescargarDes = display.newImage( "img/btn/btnDescargarDes.png" )
-        btnDescargarDes:translate( 45, 35 )
-        container:insert(btnDescargarDes)
+        local imgBtnDown = display.newRoundedRect( 45, 35, 120, 40, 5 )
+        imgBtnDown.id = item.id
+        imgBtnDown:setFillColor( 68/255, 177/255, 13/255 )
+        imgBtnDown:addEventListener( "tap", downloadDeal )
+        container:insert( imgBtnDown )
+        
+        local imgBtnShareB = display.newRoundedRect( 45, 45, 120, 20, 5 )
+        imgBtnShareB:setFillColor( {
+            type = 'gradient',
+            color1 = { 68/255, 177/255, 13/255 }, 
+            color2 = { 38/255, 147/255, 0 },
+            direction = "bottom"
+        } ) 
+        container:insert(imgBtnShareB)
+        
+        local txtDescargar = display.newText( {
+            text = "DESCARGAR",     
+            x = 45, y = 35, width = 120,
+            font = "Lato-Bold", fontSize = 14, align = "center"
+        })
+        txtDescargar:setFillColor( 1 )
+        container:insert(txtDescargar)
+        
         
         local iconReady = display.newImage( "img/btn/iconReady.png" )
         iconReady:translate( 0, 75 )

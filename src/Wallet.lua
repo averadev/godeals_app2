@@ -143,14 +143,14 @@ function buildWalletItems(screen)
 		textSeparadorEventos:setFillColor( 85/255, 85/255, 85/255 )
 		svContent:insert(textSeparadorEventos)
 
-		yMain = yMain + 30
+		yMain = yMain + 50
 		for y = 1, #elements, 1 do 
 			-- Create container
 			local deal = Deal:new()
 			svContent:insert(deal)
 			deal:build(true, elements[y], imageItems[y])
 			deal.y = yMain
-			yMain = yMain + 120
+			yMain = yMain + 180
 		end
 		endLoading()
 		RestManager.getDealsRedimir()
@@ -171,14 +171,14 @@ function buildWalletItems(screen)
 		textSeparadorRedimir:setFillColor( 85/255, 85/255, 85/255 )
 		svContent:insert(textSeparadorRedimir)
 		
-		yMain = yMain + 30
+		yMain = yMain + 50
 		for y = 1, #elements, 1 do 
 			-- Create container
 			local deal = Deal:new()
 			svContent:insert(deal)
 			deal:build(true, elements[y], imageItems[y])
 			deal.y = yMain
-			yMain = yMain + 120
+			yMain = yMain + 180
 		end
 		endLoading()
 	end
@@ -203,8 +203,8 @@ function scene:createScene( event )
     homeScreen:insert(header)
     header.y = h
     header:buildToolbar()
-    header:buildNavBar("Deals Descargados")
-    hWBW = header:buildWifiBle()
+    header:buildNavBar("Mi Bandeja")
+    hWBW = 20 + header:buildWifiBle()
 	
 	settings = DBManager.getSettings()
 	

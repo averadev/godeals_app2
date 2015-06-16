@@ -36,6 +36,27 @@ function MenuLeft:new()
 		RestManager.getCity()
 		
 	end
+    
+    local function changeCity( event )
+        hideMenuLeft()
+        local t = event.target
+        t.alpha = 1
+        transition.to( t, { alpha = .1, time = 200, transition = easing.outExpo } )
+        changeCityName(event.target)
+    end
+
+    local function getCities( event )
+        if grpCity.y == intH - 60 then
+            transition.to( grpCity, { y = intH - 180, time = 800, transition = easing.outExpo } )
+        else
+            transition.to( grpCity, { y = intH - 60, time = 800, transition = easing.outExpo } )
+        end
+    end
+    
+    local function cerrarSession( event )
+        hideMenuLeft()
+        logout()
+    end
 	
 	function createMenuLeft(items)
         
@@ -120,12 +141,15 @@ function MenuLeft:new()
         
         local icoMenu1 = display.newImage( "img/btn/icoMenu1.png" )
         icoMenu1:translate( 20, h + 390 )
+        icoMenu1:addEventListener( "tap", showTutorial )
 		selfL:insert(icoMenu1)
         local icoMenu2 = display.newImage( "img/btn/icoMenu2.png" )
         icoMenu2:translate( 160, h + 390 )
+        icoMenu2.alpha = .5
 		selfL:insert(icoMenu2)
         local icoMenu3 = display.newImage( "img/btn/icoMenu3.png" )
         icoMenu3:translate( 295, h + 390 )
+        icoMenu3:addEventListener( "tap", cerrarSession )
 		selfL:insert(icoMenu3)
         
         local txtMenu1 = display.newText( {
@@ -141,6 +165,7 @@ function MenuLeft:new()
             width = 100, height = 30,
             font = "Lato-Bold",  fontSize = 14, align = "center"
         })
+        txtMenu2:setFillColor( .5 )
 		selfL:insert(txtMenu2)
         local txtMenu3 = display.newText( {
             text = "Cerrar Sesión",
@@ -158,6 +183,7 @@ function MenuLeft:new()
 		
 		local MenuLeftCiudad = display.newRect( display.contentCenterX - 80, 30 , 400, 60 )
 		MenuLeftCiudad:setFillColor( .56 )
+        MenuLeftCiudad:addEventListener( "tap", getCities )
 		grpCity:insert(MenuLeftCiudad)
         
         local icoMenuCity = display.newImage( "img/btn/icoMenuCity.png" )
@@ -171,29 +197,20 @@ function MenuLeft:new()
         titleLeft:setFillColor( 1 )
         grpCity:insert(titleLeft)
 		
-		local function changeCity( event )
-			hideMenuLeft()
-			local t = event.target
-			t.alpha = 1
-			transition.to( t, { alpha = .1, time = 200, transition = easing.outExpo } )
-			changeCityName(event.target)
-		end
 		
 		--creamos los botones del menu
-		
 		for y = 1, #items, 1 do
 			rectCity[y] = display.newRect(  display.contentCenterX - 80, lastY, 400, 60 )
-			rectCity[y]:setFillColor( .5 )
-			rectCity[y].alpha = .1
+			rectCity[y]:setFillColor( .7 )
 			rectCity[y].txtMin = items[y].name
 			rectCity[y].id = items[y].idCity
 			rectCity[y]:addEventListener( "tap", changeCity )
 			grpCity:insert(rectCity[y])
             
-			txtCity = display.newText( {    
-			x = 130, y = MenuLeftCiudad.height + lastY - 60, align = "left", width = 220,
-			text = items[y].name,  font = "Lato-Light", fontSize = 25,
-			})
+            txtCity = display.newText( {    
+                x = 150, y = MenuLeftCiudad.height + lastY - 60, align = "left", width = 300,
+                text = " - " .. items[y].name,  font = "Lato-Bold", fontSize = 18,
+            })
 			txtCity:setFillColor( 0 )
 			grpCity:insert(txtCity)
 			
@@ -269,11 +286,6 @@ function MenuRight:new()
         titleR:setFillColor( 1 )
         selfR:insert(titleR)
 		
-		local function cerrarSession( event )
-			hideMenuRight()
-			logout()
-		end
-		
 		-- tutorial
 		local rectTutorial = display.newRect(  280, 90 + h, 400, 60 )
         rectTutorial:setFillColor( .5 )
@@ -299,7 +311,7 @@ function MenuRight:new()
 		local rectSession = display.newRect(  280, 150 + h, 400, 60 )
         rectSession:setFillColor( .5 )
 		rectSession.alpha = .1
-		rectSession:addEventListener( "tap", cerrarSession )
+		--rectSession:addEventListener( "tap", cerrarSession )
 		selfR:insert(rectSession)
         
         local icoMenuSess = display.newImage( "img/btn/icoOptSess.png" )

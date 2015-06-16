@@ -423,7 +423,7 @@ function changeButtonCoupon()
 	rctBtn:addEventListener( "tap", showRedimir )
 	imgBtnShare:removeEventListener( 'tap', showFriends )
 	imgBtnShare.alpha = .2
-    imgBtnShareB.alpha = .2
+    imgBtnShareB.alpha = 0
 end
 
 --obtenemos el grupo wallScreen de la escena actual
@@ -466,7 +466,7 @@ function changeBtnShare()
 		
 		rctBtn:setFillColor( .72, .82, .93 )
 		imgBtnShare.alpha = .2
-        imgBtnShareB.alpha = .2
+        imgBtnShareB.alpha = 0
 			
 		transition.to( txtBtn, { alpha = 1, time = 200, delay = 200, transition = easing.outExpo } )
 		transition.to( txtInfo, { alpha = 1, time = 200, delay = 200, transition = easing.outExpo } )
@@ -572,7 +572,7 @@ function buildCoupon()
 	svCoupon:insert( imgBtnShare )
     
     local imgBtnShareB = display.newRoundedRect( 355, lastY + 190, 180, 20, 5 )
-	imgBtnShareB.alpha = .2
+	imgBtnShareB.alpha = 0
     imgBtnShareB:setFillColor( {
         type = 'gradient',
         color1 = { 8/255, 108/255, 160/255 }, 
@@ -735,18 +735,21 @@ function buildCoupon()
 		txtInfo.text =  "No olvides consultar los otros Deals que "..itemObj.partner.." te ofrece."
 		txtBtn.text = "DEAL COMPARTIDO"
 		rctBtn:setFillColor( .72, .82, .93 )
+        rctBtnB.alpha = 0
 	elseif itemObj.stock == '0' then
 		txtTitleInfo.text = "Lo sentimos."
 		txtInfo.text =  "Este Deal se ha agotado, pero no te preocupes "..itemObj.partner..
 						" y el equipo de GoDeals tienen mas promociones para ti!"
 		txtBtn.text = "AGOTADO"
 		rctBtn:setFillColor( .8, .6, .6 )
+        rctBtnB.alpha = 0
 		txtStock:setFillColor( .8, .5, .5 )
     elseif itemObj.assigned == 2 or itemObj.assigned == '2' then
 		txtTitleInfo.text = "Deal redimido"
 		txtInfo.text =  "No olvides consultar los otros Deals que "..itemObj.partner.." te ofrece."
 		txtBtn.text = "DEAL REDIMIDO"
 		rctBtn:setFillColor( .72, .82, .93 )
+        rctBtnB.alpha = 0
 	else
 		rctBtn:addEventListener( "tap", DownloadCoupon )
 		imgBtnShare.alpha = 1

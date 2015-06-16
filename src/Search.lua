@@ -305,10 +305,10 @@ function modalSeach(text,self)
 	if scrViewSearch == nil then
 		scrViewSearch = widget.newScrollView
 		{
-			top = h + 65,
+			top = h + 80,
 			left = 0,
 			width = intW,
-			height = intH - (h + 65),
+			height = intH - (h + 80),
 			horizontalScrollDisabled = true,
 			verticalScrollDisabled = false,
 			backgroundColor = { .92, .92, .92 }

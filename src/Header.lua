@@ -96,7 +96,7 @@ function Header:new()
 	
 	--instancia el textField de busqueda
 	function createTxt(text)
-		Globals.txtSearch = native.newTextField( 290, 30 + h, 250, 60 )
+		Globals.txtSearch = native.newTextField( 290, 40 + h, 250, 60 )
 		Globals.txtSearch:setTextColor(1)
         Globals.txtSearch.method = "create"
         Globals.txtSearch.size = 18
@@ -108,7 +108,7 @@ function Header:new()
 	--intsancia los componentes de la busquesda
 	function createSearch()
 		
-		bgSearchA = display.newRect( 85, 1 + h, display.contentWidth, 50 )
+		bgSearchA = display.newRect( 85, h, display.contentWidth, 80 )
         bgSearchA.anchorX = 0
         bgSearchA.anchorY = 0
 		bgSearchA:setFillColor( .2, .2, .2 )
@@ -117,17 +117,17 @@ function Header:new()
 		bgSearchA:addEventListener( 'touch', lockedSearch)
 		
 		imgSearch = display.newImage( "img/btn/btnMenuSearch.png" )
-        imgSearch:translate( display.contentWidth/4, 30 + h )
+        imgSearch:translate( display.contentWidth/4, 40 + h )
 		imgSearch:addEventListener('tap', SearchText)
 		groupSearchTool:insert( imgSearch )
         
         btnClose = display.newImage( "img/btn/btnMenuClose.png" )
-        btnClose:translate( display.contentWidth - 30, 30 + h )
+        btnClose:translate( display.contentWidth - 30, 40 + h )
         btnClose:addEventListener( "tap", hideSearch )
 		groupSearchTool:insert(btnClose)
         
         bgSearch = display.newImage( "img/btn/bgTxtSearch.png" )
-        bgSearch:translate(290, 40 + h )
+        bgSearch:translate(290, 50 + h )
 		groupSearchTool:insert( bgSearch )
 		
 		
@@ -205,7 +205,7 @@ function Header:new()
 	
 	--mostramos el tutorial
 	function showTutorial( event )
-		hideMenuRight()
+		hideMenuLeft()
 		createTutorial(getScreen())
 	end
     

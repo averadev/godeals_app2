@@ -69,14 +69,14 @@ function scene:createScene( event )
     header.y = h
     header:buildToolbar()
     header:buildNavBar("Ubicación")
-    local hWBMap = 20 + header:buildWifiBle()
+    local hWBMap = 5 + header:buildWifiBle()
     
     lastY = h + 130
     
     -- Cocinar el mapa
     local mh = intH - (lastY + hWBMap)
     myMap = native.newMapView( midW, (lastY + hWBMap) + (mh / 2) - 4, intW, mh )
-    if myMap then
+    if myMap and itemObj then
         local mh = intH - lastY
         myMap:setCenter( tonumber(itemObj.latitude), tonumber(itemObj.longitude), 0.02, 0.02 )
         homeScreen:insert(myMap)

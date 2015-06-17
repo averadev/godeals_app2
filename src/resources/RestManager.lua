@@ -21,7 +21,7 @@ local RestManager = {}
 	RestManager.getRecommended = function()
 		settings = DBManager.getSettings()
 		local url = settings.url .. "api/getRecommended/format/json/idApp/" .. settings.idApp .. "/city/" .. settings.city
-	   
+	   print(url)
 	   local function callback(event)
             if ( event.isError ) then
             else
@@ -333,6 +333,25 @@ local RestManager = {}
         -- Do request
         network.request( url, "GET", callback ) 
     end
+	
+	RestManager.downloadCoupon = function(idCoupon)
+		settings = DBManager.getSettings()
+		local settings = DBManager.getSettings()
+        local url = settings.url
+        url = url.."api/discountCoupon/format/json"
+        url = url.."/idApp/"..settings.idApp
+        url = url.."/idCoupon/"..idCoupon
+    
+        local function callback(event)
+            if ( event.isError ) then
+            else
+                local data = json.decode(event.response)
+            end
+            return true
+        end
+        -- Do request
+        network.request( url, "GET", callback )
+	end
 	
 	RestManager.discountCoupon = function(idCoupon)
 		settings = DBManager.getSettings()

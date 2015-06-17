@@ -204,7 +204,7 @@ function scene:createScene( event )
     header.y = h
     header:buildToolbar()
     header:buildNavBar("Mi Bandeja")
-    hWBW = 20 + header:buildWifiBle()
+    hWBW = 5 + header:buildWifiBle()
 	
 	settings = DBManager.getSettings()
 	

@@ -413,6 +413,7 @@ function DownloadCoupon( event )
 		transition.to( txtTitleInfo, { alpha = 1, time = 200, delay = 200, transition = easing.outExpo } )
 	end, 1)
 	
+    downloadDeal()
 	RestManager.discountCoupon(event.target.idCoipon)
 	
 end
@@ -608,9 +609,7 @@ function buildCoupon()
     txtMaxDesc:setFillColor( 1 )
     svCoupon:insert( txtMaxDesc )
     
-    
     -- Descarga / Redime
-    
     local rctBtnComer = display.newRoundedRect( 130, lastY + 360, 210, 55, 5 )
 	rctBtnComer.idCoipon = itemObj.id
 	rctBtnComer:setFillColor( .4 )
@@ -757,16 +756,6 @@ function buildCoupon()
 		imgBtnShare:addEventListener( 'tap', showFriends )
 	end
 	
-	--btnFriends:addEventListener( 'tap', showFriends )
-	
-	
-    
-    
-    
-    
-	
-	
-	
     local spc = display.newRect( 0, lastY + 60, 1, 1 )
     spc:setFillColor( 0 )
     svCoupon:insert( spc )
@@ -790,7 +779,7 @@ function scene:createScene( event )
     header.y = h
     header:buildToolbar()
     header:buildNavBar(event.params.item.name)
-    hWCup = 20 + header:buildWifiBle()
+    hWCup = 5 + header:buildWifiBle()
 	
 	--obtenemos los parametros del cupon
 	if event.params.item == nil then

@@ -220,21 +220,28 @@ function Deal:new()
         
         local imgBtnDown = display.newRoundedRect( 165, 55, 120, 40, 5 )
         imgBtnDown.id = item.id
-        imgBtnDown:setFillColor( 68/255, 177/255, 13/255 )
-        imgBtnDown:addEventListener( "tap", downloadDeal )
+        imgBtnDown:setFillColor( .75 )
         container:insert( imgBtnDown )
         
-        local imgBtnShareB = display.newRoundedRect( 165, 65, 120, 20, 5 )
-        imgBtnShareB:setFillColor( {
-            type = 'gradient',
-            color1 = { 68/255, 177/255, 13/255 }, 
-            color2 = { 38/255, 147/255, 0 },
-            direction = "bottom"
-        } ) 
-        container:insert(imgBtnShareB)
+        local lbStatus = "DESCARGADO"
+        if item.assigned == 0 then
+            lbStatus = "DESCARGAR"
+            imgBtnDown:setFillColor( 68/255, 177/255, 13/255 )
+            imgBtnDown:addEventListener( "tap", downloadDeal )
+            
+            local imgBtnShareB = display.newRoundedRect( 165, 65, 120, 20, 5 )
+            imgBtnShareB:setFillColor( {
+                type = 'gradient',
+                color1 = { 68/255, 177/255, 13/255 }, 
+                color2 = { 38/255, 147/255, 0 },
+                direction = "bottom"
+            } ) 
+            imgBtnDown.grad = imgBtnShareB
+            container:insert(imgBtnShareB)
+        end
         
         local txtDescargar = display.newText( {
-            text = "DESCARGAR",     
+            text = lbStatus,     
             x = 165, y = 55, width = 120,
             font = "Lato-Bold", fontSize = 14, align = "center"
         })
@@ -371,27 +378,33 @@ function DealMain:new()
         
         local imgBtnDown = display.newRoundedRect( 45, 35, 120, 40, 5 )
         imgBtnDown.id = item.id
-        imgBtnDown:setFillColor( 68/255, 177/255, 13/255 )
-        imgBtnDown:addEventListener( "tap", downloadDeal )
+        imgBtnDown:setFillColor( .75 )
         container:insert( imgBtnDown )
         
-        local imgBtnShareB = display.newRoundedRect( 45, 45, 120, 20, 5 )
-        imgBtnShareB:setFillColor( {
-            type = 'gradient',
-            color1 = { 68/255, 177/255, 13/255 }, 
-            color2 = { 38/255, 147/255, 0 },
-            direction = "bottom"
-        } ) 
-        container:insert(imgBtnShareB)
+        local lbStatus = "DESCARGADO"
+        if item.assigned == 0 then
+            lbStatus = "DESCARGAR"
+            imgBtnDown:setFillColor( 68/255, 177/255, 13/255 )
+            imgBtnDown:addEventListener( "tap", downloadDeal )
+            
+            local imgBtnShareB = display.newRoundedRect( 45, 45, 120, 20, 5 )
+            imgBtnShareB:setFillColor( {
+                type = 'gradient',
+                color1 = { 68/255, 177/255, 13/255 }, 
+                color2 = { 38/255, 147/255, 0 },
+                direction = "bottom"
+            } ) 
+            imgBtnDown.grad = imgBtnShareB
+            container:insert(imgBtnShareB)
+        end
         
         local txtDescargar = display.newText( {
-            text = "DESCARGAR",     
+            text = lbStatus,     
             x = 45, y = 35, width = 120,
             font = "Lato-Bold", fontSize = 14, align = "center"
         })
         txtDescargar:setFillColor( 1 )
         container:insert(txtDescargar)
-        
         
         local iconReady = display.newImage( "img/btn/iconReady.png" )
         iconReady:translate( 0, 75 )

@@ -315,43 +315,88 @@ function loadPartner(item)
 end
 
 function buildPartnerInfo(item)
-
-	lastY = 50
-	
-	lastYImage = 166/2
-	
-	local txtWelcome = display.newText({
-		text = "BIENVENIDO A:",
-		x = 320,
-		y =  lastY,
-		font = "Lato-Regular",
-		width = 300,
-		fontSize = 20,
-		align = "left"
-	})
-	txtWelcome:setFillColor( 1 )
-	srvPartner[#srvPartner]:insert( txtWelcome )
-	
-	lastY = lastY + 20
-
-	local txtPartner = display.newText({
+    
+    
+    local bgAddress = display.newRoundedRect( midW, 180, 440, 100, 10 )
+    bgAddress.anchorY = 0
+	bgAddress:setFillColor( 1 )
+	srvPartner[#srvPartner]:insert(bgAddress)
+    
+    local bgMap = display.newRoundedRect( 410, 180, 100, 100, 10 )
+    bgMap.anchorY = 0
+	bgMap:setFillColor( .2 )
+	srvPartner[#srvPartner]:insert(bgMap)
+    
+    local bgMapL = display.newRect( 370, 180, 20, 100)
+    bgMapL.anchorY = 0
+	bgMapL:setFillColor( .2 )
+	srvPartner[#srvPartner]:insert(bgMapL)
+    
+    local iconTool2 = display.newImage( "img/btn/iconTool2.png" )
+    iconTool2:translate( 410, 230 )
+    srvPartner[#srvPartner]:insert(iconTool2)
+    
+	local txtInfo1 = display.newText({
 		text = item.name,
-		x = 320,
-		y =  lastY,
+		x = 195,
+		y =  205,
 		font = "Lato-Regular",
-		width = 300,
+		width = 320,
 		fontSize = 30,
 		align = "left"
 	})
-	txtPartner:setFillColor( 1 )
-	srvPartner[#srvPartner]:insert( txtPartner )
+	txtInfo1:setFillColor( .2 )
+	srvPartner[#srvPartner]:insert( txtInfo1 )
+    
+    local txtInfo2 = display.newText({
+		text = "¿Cómo llegar?",
+		x = 195,
+		y =  240,
+		font = "Lato-Italic",
+		width = 320,
+		fontSize = 16,
+		align = "left"
+	})
+	txtInfo2:setFillColor( .2 )
+	srvPartner[#srvPartner]:insert( txtInfo2 )
+    
+    local txtInfo3 = display.newText({
+		text = item.address,
+		x = 195,
+		y =  260,
+		font = "Lato-Bold",
+		width = 320,
+		fontSize = 16,
+		align = "left"
+	})
+	txtInfo3:setFillColor( .2 )
+	srvPartner[#srvPartner]:insert( txtInfo3 )
+    
+    local xtraH = 0
+    if txtInfo1.height > 50 then
+        txtInfo1.y = txtInfo1.y + 17
+        txtInfo2.y = txtInfo2.y + 30
+        txtInfo3.y = txtInfo3.y + 30
+        xtraH = xtraH + 30
+    end
+    if txtInfo1.height > 25 then
+        txtInfo3.y = txtInfo3.y + 10
+        xtraH = xtraH + 10
+    end
+    
+    bgAddress.height = bgAddress.height + xtraH
+    bgMap.height = bgMap.height + xtraH
+    bgMapL.height = bgMapL.height + xtraH
+    iconTool2.y = iconTool2.y + (xtraH / 2)
+    
+    
+    
+    
+    
+    
+	lastY = 500
 	
-	txtPartner.y = txtPartner.y + txtPartner.height/2
-	lastY = lastY + txtPartner.height + 10
-	
-	lastY = lastY + 110
-	
-	local bgAddress = display.newRect( midW, lastY, 440, 80 )
+	local bgAddress = display.newRoundedRect( midW, lastY, 440, 60, 10 )
 	bgAddress:setFillColor( 1 )
 	srvPartner[#srvPartner]:insert(bgAddress)
 	
@@ -654,7 +699,7 @@ function loadImagePartner(typeImage)
 					--cargando el logo del comercio
 					imgPartner.alpha = 1
 					imgPartner.x = 90
-					imgPartner.y = lastYImage
+					imgPartner.y = 100
 					imgPartner.width = 120
 					imgPartner.height = 120
 					imgPartner:setMask( mask )
@@ -664,8 +709,8 @@ function loadImagePartner(typeImage)
 					local imgBgPartner = display.newImage( itemPartner.banner, system.TemporaryDirectory )
 					imgBgPartner.alpha = 1
 					imgBgPartner.x = 240
-					imgBgPartner.y = lastYImage
-					imgBgPartner.height = 165
+					imgBgPartner.y = 200
+					imgBgPartner.height = 400
 					srvPartner[1]:insert( imgBgPartner )
 					imgBgPartner:toBack()
 					loadImagePartner( 2 )
@@ -688,7 +733,7 @@ function loadImagePartner(typeImage)
 					--cargando el logo del comercio
 					imgPartner.alpha = 1
 					imgPartner.x = 90
-					imgPartner.y = lastYImage
+					imgPartner.y = 100
 					imgPartner.width = 120
 					imgPartner.height = 120
 					imgPartner:setMask( mask )
@@ -698,8 +743,8 @@ function loadImagePartner(typeImage)
 					local imgBgPartner = display.newImage( itemPartner.banner, system.TemporaryDirectory )
 					imgBgPartner.alpha = 1
 					imgBgPartner.x = 240
-					imgBgPartner.y = lastYImage
-					imgBgPartner.height = 165
+					imgBgPartner.y = 200
+					imgBgPartner.height = 400
 					srvPartner[1]:insert( imgBgPartner )
 					imgBgPartner:toBack()
 					loadImagePartner( 2 )
@@ -787,7 +832,7 @@ function scene:createScene( event )
     homeScreen:insert(header)
     header:buildToolbar()
     header:buildNavBar(title)
-    hWBPar = 20 + header:buildWifiBle()
+    hWBPar = 5 + header:buildWifiBle()
 	
 	Globals.noCallbackGlobal = Globals.noCallbackGlobal + 1
 	callbackCurrent = Globals.noCallbackGlobal

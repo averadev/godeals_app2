@@ -15,7 +15,8 @@ local txtCiudad = {}
 local textoCiudad = ""
 local menuScreenLeft = nil
 local menuScreenRight = nil
- local groupSearchTool = display.newGroup()
+local groupSearchTool = display.newGroup()
+local groupDownload
 
 Header = {}
 
@@ -28,6 +29,15 @@ function Header:new()
     local grpSearch = display.newGroup()
     local imgSearch, btnClose, txtSearch
 	local h = display.topStatusBarContentHeight
+    local fx = audio.loadStream( "fx/alert.wav" )
+    
+    -- Obtener mapa
+    function showMap(event)
+        if storyboard.getCurrentSceneName() ~= "src.Mapa" then
+            Globals.noCallbackGlobal = Globals.noCallbackGlobal + 1
+            storyboard.gotoScene( "src.Mapa", { time = 400, effect = "slideLeft", params = { itemObj = nil } })
+        end
+    end
     
     -- Obtener cupones descargados
     function showHome(event)
@@ -129,9 +139,71 @@ function Header:new()
         bgSearch = display.newImage( "img/btn/bgTxtSearch.png" )
         bgSearch:translate(290, 50 + h )
 		groupSearchTool:insert( bgSearch )
-		
-		
 	end
+    
+    
+    -- Descargar Deal
+    function downloadDeal(event)
+        
+        if storyboard.getCurrentSceneName() ~= "src.Coupon" then
+            -- Deshabilitar boton
+            local t = event.target
+            t:setFillColor( .75 )
+            t.grad.alpha = 0
+            t:removeEventListener( "tap", downloadDeal )
+            
+            -- Descargar en la nube
+            RestManager.downloadCoupon(t.id)
+        end
+        
+        -- Play Sound
+        timer.performWithDelay(500, function() 
+            audio.play( fx )
+        end, 1)
+        
+        -- Creamos anuncio
+        local midW = display.contentWidth / 2
+        local midH = display.contentHeight / 2
+        groupDownload = display.newGroup()
+        
+        local bgShade = display.newRect( midW, midH, display.contentWidth, display.contentHeight )
+        bgShade:setFillColor( 0, 0, 0, .3 )
+        groupDownload:insert(bgShade)
+        
+        local bg = display.newRoundedRect( midW, midH, 280, 300, 10 )
+        bg:setFillColor( .3, .3, .3 )
+        groupDownload:insert(bg)
+        
+        -- Sprite and text
+        local sheet = graphics.newImageSheet(Sprites.down.source, Sprites.down.frames)
+        local sprite = display.newSprite(sheet, Sprites.down.sequences)
+        sprite.x = midW
+        sprite.y = midH - 40
+        groupDownload:insert(sprite)
+        
+        local txt1 = display.newText( {
+            text = "DEAL Descargado",
+            x = midW, y = midH + 60,
+			align = "center", width = 200,
+            font = "Lato-Bold", fontSize = 24
+        })
+        groupDownload:insert(txt1)
+        
+        local txt2 = display.newText( {
+            text = "Consulta tus descargas",
+            x = midW, y = midH + 95,
+			align = "center", width = 200,
+            font = "Lato-Bold", fontSize = 16
+        })
+        groupDownload:insert(txt2)
+        
+        sprite:setSequence("play")
+        sprite:play()
+        
+        transition.to( groupDownload, { alpha = 0, time = 400, delay = 2000, transition = easing.outExpo } )
+        
+        return true
+    end
 	
 	--elimina el txtField de busqueda
 	function deleteTxt()
@@ -292,7 +364,9 @@ function Header:new()
 			deleteTxt()
 			
 			table.remove(txtCiudad, #txtCiudad)
-			txtCiudad[#txtCiudad].text = textoCiudad
+            if txtCiudad[#txtCiudad] then
+                txtCiudad[#txtCiudad].text = textoCiudad
+            end
 			
             storyboard.gotoScene( previousScene, { time = 400, effect = "slideRight" })
 			
@@ -436,7 +510,7 @@ function Header:new()
         
         local iconTool2 = display.newImage( "img/btn/iconTool2.png" )
         iconTool2:translate( 142, 35 )
-		--iconTool2:addEventListener("tap",showMenuLeft)
+		iconTool2:addEventListener("tap",showMap)
         grpTool:insert(iconTool2)
         local iconTool3 = display.newImage( "img/btn/iconTool3.png" )
         iconTool3:translate( 237, 35 )
@@ -482,33 +556,6 @@ function Header:new()
         })
         txtTool5:setFillColor( 1 )
         grpTool:insert(txtTool5)
-        
-        
-        
-        
-
-        --[[
-        local btnWallet = display.newImage( "img/btn/btnMenuWallet.png" )
-        btnWallet:translate( display.contentWidth - 212, 30 )
-        btnWallet:addEventListener( "tap", showWallet )
-        grpTool:insert(btnWallet)
-
-        local btnSearch = display.newImage( "img/btn/btnMenuSearch.png" )
-        btnSearch:translate( display.contentWidth - 90, 30 )
-        btnSearch:addEventListener( "tap", showSearch )
-        grpTool:insert(btnSearch)
-        
-        local btnMensaje = display.newImage( "img/btn/btnMenuNotification.png" )
-        btnMensaje:translate( display.contentWidth - 150, 30 )
-        btnMensaje:addEventListener( "tap", showNotifications )
-        grpTool:insert(btnMensaje)
-
-        local btnUser = display.newImage( "img/btn/btnMenuUser.png" )
-        btnUser:translate( display.contentWidth - 35, 30 )
-        --btnUser:addEventListener( "tap", saveBeacon )
-		btnUser:addEventListener( "tap", showMenuRight )
-        grpTool:insert(btnUser)
-        ]]--
                 
         -- Search Elements
         grpSearch.alpha = 0
@@ -555,32 +602,52 @@ function Header:new()
         local hWB = 20
         if not (isWifiBle) then hWB = 50 end
         
-        local menu = display.newRect( 0, 60 + hWB, display.contentWidth, 65 )
+        local menu = display.newRect( 0, 60 + hWB, display.contentWidth, 50 )
         menu.anchorX = 0
         menu.anchorY = 0
-        menu:setFillColor( .87 )
+        menu:setFillColor( 1 )
         self:insert(menu)
         
         txtTitle = display.newText( {
-            x = (display.contentWidth/2), y = 95 + hWB,
+            x = (display.contentWidth/2), y = 85 + hWB,
 			width = 400, align = "center",
-            text = texto, font = "Lato-Hairline", fontSize = 22,
+            font = "Lato-Hairline", fontSize = 22, text = ""--texto
         })
         txtTitle:setFillColor( .2 )
         self:insert(txtTitle)
 
-        local imgBtnBack = display.newImage( "img/btn/btnBackward.png" )
-        imgBtnBack.x= 30
-        imgBtnBack.y = 92 + hWB
+        local imgBtnBack = display.newImage( "img/btn/iconReturn.png" )
+        imgBtnBack.anchorX = 0
+        imgBtnBack.x= 25
+        imgBtnBack.y = 85 + hWB
         imgBtnBack:addEventListener( "tap", returnScene )
         self:insert( imgBtnBack )
+        
+        local txtReturn = display.newText( {
+            x = 90, y = 85 + hWB,
+			width = 100, align = "center",
+            font = "Lato-Bold", fontSize = 14, text = "REGRESAR"
+        })
+        txtReturn:setFillColor( 0 )
+        self:insert(txtReturn)
 		
 		local imgBtnHome = display.newImage( "img/btn/btnMenuHome.png" )
         imgBtnHome.x= 440
-        imgBtnHome.y = 92 + hWB
+        imgBtnHome.y = 85 + hWB
 		imgBtnHome:setFillColor( .5 )
         imgBtnHome:addEventListener( "tap", returnHome )
         self:insert( imgBtnHome )
+        
+        local bgGrad = display.newRect( 0, 105 + hWB, display.contentWidth, 5 )
+        bgGrad.anchorX = 0
+        bgGrad.anchorY = 0
+        bgGrad:setFillColor( {
+            type = 'gradient',
+            color1 = { 1 }, 
+            color2 = { .7 },
+            direction = "bottom"
+        } ) 
+        self:insert(bgGrad)
         
     end
 	

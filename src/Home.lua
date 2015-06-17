@@ -336,9 +336,6 @@ function buildItems(screen)
     end
 end
 
-function downloadDeal(event)
-end
-
 -- Genera la fecha en formato
 function getDate(strDate)
     local fecha
@@ -645,8 +642,7 @@ function scene:createScene( event )
     homeScreen:insert(header)
     header.y = h
     header:buildToolbar()
-    local hWB = 20
-    hWB = hWB + header:buildWifiBle()
+    local hWB = 20 + header:buildWifiBle()
         
 	svMenuTxt = widget.newScrollView
 	{

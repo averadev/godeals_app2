@@ -711,7 +711,7 @@ function scene:createScene( event )
     header.y = h
     header:buildToolbar()
     header:buildNavBar(itemObj.name)
-    hWBE = 20 + header:buildWifiBle()
+    hWBE = 5 + header:buildWifiBle()
 	
 	Globals.noCallbackGlobal = Globals.noCallbackGlobal + 1
 	callbackCurrent = Globals.noCallbackGlobal

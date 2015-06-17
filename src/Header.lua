@@ -458,14 +458,13 @@ function Header:new()
             isWifiBle = getBeacon.verifyWifiBLE()
         end
         
-        
         -- Incluye botones que de se ocultaran en la bus
 		local poscCiu = #txtCiudad + 1
         
         local toolbar = display.newRect( 0, 0, display.contentWidth, 80 )
         toolbar.anchorX = 0
         toolbar.anchorY = 0
-        toolbar:setFillColor( .2, .2, .2 )
+        toolbar:setFillColor( .1 )
         self:insert(toolbar)
         
         local iconTool1 = display.newImage( "img/btn/iconTool1.png" )
@@ -502,7 +501,7 @@ function Header:new()
         line4.alpha = .1
 		grpTool:insert(line4)
         local bgToolB = display.newRect( 237, 40, 95, 80 )
-        bgToolB:setFillColor( 64/255 )
+        bgToolB:setFillColor( .2 )
         grpTool:insert(bgToolB)
         local bgToolD = display.newRect( 332, 40, 95, 80 )
         bgToolD:setFillColor( 50/255, 150/255, 0 )

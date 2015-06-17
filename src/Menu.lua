@@ -27,7 +27,7 @@ function MenuLeft:new()
 		selfL:insert(bgMenuLeft)
 		
 		local MenuLeft = display.newRect( display.contentCenterX - 80, display.contentCenterY + h, 400, intH )
-		MenuLeft:setFillColor( .168, .168, .168 )
+		MenuLeft:setFillColor( .1 )
 		MenuLeft.alpha = 1
 		MenuLeft:addEventListener("tap",blockMenu)
 		MenuLeft:addEventListener("touch",blockMenu)

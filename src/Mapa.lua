@@ -12,6 +12,7 @@ require('src.Menu')
 require('src.BuildRow')
 local storyboard = require( "storyboard" )
 local Globals = require('src.resources.Globals')
+local RestManager = require('src.resources.RestManager')
 local scene = storyboard.newScene()
 
 -- Variables
@@ -40,16 +41,31 @@ end
 -- FUNCIONES
 ---------------------------------------------------------------------------------
 
---obtenemos el grupo homeScreen de la escena actual
+-- obtenemos el grupo homeScreen de la escena actual
 function getSceneSearchM( event )
 	--modalSeach(txtSearch.text)
 	SearchText(homeScreen)
 	return true
 end
 
---obtenemos el homeScreen de la escena
+-- obtenemos el homeScreen de la escena
 function getScreenM()
 	return homeScreen
+end
+
+-- obtenemos los comercios
+function setComerciosGPS(data)
+    if myMap then
+        for y = 1, #data, 1 do 
+            local options = { 
+                title = data[y].name,
+                subtitle = data[y].info, 
+                listener = markerListener, 
+                imageFile = "img/btn/iconGPS.png"
+            }
+            myMap:addMarker( tonumber(data[y].latitude), tonumber(data[y].longitude), options )
+        end
+    end
 end
 
 function scene:createScene( event )
@@ -83,13 +99,22 @@ function scene:createScene( event )
         
         -- Add Maker
         timeMarker = timer.performWithDelay( 2000, function()
-            local options = { 
-                title = itemObj.name, 
-                subtitle = itemObj.address, 
-                listener = markerListener, 
-                imageFile = "img/btn/btnIconMap.png"
-            }
-            myMap:addMarker( tonumber(itemObj.latitude), tonumber(itemObj.longitude), options )
+            if myMap then
+                local options = { 
+                    title = itemObj.name, 
+                    subtitle = itemObj.address, 
+                    listener = markerListener, 
+                    imageFile = "img/btn/iconGPS.png"
+                }
+                myMap:addMarker( tonumber(itemObj.latitude), tonumber(itemObj.longitude), options )
+            end
+        end, 1 )
+    elseif myMap then
+        homeScreen:insert(myMap)
+        timeMarker = timer.performWithDelay( 2000, function()
+            if myMap then
+                RestManager.getComerciosGPS()
+            end
         end, 1 )
     else
         local bg = display.newRect( midW, (lastY + hWBMap) + (mh / 2) - 4, intW, mh )

@@ -38,11 +38,16 @@ function MenuLeft:new()
 	end
     
     local function changeCity( event )
-        hideMenuLeft()
         local t = event.target
         t.alpha = 1
-        transition.to( t, { alpha = .1, time = 200, transition = easing.outExpo } )
-        changeCityName(event.target)
+        transition.to( t, { alpha = .1, time = 200, transition = easing.outExpo, 
+            onComplete = function()
+                transition.to( t, { alpha = 1, time = 200, transition = easing.outExpo })
+                transition.to( grpCity, { y = intH - 60, time = 800, transition = easing.outExpo } )
+                hideMenuLeft()
+                changeCityName(event.target)
+            end 
+        })
     end
 
     local function getCities( event )
@@ -64,14 +69,16 @@ function MenuLeft:new()
         local sizeAvatar = 'width=200&height=200'
         
 		if settings.fbId == "" then
-            local mask = graphics.newMask( "img/bgk/maskBig.jpg" )
-			local avatar = display.newImage( "img/bgk/user.png" )
-            avatar:setMask( mask )
-			avatar.x = 150
+            local avatar = display.newImage( "img/bgk/user.png" )
+            avatar.x = 150
             avatar.y = h + 160
             avatar.width = 200
             avatar.height  = 200
 			selfL:insert(avatar)
+            
+            local mask = display.newImage( "img/bgk/bgAvatar.png" )
+            mask:translate( 150, h + 160)
+            selfL:insert(mask)
 		else
 			local path = system.pathForFile( "avatarFb"..settings.fbId, system.TemporaryDirectory )
 			local fhd = io.open( path )
@@ -82,6 +89,7 @@ function MenuLeft:new()
                 avatar.width = 200
                 avatar.height  = 200
 				selfL:insert(avatar)
+                
                 local mask = display.newImage( "img/bgk/bgAvatar.png" )
                 mask:translate( 150, h + 160)
 				selfL:insert(mask)
@@ -90,13 +98,15 @@ function MenuLeft:new()
 					-- Verificamos el callback activo
 					if ( event.isError ) then
 					else
-                        local mask = graphics.newMask( "img/bgk/maskBig.jpg" )
-						event.target:setMask( mask )
                         event.target.x = 150
                         event.target.y = h + 160
                         event.target.height = 200
                         event.target.width = 200
 						selfL:insert( event.target )
+                        
+                        local mask = display.newImage( "img/bgk/bgAvatar.png" )
+                        mask:translate( 150, h + 160)
+                        selfL:insert(mask)
 					end
 				end
 				display.loadRemoteImage( "http://graph.facebook.com/".. settings.fbId .."/picture?type=large&"..sizeAvatar, 
@@ -104,20 +114,11 @@ function MenuLeft:new()
 			end
 		end
         
-        local textSaludo = display.newText( {
-            text = "HOLA",     
-            x = 225, y = h + 280,
-            width = 350, height =20,
-            font = "Lato-Regular",  fontSize = 16, align = "left"
-        })
-        textSaludo:setFillColor( 1 )
-        selfL:insert(textSaludo)
-
         local textNombre = display.newText( {
             text = settings.name,     
-            x = 225, y = h + 310,
-            width = 350, height = 30,
-            font = "Lato-Bold",  fontSize = 30, align = "left"
+            x = 160, y = h + 300,
+            width = 380, height = 30,
+            font = "Lato-Bold",  fontSize = 30, align = "center"
         })
         textNombre:setFillColor( 1 )
         selfL:insert(textNombre)
@@ -238,113 +239,6 @@ function MenuLeft:new()
 	end
 	
 	return selfL
-	
-end
-
-function MenuRight:new()
-	
-	local intW = display.contentWidth
-	local intH = display.contentHeight
-	local h = display.topStatusBarContentHeight
-
-	local selfR = display.newGroup()
-	
-	selfR.x = 520
-	
-	function selfR:builScreenRight()
-		
-		local bgMenuRight = display.newRect( display.contentCenterX, display.contentCenterY + h, intW, intH )
-		bgMenuRight:setFillColor( 1 )
-		bgMenuRight.alpha = .2
-		bgMenuRight:addEventListener("tap",hideMenuRight)
-		bgMenuRight:addEventListener("touch",blockMenu)
-		selfR:insert(bgMenuRight)
-		
-		local MenuRight = display.newRect( 280, display.contentCenterY + h, 400, intH )
-		MenuRight:setFillColor( .92 )
-		MenuRight.alpha = 1
-		MenuRight:addEventListener("tap",blockMenu)
-		MenuRight:addEventListener("touch",blockMenu)
-		selfR:insert(MenuRight)
-		
-		createMenuRight()
-		
-	end
-	
-	function createMenuRight()
-		local MenuLeftOthers = display.newRect( 280, h + 30 , 400, 60 )
-		MenuLeftOthers:setFillColor( .66 )
-		MenuLeftOthers.alpha = 1
-		MenuLeftOthers:addEventListener("tap",blockMenu)
-		MenuLeftOthers:addEventListener("touch",blockMenu)
-		selfR:insert(MenuLeftOthers)
-        
-        titleR = display.newText( {    
-            x = 290, y = h + 30, align = "left", width = 300,
-            text = "Opciónes",  font = "Lato-Light", fontSize = 25,
-        })
-        titleR:setFillColor( 1 )
-        selfR:insert(titleR)
-		
-		-- tutorial
-		local rectTutorial = display.newRect(  280, 90 + h, 400, 60 )
-        rectTutorial:setFillColor( .5 )
-		rectTutorial.alpha = .1
-		rectTutorial:addEventListener( "tap", showTutorial )
-		selfR:insert(rectTutorial)
-        
-        local icoMenuTuto = display.newImage( "img/btn/icoOptTuto.png" )
-        icoMenuTuto:translate( 160, MenuLeftOthers.height + 30 + h)
-        selfR:insert(icoMenuTuto)
-		
-		local txtTutorial = display.newText( {    
-            x = 300, y = MenuLeftOthers.height + 30 + h, align = "left", width = 200,
-            text = "Tutorial",  font = "Lato-Light", fontSize = 25,
-		})
-		txtTutorial:setFillColor( 0 )
-		selfR:insert(txtTutorial)
-		
-		local line1 = display.newLine(80, 120 + h, 480, 120 + h)
-		selfR:insert(line1)
-		
-		-- Cerrar session
-		local rectSession = display.newRect(  280, 150 + h, 400, 60 )
-        rectSession:setFillColor( .5 )
-		rectSession.alpha = .1
-		--rectSession:addEventListener( "tap", cerrarSession )
-		selfR:insert(rectSession)
-        
-        local icoMenuSess = display.newImage( "img/btn/icoOptSess.png" )
-        icoMenuSess:translate( 160, MenuLeftOthers.height + 90 + h)
-        selfR:insert(icoMenuSess)
-		
-		local txtSession = display.newText( {    
-            x = 300, y = MenuLeftOthers.height + 90 + h, align = "left", width = 200,
-            text = "Cerrar sesión",  font = "Lato-Light", fontSize = 25,
-		})
-		txtSession:setFillColor( 0 )
-		selfR:insert(txtSession)
-		
-		local line2 = display.newLine(80, 180 + h, 480, 180 + h)
-		selfR:insert(line2)
-				
-		-- Border Right
-        local borderRight = display.newRect( 80, intH / 2, 4, intH )
-        borderRight:setFillColor( {
-            type = 'gradient',
-            color1 = { .1, .1, .1, .7 }, 
-            color2 = { .4, .4, .4, .2 },
-            direction = "right"
-        } ) 
-        borderRight:setFillColor( 0, 0, 0 )
-        selfR:insert(borderRight)
-	end
-	
-	function blockMenu( event )
-		return true
-	end
-	
-	return selfR
 	
 end
 

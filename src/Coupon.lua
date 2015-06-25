@@ -569,7 +569,6 @@ function buildCoupon()
 	imgBtnShare.alpha = .2
 	imgBtnShare.id = itemObj.id
 	imgBtnShare:setFillColor( 8/255, 108/255, 160/255 )
-	imgBtnShare:addEventListener( "tap", showPartner )
 	svCoupon:insert( imgBtnShare )
     
     local imgBtnShareB = display.newRoundedRect( 355, lastY + 190, 180, 20, 5 )

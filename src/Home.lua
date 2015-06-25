@@ -533,7 +533,7 @@ function ListenerChangeScrollHome( event )
 				btnModal.name = "EVENTOS"
 			end
 			
-            if event.target.name == "scrViewEventos" then
+            if event.target.name == "scrViewDeals" then
                 showFilter(false)
             end
 			
@@ -747,7 +747,6 @@ function scene:createScene( event )
 	scrViewMain:insert(grupoSeparadorEventos)
 	
 	currentSv = scrViewMain
-	
 	settings = DBManager.getSettings()
 		
 	btnModal = display.newImage( "img/btn/btnFilter.png" )

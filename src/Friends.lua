@@ -9,6 +9,7 @@ require('src.BuildRow')
 --variables
 local intW = display.contentWidth
 local intH = display.contentHeight
+local midW = display.contentWidth / 2
 local midH = display.contentHeight / 2
 local h = display.topStatusBarContentHeight
 local faceActive = 0
@@ -46,39 +47,39 @@ function showListFriends(idC)
     groupFriends:insert(bgFriend)
 	bgFriend:addEventListener( "tap", CloseListFriends )
 	bgFriend:addEventListener( "touch", CloseListFriends )
-	
-	local imgBgFriends = display.newImage( "img/bgk/bgShare.png" )
-	imgBgFriends:translate( (intW / 2), midH )
-	groupFriends:insert(imgBgFriends)
-	imgBgFriends:addEventListener( 'tap', lockedModalFriend )
-	imgBgFriends:addEventListener( 'touch', lockedModalFriend )
+    
+    local bgModal = display.newRoundedRect( midW, midH, 400, 500, 10 )
+    bgModal:setFillColor( .9 )
+    groupFriends:insert( bgModal )
+    
+    local bgBanner = display.newRoundedRect( midW, midH - 210, 400, 80, 10 )
+    bgBanner:setFillColor( .2 )
+    groupFriends:insert( bgBanner )
+    
+    local bgSearch = display.newRoundedRect( midW + 125, midH - 210, 150, 80, 10 )
+    bgSearch:setFillColor( .2, .6, 0 )
+    groupFriends:insert( bgSearch )
+    
+    local bgBanner2 = display.newRect( midW + 60, midH - 210, 20, 80)
+    bgBanner2:setFillColor( .2 )
+    groupFriends:insert( bgBanner2 )
 	
 	local friendsTitle = display.newText( {
-		text = "Compartir DEAL con:",     
-		x = 200, y = midH - 235,
+		text = "COMPARTIR DEAL CON:",     
+		x = 210, y = midH - 215,
 		width = 300,
-		font = "Lato-Regular",  fontSize = 20
+		font = "Lato-Bold",  fontSize = 18
 	})
 	friendsTitle:setFillColor( 1 )
 	groupFriends:insert(friendsTitle)
-	
-	local btnRefreshFriend = display.newRoundedRect(370, midH - 235, 140, 46, 5)
-	btnRefreshFriend:setFillColor({
-        type = 'gradient',
-        color1 = { 0, 179/255, 0 }, 
-        color2 = { 0, 138/255, 0 },
-        direction = "bottom"
-    })
-	groupFriends:insert(btnRefreshFriend)
-	btnRefreshFriend:addEventListener( 'tap', refreshFriend )
     
-    local friendRefresh = display.newImage( "img/btn/friendRefresh.png" )
-	friendRefresh:translate( 320, midH - 235 )
+    local friendRefresh = display.newImage( "img/btn/iconUpdate.png" )
+	friendRefresh:translate( 375, midH - 225 )
 	groupFriends:insert(friendRefresh)
 	
 	local txtRefreshFriend = display.newText( {
-		text = "ACTUALIZAR AMIGOS",     
-		x = 385, y = midH - 235, width = 110,
+		text = "Actualizar Amigos",     
+		x = 375, y = midH - 195, width = 150,
 		font = "Lato-Regular",  fontSize = 14, align = "center"
 	})
 	txtRefreshFriend:setFillColor( 1 )
@@ -113,10 +114,10 @@ function showListFriends(idC)
 	
 	scvFriends = widget.newScrollView
 	{
-		top = midH - 185,
+		top = midH - 180,
 		left = 40,
 		width = 400,
-		height = 360,
+		height = 320,
 		listener = ScrollListenerFriends,
 		horizontalScrollDisabled = true,
         verticalScrollDisabled = false,
@@ -124,8 +125,8 @@ function showListFriends(idC)
 		backgroundColor = { 1 }--.96
 	}
 	groupFriends:insert(scvFriends)
-	
-	createListFriends()
+    
+	--createListFriends()
 
 	return true;
 end

@@ -139,28 +139,44 @@ end
 
 function buildNotificationsItems(objScreen)
 
-    yMain = 50
+    local isMessage = false
 	endLoading(svContent)
-	
-    local separadorEventos = display.newImage( "img/btn/btnArrowGreen.png" )
-    separadorEventos:translate( 41, yMain -3)
-    separadorEventos.isVisible = true
-    svContent:insert(separadorEventos)
-
-    local textSeparadorEventos = display.newText( {
-        text = "ESTAS SON TUS NOTIFICACIONES.",     
-        x = 300, y = yMain, width = intW, height = 20,
-        font = "Lato-Regular", fontSize = 14, align = "left"
-    })
-    textSeparadorEventos:setFillColor( 85/255, 85/255, 85/255 )
-    svContent:insert(textSeparadorEventos)
-	
-    yMain = yMain + 50
+    yMain = 40
+    
+    -- Create messages
     for y = 1, #elements, 1 do
-	
+        if elements[y].tipo == "3" then
+            if not isMessage then 
+                isMessage = true
+                yMain = 0 
+            end
+            
+			local message = Message:new()
+			svContent:insert(message)
+			message:build(true, elements[y], imageItems[y])
+			message.y = yMain
+			message.id = elements[y].idRelacional
+			message.posci = y
+			message:addEventListener('tap', markRead)
+			
+            if elements[y].leido == "1" then
+                noLeido[y] = display.newRect( 0, h, 2, 98 )
+                noLeido[y].x = 10
+                noLeido[y].y = yMain - 50
+                noLeido[y]:setFillColor( .18, .59, 0 )
+                svContent:insert(noLeido[y])
+            end
+            yMain = yMain + 110
+		end
+    end
+    
+    if isMessage then 
+        yMain = yMain + 40
+    end
+    
+    for y = 1, #elements, 1 do
         -- Create container
 		if elements[y].tipo == "1" then
-		
 			local evento = Event:new()
             svContent:insert(evento)
             evento:build(true, elements[y], imageItems[y])
@@ -168,10 +184,16 @@ function buildNotificationsItems(objScreen)
 			evento.id = elements[y].idRelacional
 			evento.posci = y
 			evento:addEventListener('tap', markRead)
+            
+            if elements[y].leido == "1" then
+                noLeido[y] = display.newRect( 0, h, 2, 165 )
+                noLeido[y].x = 10
+                noLeido[y].y = yMain + 60 
+                noLeido[y]:setFillColor( .18, .59, 0 )
+                svContent:insert(noLeido[y])
+            end
 			yMain = yMain + 180
-		
 		elseif elements[y].tipo == "2" then
-		
 			local deal = Deal:new()
 			svContent:insert(deal)
 			deal:build(true, elements[y], imageItems[y])
@@ -179,18 +201,16 @@ function buildNotificationsItems(objScreen)
 			deal.id = elements[y].idRelacional
 			deal.posci = y
 			deal:addEventListener('tap', markRead)
-			yMain = yMain + 180
-		
+			
+            if elements[y].leido == "1" then
+                noLeido[y] = display.newRect( 0, h, 2, 165 )
+                noLeido[y].x = 10
+                noLeido[y].y = yMain + 60
+                noLeido[y]:setFillColor( .18, .59, 0 )
+                svContent:insert(noLeido[y])
+            end
+            yMain = yMain + 180
 		end
-		
-		if elements[y].leido == "1" then
-            noLeido[y] = display.newRect( 0, h, 2, 110 )
-            noLeido[y].x = 10
-            noLeido[y].y = yMain - 60
-            noLeido[y]:setFillColor( .18, .59, 0 )
-            svContent:insert(noLeido[y])
-		end
-		
     end
 	
 	svContent:setScrollHeight(yMain + 20)

@@ -35,6 +35,7 @@ function Header:new()
     function showMap(event)
         if storyboard.getCurrentSceneName() ~= "src.Mapa" then
             Globals.noCallbackGlobal = Globals.noCallbackGlobal + 1
+			storyboard.removeScene( "src.Mapa" )
             storyboard.gotoScene( "src.Mapa", { time = 400, effect = "slideLeft", params = { itemObj = nil } })
         end
     end
@@ -94,12 +95,6 @@ function Header:new()
     
 	--muestra el formulario de busqueda
     function showSearch( event )
-       -- grpTool.alpha = 0
-       --[[ grpSearch.alpha = 1
-        --txtSearch.y = 37
-        transition.to( imgSearch, { x = 150, time = 400, transition = easing.outExpo, 
-			onComplete=function() btnClose.alpha = 1 end
-        })]]
 		createSearch()
 		createTxt("")
     end
@@ -118,10 +113,10 @@ function Header:new()
 	--intsancia los componentes de la busquesda
 	function createSearch()
 		
-		bgSearchA = display.newRect( 85, h, display.contentWidth, 80 )
+		bgSearchA = display.newRect( 97, h, display.contentWidth, 80 )
         bgSearchA.anchorX = 0
         bgSearchA.anchorY = 0
-		bgSearchA:setFillColor( .2, .2, .2 )
+		bgSearchA:setFillColor( .1 )
 		groupSearchTool:insert( bgSearchA )
 		bgSearchA:addEventListener( 'tap', lockedSearch)
 		bgSearchA:addEventListener( 'touch', lockedSearch)
@@ -254,15 +249,6 @@ function Header:new()
 		transition.to( screen, { x = 0, time = 400, transition = easing.outExpo } )
 		screen = nil
 		return true
-	end
-	
-	--muestra el menu Derecho
-	function showMenuRight( event )
-		local screen = getScreen()
-		screen.alpha = .5
-		transition.to( screen, { x = -400, time = 400, transition = easing.outExpo } )
-		transition.to( menuScreenRight, { x = 0, time = 400, transition = easing.outExpo } )
-		screen = nil
 	end
 	
 	--esconde el menu Derecho
@@ -501,7 +487,7 @@ function Header:new()
         line4.alpha = .1
 		grpTool:insert(line4)
         local bgToolB = display.newRect( 237, 40, 95, 80 )
-        bgToolB:setFillColor( .2 )
+        bgToolB:setFillColor( .15 )
         grpTool:insert(bgToolB)
         local bgToolD = display.newRect( 332, 40, 95, 80 )
         bgToolD:setFillColor( 50/255, 150/255, 0 )
@@ -562,10 +548,7 @@ function Header:new()
 		--creamos la pantalla del menu
 		if menuScreenLeft == nil then
 			menuScreenLeft = MenuLeft:new()
-			menuScreenRight = MenuRight:new()
-		
 			menuScreenLeft:builScreenLeft()
-			menuScreenRight:builScreenRight()
 		end
 		
 		--verificamos notificaciones

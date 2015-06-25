@@ -137,6 +137,122 @@ end
 
 
 ---------------------------------------------------------------------------------
+-- MESSAGE
+---------------------------------------------------------------------------------
+Message = {}
+local assigned = 0
+function Message:new()
+    -- Variables
+    local self = display.newGroup()
+	
+	function AssignedCoupon(item)
+		assigned = item
+	end
+    
+    function showMessage(event)
+        local Globals = require('src.resources.Globals')
+        local storyboard = require( "storyboard" )
+        Globals.noCallbackGlobal = Globals.noCallbackGlobal + 1
+		hideSearch2()
+		deleteTxt()
+		
+        local current = storyboard.getCurrentSceneName()
+		if current ~= "src.Message" then
+			storyboard.gotoScene( "src.Message", {
+                time = 400,
+                effect = "crossFade",
+                params = { item = event.target.item }
+            })
+		end
+    end
+    
+    -- Creamos la pantalla del menu
+    function self:build(isBg, item, image)
+        -- Generamos contenedor
+        local container = display.newContainer( 480, 110 )
+        container.x = 240
+        container.y = 60
+		container.item = item
+        self:insert( container )
+		container:addEventListener( "tap", showMessage )
+
+        local maxShape = display.newRect( 0, 0, 460, 100 )
+        maxShape:setFillColor( .84 )
+        container:insert( maxShape )
+
+        local maxShape = display.newRect( 0, 0, 456, 96 )
+        maxShape:setFillColor( 1 )
+        container:insert( maxShape )
+
+        -- Agregamos imagen
+        item.tipo  = "Message"
+        image.alpha = 1
+        image.x= -177
+        image.item = item
+        container:insert( image )
+
+        -- Agregamos textos
+        local txtPartner0 = display.newText( {
+            text = "De:",     
+            x = 45, y = -25,
+            width = 340,
+            font = "Lato-Bold", fontSize = 16, align = "left"
+        })
+        txtPartner0:setFillColor( 0 )
+        container:insert(txtPartner0)
+        
+        local txtPartner = display.newText( {
+            text = item.partner,     
+            x = 55, y = -25,
+            width = 300,
+            font = "Lato-Bold", fontSize = 18, align = "left"
+        })
+        txtPartner:setFillColor( 0 )
+        container:insert(txtPartner)
+        
+        local txtFecha = display.newText( {
+            text = item.fechaFormat,     
+            x = 200, y = -30,
+            width = 100,
+            font = "Lato-Bold", fontSize = 12, align = "left"
+        })
+        txtFecha:setFillColor( 0 )
+        container:insert(txtFecha)
+        
+        local txtTitle0 = display.newText( {
+            text = "Asunto: ",
+            x = 45, y = 0,
+            width = 340, height = 0,
+            font = "Lato-Bold", fontSize = 16, align = "left"
+        })
+        txtTitle0:setFillColor( 0 )
+        container:insert(txtTitle0)
+        
+        local txtTitle = display.newText( {
+            text = item.name,
+            x = 75, y = 0,
+            width = 280, height = 0,
+            font = "Lato-Bold", fontSize = 18, align = "left"
+        })
+        txtTitle:setFillColor( 0 )
+        container:insert(txtTitle)
+
+        local txtInfo = display.newText( {
+            text = item.detail:sub(1,42).."...",
+            x = 35, y = 25, width = 320,
+            font = "Lato-Italic", fontSize = 14, align = "left"
+        })
+        txtInfo:setFillColor( .3 )
+        container:insert(txtInfo)
+        
+        local btnForward = display.newImage( "img/btn/btnForward.png" )
+        btnForward:translate( 200, 18)
+        container:insert( btnForward )
+        
+    end
+
+    return self
+end---------------------------------------------------------------------------------
 -- DEAL
 ---------------------------------------------------------------------------------
 Deal = {}
@@ -218,52 +334,63 @@ function Deal:new()
         txtPartner:setFillColor( .3 )
         container:insert(txtPartner)
         
-        local imgBtnDown = display.newRoundedRect( 165, 55, 120, 40, 5 )
-        imgBtnDown.id = item.id
-        imgBtnDown:setFillColor( .75 )
-        container:insert( imgBtnDown )
-        
-        local lbStatus = "DESCARGADO"
-        if item.assigned == 0 then
-            lbStatus = "DESCARGAR"
-            imgBtnDown:setFillColor( 68/255, 177/255, 13/255 )
-            imgBtnDown:addEventListener( "tap", downloadDeal )
-            
-            local imgBtnShareB = display.newRoundedRect( 165, 65, 120, 20, 5 )
-            imgBtnShareB:setFillColor( {
-                type = 'gradient',
-                color1 = { 68/255, 177/255, 13/255 }, 
-                color2 = { 38/255, 147/255, 0 },
-                direction = "bottom"
-            } ) 
-            imgBtnDown.grad = imgBtnShareB
-            container:insert(imgBtnShareB)
-        end
-        
-        local txtDescargar = display.newText( {
-            text = lbStatus,     
-            x = 165, y = 55, width = 120,
-            font = "Lato-Bold", fontSize = 14, align = "center"
-        })
-        txtDescargar:setFillColor( 1 )
-        container:insert(txtDescargar)
-        
-        local iconReady = display.newImage( "img/btn/iconReady.png" )
-        iconReady:translate( -30, 60 )
-        container:insert(iconReady)
-
-        local txtStock = display.newText( {
-            text = item.stock.." Disponibles",     
-            x = 105, y = 60,
-            width = 240, height =20,
-            font = "Lato-Regular", fontSize = 16, align = "left"
-        })
-        if item.stock == '0' then
-            txtStock:setFillColor( .8, .5, .5 )
+        if item.leido then 
+            local txtInfo = display.newText( {
+                text = item.detail,     
+                x = 80, y = 35,
+                width = 240, height = 50,
+                font = "Lato-Italic", fontSize = 16, align = "left"
+            })
+            txtInfo:setFillColor( .3 )
+            container:insert(txtInfo)
         else
-            txtStock:setFillColor( .3 )
+            local imgBtnDown = display.newRoundedRect( 165, 55, 120, 40, 5 )
+            imgBtnDown.id = item.id
+            imgBtnDown:setFillColor( .75 )
+            container:insert( imgBtnDown )
+
+            local lbStatus = "DESCARGADO"
+            if item.assigned == 0 then
+                lbStatus = "DESCARGAR"
+                imgBtnDown:setFillColor( 68/255, 177/255, 13/255 )
+                imgBtnDown:addEventListener( "tap", downloadDeal )
+
+                local imgBtnShareB = display.newRoundedRect( 165, 65, 120, 20, 5 )
+                imgBtnShareB:setFillColor( {
+                    type = 'gradient',
+                    color1 = { 68/255, 177/255, 13/255 }, 
+                    color2 = { 38/255, 147/255, 0 },
+                    direction = "bottom"
+                } ) 
+                imgBtnDown.grad = imgBtnShareB
+                container:insert(imgBtnShareB)
+            end
+
+            local txtDescargar = display.newText( {
+                text = lbStatus,     
+                x = 165, y = 55, width = 120,
+                font = "Lato-Bold", fontSize = 14, align = "center"
+            })
+            txtDescargar:setFillColor( 1 )
+            container:insert(txtDescargar)
+        
+            local iconReady = display.newImage( "img/btn/iconReady.png" )
+            iconReady:translate( -30, 60 )
+            container:insert(iconReady)
+
+            local txtStock = display.newText( {
+                text = item.stock.." Disponibles",     
+                x = 105, y = 60,
+                width = 240, height =20,
+                font = "Lato-Regular", fontSize = 16, align = "left"
+            })
+            if item.stock == '0' then
+                txtStock:setFillColor( .8, .5, .5 )
+            else
+                txtStock:setFillColor( .3 )
+            end
+            container:insert(txtStock)
         end
-        container:insert(txtStock)
         
 		-- Fix Height
 		if txtTitle.height > 35 then
@@ -338,6 +465,11 @@ function DealMain:new()
         image.height  = 200
         image.item = item
         container:insert( image )
+        
+        local bgShadowLogo = display.newImage( "img/bgk/bgShadowLogo.png" )
+        bgShadowLogo.x = -123
+        bgShadowLogo.y = 5
+        container:insert(bgShadowLogo)
         
         local mask = graphics.newMask( "img/bgk/maskImgRow.jpg" )
         logo:setMask( mask )

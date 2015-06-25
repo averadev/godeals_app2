@@ -15,6 +15,7 @@ local midW = display.contentCenterX
 local midH = display.contentCenterY
 
 local toolbar, menu
+local srvPartnerD
 local groupMenu, groupPartner, groupMenuPartnerText
 local  svCoupon, svMenuTxt
 local h = display.topStatusBarContentHeight
@@ -56,199 +57,7 @@ function openSocialNetwork( event )
 	system.openURL( event.target.url )
 end
 
-
-
---------listener scroll
-
-function ListenerChangeMenuPartner( event )
-	
-	local positionScroll
-	local nextSv
-	local previousSv
-	
-	positionScroll = currentSv.name
-	
-	if positionScroll ~= nil then
-		if positionScroll == 1 then
-			nextSv = srvPartner[2]
-		elseif positionScroll == #srvPartner then
-			previousSv = srvPartner[positionScroll - 1]
-		else
-			nextSv = srvPartner[positionScroll + 1]
-			previousSv = srvPartner[positionScroll - 1]
-		end
-	end
-	
-	if event.phase == "began" then
-		
-		svMenuTxt:setScrollWidth(  480 )
-		
-		diferenciaX = event.x - event.target.x
-		posicionMenu = groupMenuPartnerText.x
-		
-    elseif event.phase == "moved" then
-		if  event.direction == "left"  or event.direction == "right" then
-			
-			posicionNueva = event.x-diferenciaX 
-			
-			posicionNueva2 = ( (posicionNueva - 240) / .5 )
-			
-			currentSv.x = ((posicionNueva - 240) / .7 ) + posicionNueva
-			
-			if nextSv ~= nil then
-				nextSv.x = 480 + ((posicionNueva - 240) / .7 ) + posicionNueva
-			end
-			
-			if previousSv ~= nil then
-				previousSv.x = -480 + ((posicionNueva - 240) / .7 ) + posicionNueva
-			end
-			
-			groupMenuPartnerText.x = (( posicionNueva - 240) / 3) + posicionMenu
-			
-		end
-		
-    elseif event.phase == "ended" or event.phase == "cancelled" then
-		if diferenciaX - event.x >= -100 then
-			
-			if nextSv == nil then
-				transition.to( currentSv, { x = 240, time = 400, transition = easing.outExpo } )
-				transition.to( groupMenuPartnerText, { x = posicionMenu, time = 400, transition = easing.outExpo } )
-			else
-			transition.to( currentSv, { x = -240, time = 400, transition = easing.outExpo } )
-			transition.to( nextSv, { x = 240, time = 400, transition = easing.outExpo } )
-			transition.to( groupMenuPartnerText, { x = posicionMenu - 166, time = 400, transition = easing.outExpo } )
-			currentSv = nextSv
-			end
-		elseif diferenciaX - event.x  <= -380 then
-			
-			if previousSv == nil then 
-				transition.to( currentSv, { x = 240, time = 400, transition = easing.outExpo } )
-				transition.to( groupMenuPartnerText, { x = posicionMenu, time = 400, transition = easing.outExpo } )
-			else
-				transition.to( currentSv, { x = 720, time = 400, transition = easing.outExpo } )
-				transition.to( nextSv, { x = 720, time = 400, transition = easing.outExpo } )
-				transition.to( previousSv, { x = 240, time = 400, transition = easing.outExpo } )
-				transition.to( groupMenuPartnerText, { x = posicionMenu + 166, time = 400, transition = easing.outExpo } )
-				currentSv = previousSv
-			end
-		else
-			transition.to( currentSv, { x = 240, time = 400, transition = easing.outExpo } )
-			transition.to( nextSv, { x = 720, time = 400, transition = easing.outExpo } )
-			transition.to( previousSv, { x = -240, time = 400, transition = easing.outExpo } )
-			transition.to( groupMenuPartnerText, { x = posicionMenu, time = 400, transition = easing.outExpo } )
-		end
-		
-    end
-	
-end
-
-function ListenerChangeScrollPartner( event )
-
-	local positionScroll 
-	local nextSv
-	local previousSv
-	
-	positionScroll = event.target.name
-	
-	if positionScroll ~= nil then
-			
-		if positionScroll == 1 then
-			nextSv = srvPartner[2]
-		elseif positionScroll == #srvPartner then
-			previousSv = srvPartner[positionScroll - 1]
-		else
-			nextSv = srvPartner[positionScroll + 1]
-			previousSv = srvPartner[positionScroll - 1]
-		end
-		
-	end
-	
-	if event.phase == "began" then
-		diferenciaX = event.x - event.target.x
-		posicionMenu = groupMenuPartnerText.x
-		xCurrent = event.x
-    elseif event.phase == "moved" then
-		if  event.direction == "left"  or event.direction == "right" then
-			posicionNueva = event.x-diferenciaX
-			
-			event.target.x = posicionNueva
-			
-			groupMenuPartnerText.x = (( posicionNueva - 240) / 3) + posicionMenu
-			
-			if nextSv ~= nil then
-				nextSv.x = 480+posicionNueva
-			end
-			
-			if previousSv ~= nil then
-				previousSv.x = -480+posicionNueva
-			end
-			
-		end
-		
-		movimiento = "c"
-		if(event.direction == "left") then
-			movimiento = "i"
-		elseif event.direction == "right" then
-			movimiento = "d"
-		end
-		
-    elseif event.phase == "ended" or event.phase == "cancelled" then
-		--if event.x <= 100 and movimiento == "i" then
-		if xCurrent - event.x >= 160 and movimiento == "i" then
-			transition.to( event.target, { x = -240, time = 400, transition = easing.outExpo } )
-			transition.to( nextSv, { x = 240, time = 400, transition = easing.outExpo } )
-			transition.to( groupMenuPartnerText, { x = posicionMenu - 166, time = 400, transition = easing.outExpo } )
-			currentSv = nextSv
-			if nextSv == nil then
-				transition.to( event.target, { x = 240, time = 400, transition = easing.outExpo } )
-				transition.to( groupMenuPartnerText, { x = posicionMenu, time = 400, transition = easing.outExpo } )
-			end
-		--elseif event.x  >= 380 and movimiento == "d" then
-		elseif xCurrent - event.x <= -160 and movimiento == "d" then
-			transition.to( event.target, { x = 720, time = 400, transition = easing.outExpo } )
-			transition.to( nextSv, { x = 720, time = 400, transition = easing.outExpo } )
-			transition.to( previousSv, { x = 240, time = 400, transition = easing.outExpo } )
-			transition.to( groupMenuPartnerText, { x = posicionMenu - 160, time = 400, transition = easing.outExpo } )
-			
-			transition.to( groupMenuPartnerText, { x = posicionMenu + 166, time = 400, transition = easing.outExpo } )
-			currentSv = previousSv
-			if previousSv == nil then 
-				transition.to( event.target, { x = 240, time = 400, transition = easing.outExpo } )
-				transition.to( groupMenuPartnerText, { x = posicionMenu, time = 400, transition = easing.outExpo } )
-			end
-		else
-			transition.to( event.target, { x = 240, time = 400, transition = easing.outExpo } )
-			transition.to( nextSv, { x = 720, time = 400, transition = easing.outExpo } )
-			transition.to( previousSv, { x = -240, time = 400, transition = easing.outExpo } )
-			transition.to( groupMenuPartnerText, { x = posicionMenu, time = 400, transition = easing.outExpo } )
-			currentSv = event.target
-		end
-		
-    end
-	
-end
-
---cambia el menu con un tap
-function changeMenuPartnerTap( event )
-	
-	local posiM = (event.target.name - 1) * -168
-	transition.to( groupMenuPartnerText, { x = posiM, time = 400, transition = easing.outExpo } )
-	
-	if event.target.name == 1 then
-		transition.to( srvPartner[1], { x = 240, time = 400, transition = easing.outExpo } )
-		transition.to( srvPartner[2], { x = 720, time = 400, transition = easing.outExpo } )
-	elseif event.target.name == #srvPartner then
-		transition.to( srvPartner[#srvPartner], { x = 240, time = 400, transition = easing.outExpo } )
-		transition.to( srvPartner[#srvPartner - 1], { x = -240, time = 400, transition = easing.outExpo } )
-	else
-		transition.to( srvPartner[event.target.name - 1], { x = -240, time = 400, transition = easing.outExpo } )
-		transition.to( srvPartner[event.target.name], { x = 240, time = 400, transition = easing.outExpo } )
-		transition.to( srvPartner[event.target.name + 1], { x = 720, time = 400, transition = easing.outExpo } )
-	end
-	
-end
-
-
+-- Obtiene el mapa
 function showMapa( event )
     storyboard.removeScene( "src.Mapa" )
 	storyboard.gotoScene( "src.Mapa", {
@@ -274,41 +83,9 @@ end
 ---------build Partner
 ---------------------------------------------------------
 function loadPartner(item)
-	
 	itemPartner = item
-	
-	groupPartner = display.newGroup()
-	homeScreen:insert( groupPartner )
-	
-	svMenuTxt = widget.newScrollView
-	{
-		x = midW,
-		y = 163 + hWBPar,
-		width = intW,
-		height = 73,
-		--listener = ListenerChangeMenuPartner,
-		horizontalScrollDisabled = true,
-        verticalScrollDisabled = true,
-		backgroundColor = { 1 }
-	}
-	groupPartner:insert(svMenuTxt)
-	
-	MenuPartnerBar = display.newRect( midW, 198 + hWBPar, intW /3, 4 )
-	MenuPartnerBar:setFillColor( 88/255, 188/255, 36/255 )
-	groupPartner:insert(MenuPartnerBar)
-	
-	groupMenuPartnerText = display.newGroup()
-	groupMenuPartnerText.y = 35
-	svMenuTxt:insert(groupMenuPartnerText)
-	
-	createScrollViewPartner("INFO")
-	
-	srvPartner[#srvPartner]:setIsLocked( true, "horizontal" )
-	--svMenuTxt:setIsLocked( true, "horizontal" )
-	
-	currentSv = srvPartner[#srvPartner]
-	
 	if callbackCurrent == Globals.noCallbackGlobal then
+        loadImagePartner(1)
 		buildPartnerInfo(item)
 	end
 	
@@ -316,171 +93,135 @@ end
 
 function buildPartnerInfo(item)
     
-    
-    local bgAddress = display.newRoundedRect( midW, 180, 440, 100, 10 )
+    local bgAddress = display.newRoundedRect( midW, 200, 440, 70, 10 )
     bgAddress.anchorY = 0
 	bgAddress:setFillColor( 1 )
-	srvPartner[#srvPartner]:insert(bgAddress)
+	srvPartnerD:insert(bgAddress)
     
-    local bgMap = display.newRoundedRect( 410, 180, 100, 100, 10 )
+    local bgMap = display.newRoundedRect( 410, 200, 100, 70, 10 )
     bgMap.anchorY = 0
 	bgMap:setFillColor( .2 )
-	srvPartner[#srvPartner]:insert(bgMap)
+	srvPartnerD:insert(bgMap)
     
-    local bgMapL = display.newRect( 370, 180, 20, 100)
+    local bgMapL = display.newRect( 370, 200, 20, 70)
     bgMapL.anchorY = 0
 	bgMapL:setFillColor( .2 )
-	srvPartner[#srvPartner]:insert(bgMapL)
+	srvPartnerD:insert(bgMapL)
     
     local iconTool2 = display.newImage( "img/btn/iconTool2.png" )
-    iconTool2:translate( 410, 230 )
-    srvPartner[#srvPartner]:insert(iconTool2)
+    iconTool2.itemObj = itemObj
+    iconTool2:translate( 410, 235 )
+	iconTool2:addEventListener( "tap", showMapa )
+    srvPartnerD:insert(iconTool2)
     
 	local txtInfo1 = display.newText({
 		text = item.name,
 		x = 195,
-		y =  205,
+		y =  225,
 		font = "Lato-Regular",
 		width = 320,
 		fontSize = 30,
 		align = "left"
 	})
 	txtInfo1:setFillColor( .2 )
-	srvPartner[#srvPartner]:insert( txtInfo1 )
-    
-    local txtInfo2 = display.newText({
-		text = "¿Cómo llegar?",
-		x = 195,
-		y =  240,
-		font = "Lato-Italic",
-		width = 320,
-		fontSize = 16,
-		align = "left"
-	})
-	txtInfo2:setFillColor( .2 )
-	srvPartner[#srvPartner]:insert( txtInfo2 )
+	srvPartnerD:insert( txtInfo1 )
     
     local txtInfo3 = display.newText({
 		text = item.address,
 		x = 195,
-		y =  260,
+		y =  255,
 		font = "Lato-Bold",
 		width = 320,
 		fontSize = 16,
 		align = "left"
 	})
 	txtInfo3:setFillColor( .2 )
-	srvPartner[#srvPartner]:insert( txtInfo3 )
+	srvPartnerD:insert( txtInfo3 )
     
     local xtraH = 0
     if txtInfo1.height > 50 then
         txtInfo1.y = txtInfo1.y + 17
-        txtInfo2.y = txtInfo2.y + 30
         txtInfo3.y = txtInfo3.y + 30
         xtraH = xtraH + 30
     end
-    if txtInfo1.height > 25 then
-        txtInfo3.y = txtInfo3.y + 10
-        xtraH = xtraH + 10
+    if txtInfo3.height > 25 then
+        txtInfo3.y = txtInfo3.y + ((txtInfo3.height/2) - 10)
+        xtraH = xtraH + (txtInfo3.height/2)
     end
     
+    -- Ajustes
     bgAddress.height = bgAddress.height + xtraH
     bgMap.height = bgMap.height + xtraH
     bgMapL.height = bgMapL.height + xtraH
     iconTool2.y = iconTool2.y + (xtraH / 2)
     
+    lastY = bgAddress.height + 220
     
+    local bgInfo = display.newRoundedRect( midW, lastY, 440, 70, 10 )
+    bgInfo.anchorY = 0
+	bgInfo:setFillColor( .2 )
+	srvPartnerD:insert(bgInfo)
     
-    
-    
-    
-	lastY = 500
-	
-	local bgAddress = display.newRoundedRect( midW, lastY, 440, 60, 10 )
-	bgAddress:setFillColor( 1 )
-	srvPartner[#srvPartner]:insert(bgAddress)
-	
-	local txtAddress = display.newText({
-		text = item.address,
-		x = 280,
-		y =  lastY - 15,
-		font = "Lato-Regular",
-		width = 320,
-		fontSize = 20,
+    local txtInfo4 = display.newText({
+		text = item.info,
+		x = midW,
+		y =  lastY + 35,
+		font = "Lato-Bold",
+		width = 410,
+		fontSize = 16,
 		align = "left"
 	})
-	txtAddress:setFillColor( 0 )
-	srvPartner[#srvPartner]:insert( txtAddress )
-	
-	local txtLocation = display.newText({
-		text = "¿Cómo llegar?",
-		x = 280,
-		y =  lastY,
-		font = "Lato-Regular",
-		width = 320,
-		fontSize = 20,
-		align = "left"
-	})
-	txtLocation:setFillColor( .3 )
-	txtLocation:addEventListener( "tap", showMapa )
-	srvPartner[#srvPartner]:insert( txtLocation )
-	
-	bgAddress.height = txtAddress.height + 70
-	bgAddress.y = (txtAddress.height / 2) + lastY
-	
-	txtAddress.y = txtAddress.y + txtAddress.height/2
-	txtLocation.y = txtLocation.y + txtAddress.height
-	
-	local imgLocation = display.newImage( "img/btn/menu.png" )
-    imgLocation:translate( 70, lastY + txtAddress.height / 2 )
-    srvPartner[#srvPartner]:insert(imgLocation)
-	
-	lastY = lastY + bgAddress.height + 12
-	
-	local line1 = display.newRect( midW, lastY - 45, 440, 3 )
-	line1:setFillColor( .5 )
-	srvPartner[#srvPartner]:insert(line1)
-	
-	local bgPhome = display.newRect( midW, lastY, 440, 90 )
-	bgPhome:setFillColor( 1 )
-	srvPartner[#srvPartner]:insert(bgPhome)
-	
-	local txtCall = display.newText({
-		text = "Llamar:",
-		x = 280,
-		y =  lastY,
-		font = "Lato-Regular",
-		width = 320,
-		fontSize = 20,
-		align = "left"
-	})
-	txtCall:setFillColor( 0 )
-	srvPartner[#srvPartner]:insert( txtCall )
-	
-	local txtPhone = display.newText({
+	txtInfo4:setFillColor( 1 )
+	srvPartnerD:insert( txtInfo4 )
+    
+    xtraH = 0
+    if txtInfo4.height > 28 then
+        xtraH = (txtInfo4.height / 2) - 16
+        txtInfo4.y = txtInfo4.y + xtraH
+        bgInfo.height = txtInfo4.height + 35
+    end
+    
+    lastY = lastY + bgInfo.height + 20
+    
+    local bgPhone1 = display.newRoundedRect( midW, lastY, 440, 60, 10 )
+    bgPhone1.anchorY = 0
+	bgPhone1:setFillColor( 1 )
+	srvPartnerD:insert(bgPhone1)
+    
+    local bgPhone2 = display.newRoundedRect( 410, lastY, 100, 60, 10 )
+    bgPhone2.anchorY = 0
+	bgPhone2:setFillColor( .19, .6, 0 )
+	srvPartnerD:insert(bgPhone2)
+     
+    local bgPhone3 = display.newRect( 370, lastY, 20, 60)
+    bgPhone3.anchorY = 0
+	bgPhone3:setFillColor( .19, .6, 0 )
+	bgPhone3:addEventListener( "tap", callPhone )
+	srvPartnerD:insert(bgPhone3)
+    
+    local iconPhone = display.newImage( "img/btn/iconPhone.png" )
+    iconPhone:translate( 410, lastY + 29 )
+    srvPartnerD:insert(iconPhone)
+    
+    local txtInfo5 = display.newText({
 		text = item.phone,
-		x = 355,
-		y =  lastY,
-		font = "Lato-Black",
+		x = 205,
+		y =  lastY + 30,
+		font = "Lato-Regular",
 		width = 320,
-		fontSize = 30,
+		fontSize = 26,
 		align = "left"
 	})
-	txtPhone:setFillColor( 0 )
-	txtPhone.phone = item.phone
-	txtPhone:addEventListener( "tap", callPhone )
-	srvPartner[#srvPartner]:insert( txtPhone )
-	
-	local imgPhone = display.newImage( "img/btn/telefono.png" )
-    imgPhone:translate( 70, lastY )
-    srvPartner[#srvPartner]:insert(imgPhone)
-	
-	lastY = lastY + bgPhome.height
-	
-	local btnFacebook = display.newImage( "img/btn/facebook.png" )
-    btnFacebook:translate( intW/4 + 10, lastY - 20 )
+	txtInfo5:setFillColor( 0 )
+	srvPartnerD:insert( txtInfo5 )
+    
+    lastY = bgPhone1.y + bgPhone1.height + 20
+    
+    local btnFacebook = display.newImage( "img/btn/facebook.png" )
+    btnFacebook.anchorY = 0
+    btnFacebook:translate( intW/4 + 10, lastY )
 	btnFacebook.url = item.facebook
-    srvPartner[#srvPartner]:insert(btnFacebook)
+    srvPartnerD:insert(btnFacebook)
 	
 	if #item.facebook > 1 then
 		btnFacebook:addEventListener( "tap", openSocialNetwork )
@@ -489,193 +230,60 @@ function buildPartnerInfo(item)
 	end
 	
 	local btnTwitter = display.newImage( "img/btn/twitter.png" )
-    btnTwitter:translate( intW/2 + (intW/4) - 10, lastY - 20 )
+    btnTwitter.anchorY = 0
+    btnTwitter:translate( intW/2 + (intW/4) - 10, lastY )
 	btnTwitter.url = item.twitter
-    srvPartner[#srvPartner]:insert(btnTwitter)
+    srvPartnerD:insert(btnTwitter)
 	
-	--if item.twitter ~= "" or item.twitter ~= nil or #item.twitter > 1 then
 	if #item.twitter > 1 then
 		btnTwitter:addEventListener( "tap", openSocialNetwork )
 	else
 		btnTwitter.alpha = .5
 	end
-	
-	lastY = lastY + btnFacebook.height + 10
-	
-	-- Detail Event
-	local bgGeneralInformacion = display.newRect( midW, lastY, 440, 76 )
-	bgGeneralInformacion:setFillColor( 1 )
-	srvPartner[#srvPartner]:insert(bgGeneralInformacion)
     
-    local txtGeneralInformacion = display.newText({
-		text = "Información Adicional:",
-		x = 230, y =  lastY + 5,
-		height = 20, width = 400,
-		font = "Lato-Bold", fontSize = 20, align = "left"
+    -- Deals
+    lastY = lastY + 80
+    
+    local bgTitleDeal = display.newRect( midW, lastY, intW, 40)
+    bgTitleDeal.anchorY = 0
+	bgTitleDeal:setFillColor( .19, .6, 0 )
+	srvPartnerD:insert(bgTitleDeal)
+    
+    local txtInfo6 = display.newText({
+		text = "DEALS disponibles",
+		x = midW,
+		y =  lastY + 20,
+		font = "Lato-Bold",
+		width = 430,
+		fontSize = 16,
+		align = "left"
 	})
-	txtGeneralInformacion:setFillColor( 0 )
-	srvPartner[#srvPartner]:insert(txtGeneralInformacion)
-	
-	local txtInfo = display.newText({
-		text = item.info,
-		x = midW, y = lastY,
-		width = 420,
-		font = "Lato-Regular", fontSize = 16, align = "left"
-	})
-	txtInfo:setFillColor( 0 )
-    txtInfo.y = (txtInfo.height / 2) + lastY + 30
-	srvPartner[#srvPartner]:insert( txtInfo )
+	txtInfo6:setFillColor( 1 )
+	srvPartnerD:insert( txtInfo6 )
     
-    bgGeneralInformacion.height = txtInfo.height + 70
-    bgGeneralInformacion.y = (txtInfo.height / 2) + lastY + 10
-    
-    lastY = lastY + bgGeneralInformacion.height + 25
-	
-	local txtAdditionalInformation = display.newText({
-		text = "Consultar ubicación en el mapa",
-		x = 230, y = lastY,
-		height = 40, width = 400,
-		font = "Chivo", fontSize = 22, align = "center"
-	})
-    txtAdditionalInformation.itemObj = itemObj
-	txtAdditionalInformation:setFillColor( .27, .5, .7 )
-	txtAdditionalInformation:addEventListener( "tap", showMapa )
-	srvPartner[#srvPartner]:insert( txtAdditionalInformation )
-    
-    local lineLink = display.newRect( 66, lastY + 15, 330, 1 )
-	lineLink.anchorX = 0
-	lineLink.anchorY = 0
-	lineLink:setFillColor( .27, .5, .7 )
-	srvPartner[#srvPartner]:insert( lineLink )
-	
-	local spc = display.newRect( 0, lastY + 50, 1, 1 )
-    spc:setFillColor( 0 )
-    srvPartner[#srvPartner]:insert( spc )
-	
-	srvPartner[#srvPartner]:setScrollHeight(lastY + 50)
-	
-	if callbackCurrent == Globals.noCallbackGlobal then
-		RestManager.getDealsByPartner(idPartner,"partner")
-	end
+    -- Get Deals
+    lastY = lastY + 80
+    srvPartnerD:setScrollHeight(lastY)
+    RestManager.getDealsByPartner(idPartner,"partner")
 	
 end
 
 --mostramos los deals del comercio
 function buildPartnerPromociones(items)
-
 	if #items > 0 then
-	
-	srvPartner[1]:setIsLocked( false, "horizontal" )
-	--svMenuTxt:setIsLocked( false, "horizontal" )
-	
-	createScrollViewPartner("DEALS")
-	
-	getLoading(srvPartner[#srvPartner])
-	
-		lastY = 25
-	
 		for y = 1, #items, 1 do 
             -- Create container
-			
 			imagePartnerDeals[y] = display.newImage( items[y].image, system.TemporaryDirectory )
 			imagePartnerDeals[y].alpha = 1
 			
             local deal = Deal:new()
-            srvPartner[#srvPartner]:insert(deal)
+            srvPartnerD:insert(deal)
             deal:build(true, items[y], imagePartnerDeals[y])
             deal.y = lastY
-			lastY = lastY + 120
+			lastY = lastY + 180
         end
-	
+        srvPartnerD:setScrollHeight(lastY + 50)
 	end
-	
-	endLoading()
-	
-	srvPartner[#srvPartner]:setScrollHeight(lastY + 50)
-	
-	--llamamos a la galeria
-	RestManager.getGallery(idPartner,1,"partner")
-	
-end
-
---mostramos la galeria
-function buildPartnerGaleria(items)
-	
-		lastY = 75
-	
-		srvPartner[1]:setIsLocked( false, "horizontal" )
-		--svMenuTxt:setIsLocked( false, "horizontal" )
-	
-		createScrollViewPartner("GALERIA")
-	
-		for y = 1, #items, 1 do 
-            -- Create container
-			
-			imagePartnerGallery[y] = display.newImage( items[y].image, system.TemporaryDirectory )
-			imagePartnerGallery[y].alpha = 1
-			
-            local gallery = Gallery:new()
-            srvPartner[#srvPartner]:insert(gallery)
-            gallery:build(items[y], imagePartnerGallery[y])
-            gallery.y = lastY
-			lastY = lastY + 210
-        end
-		
-		srvPartner[#srvPartner]:setScrollHeight(lastY)
-
-end
-
---llamas al metodo para cargar las imagenes
-function GalleryPartner(items)
-	if #items > 0 then
-		loadGalleryPartner(items,1)
-	end
-	
-	--cargamos la imagen del partner del encabezado
-	loadImagePartner( 1 )
-end
-
---creamos los crollview dinamicos
-
-function createScrollViewPartner(nameTxt)
-	
-	local positionCurrent = #srvPartner + 1
-
-	local positionTxtMenu = midW + (#srvPartner * 166)
-
-	txtMenuPartner[positionCurrent] = display.newText({
-			text = nameTxt,
-			x = positionTxtMenu,
-			y =  0,
-			font = "Lato-Hairline",
-			fontSize = 18
-	})
-	txtMenuPartner[positionCurrent]:setFillColor( 0 )
-	groupMenuPartnerText:insert( txtMenuPartner[positionCurrent] )
-	txtMenuPartner[positionCurrent].name = positionCurrent
-	txtMenuPartner[positionCurrent]:addEventListener( 'tap', changeMenuPartnerTap )
-	
-	local positionScrollPartner
-	if #srvPartner == 0 then
-		positionScrollPartner = 0
-	else
-		positionScrollPartner = intW
-	end
-	
-	srvPartner[positionCurrent] = widget.newScrollView
-	{
-		top = 200 + hWBPar,
-		left = positionScrollPartner,
-		width = intW,
-		height = intH - (h + 200 + hWBPar),
-		listener = ListenerChangeScrollPartner,
-		horizontalScrollDisabled = false,
-		verticalScrollDisabled = false,
-		backgroundColor = { 245/255, 245/255, 245/255 }
-	}
-	groupPartner:insert(srvPartner[positionCurrent])
-	srvPartner[positionCurrent].name = positionCurrent
-	
 end
 
 function loadImagePartner(typeImage)
@@ -699,11 +307,11 @@ function loadImagePartner(typeImage)
 					--cargando el logo del comercio
 					imgPartner.alpha = 1
 					imgPartner.x = 90
-					imgPartner.y = 100
+					imgPartner.y = 120
 					imgPartner.width = 120
 					imgPartner.height = 120
 					imgPartner:setMask( mask )
-					srvPartner[1]:insert( imgPartner )
+					srvPartnerD:insert( imgPartner )
 				else
 					--cargando el banner del comercio
 					local imgBgPartner = display.newImage( itemPartner.banner, system.TemporaryDirectory )
@@ -711,7 +319,7 @@ function loadImagePartner(typeImage)
 					imgBgPartner.x = 240
 					imgBgPartner.y = 200
 					imgBgPartner.height = 400
-					srvPartner[1]:insert( imgBgPartner )
+					srvPartnerD:insert( imgBgPartner )
 					imgBgPartner:toBack()
 					loadImagePartner( 2 )
 				end
@@ -733,11 +341,11 @@ function loadImagePartner(typeImage)
 					--cargando el logo del comercio
 					imgPartner.alpha = 1
 					imgPartner.x = 90
-					imgPartner.y = 100
+					imgPartner.y = 120
 					imgPartner.width = 120
 					imgPartner.height = 120
 					imgPartner:setMask( mask )
-					srvPartner[1]:insert( imgPartner )
+					srvPartnerD:insert( imgPartner )
 				else
 					--cargando el banner del comercio
 					local imgBgPartner = display.newImage( itemPartner.banner, system.TemporaryDirectory )
@@ -745,7 +353,7 @@ function loadImagePartner(typeImage)
 					imgBgPartner.x = 240
 					imgBgPartner.y = 200
 					imgBgPartner.height = 400
-					srvPartner[1]:insert( imgBgPartner )
+					srvPartnerD:insert( imgBgPartner )
 					imgBgPartner:toBack()
 					loadImagePartner( 2 )
 				end
@@ -764,50 +372,8 @@ function loadImagePartner(typeImage)
 			imageName = itemPartner.banner
 		end
         
-		print(imageName)
-		
         -- Descargamos de la nube
         display.loadRemoteImage( imageUrl, "GET", loadImagePartnerListener, imageName, system.TemporaryDirectory ) 
-    end
-end
-
-function loadGalleryPartner(items,posc)    
-    -- Determinamos si la imagen existe
-    local path = system.pathForFile( items[posc].image, system.TemporaryDirectory )
-    local fhd = io.open( path )
-    if fhd then
-        fhd:close()
-        --[[imageItems[obj.posc] = display.newImage( elements[obj.posc].image, system.TemporaryDirectory )
-        imageItems[obj.posc].alpha = 0]]
-		if callbackCurrent == Globals.noCallbackGlobal then
-			if posc < #items then
-				loadGalleryPartner(items,posc+1)
-			else
-				buildPartnerGaleria(items)
-			end
-		end
-    else
-        -- Listener de la carga de la imagen del servidor
-        local function loadGalleryPartnerListener( event )
-            if ( event.isError ) then
-                native.showAlert( "Go Deals", "Network error :(", { "OK"})
-            else
-                event.target.alpha = 0
-               -- imageItems[obj.posc] = event.target
-				if callbackCurrent == Globals.noCallbackGlobal then
-			   
-					if posc < #items then
-						loadGalleryPartner(items,posc+1)
-					else
-						buildPartnerGaleria(items)
-					end
-				end
-            end
-        end
-        
-        -- Descargamos de la nube
-        display.loadRemoteImage( settings.url.."assets/img/app/partner/gallery/"..items[posc].image, 
-        "GET", loadGalleryPartnerListener, items[posc].image, system.TemporaryDirectory ) 
     end
 end
 
@@ -836,6 +402,18 @@ function scene:createScene( event )
 	
 	Globals.noCallbackGlobal = Globals.noCallbackGlobal + 1
 	callbackCurrent = Globals.noCallbackGlobal
+    
+    srvPartnerD = widget.newScrollView
+	{
+		top = h + hWBPar + 100,
+		left = 0,
+		width = intW,
+		height = intH - (h + 100 + hWBPar),
+		horizontalScrollDisabled = true,
+		verticalScrollDisabled = false,
+		backgroundColor = { .85 }
+	}
+	homeScreen:insert(srvPartnerD)
 	
     settings = DBManager.getSettings()
 	RestManager.getPartner(idPartner)
@@ -850,7 +428,6 @@ end
 function scene:exitScene( event )
     if timeMarker then
         timer.cancel(timeMarker)
-        print("cancel Marker")
     end
 end
 

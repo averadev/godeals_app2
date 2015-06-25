@@ -172,10 +172,26 @@ local RestManager = {}
         -- Do request
         network.request( url, "GET", callback )
 	end
+
+    RestManager.getComerciosGPS = function()
+		settings = DBManager.getSettings()
+        local url = settings.url .. "api/getComerciosGPS/format/json/idApp/" .. settings.idApp
+
+        local function callback(event)
+            if ( event.isError ) then
+            else
+                local data = json.decode(event.response)
+                setComerciosGPS(data.items)
+            end
+            return true
+        end
+        -- Do request
+        network.request( url, "GET", callback )
+	end
 	
 	RestManager.getDealsByPartner = function(idPartner,typeInfo)
 		settings = DBManager.getSettings()
-		local url = settings.url .. "api/getDealsByPartner/format/json/idPartner/" .. idPartner .. "/city/" .. settings.city
+		local url = settings.url .. "api/getDealsByPartner/format/json/idApp/" .. settings.idApp .. "/idPartner/" .. idPartner .. "/city/" .. settings.city
 	   
 	   local function callback(event)
             if ( event.isError ) then
@@ -388,7 +404,7 @@ local RestManager = {}
 		local url = settings.url
         url = url.."api/getNotificationsUnRead/format/json"
         url = url.."/idApp/"..settings.idApp
-    
+        
         local function callback(event)
             if ( event.isError ) then
             else
@@ -415,7 +431,7 @@ local RestManager = {}
 		local url = settings.url
         url = url.."api/getNotifications/format/json"
         url = url.."/idApp/"..settings.idApp
-    
+        
         local function callback(event)
             if ( event.isError ) then
             else

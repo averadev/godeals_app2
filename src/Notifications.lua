@@ -213,7 +213,7 @@ function buildNotificationsItems(objScreen)
 		end
     end
 	
-	svContent:setScrollHeight(yMain + 20)
+	svContent:setScrollHeight(yMain)
 	
 end
 

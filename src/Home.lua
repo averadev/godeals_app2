@@ -203,7 +203,7 @@ function buildItems(screen)
         end
         
 		endLoading()
-		scrViewMain:setScrollHeight(yMain + 20)
+		scrViewMain:setScrollHeight(yMain)
         
         -- Siguiente solicitud
 		getLoading(scrViewDeals)
@@ -231,7 +231,7 @@ function buildItems(screen)
             lastY = lastY + 180
         end
 		
-		scrViewDeals:setScrollHeight(lastY + 20)
+		scrViewDeals:setScrollHeight(lastY)
 		
 		
         -- Siguiente solicitud
@@ -265,7 +265,7 @@ function buildItems(screen)
             lastY = lastY + 180
         end
 			
-		scrViewEventos:setScrollHeight(lastY + 20)
+		scrViewEventos:setScrollHeight(lastY)
         endLoading()
 	elseif screen == "FilterEvent" then
 	
@@ -504,9 +504,9 @@ function ListenerChangeScrollHome( event )
 			end
 			
 			if event.target.name == "scrViewMain" then
-				btnModal.name = "EVENTOS"
-			elseif event.target.name == "scrViewEventos" then
 				btnModal.name = "DEALS"
+			elseif event.target.name == "scrViewDeals" then
+				btnModal.name = "EVENTOS"
 			end
 			
 			
@@ -528,9 +528,9 @@ function ListenerChangeScrollHome( event )
 			end
 			
 			if event.target.name == "scrViewEventos" then
-				btnModal.name = ""
+				btnModal.name = "DEALS"
 			elseif event.target.name == "scrViewDeals" then
-				btnModal.name = "EVENTOS"
+				btnModal.name = ""
 			end
 			
             if event.target.name == "scrViewDeals" then

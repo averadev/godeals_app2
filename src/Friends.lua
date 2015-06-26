@@ -2,6 +2,7 @@
 local json = require("json")
 local facebook = require( "facebook" )
 local RestManager = require('src.resources.RestManager')
+local DBManager = require('src.resources.DBManager')
 local Globals = require('src.resources.Globals')
 local widget = require( "widget" )
 require('src.BuildRow')
@@ -29,9 +30,8 @@ local txtSendEmail
 local xscv, yscv
 
 --contenedores
-local scvFriends
-local groupFriends = display.newGroup()
-local groupFriendsList = display.newGroup()
+local scvFriends, grpFList, iconCheckFB
+local groupFriends, btnAceptF, btnAceptFB
 local maxShape = {}
 local txtIsNotFriends
 
@@ -40,13 +40,13 @@ local txtIsNotFriends
 function showListFriends(idC)
 
 	idCoupon = idC
+    groupFriends = display.newGroup()
 
 	local bgFriend = display.newRect( display.contentCenterX, display.contentCenterY + h, intW, intH)
     bgFriend:setFillColor( 0 )
     bgFriend.alpha = .5
     groupFriends:insert(bgFriend)
-	bgFriend:addEventListener( "tap", CloseListFriends )
-	bgFriend:addEventListener( "touch", CloseListFriends )
+	bgFriend:addEventListener( "tap", NoCloseFB )
     
     local bgModal = display.newRoundedRect( midW, midH, 400, 500, 10 )
     bgModal:setFillColor( .9 )
@@ -58,6 +58,7 @@ function showListFriends(idC)
     
     local bgSearch = display.newRoundedRect( midW + 125, midH - 210, 150, 80, 10 )
     bgSearch:setFillColor( .2, .6, 0 )
+	bgSearch:addEventListener( "tap", getFBFriends )
     groupFriends:insert( bgSearch )
     
     local bgBanner2 = display.newRect( midW + 60, midH - 210, 20, 80)
@@ -84,30 +85,55 @@ function showListFriends(idC)
 	})
 	txtRefreshFriend:setFillColor( 1 )
 	groupFriends:insert(txtRefreshFriend)
+    
+    local bgButtons = display.newRoundedRect( midW, midH + 205, 380, 70, 10 )
+    bgButtons:setFillColor( 1 )
+    groupFriends:insert( bgButtons )
 	
-	btnAceptF = display.newRoundedRect(350, midH + 210, 170, 50, 5)
-	btnAceptF:setFillColor(0/255, 149/255, 186/255)
+	btnAceptF = display.newRoundedRect(335, midH + 205, 170, 45, 5)
+	btnAceptF:setFillColor(8/255, 108/255, 160/255)
+    btnAceptF.alpha = .5
+	btnAceptF:addEventListener( "tap", shareToFriend )
 	groupFriends:insert(btnAceptF)
+    
+    btnAceptFB = display.newRoundedRect( 335, midH + 217, 170, 20, 5 )
+    btnAceptFB.alpha = 0
+    btnAceptFB:setFillColor( {
+        type = 'gradient',
+        color1 = { 8/255, 108/255, 160/255 }, 
+        color2 = { 0, 78/255, 130/255 },
+        direction = "bottom"
+    } ) 
+	groupFriends:insert(btnAceptFB)
 	
 	local txtAceptF = display.newText( {
-		text = "Compartir",     
-		x = 350, y = midH + 210,
+		text = "COMPARTIR DEAL",     
+		x = 335, y = midH + 205,
 		width = 200,
-		font = "Lato-Regular",  fontSize = 20, align = "center"
+		font = "Lato-Bold",  fontSize = 14, align = "center"
 	})
 	txtAceptF:setFillColor( 1 )
 	groupFriends:insert(txtAceptF)
 	
-	local btnCancelF = display.newRoundedRect(130, midH + 210, 170, 50, 5)
-	btnCancelF:setFillColor(241/255, 151/255, 151/255)
+	local btnCancelF = display.newRoundedRect(145, midH + 205, 170, 45, 5)
+	btnCancelF:setFillColor(224/255, 16/255, 16/255)
 	groupFriends:insert(btnCancelF)
-	btnCancelF:addEventListener( "tap", CloseListFriends )
+	btnCancelF:addEventListener( "tap", closeListFB )
+    
+    local btnCancelFB = display.newRoundedRect( 145, midH + 217, 170, 20, 5 )
+    btnCancelFB:setFillColor( {
+        type = 'gradient',
+        color1 = { 224/255, 16/255, 16/255 }, 
+        color2 = { 184/255, 0/255, 0/255 },
+        direction = "bottom"
+    } ) 
+	groupFriends:insert(btnCancelFB)
 	
 	local txtCancelF = display.newText( {
-		text = "Cancelar",     
-		x = 130, y = midH + 210,
+		text = "CANCELAR",     
+		x = 145, y = midH + 205,
 		width = 200,
-		font = "Lato-Regular",  fontSize = 20, align = "center"
+		font = "Lato-Bold",  fontSize = 14, align = "center"
 	})
 	txtCancelF:setFillColor( 1 )
 	groupFriends:insert(txtCancelF)
@@ -117,33 +143,226 @@ function showListFriends(idC)
 		top = midH - 180,
 		left = 40,
 		width = 400,
-		height = 320,
+		height = 350,
 		listener = ScrollListenerFriends,
 		horizontalScrollDisabled = true,
         verticalScrollDisabled = false,
 		isBounceEnabled = false,
-		backgroundColor = { 1 }--.96
+		backgroundColor = { .9 }
 	}
 	groupFriends:insert(scvFriends)
-    
-	--createListFriends()
+    printFriends(DBManager.getFriends())
 
 	return true;
 end
 
---cierra el modal de amigos
-function CloseListFriends( event )
+-- Muestra los usuarios
+function printFriends( items )
+    if grpFList then
+        grpFList:removeSelf()
+        grpFList = nil
+    end
+    grpFList = display.newGroup()
+	scvFriends:insert(grpFList)
+    local listY = 40
+    
+    for i = 1, #items, 1 do
+        local bgFriend = display.newRect( 200, listY, 400, 79)
+        bgFriend.fbId = items[i].id
+        bgFriend:setFillColor( 1 )
+        grpFList:insert( bgFriend )
+        bgFriend:addEventListener( "tap", selFBRow )
+        
+        local txtId = display.newText( {
+            text = items[i].name,     
+            x = 250, y = listY,
+            width = 270,
+            font = "Lato-Bold",  fontSize = 16, align = "left"
+        })
+        txtId:setFillColor( .2 )
+        grpFList:insert(txtId)
+        
+        getFBImage(listY, items[i].id)
+        listY = listY + 80 
+    end
+    
+    iconCheckFB = display.newImage( "img/btn/iconReady.png" )
+    iconCheckFB.fbId = nil
+    iconCheckFB.alpha = 0
+    iconCheckFB:translate( 370, 40 )
+    grpFList:insert(iconCheckFB)
+    
+    listY = listY + 20
+    local bgToMail = display.newRoundedRect( 200, listY, 360, 60, 5 )
+    bgToMail:setFillColor( 1 )
+    grpFList:insert( bgToMail )
+    
+    local iconEmail = display.newImage( "img/btn/iconEmail.png" )
+	iconEmail:translate( 50, listY )
+	grpFList:insert(iconEmail)
+    
+    txtSendEmail = native.newTextField( 220, listY, 300, 50 )
+    txtSendEmail.inputType = "email"
+	txtSendEmail.placeholder = "ENVIAR CORREO A UN AMIGO"
+    txtSendEmail.hasBackground = false
+	txtSendEmail:setReturnKey(  "send"  )
+	txtSendEmail:addEventListener( "userInput", onTxtFriend )
+	txtSendEmail.font = native.newFont( native.systemFont, 18 )
+	grpFList:insert(txtSendEmail)
+    
+    scvFriends:setScrollHeight(listY + 50)
+    
+end
+
+-- Selecciona registro
+function selFBRow( event )
+    t = event.target
+    iconCheckFB.fbId = t.fbId
+    iconCheckFB.y = t.y
+    iconCheckFB.alpha = 1
+    enablebButton(true)
+end
+
+-- Selecciona registro
+function enablebButton( isEnabled )
+    if isEnabled then
+        btnAceptF.alpha = 1
+        btnAceptFB.alpha = 1
+    else
+        btnAceptF.alpha = .5
+        btnAceptFB.alpha = 0
+    end
+end
+
+-- Compartir a Amigo
+function shareToFriend( event )
+    t = event.target
+    if t.alpha == 1 then
+        if iconCheckFB.fbId == nil then
+            RestManager.shareDealsByEmail( txtSendEmail.text, idCoupon )
+        else
+            local idUser = iconCheckFB.fbId
+            RestManager.shareDealsByFace( idUser, idCoupon )
+        end
+        -- Close window
+        closeListFB()
+        animateShareDeal()
+        changeBtnShare()
+    end
+    
+end
+
+
+-- Obtiene las fotos de perfil
+function getFBImage( posc, fbId )
+    local sizeAvatar = 'width=70&height=70'
+	
+	-- Determinamos si la imagen existe
+    local path = system.pathForFile( "avatarFriend" .. fbId, system.TemporaryDirectory )
+    local fhd = io.open( path )
+    if fhd then
+        fhd:close()
+        if groupFriends then
+            local avatar = display.newImage("avatarFriend"..fbId, system.TemporaryDirectory )
+            avatar:translate( 50, posc)
+            avatar.width = 70
+            avatar.height  = 70
+            grpFList:insert(avatar)
+        end
+    else
+        -- Listener de la carga de la imagen del servidor
+        local function networkListenerFBFriend( event )
+            if ( event.isError ) then
+            else
+                if groupFriends then
+                    event.target:translate( 50, posc)
+                    grpFList:insert(event.target)
+                else
+                    event.target.alpha = 0
+                end
+            end
+        end
+        -- Descargamos de la nube
+        display.loadRemoteImage( "http://graph.facebook.com/".. fbId .."/picture?type=large&"..sizeAvatar, 
+					"GET", networkListenerFBFriend, "avatarFriend"..fbId, system.TemporaryDirectory )
+    end
+end
+
+-- Obtiene los amigos
+function getFBFriends(  )
+    facebook.login( fbAppID, FBListener, {"public_profile", "email", "user_birthday", "user_friends"} )
+end
+
+function FBListener( event )
+    if ( "session" == event.type ) then
+        if ( "login" == event.phase ) then
+			local params = { fields = "email,name,id" }
+            facebook.request( "me/friends", "GET",params )
+		elseif ( "loginCancelled" == event.phase) then
+			
+        end
+    elseif ( "request" == event.type ) then
+        if ( not event.isError ) then
+            local response = json.decode( event.response )
+            if #response.data > 0 then
+                DBManager.saveFriends(response.data)
+                printFriends(response.data)
+            end
+        end
+    end
+end
+
+-- No cierra el modal de amigos
+function NoCloseFB( event )
+    return true;
+end
+
+-- Cierra el modal de amigos
+function closeListFB( event )
 	native.setKeyboardFocus(nil)
 	groupFriends:removeSelf()
-	groupFriends = display.newGroup()
+	groupFriends = nil
 	idCoupon = 0
-	groupFriendsList = display.newGroup()
-	lastY = 50
-	maxShape = {}
-	lockInput = 0
-	
 	return true;
 end
+
+-- Cierra el modal de amigos
+function onTxtFriend( event )
+	if ( "began" == event.phase ) then
+		if event.target.text ~= "" then
+            iconCheckFB.alpha = 0
+            iconCheckFB.fbId = nil
+            enablebButton(true)
+		end
+	elseif ( "submitted" == event.phase ) then
+		native.setKeyboardFocus(nil)
+		if event.target.text ~= "" then
+            RestManager.shareDealsByEmail( txtSendEmail.text, idCoupon )
+            -- Close window
+            closeListFB()
+            animateShareDeal()
+            changeBtnShare()
+		end
+		
+	elseif ( event.phase == "editing" ) then
+	
+		if event.target.text ~= "" then
+            enablebButton(true)
+		else
+            enablebButton(false)  
+		end
+		
+	elseif( "ended" == event.phase ) then
+		
+	end
+end
+
+
+
+
+
+
+
 
 --bloqueamos los efectos de tap y touch
 function lockedModalFriend( event )
@@ -289,65 +508,7 @@ end
 --evento que se dispara cuando se hace focus en el textField
 function onTxtFocusFriend( event )
 	
-	if ( "began" == event.phase ) then
 	
-		xscv, yscv = scvFriends:getContentPosition()
-	
-		scvFriends:setScrollHeight(lastY + scvFriends.height - scvFriends.height/3)
-		scvFriends:scrollToPosition{
-			y =  -txtSendEmail.y + 30,
-			time = 200
-		}
-		
-		if event.target.text ~= "" then
-		
-			maxShape[previousFriend]:setFillColor( 1 )
-			previousFriend =  event.target.num
-			maxShape[event.target.num]:setFillColor( .80 )
-			
-			btnAceptF.alpha = 1
-			btnAceptF.id = 0
-			btnAceptF:removeEventListener( 'tap', sendDealsFriend )
-			btnAceptF:addEventListener( 'tap', sendDealsFriend )
-		
-		end
-		
-		
-	elseif ( "submitted" == event.phase ) then
-		native.setKeyboardFocus(nil)
-		
-		if lockInput == 0 then
-			lockInput = 1
-			if txtSendEmail.text ~= "" then
-				RestManager.shareDealsByEmail( txtSendEmail.text, idCoupon )
-			else
-				RestManager.shareDealsByEmail( " ", idCoupon )
-			end
-		end
-		
-	elseif ( event.phase == "editing" ) then
-	
-		if event.target.text ~= " " then
-		
-			maxShape[previousFriend]:setFillColor( 1 )
-			previousFriend =  event.target.num
-			maxShape[event.target.num]:setFillColor( .80 )
-			
-			btnAceptF.alpha = 1
-			btnAceptF.id = 0
-			btnAceptF:removeEventListener( 'tap', sendDealsFriend )
-			btnAceptF:addEventListener( 'tap', sendDealsFriend )
-		
-		end
-		
-	elseif( "ended" == event.phase ) then
-		scvFriends:setScrollHeight(lastY)
-		scvFriends:scrollToPosition{
-			y =  yscv,
-			time = 200
-	}
-	
-	end
 	
 end
 

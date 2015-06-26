@@ -666,11 +666,7 @@ local RestManager = {}
             else
 				local data = json.decode(event.response)
                 if data.success then
-                    native.showAlert( "Go Deals", data.message, { "OK"})
-					CloseListFriends()
-					if data.share then
-						changeBtnShare()
-					end
+                    
                 end
             end
             return true
@@ -690,11 +686,7 @@ local RestManager = {}
             else
 				local data = json.decode(event.response)
                 if data.success then
-                    native.showAlert( "Go Deals", data.message, { "OK"})
-					CloseListFriends()
-					if data.share then
-						changeBtnShare()
-					end
+                    
                 end
             end
             return true

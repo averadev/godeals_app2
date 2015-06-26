@@ -156,7 +156,7 @@ function buildWalletItems(screen)
 		RestManager.getDealsRedimir()
 	elseif screen == "redimir" then
 	
-		yMain = yMain + 50
+		yMain = yMain + 10
 	
 		local separadorRedimir = display.newImage( "img/btn/btnArrowGreen.png" )
 		separadorRedimir:translate( 41, yMain -3)
@@ -183,7 +183,7 @@ function buildWalletItems(screen)
 		endLoading()
 	end
 	
-	svContent:setScrollHeight(yMain + 20)
+	svContent:setScrollHeight(yMain)
 	
 end
 

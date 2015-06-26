@@ -183,7 +183,7 @@ function MenuLeft:new()
         grpCity.y = intH - 60
 		
 		local MenuLeftCiudad = display.newRect( display.contentCenterX - 80, 30 , 400, 60 )
-		MenuLeftCiudad:setFillColor( .56 )
+		MenuLeftCiudad:setFillColor( 50/255, 150/255, 0 )
         MenuLeftCiudad:addEventListener( "tap", getCities )
 		grpCity:insert(MenuLeftCiudad)
         

@@ -468,7 +468,7 @@ function DealMain:new()
         
         local bgShadowLogo = display.newImage( "img/bgk/bgShadowLogo.png" )
         bgShadowLogo.x = -123
-        bgShadowLogo.y = 5
+        bgShadowLogo.y = 3
         container:insert(bgShadowLogo)
         
         local mask = graphics.newMask( "img/bgk/maskImgRow.jpg" )

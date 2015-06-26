@@ -40,9 +40,9 @@ local lastYCoupon = 0
 local itemObj
 local currentSv
 local settings
-local rctBtn
+local rctBtn, rctBtnB
 local FlagCoupon = 0
-local imgBtnShare = ""
+local imgBtnShare, imgBtnShareB
 local hWCup = 0
 
 local txtInfo, txtBtn, txtTitleInfo, loadingRed, rctRed, txtRed
@@ -122,6 +122,7 @@ function listenerBeaconIOS( event )
             txtInfo.text =  "No olvides consultar los otros Deals que "..itemObj.partner.." te ofrece."
             txtBtn.text = "DEAL REDIMIDO"
             rctBtn:setFillColor( .72, .82, .93 )
+            rctBtnB.alpha = 0
             rctBtn:removeEventListener( "tap", showRedimir )
             
             sprCheck.alpha = .7
@@ -231,6 +232,7 @@ function goBLE(event)
 					
 					txtBtn.text = "DEAL REDIMIDO"
 					rctBtn:setFillColor( .72, .82, .93 )
+                    rctBtnB.alpha = 0
 					rctBtn:removeEventListener( "tap", showRedimir )
                     
                     sprCheck.alpha = .7
@@ -422,6 +424,7 @@ function changeButtonCoupon()
 	RestManager.getCouponDownload(itemObj.id)
 	rctBtn:removeEventListener( "tap", DownloadCoupon )
 	rctBtn:addEventListener( "tap", showRedimir )
+    rctBtnB.alpha = 0
 	imgBtnShare:removeEventListener( 'tap', showFriends )
 	imgBtnShare.alpha = .2
     imgBtnShareB.alpha = 0
@@ -468,6 +471,7 @@ function changeBtnShare()
 		rctBtn:setFillColor( .72, .82, .93 )
 		imgBtnShare.alpha = .2
         imgBtnShareB.alpha = 0
+        rctBtnB.alpha = 0
 			
 		transition.to( txtBtn, { alpha = 1, time = 200, delay = 200, transition = easing.outExpo } )
 		transition.to( txtInfo, { alpha = 1, time = 200, delay = 200, transition = easing.outExpo } )
@@ -565,13 +569,13 @@ function buildCoupon()
     txtStock:setFillColor( .2, .6 ,0 )
     svCoupon:insert( txtStock )
     
-    local imgBtnShare = display.newRoundedRect( 355, lastY + 175, 180, 45, 5 )
+    imgBtnShare = display.newRoundedRect( 355, lastY + 175, 180, 45, 5 )
 	imgBtnShare.alpha = .2
 	imgBtnShare.id = itemObj.id
 	imgBtnShare:setFillColor( 8/255, 108/255, 160/255 )
 	svCoupon:insert( imgBtnShare )
     
-    local imgBtnShareB = display.newRoundedRect( 355, lastY + 190, 180, 20, 5 )
+    imgBtnShareB = display.newRoundedRect( 355, lastY + 190, 180, 20, 5 )
 	imgBtnShareB.alpha = 0
     imgBtnShareB:setFillColor( {
         type = 'gradient',
@@ -638,7 +642,7 @@ function buildCoupon()
 	rctBtn:setFillColor( .2, .6, 0 )
 	svCoupon:insert(rctBtn)
     
-    local rctBtnB = display.newRoundedRect( 350, lastY + 378, 210, 22, 5 )
+    rctBtnB = display.newRoundedRect( 350, lastY + 378, 210, 22, 5 )
     rctBtnB:setFillColor( {
         type = 'gradient',
         color1 = { .2, .6, 0 }, 

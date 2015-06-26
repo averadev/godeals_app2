@@ -139,6 +139,40 @@ local dbManager = {}
         db:exec( query )
 		closeConnection( )
     end
+
+    dbManager.getFriends = function()
+		local result = {}
+        local counter = 1
+		openConnection( )
+    
+		for row in db:nrows("SELECT * FROM friends;") do
+			result[counter] = row
+			counter = counter + 1
+		end
+		closeConnection( )
+		return result
+	end
+
+    dbManager.saveFriends = function(items)
+		openConnection( )
+    
+        -- Delete all
+        query = "DELETE FROM friends;"
+        db:exec( query )
+        
+        -- Save update
+		for z = 1, #items, 1 do 
+            if not (items[z] == nil) then
+				query = "INSERT INTO friends VALUES ('"
+                        ..items[z].id.."','"
+                        ..items[z].name.."');"
+                db:exec( query )
+            end
+        end
+    
+		closeConnection( )
+		return 1
+	end
     
 	dbManager.saveBeacons = function(items)
 		openConnection( )
@@ -211,6 +245,9 @@ local dbManager = {}
 		db:exec( query )
     
         local query = "CREATE TABLE IF NOT EXISTS beaconday (fecha INTEGER, major INTEGER, status INTEGER);"
+		db:exec( query )
+    
+        local query = "CREATE TABLE IF NOT EXISTS friends (id TEXT, name TEXT);"
 		db:exec( query )
 	
 		-- Verify Version APP

@@ -90,6 +90,10 @@ function loadImageMessage(itemObj)
     end
 end
 
+--obtenemos el homeScreen de la escena
+function getScreenMe()
+	return homeScreen
+end
 
 function scene:createScene( event )
 	screen = self.view

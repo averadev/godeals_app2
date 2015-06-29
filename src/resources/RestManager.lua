@@ -157,6 +157,22 @@ local RestManager = {}
         network.request( url, "GET", callback )
 	end
 
+    RestManager.getPartnerList = function()
+		settings = DBManager.getSettings()
+        local url = settings.url .. "api/getPartnerList/format/json/idApp/" .. settings.idApp
+
+        local function callback(event)
+            if ( event.isError ) then
+            else
+                local data = json.decode(event.response)
+                setPartnerList(data.items)
+            end
+            return true
+        end
+        -- Do request
+        network.request( url, "GET", callback )
+	end
+
     RestManager.getBeacons = function()
 		settings = DBManager.getSettings()
         local url = settings.url .. "api/getBeacons/format/json"

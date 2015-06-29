@@ -158,6 +158,7 @@ function Message:new()
 		
         local current = storyboard.getCurrentSceneName()
 		if current ~= "src.Message" then
+            storyboard.removeScene( "src.Message" )
 			storyboard.gotoScene( "src.Message", {
                 time = 400,
                 effect = "crossFade",
@@ -252,7 +253,75 @@ function Message:new()
     end
 
     return self
-end---------------------------------------------------------------------------------
+end
+
+---------------------------------------------------------------------------------
+-- PARTNER
+---------------------------------------------------------------------------------
+Partner = {}
+function Partner:new()
+    -- Variables
+    local self = display.newGroup()
+    
+    function showPartner(event)
+        local Globals = require('src.resources.Globals')
+        local storyboard = require( "storyboard" )
+        Globals.noCallbackGlobal = Globals.noCallbackGlobal + 1
+		hideSearch2()
+		deleteTxt()
+        txtPHide()
+		
+        storyboard.removeScene( "src.Partner" )
+        storyboard.gotoScene( "src.Partner", {
+            time = 400,
+            effect = "crossFade",
+            params = { idPartner = event.target.item.id, name = event.target.item.name }
+        })
+    end
+    
+    -- Creamos la pantalla del menu
+    function self:build(item)
+        -- Generamos contenedor
+        local container = display.newContainer( 480, 100 )
+        container.x = 240
+        container.y = 40
+		container.item = item
+        self:insert( container )
+		container:addEventListener( "tap", showPartner )
+        
+        -- Agregamos imagen
+        local iconReady = display.newImage( "img/btn/iconCategoryDeal/deal".. item.idFilter ..".png" )
+        iconReady:translate( -190, 0 )
+        container:insert(iconReady)
+        
+        -- Agregamos textos
+        local txtName = display.newText( {
+            text = item.name,
+            x = 35, y = -15, width = 340,
+            font = "Lato-Bold", fontSize = 18, align = "left"
+        })
+        txtName:setFillColor( 0 )
+        container:insert(txtName)
+        
+        local txtInfo = display.newText( {
+            text = item.info:sub(1,40).."...",
+            x = 35, y = 10,
+            width = 340, height = 20,
+            font = "Lato-Italic", fontSize = 16, align = "left"
+        })
+        txtInfo:setFillColor( 0 )
+        container:insert(txtInfo)
+        
+        local lineBottom = display.newRect( 0, 50, 480, 2)
+        lineBottom.alpha = .3
+        lineBottom:setFillColor( .3 )
+		container:insert(lineBottom)
+    end
+
+    return self
+end
+
+---------------------------------------------------------------------------------
 -- DEAL
 ---------------------------------------------------------------------------------
 Deal = {}

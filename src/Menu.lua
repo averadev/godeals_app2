@@ -49,6 +49,17 @@ function MenuLeft:new()
             end 
         })
     end
+    
+    local function getPartners( event )
+        local t = event.target
+        t.alpha = .5
+        transition.to( t, { alpha = .05, time = 200, transition = easing.outExpo, 
+            onComplete = function()
+                hideMenuLeft()
+                showPartners()
+            end 
+        })
+    end
 
     local function getCities( event )
         if grpCity.y == intH - 60 then
@@ -175,6 +186,28 @@ function MenuLeft:new()
             font = "Lato-Bold",  fontSize = 14, align = "center"
         })
 		selfL:insert(txtMenu3)
+        
+        
+        -- Comercios afiliados
+        local bgComercios = display.newRect( display.contentCenterX - 80, h + 545, 400, 70 )
+		bgComercios:setFillColor( .5 )
+        bgComercios.alpha = .05
+        bgComercios:addEventListener( "tap", getPartners )
+		selfL:insert(bgComercios)
+        local lineTopC = display.newRect( 160, h + 510, 400, 1)
+        lineTopC:setFillColor( 50/255, 150/255, 0 )
+		selfL:insert(lineTopC)
+        local lineBottomC = display.newRect( 160, h + 580, 400, 1)
+        lineBottomC:setFillColor( 50/255, 150/255, 0 )
+		selfL:insert(lineBottomC)
+        
+        local txtMenu4 = display.newText( {
+            text = "Comercios Afiliados",
+            x = 160, y = h + 545, width = 330, 
+            font = "Lato-Bold",  fontSize = 18, align = "left"
+        })
+		selfL:insert(txtMenu4)
+        
         
         -- Menu Ciudades
 		local lastY = 90

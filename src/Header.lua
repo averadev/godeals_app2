@@ -66,6 +66,15 @@ function Header:new()
         end
     end
     
+    -- Obtener cupones descargados
+    function showPartners()
+       if storyboard.getCurrentSceneName() ~= "src.PartnerList" then
+            Globals.noCallbackGlobal = Globals.noCallbackGlobal + 1
+			storyboard.removeScene( "src.PartnerList" )
+            storyboard.gotoScene( "src.PartnerList", { time = 400, effect = "slideLeft" })
+        end
+    end
+    
 	-- esconde la busqueda y el modal
     function hideSearch( event )
 		
@@ -274,8 +283,12 @@ function Header:new()
 			return getScreenC()
 		elseif currentScene == "src.Partner" then
 			return getScreenP()
+		elseif currentScene == "src.PartnerList" then
+			return getScreenPL()
 		elseif currentScene == "src.Mapa" then
 			return getScreenM()
+		elseif currentScene == "src.Message" then
+            return getScreenMe()
 		elseif currentScene == "src.Notifications" then
 			return getScreenN()
 		elseif currentScene == "src.Wallet" then

@@ -17,7 +17,7 @@ local midH = display.contentCenterY
 local toolbar, menu
 local srvPartnerD
 local groupMenu, groupPartner, groupMenuPartnerText
-local  svCoupon, svMenuTxt
+local svCoupon, svMenuTxt
 local h = display.topStatusBarContentHeight
 local lastY = 200
 local lastYImage
@@ -385,8 +385,6 @@ function scene:createScene( event )
     local title = ''
     if event.params.name then title = event.params.name end
 	
-	homeScreen.y = h
-	
 	local bg = display.newRect( 0, h, display.contentWidth, display.contentHeight )
 	bg.anchorX = 0
 	bg.anchorY = 0
@@ -396,6 +394,7 @@ function scene:createScene( event )
 	-- Build Component Header
 	local header = Header:new()
     homeScreen:insert(header)
+    header.y = h
     header:buildToolbar()
     header:buildNavBar(title)
     hWBPar = 5 + header:buildWifiBle()
@@ -405,10 +404,10 @@ function scene:createScene( event )
     
     srvPartnerD = widget.newScrollView
 	{
-		top = h + hWBPar + 100,
+		top = h + hWBPar + 125,
 		left = 0,
 		width = intW,
-		height = intH - (h + 100 + hWBPar),
+		height = intH - (h + 125 + hWBPar),
 		horizontalScrollDisabled = true,
 		verticalScrollDisabled = false,
 		backgroundColor = { .85 }

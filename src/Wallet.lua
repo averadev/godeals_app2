@@ -46,18 +46,14 @@ local imageItems = {}
 ---------------------------------------------------------------------------------
 function setWalletElements(obj)
     elements = obj.items
-	
 	if #elements > 0 then
 			getLoading(svContent)
 		loadWalletImage(obj)
 	else
-		
 		contDeals = contDeals + 1
-		
 		if obj.screen == "noRedimir" then
 			RestManager.getDealsRedimir()
 		end
-		
 		if contDeals == 2 then
 			endLoading()
 			getNoContent(svContent, "En este momento no cuentas con Deals descargados")

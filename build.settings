@@ -71,8 +71,8 @@ settings = {
             "Lato-Light.ttf",
             "Lato-Regular.ttf",
             "Lato-Black.ttf",
-            "Lato-Bold.ttf",
-            "Lato-Italic"
+            "Lato Bold.ttf",
+            "Lato-Italic.ttf"
         },
     },
     

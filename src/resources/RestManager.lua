@@ -47,7 +47,7 @@ local RestManager = {}
             if ( event.isError ) then
             else
 				local data = json.decode(event.response)
-                if data.success and #data.items > 0 then
+                if data.success then
                     setWalletElements({items = data.items, screen = "noRedimir", posc = 1, path = 'assets/img/app/deal/'})
                 end
             end
@@ -656,7 +656,7 @@ local RestManager = {}
 		settings = DBManager.getSettings()
 		
 		local url = settings.url .. "api/getDealsRedimir/format/json/idApp/" .. settings.idApp .. "/city/" .. settings.city
-	   
+	   print(url)
 	   local function callback(event)
             if ( event.isError ) then
             else

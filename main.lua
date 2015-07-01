@@ -24,6 +24,20 @@ local isUser = DBManager.setupSquema()
 -- isUser = true
 ------------------------
 
+local systemFonts = native.getFontNames()
+-- Set the string to query for (part of the font name to locate)
+local searchString = "Lato"
+
+-- Display each font in the Terminal/console
+for i, fontName in ipairs( systemFonts ) do
+
+    local j, k = string.find( string.lower(fontName), string.lower(searchString) )
+
+    if ( j ~= nil ) then
+        print( "Font Name = " .. tostring( fontName ) )
+    end
+end
+
 -- Verify is Beacon
 local partnerId = 0
 local function isBeacon(args)

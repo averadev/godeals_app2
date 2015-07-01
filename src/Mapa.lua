@@ -92,7 +92,7 @@ function scene:createScene( event )
     -- Cocinar el mapa
     local mh = intH - (lastY + hWBMap)
     myMap = native.newMapView( midW, (lastY + hWBMap) + (mh / 2) - 4, intW, mh )
-    if myMap and itemObj then
+    if itemObj then
         local mh = intH - lastY
         myMap:setCenter( tonumber(itemObj.latitude), tonumber(itemObj.longitude), 0.02, 0.02 )
         homeScreen:insert(myMap)
@@ -109,17 +109,13 @@ function scene:createScene( event )
                 myMap:addMarker( tonumber(itemObj.latitude), tonumber(itemObj.longitude), options )
             end
         end, 1 )
-    elseif myMap then
+    else
         homeScreen:insert(myMap)
         timeMarker = timer.performWithDelay( 2000, function()
             if myMap then
                 RestManager.getComerciosGPS()
             end
         end, 1 )
-    else
-        local bg = display.newRect( midW, (lastY + hWBMap) + (mh / 2) - 4, intW, mh )
-        bg:setFillColor( .7 )
-        homeScreen:insert(bg)
     end
     
 end

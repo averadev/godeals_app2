@@ -562,7 +562,7 @@ function DealMain:new()
             text = item.name ,     
             x = 110, y = -65,
             width = 240, height = 0,
-            font = "Lato Bold", fontSize = 19, align = "left"
+            font = "Lato-Bold", fontSize = 19, align = "left"
         })
         txtTitle:setFillColor( 0 )
         container:insert(txtTitle)
@@ -571,7 +571,7 @@ function DealMain:new()
             text = item.partner,     
             x = 110, y = -20,
             width = 240, height =60,
-            font = "Lato Bold", fontSize = 16, align = "left"
+            font = "Lato-Bold", fontSize = 16, align = "left"
         })
         txtPartner:setFillColor( .3 )
         container:insert(txtPartner)

@@ -518,7 +518,7 @@ function Header:new()
         self:insert(toolbar)
         
         local iconTool1 = display.newImage( "img/btn/iconTool1.png" )
-        iconTool1:translate( 47, 35 )
+        iconTool1:translate( 47, 33 )
 		iconTool1:addEventListener("tap",showMenuLeft)
         self:insert(iconTool1)
         

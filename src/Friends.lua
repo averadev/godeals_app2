@@ -244,10 +244,6 @@ function shareToFriend( event )
             local idUser = iconCheckFB.fbId
             RestManager.shareDealsByFace( idUser, idCoupon )
         end
-        -- Close window
-        closeListFB()
-        animateShareDeal()
-        changeBtnShare()
     end
     
 end
@@ -290,6 +286,8 @@ end
 
 -- Obtiene los amigos
 function getFBFriends(  )
+    iconCheckFB.alpha = 0
+    iconCheckFB.fbId = nil
     facebook.login( fbAppID, FBListener, {"public_profile", "email", "user_birthday", "user_friends"} )
 end
 
@@ -326,26 +324,28 @@ function closeListFB( event )
 	return true;
 end
 
+function isFBShared()
+    closeListFB()
+    animateShareDeal()
+    changeBtnShare()
+end
+
 -- Cierra el modal de amigos
 function onTxtFriend( event )
 	if ( "began" == event.phase ) then
-		if event.target.text ~= "" then
-            iconCheckFB.alpha = 0
-            iconCheckFB.fbId = nil
+		iconCheckFB.alpha = 0
+        iconCheckFB.fbId = nil
+        if event.target.text ~= "" then
             enablebButton(true)
+		else
+            enablebButton(false)  
 		end
 	elseif ( "submitted" == event.phase ) then
 		native.setKeyboardFocus(nil)
 		if event.target.text ~= "" then
             RestManager.shareDealsByEmail( txtSendEmail.text, idCoupon )
-            -- Close window
-            closeListFB()
-            animateShareDeal()
-            changeBtnShare()
 		end
-		
 	elseif ( event.phase == "editing" ) then
-	
 		if event.target.text ~= "" then
             enablebButton(true)
 		else

@@ -43,6 +43,7 @@ local h = display.topStatusBarContentHeight
 local elements = {}
 local imageItems = {}
 local imageLogos = {}
+local isSvLoaded = {false, false}
 
 -- Contadores
 local yMain = 215
@@ -205,10 +206,6 @@ function buildItems(screen)
 		endLoading()
 		scrViewMain:setScrollHeight(yMain)
         
-        -- Siguiente solicitud
-		getLoading(scrViewDeals)
-		RestManager.getAllCoupon()
-        
     elseif screen == "DealPanel" then
 	
 		scrViewDeals:scrollTo( "top", { time=400 } )
@@ -230,13 +227,10 @@ function buildItems(screen)
             
             lastY = lastY + 180
         end
-		
+        
+		isSvLoaded[1] = true
+        endLoading()
 		scrViewDeals:setScrollHeight(lastY)
-		
-		
-        -- Siguiente solicitud
-		getLoading(scrViewEventos)
-        RestManager.getAllEvent()
         
     elseif screen == "EventPanel" then
         
@@ -264,9 +258,11 @@ function buildItems(screen)
             
             lastY = lastY + 180
         end
-			
-		scrViewEventos:setScrollHeight(lastY)
+		
+        isSvLoaded[2] = true
         endLoading()
+		scrViewEventos:setScrollHeight(lastY)
+        
 	elseif screen == "FilterEvent" then
 	
 		scrViewEventos:scrollTo( "top", { time=400 } )
@@ -348,6 +344,18 @@ end
 --obtenemos el homeScreen de la escena
 function getScreenH()
 	return homeScreen
+end
+
+function svLoaded(no)
+    if not (isSvLoaded[no]) then
+        if no == 1 then
+            getLoading(scrViewDeals)
+            RestManager.getAllCoupon()
+        else
+            getLoading(scrViewEventos)
+            RestManager.getAllEvent()
+        end
+    end
 end
 
 function removeItemsGroupHome()
@@ -505,11 +513,11 @@ function ListenerChangeScrollHome( event )
 			
 			if event.target.name == "scrViewMain" then
 				btnModal.name = "DEALS"
+                svLoaded(1)
 			elseif event.target.name == "scrViewDeals" then
 				btnModal.name = "EVENTOS"
+                svLoaded(2)
 			end
-			
-			
             showFilter(true)
 		--elseif event.x  >= 380 and movimiento == "d" then
 		elseif xCurrent - event.x <= -160 and movimiento == "d" then
@@ -577,6 +585,7 @@ function changeScrollTap( event )
 		currentSv = scrViewDeals
 		btnModal.name = "DEALS"
 		txtMenuDeals:setFillColor( 0 )
+        svLoaded(1)
 		showFilter(true)
 	elseif event.target.name == "eventos" then
 		transition.to( scrViewMain, { x = -240, time = 400, transition = easing.outExpo } )
@@ -586,6 +595,7 @@ function changeScrollTap( event )
 		currentSv = scrViewEventos
 		btnModal.name = "EVENTOS"
 		txtMenuEventos:setFillColor( 0 )
+        svLoaded(2)
 		showFilter(true)
 	end
 end

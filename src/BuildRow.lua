@@ -418,8 +418,8 @@ function Deal:new()
             imgBtnDown:setFillColor( .75 )
             container:insert( imgBtnDown )
 
-            local lbStatus = "DESCARGADO"
-            if item.assigned == 0 then
+            local lbStatus = ""
+            if item.assigned == 0  then
                 lbStatus = "DESCARGAR"
                 imgBtnDown:setFillColor( 68/255, 177/255, 13/255 )
                 imgBtnDown:addEventListener( "tap", downloadDeal )
@@ -433,6 +433,14 @@ function Deal:new()
                 } ) 
                 imgBtnDown.grad = imgBtnShareB
                 container:insert(imgBtnShareB)
+            else
+                if item.status == "1" then
+                    lbStatus = "DESCARGADO"
+                elseif item.status == "2" then
+                    lbStatus = "REDIMIDO"
+                elseif item.status == "3" then
+                    lbStatus = "COMPARTIDO"
+                end
             end
 
             local txtDescargar = display.newText( {
@@ -582,7 +590,7 @@ function DealMain:new()
         imgBtnDown:setFillColor( .75 )
         container:insert( imgBtnDown )
         
-        local lbStatus = "DESCARGADO"
+        local lbStatus = ""
         if item.assigned == 0 then
             lbStatus = "DESCARGAR"
             imgBtnDown:setFillColor( 68/255, 177/255, 13/255 )
@@ -597,6 +605,14 @@ function DealMain:new()
             } ) 
             imgBtnDown.grad = imgBtnShareB
             container:insert(imgBtnShareB)
+        else
+            if item.status == "1" then
+                lbStatus = "DESCARGADO"
+            elseif item.status == "2" then
+                lbStatus = "REDIMIDO"
+            elseif item.status == "3" then
+                lbStatus = "COMPARTIDO"
+            end
         end
         
         local txtDescargar = display.newText( {

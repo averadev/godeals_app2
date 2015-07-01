@@ -203,7 +203,7 @@ function buildSearchItems(screen)
 				deal:build(true, elements[y], imageItems[y])
 				deal.y = yMain
 				deal:addEventListener( 'tap', hideModalSearch)
-				yMain = yMain + 120
+				yMain = yMain + 180
 			
 			end
 		

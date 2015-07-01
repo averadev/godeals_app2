@@ -150,10 +150,11 @@ function buildPartnerInfo(item)
     end
     
     -- Ajustes
-    bgAddress.height = bgAddress.height + xtraH
-    bgMap.height = bgMap.height + xtraH
-    bgMapL.height = bgMapL.height + xtraH
-    iconTool2.y = iconTool2.y + (xtraH / 2)
+    local newH = txtInfo1.height + txtInfo3.height + 20
+    bgAddress.height = newH
+    bgMap.height = newH
+    bgMapL.height = newH
+    iconTool2.y = bgAddress.y + (bgAddress.height / 2)
     
     lastY = bgAddress.height + 220
     

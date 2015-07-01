@@ -80,7 +80,7 @@ local RestManager = {}
 	RestManager.getAllCoupon = function()
 		settings = DBManager.getSettings()
 		local url = settings.url .. "api/getAllDeal/format/json/idApp/" .. settings.idApp .. "/city/" .. settings.city
-	   
+        print(url)
 	    local function callback(event)
             if ( event.isError ) then
             else
@@ -256,7 +256,7 @@ local RestManager = {}
 	RestManager.getCouponById = function(idCoupon)
 		settings = DBManager.getSettings()
 		local url = settings.url .. "api/getCouponById/format/json/idCoupon/" .. idCoupon
-	   
+	   print(url)
 	   local function callback(event)
             if ( event.isError ) then
             else
@@ -546,7 +546,7 @@ local RestManager = {}
         url = url.."api/getCouponDownload/format/json"
 		url = url.."/idApp/"..settings.idApp
 		url = url.."/idCoupon/"..idCoupon
-    
+        print(url)
         local function callback(event)
             if ( event.isError ) then
             else
@@ -676,13 +676,15 @@ local RestManager = {}
 		settings = DBManager.getSettings()
 		
 		local url = settings.url .. "api/shareDealsByFace/format/json/idApp/" .. settings.idApp .. "/idFriend/" .. idFriend .. "/idCoupon/" .. idCoupon
-	    
+	    print(url)
 		local function callback(event)
             if ( event.isError ) then
             else
 				local data = json.decode(event.response)
-                if data.success then
-                    
+                if data.share then
+                    isFBShared()
+                else
+                    native.showAlert( "Go Deals", data.message, { "OK" })
                 end
             end
             return true
@@ -696,13 +698,15 @@ local RestManager = {}
 		settings = DBManager.getSettings()
 		
 		local url = settings.url .. "api/shareDealsByEmail/format/json/idApp/" .. settings.idApp .. "/email/" .. urlencode(email) .. "/idCoupon/" .. idCoupon
-	    
+	    print(url)
 		local function callback(event)
             if ( event.isError ) then
             else
 				local data = json.decode(event.response)
-                if data.success then
-                    
+                if data.share then
+                   isFBShared()
+                else
+                    native.showAlert( "Go Deals", data.message, { "OK" })
                 end
             end
             return true

@@ -265,17 +265,21 @@ function scene:createScene( event )
     txtSignPass:addEventListener( "userInput", onTxtFocus )
 	groupSign:insert(txtSignPass)
     
-    local btnReturn1 = display.newImage("img/btn/btnLoginRegresar.png", true) 
-	btnReturn1.x = midW - 122
-	btnReturn1.y = midH + 130
-	groupSign:insert(btnReturn1)
-    btnReturn1:addEventListener( "tap", getReturnButtons )
+    local txtReturn1 = display.newText( {
+        text = "Regresar",
+        x = midW - 122, y = midH + 130,
+        font = "Lato-Bold",  fontSize = 22, align = "center"
+    })
+    txtReturn1:addEventListener( "tap", getReturnButtons )
+    groupSign:insert(txtReturn1)
     
-    local btnDoSignIn = display.newImage("img/btn/btnLoginSignIn.png", true) 
-	btnDoSignIn.x = midW + 122
-	btnDoSignIn.y = midH + 130
-	groupSign:insert(btnDoSignIn)
-    btnDoSignIn:addEventListener( "tap", doSignIn )
+    local txtDoSignIn = display.newText( {
+        text = "Entrar",
+        x = midW + 128, y = midH + 130,
+        font = "Lato-Bold",  fontSize = 22, align = "center"
+    })
+    txtDoSignIn:addEventListener( "tap", doSignIn )
+    groupSign:insert(txtDoSignIn)
     
     groupSign.x = 480
         
@@ -313,17 +317,21 @@ function scene:createScene( event )
 	groupCreate:insert(txtCreateRePass)
     txtCreateRePass:addEventListener( "userInput", onTxtFocus )
     
-    local btnReturn2 = display.newImage("img/btn/btnLoginRegresar.png", true) 
-	btnReturn2.x = midW - 122
-	btnReturn2.y = midH + 170
-	groupCreate:insert(btnReturn2)
-    btnReturn2:addEventListener( "tap", getReturnButtons )
+    local txtReturn2 = display.newText( {
+        text = "Regresar",
+        x = midW - 122, y = midH + 170,
+        font = "Lato-Bold",  fontSize = 22, align = "center"
+    })
+    txtReturn2:addEventListener( "tap", getReturnButtons )
+    groupCreate:insert(txtReturn2)
     
-    local btnDoCreate = display.newImage("img/btn/btnLoginSignIn.png", true) 
-	btnDoCreate.x = midW + 122
-	btnDoCreate.y = midH + 170
-	groupCreate:insert(btnDoCreate)
-    btnDoCreate:addEventListener( "tap", doCreate )
+    local txtDoCreate = display.newText( {
+        text = "Entrar",
+        x = midW + 128, y = midH + 170,
+        font = "Lato-Bold",  fontSize = 22, align = "center"
+    })
+    txtDoCreate:addEventListener( "tap", doCreate )
+    groupCreate:insert(txtDoCreate)
     
     groupCreate.x = 480
         
@@ -334,17 +342,21 @@ function scene:createScene( event )
 	groupBtn:insert(btnFB)
     btnFB:addEventListener( "tap", loginFaceBook )
     
-    local btnCreate = display.newImage("img/btn/btnLoginCreate.png", true) 
-	btnCreate.x = midW - 80
-	btnCreate.y = midH + 50
-	groupBtn:insert(btnCreate)
-    btnCreate:addEventListener( "tap", showCreate )
+    local txtCreate = display.newText( {
+        text = "Crear Cuenta",
+        x = midW - 70, y = midH + 50,
+        font = "Lato-Bold",  fontSize = 22, align = "center"
+    })
+    txtCreate:addEventListener( "tap", showCreate )
+    groupBtn:insert(txtCreate)
     
-    local btnSignIn = display.newImage("img/btn/btnLoginSignIn.png", true) 
-	btnSignIn.x = midW + 110
-	btnSignIn.y = midH + 50
-	groupBtn:insert(btnSignIn)
-    btnSignIn:addEventListener( "tap", showSignIn )
+    local txtSignIn = display.newText( {
+        text = "Entrar",
+        x = midW + 100, y = midH + 50,
+        font = "Lato-Bold",  fontSize = 22, align = "center"
+    })
+    txtSignIn:addEventListener( "tap", showSignIn )
+    groupBtn:insert(txtSignIn)
     
     -- Lines
     local line = {}

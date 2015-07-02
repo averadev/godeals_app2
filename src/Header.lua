@@ -348,13 +348,13 @@ function Header:new()
 	function createNotBubble(totalBubble)
         local tTxt = #Globals.txtBubble + 1
 	
-		Globals.notBubble[tTxt] = display.newCircle( display.contentWidth - 132, 40, 10 )
+		Globals.notBubble[tTxt] = display.newCircle( 270, 20, 10 )
         Globals.notBubble[tTxt]:setFillColor(.1,.5,.1)
         Globals.notBubble[tTxt].strokeWidth = 2
         Globals.notBubble[tTxt]:setStrokeColor(.8)
         grpTool:insert(Globals.notBubble[tTxt])
         Globals.txtBubble[tTxt] = display.newText( {
-            x = display.contentWidth - 131, y = 40,
+            x = 272, y = 20,
             text = totalBubble, font = "Lato-Regular", fontSize = 12,
         })
         Globals.txtBubble[tTxt]:setFillColor( 1 )

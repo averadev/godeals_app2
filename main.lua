@@ -14,17 +14,9 @@ local platformName = system.getInfo( "platformName" )
 if platformName == "iPhone OS" then
 	redimirObj = require( "plugin.redimir" )
 end
-
-
 local isUser = DBManager.setupSquema()
------------------------- Delete before deploy
---DBManager.updateUser(1, "mrfeto@gmail.com", '', 'Alberto Vera', '10152713865899218', '') -- Temporal
---DBManager.updateUser(1, "conomia_alfredo@hotmail.com", '', 'Alfredo chi Zum', '100001525033547', '')
 
--- isUser = true
-------------------------
-
--- Verify is Beacon
+-------- BEGIN Verify is Beacon for Android --------
 local partnerId = 0
 local function isBeacon(args)
     if args.androidIntent then
@@ -43,7 +35,7 @@ local function isBeacon(args)
                     
                     if optsExtras.adId then
                         partnerId = optsExtras.adId
-                        storyboard.gotoScene("src.WelcomePartner", {params = { idAd = partnerId }})
+                        storyboard.gotoScene("src.PartnerWelcome", {params = { idAd = partnerId }})
                     end
                     
                 end
@@ -61,6 +53,7 @@ local function onSystemEvent(event)
 	end
 end
 Runtime:addEventListener("system", onSystemEvent) 
+-------- END Verify is Beacon for Android --------
 
 
 if redimirObj then
@@ -70,12 +63,10 @@ if redimirObj then
     redimirObj.init( listenerBconIOS )
 end
 
-
-if partnerId > 0 then
-    storyboard.gotoScene("src.Partner", {params = { idPartner = 11 }})
-    -- Do nothing
-elseif isUser then
-	storyboard.gotoScene("src.Home")
-else
-    storyboard.gotoScene("src.Login")
+if partnerId == 0 then
+    if isUser then
+        storyboard.gotoScene("src.Home")
+    else
+        storyboard.gotoScene("src.Login")
+    end
 end

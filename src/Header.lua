@@ -285,6 +285,8 @@ function Header:new()
 			return getScreenP()
 		elseif currentScene == "src.PartnerList" then
 			return getScreenPL()
+        elseif currentScene == "src.PartnerWelcome" then
+			return getScreenWP()
 		elseif currentScene == "src.Mapa" then
 			return getScreenM()
 		elseif currentScene == "src.Message" then

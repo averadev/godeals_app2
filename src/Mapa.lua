@@ -23,7 +23,7 @@ local midH = display.contentCenterY
 
 local h = display.topStatusBarContentHeight
 local lastY = 0
-local myMap
+local myMap, attempts
 local homeScreen = display.newGroup()
 
 -- Arreglos
@@ -87,6 +87,7 @@ function scene:createScene( event )
     header:buildNavBar("Ubicación")
     local hWBMap = 5 + header:buildWifiBle()
     
+    attempts = 0
     lastY = h + 130
     
     -- Cocinar el mapa
@@ -116,6 +117,21 @@ function scene:createScene( event )
                 RestManager.getComerciosGPS()
             end
         end, 1 )
+        
+        local function locationHandler( event )
+            if myMap then
+                local currentLocation = myMap:getUserLocation()
+                if ( currentLocation.errorCode or ( currentLocation.latitude == 0 and currentLocation.longitude == 0 ) ) then
+                    attempts = attempts + 1
+                    if ( attempts < 10 ) then
+                        timer.performWithDelay( 1000, locationHandler )
+                    end
+                else
+                    myMap:setRegion( currentLocation.latitude, currentLocation.longitude, 0.2, 0.2 )
+                end
+            end
+        end
+        locationHandler()
     end
     
 end

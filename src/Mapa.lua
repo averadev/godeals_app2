@@ -119,15 +119,16 @@ function scene:createScene( event )
         end, 1 )
         
         local function locationHandler( event )
-            local currentLocation = myMap:getUserLocation()
-            if ( currentLocation.errorCode or ( currentLocation.latitude == 0 and currentLocation.longitude == 0 ) ) then
-                attempts = attempts + 1
-                if ( attempts > 10 ) then
+            if myMap then
+                local currentLocation = myMap:getUserLocation()
+                if ( currentLocation.errorCode or ( currentLocation.latitude == 0 and currentLocation.longitude == 0 ) ) then
+                    attempts = attempts + 1
+                    if ( attempts < 10 ) then
+                        timer.performWithDelay( 1000, locationHandler )
+                    end
                 else
-                    timer.performWithDelay( 1000, locationHandler )
+                    myMap:setRegion( currentLocation.latitude, currentLocation.longitude, 0.2, 0.2 )
                 end
-            else
-                myMap:setRegion( currentLocation.latitude, currentLocation.longitude, 0.2, 0.2 )
             end
         end
         locationHandler()

@@ -125,12 +125,8 @@ function listenerBeaconIOS( event )
             rctBtnB.alpha = 0
             rctBtn:removeEventListener( "tap", showRedimir )
             
-            sprCheck.alpha = .7
-            sprCheck:setSequence("play")
-            sprCheck:play()
-            timer.performWithDelay(1000, function() 
-                showRedimir()
-            end)
+            showRedimir()
+            animateRedemDeal()
         end
     end
 end

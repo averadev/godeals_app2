@@ -259,6 +259,58 @@ function Header:new()
         
         return true
     end
+    
+    -- Descargar Deal
+    function animateRedemDeal(event)
+        
+        -- Play Sound
+        timer.performWithDelay(500, function() 
+            audio.play( fx )
+        end, 1)
+        
+        -- Creamos anuncio
+        local midW = display.contentWidth / 2
+        local midH = display.contentHeight / 2
+        groupDownload = display.newGroup()
+        
+        local bgShade = display.newRect( midW, midH, display.contentWidth, display.contentHeight )
+        bgShade:setFillColor( 0, 0, 0, .3 )
+        groupDownload:insert(bgShade)
+        
+        local bg = display.newRoundedRect( midW, midH, 280, 300, 10 )
+        bg:setFillColor( .3, .3, .3 )
+        groupDownload:insert(bg)
+        
+        -- Sprite and text
+        local sheet = graphics.newImageSheet(Sprites.check.source, Sprites.check.frames)
+        local sprite = display.newSprite(sheet, Sprites.check.sequences)
+        sprite.x = midW
+        sprite.y = midH - 40
+        groupDownload:insert(sprite)
+        
+        local txt1 = display.newText( {
+            text = "DEAL Redimido",
+            x = midW, y = midH + 60,
+			align = "center", width = 200,
+            font = "Lato-Bold", fontSize = 24
+        })
+        groupDownload:insert(txt1)
+        
+        local txt2 = display.newText( {
+            text = "No olvides consultar otros Deals que tenemos para ti.",
+            x = midW, y = midH + 95,
+			align = "center", width = 200,
+            font = "Lato-Bold", fontSize = 16
+        })
+        groupDownload:insert(txt2)
+        
+        sprite:setSequence("play")
+        sprite:play()
+        
+        transition.to( groupDownload, { alpha = 0, time = 400, delay = 2000, transition = easing.outExpo } )
+        
+        return true
+    end
 	
 	--elimina el txtField de busqueda
 	function deleteTxt()

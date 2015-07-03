@@ -178,7 +178,7 @@ local dbManager = {}
 		openConnection( )
     
         -- Delete all
-        query = "DELETE FROM ads WHERE status = 1;"
+        query = "DELETE FROM ads WHERE status = 1 and fecha > 0;"
         db:exec( query )
     
         for row in db:nrows("SELECT id FROM ads;") do
@@ -209,6 +209,29 @@ local dbManager = {}
     
 		closeConnection( )
 		return 1
+	end
+
+    dbManager.isNotification = function()
+		openConnection( )
+    
+        local lastNotif, itemNotif
+    
+        -- Get Notification
+        for row in db:nrows("SELECT * FROM toNotif;") do
+            lastNotif = row.id
+        end
+        -- Delete all
+        query = "DELETE FROM toNotif;"
+        db:exec( query )
+        -- Get info notification
+        if lastNotif then
+            for row in db:nrows("SELECT * FROM ads WHERE id = "..lastNotif..";") do
+                itemNotif = row
+            end
+        end 
+    
+        closeConnection( )
+        return itemNotif
 	end
     
 	dbManager.lealtad = function()
@@ -245,6 +268,9 @@ local dbManager = {}
 		db:exec( query )
     
         local query = "CREATE TABLE IF NOT EXISTS beaconday (fecha INTEGER, major INTEGER, status INTEGER);"
+		db:exec( query )
+    
+        local query = "CREATE TABLE IF NOT EXISTS toNotif (id INTEGER);"
 		db:exec( query )
     
         local query = "CREATE TABLE IF NOT EXISTS friends (id TEXT, name TEXT);"

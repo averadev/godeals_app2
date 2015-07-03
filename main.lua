@@ -51,6 +51,19 @@ local function onSystemEvent(event)
 	if (event.type == "applicationOpen") then
 		isBeacon(event)
 	end
+    -- Validate Notification IOS
+    if (event.type == "applicationStart" or event.type == "applicationResume") then
+		local notif = DBManager.isNotification()
+        if notif then
+            if notif.type == 1 then
+                partnerId = notif.partnerId
+                storyboard.gotoScene("src.Partner", {params = { idPartner = partnerId }})
+            elseif notif.type == 2 then
+                partnerId = notif.id
+                storyboard.gotoScene("src.PartnerWelcome", {params = { idAd = partnerId }})
+            end
+        end
+	end
 end
 Runtime:addEventListener("system", onSystemEvent) 
 -------- END Verify is Beacon for Android --------

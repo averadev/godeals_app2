@@ -55,6 +55,7 @@ local function onSystemEvent(event)
     if (event.type == "applicationStart" or event.type == "applicationResume") then
 		local notif = DBManager.isNotification()
         if notif then
+            native.setProperty( "applicationIconBadgeNumber", 0 )
             if notif.type == 1 then
                 partnerId = notif.partnerId
                 storyboard.gotoScene("src.Partner", {params = { idPartner = partnerId }})

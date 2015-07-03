@@ -158,7 +158,7 @@ function buildSearchItems(screen)
 		
 		if callbackCurrent == Globals.noCallbackGlobal then
 	
-		yMain = yMain + 30
+		yMain = yMain + 50
         for y = 1, #elements, 1 do 
             -- Create container
 			
@@ -168,7 +168,7 @@ function buildSearchItems(screen)
 				evento.y = yMain
 				evento.name = "src.Evento"
 				evento:addEventListener( 'tap', hideModalSearch)
-				yMain = yMain + 120
+				yMain = yMain + 180
 			
         end
 		
@@ -178,7 +178,7 @@ function buildSearchItems(screen)
 		end
 	elseif screen == "deal" then
 	
-		yMain = yMain + 50
+		yMain = yMain + 30
 			local separadorEventos = display.newImage( "img/btn/btnArrowGreen.png" )
 			separadorEventos:translate( 41, yMain -3)
 			separadorEventos.isVisible = true
@@ -194,7 +194,7 @@ function buildSearchItems(screen)
 		
 		if callbackCurrent == Globals.noCallbackGlobal then
 	
-			yMain = yMain + 30
+			yMain = yMain + 50
 			for y = 1, #elements, 1 do 
 				-- Create container
 			

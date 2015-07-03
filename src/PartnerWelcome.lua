@@ -126,7 +126,7 @@ function showAdd(item)
     -- Agregamos textos
     local txtPartner0 = display.newText( {
         text = "¡Bienvenido a "..item.name.."!",     
-        x = 260, y = 60,
+        x = 260, y = 55,
         width = 340,
         font = "Lato-Bold", fontSize = 16, align = "left"
     })

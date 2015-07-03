@@ -183,8 +183,10 @@ local dbManager = {}
     
         for row in db:nrows("SELECT id FROM ads;") do
             for z = 1, #items, 1 do 
-                if tonumber(items[z].id) == tonumber(row.id) then
-                    items[z] = nil;
+                if items[z] then
+                    if tonumber(items[z].id) == tonumber(row.id) then
+                        items[z] = nil;
+                    end
                 end
             end
 		end

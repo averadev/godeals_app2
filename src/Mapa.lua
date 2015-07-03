@@ -127,7 +127,7 @@ function scene:createScene( event )
                         timer.performWithDelay( 1000, locationHandler )
                     end
                 else
-                    myMap:setRegion( currentLocation.latitude, currentLocation.longitude, 0.2, 0.2 )
+                    myMap:setRegion( currentLocation.latitude, currentLocation.longitude, 0.02, 0.02 )
                 end
             end
         end

@@ -68,7 +68,7 @@ function createTutorial(self)
 	
 	bgTutorial = display.newRect(  midW, midH, intW, intH)
     bgTutorial:setFillColor( 0 )
-	bgTutorial.alpha = .3
+	bgTutorial.alpha = .7
 	bgTutorial:addEventListener( "tap", lockScrenn )
 	bgTutorial:addEventListener( "touch", lockScrenn )
 	self:insert(bgTutorial)

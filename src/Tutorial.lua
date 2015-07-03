@@ -1,6 +1,8 @@
 
 local intW = display.contentWidth
 local intH = display.contentHeight
+local midW = display.contentWidth / 2
+local midH = display.contentHeight / 2
 local h = display.topStatusBarContentHeight
 
 local btnCirCle = {}
@@ -9,7 +11,8 @@ local poscCurrent = 1
 
 local groupTutorial = {}
 
-local txtTutorial = {"img/bgk/TUTORIAL1.png", "img/bgk/TUTORIAL2.png", "img/bgk/TUTORIAL3.png"}
+local txtTutorial = {"img/bgk/app_tutorial1.png", "img/bgk/app_tutorial2.png", "img/bgk/app_tutorial3.png",
+                     "img/bgk/app_tutorial4.png", "img/bgk/app_tutorial5.png", "img/bgk/app_tutorial6.png"}
 
 local bgTutorial = nil
 
@@ -38,9 +41,7 @@ end
 
 --cambiamos a la siguiente grupo
 function changeScreen( event )
-	if poscCurrent ~= 3 then
-		--[[btnCirCle[poscCurrent]:setFillColor( 1 )
-		btnCirCle[poscCurrent + 1]:setFillColor( 0,150/255,0 )]]
+	if poscCurrent ~= #txtTutorial then
 		groupTutorial[poscCurrent].alpha = 0
 		groupTutorial[poscCurrent + 1].alpha = 1
 		poscCurrent = poscCurrent + 1
@@ -65,7 +66,7 @@ end
 --creamos la pantalla del tutorial
 function createTutorial(self)
 	
-	bgTutorial = display.newRect(  intW/2, intH/2 + h, intW, intH)
+	bgTutorial = display.newRect(  midW, midH, intW, intH)
     bgTutorial:setFillColor( 0 )
 	bgTutorial.alpha = .3
 	bgTutorial:addEventListener( "tap", lockScrenn )
@@ -74,16 +75,15 @@ function createTutorial(self)
 	
 	local imgH 
 	
-	for y = 1, 3, 1 do
+	for y = 1, #txtTutorial, 1 do
 	
 		groupTutorial[y] = display.newGroup()
 		groupTutorial[y].alpha = 0
 		self:insert(groupTutorial[y])
 		
 		local imgTutorial = display.newImage( txtTutorial[y] )
-		imgTutorial.x = intW/2
-		imgTutorial.y = imgTutorial.contentHeight/2 + h + 59.5
-		--imgTutorial:translate( intW/2, (intH/2 -intH/30.5) + h )
+		imgTutorial.x = midW
+		imgTutorial.y = midH
 		imgH = imgTutorial.contentHeight
 		
 		groupTutorial[y]:insert( imgTutorial )
@@ -93,33 +93,11 @@ function createTutorial(self)
 	
 	self:insert(groupBtn)
 	
-	local btnNext = display.newRoundedRect( intW/2, imgH/2 + imgH/2.9, 380, 70, 11 )
+	local btnNext = display.newRoundedRect( midW + 170, midH + 280, 100, 70, 11 )
 	btnNext:addEventListener( "tap", changeScreen )
 	btnNext:setFillColor( 1 )
+    btnNext.alpha = .01
 	groupBtn:insert(btnNext)
 	btnNext:toFront()
-	
-	local txtNext = display.newText({
-		text = "CONTINUAR",
-		x = intW/2, y = imgH/2 + imgH/2.9,
-		width = 420,
-		font = "Lato-Bold", fontSize = 30, align = "center"
-	})
-	txtNext:setFillColor( 145/255, 197/255, 115/255 )
-	groupBtn:insert( txtNext )
-		
-	local btnHide = display.newRoundedRect( intW/2, imgH/2 + imgH/2, 380, 70, 11 )
-	btnHide:setFillColor( 120/255, 163/255, 95/255 )
-	btnHide:addEventListener( 'tap', closeTutorial )
-	groupBtn:insert(btnHide)
-	
-	local txtHide = display.newText({
-		text = "NO MOSTRAR",
-		x = intW/2, y =  imgH/2 + imgH/2,
-		width = 420,
-		font = "Lato-Bold", fontSize = 30, align = "center"
-	})
-	txtHide:setFillColor( 145/255, 197/255, 115/255 )
-	groupBtn:insert( txtHide )
 	
 end

@@ -715,4 +715,30 @@ local RestManager = {}
 		network.request( url, "GET", callback )
 	end
 	
+	--Redime el codigo especial
+	RestManager.redeemCodePromoter = function(code)
+		settings = DBManager.getSettings()
+		
+		local url = settings.url .. "api/redeemCodePromoter/format/json/idApp/" .. settings.idApp .. "/code/" .. urlencode(code)
+		local function callback(event)
+            if ( event.isError ) then
+            else
+				local data = json.decode(event.response)
+				if data.success == true then
+					showDealsRedeem()
+				else
+					 native.showAlert( "Go Deals", data.message, { "OK" })
+				end
+                --[[if data.share then
+                   isFBShared()
+                else
+                    native.showAlert( "Go Deals", data.message, { "OK" })
+                end]]
+            end
+            return true
+		end
+		-- Do request
+		network.request( url, "GET", callback )
+	end
+	
 return RestManager

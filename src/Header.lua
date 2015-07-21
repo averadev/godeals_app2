@@ -74,6 +74,14 @@ function Header:new()
             storyboard.gotoScene( "src.PartnerList", { time = 400, effect = "slideLeft" })
         end
     end
+	
+	function showCode()
+		if storyboard.getCurrentSceneName() ~= "src.Code" then
+			Globals.noCallbackGlobal = Globals.noCallbackGlobal + 1
+			storyboard.removeScene( "src.Code" )
+			storyboard.gotoScene( "src.Code", { time = 400, effect = "slideLeft" })
+		end
+	end
     
 	-- esconde la busqueda y el modal
     function hideSearch( event )
@@ -347,7 +355,10 @@ function Header:new()
 			return getScreenN()
 		elseif currentScene == "src.Wallet" then
 			return getScreenW()
+		elseif currentScene == "src.Code" then
+			return getScreenRC()
 		end
+		
 	end
 	
 	--mostramos el menu izquierdo

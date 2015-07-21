@@ -60,6 +60,18 @@ function MenuLeft:new()
             end 
         })
     end
+	
+	local function ShowRedeemCode( event )
+		local t = event.target
+        t.alpha = .5
+        transition.to( t, { alpha = .05, time = 200, transition = easing.outExpo, 
+            onComplete = function()
+                hideMenuLeft()
+				showCode()
+            end 
+        })
+		return true
+	end
 
     local function getCities( event )
         if grpCity.y == intH - 60 then
@@ -207,6 +219,23 @@ function MenuLeft:new()
             font = "Lato-Bold",  fontSize = 18, align = "left"
         })
 		selfL:insert(txtMenu4)
+		
+		 -- Cambio de codigo
+        local bgChangeCode = display.newRect( display.contentCenterX - 80, h + 620, 400, 70 )
+		bgChangeCode:setFillColor( .5 )
+        bgChangeCode.alpha = .05
+        bgChangeCode:addEventListener( "tap", ShowRedeemCode )
+		selfL:insert(bgChangeCode)
+		local lineBottomCC = display.newRect( 160, h + 655, 400, 1)
+        lineBottomCC:setFillColor( 50/255, 150/255, 0 )
+		selfL:insert(lineBottomCC)
+		
+		local txtMenuCC = display.newText( {
+            text = "Codigo",
+            x = 160, y = h + 620, width = 330, 
+            font = "Lato-Bold",  fontSize = 18, align = "left"
+        })
+		selfL:insert(txtMenuCC)
         
         
         -- Menu Ciudades

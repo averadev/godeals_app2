@@ -231,7 +231,7 @@ function MenuLeft:new()
 		selfL:insert(lineBottomCC)
 		
 		local txtMenuCC = display.newText( {
-            text = "Codigo",
+            text = "Captura de código de regalo",
             x = 160, y = h + 620, width = 330, 
             font = "Lato-Bold",  fontSize = 18, align = "left"
         })

@@ -50,6 +50,7 @@ local btnDownloadCoupon]]
 
 local codeScreen = display.newGroup()
 local txtFieldReedirCode, rctBtnRC, rctBtnBRC, txtBtnRC
+local txtErrorReedirCode
 
 ----------------------------------------------------------
 -- Funciones
@@ -62,12 +63,13 @@ end
 
 --redime el codigo
 function changeCodeC( event )
-	--RestManager.redeemCodePromoter(txtFieldReedirCode.text)
+	--RestManager.redeemCodePromoter('456')
 	if txtFieldReedirCode.text ~= '' or txtFieldReedirCode.text ~= " " then
 		RestManager.redeemCodePromoter(txtFieldReedirCode.text)
 		txtFieldReedirCode.text = ''
 	else
-		native.showAlert( "Go Deals", 'Campo vacio. Ingrese un codigo de deals', { "OK" })
+		--native.showAlert( "Go Deals", 'Campo vacio. Ingrese un codigo de deals', { "OK" })
+		showTextErrorCode('*Campo vacio. Ingrese un codigo de regalo')
 	end
 	native.setKeyboardFocus(nil)
 end
@@ -94,14 +96,14 @@ function showDealsRedeem()
 	groupDownloadCode:insert(bg)
         
 	-- Sprite and text
-	local sheet = graphics.newImageSheet(Sprites.down.source, Sprites.down.frames)
-	local sprite = display.newSprite(sheet, Sprites.down.sequences)
+	local sheet = graphics.newImageSheet(Sprites.promo.source, Sprites.promo.frames)
+	local sprite = display.newSprite(sheet, Sprites.promo.sequences)
 	sprite.x = midW
 	sprite.y = midH - 40
 	groupDownloadCode:insert(sprite)
         
 	local txt1 = display.newText( {
-		text = "DEAL Descargado",
+		text = "Regalo envíado",
 		x = midW, y = midH + 60,
 		align = "center", width = 200,
 		font = "Lato-Bold", fontSize = 24
@@ -109,7 +111,7 @@ function showDealsRedeem()
 	groupDownloadCode:insert(txt1)
         
 	local txt2 = display.newText( {
-		text = "Consulta tus descargas",
+		text = "Consulta tu bandeja",
 		x = midW, y = midH + 95,
 		align = "center", width = 200,
 		font = "Lato-Bold", fontSize = 16
@@ -122,6 +124,11 @@ function showDealsRedeem()
 	transition.to( groupDownloadCode, { alpha = 0, time = 400, delay = 2000, transition = easing.outExpo } )
         
 	return true
+end
+
+--muestra el mensaje de error
+function showTextErrorCode(errorText)
+	txtErrorReedirCode.text = errorText
 end
 
 function onTxtFocusCode(event)
@@ -154,11 +161,11 @@ function scene:createScene( event )
     hWPL = 5 + header:buildWifiBle()
 	
 	local txtReedirCode = display.newText({
-		text = "Codigo a redimir",
-		x = 230, y = 600,
-		x = midW, y = lastY + 15,
-		width = 400,
-		font = "Lato-Regular", fontSize = 24, align = "center"
+		text = "Introduce el código de regalo",
+		x = 240, y = 600,
+		x = midW, y = lastY + 70,
+		width = 360,
+		font = "Lato-Regular", fontSize = 20, align = "left"
 	})
 	txtReedirCode:setFillColor( 0 )
 	codeScreen:insert(txtReedirCode)
@@ -176,13 +183,13 @@ function scene:createScene( event )
 	txtFieldReedirCode:setReturnKey(  "send"  )
 	codeScreen:insert(txtFieldReedirCode)
 	
-	rctBtnRC = display.newRoundedRect( 240, lastY + 250, 210, 55, 5 )
+	rctBtnRC = display.newRoundedRect( 240, lastY + 260, 210, 55, 5 )
 	--rctBtn.idCoipon = itemObj.id
 	rctBtnRC:setFillColor( .2, .6, 0 )
 	codeScreen:insert(rctBtnRC)
 	rctBtnRC:addEventListener( 'tap', changeCodeC )
 	
-	rctBtnBRC = display.newRoundedRect( 240, lastY + 268, 210, 22, 5 )
+	rctBtnBRC = display.newRoundedRect( 240, lastY + 278, 210, 22, 5 )
     rctBtnBRC:setFillColor( {
         type = 'gradient',
         color1 = { .2, .6, 0 }, 
@@ -192,13 +199,24 @@ function scene:createScene( event )
     codeScreen:insert(rctBtnBRC)
 
 	txtBtnRC = display.newText( {
-		text =  "Redimir codigo",
-		x = 240, y = lastY + 250,
+		text =  "OBTENER REGALO",
+		x = 240, y = lastY + 260,
 		width = 210, height = 0,
 		font = "Lato-Bold", fontSize = 18, align = "center"
 	})
 	txtBtnRC:setFillColor( 1 )
 	codeScreen:insert(txtBtnRC)
+	
+	txtErrorReedirCode = display.newText({
+		text = "",
+		x = midW + 20, y = lastY + 190,
+		width = 400,
+		font = "Lato-Regular", fontSize = 18, align = "left"
+	})
+	txtErrorReedirCode:setFillColor( 0 )
+	txtErrorReedirCode:setFillColor( 1, 0, 0 )
+	codeScreen:insert(txtErrorReedirCode)
+
 	
     
 end

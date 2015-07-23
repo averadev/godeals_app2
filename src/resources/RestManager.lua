@@ -727,13 +727,9 @@ local RestManager = {}
 				if data.success == true then
 					showDealsRedeem()
 				else
-					 native.showAlert( "Go Deals", data.message, { "OK" })
+					--native.showAlert( "Go Deals", data.message, { "OK" })
+					showTextErrorCode(data.message)
 				end
-                --[[if data.share then
-                   isFBShared()
-                else
-                    native.showAlert( "Go Deals", data.message, { "OK" })
-                end]]
             end
             return true
 		end

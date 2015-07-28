@@ -140,7 +140,7 @@ function scene:createScene( event )
 
     -- Agregamos textos
     local txtPartner0 = display.newText( {
-        text = Globals.language.MSGTxtPartner0,,     
+        text = Globals.language.MSGTxtPartner0,     
         x = 260, y = 40,
         width = 340,
         font = "Lato-Bold", fontSize = 16, align = "left"

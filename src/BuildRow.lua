@@ -1,4 +1,6 @@
 
+local Globals = require('src.resources.Globals')
+
 ---------------------------------------------------------------------------------
 -- MONTH TITLE
 ---------------------------------------------------------------------------------
@@ -194,7 +196,7 @@ function Message:new()
 
         -- Agregamos textos
         local txtPartner0 = display.newText( {
-            text = "De:",     
+            text = Globals.language.buildMSGOf,     
             x = 45, y = -25,
             width = 340,
             font = "Lato-Bold", fontSize = 16, align = "left"
@@ -221,7 +223,7 @@ function Message:new()
         container:insert(txtFecha)
         
         local txtTitle0 = display.newText( {
-            text = "Asunto: ",
+            text = Globals.language.buildMSGSubject,
             x = 45, y = 0,
             width = 340, height = 0,
             font = "Lato-Bold", fontSize = 16, align = "left"
@@ -420,7 +422,7 @@ function Deal:new()
 
             local lbStatus = ""
             if item.assigned == 0  then
-                lbStatus = "DESCARGAR"
+                lbStatus = Globals.language.buildDownloads
                 imgBtnDown:setFillColor( 68/255, 177/255, 13/255 )
                 imgBtnDown:addEventListener( "tap", downloadDeal )
 
@@ -435,11 +437,11 @@ function Deal:new()
                 container:insert(imgBtnShareB)
             else
                 if item.status == "1" then
-                    lbStatus = "DESCARGADO"
+                    lbStatus = Globals.language.buildDownloads
                 elseif item.status == "2" then
-                    lbStatus = "REDIMIDO"
+                    lbStatus = Globals.language.buildRedeemed
                 elseif item.status == "3" then
-                    lbStatus = "COMPARTIDO"
+                    lbStatus = Globals.language.buildShared
                 end
             end
 
@@ -456,7 +458,7 @@ function Deal:new()
             container:insert(iconReady)
 
             local txtStock = display.newText( {
-                text = item.stock.." Disponibles",     
+                text = item.stock.. Globals.language.buildAvailable,     
                 x = 105, y = 60,
                 width = 240, height =20,
                 font = "Lato-Regular", fontSize = 16, align = "left"
@@ -577,7 +579,7 @@ function DealMain:new()
         container:insert(txtPartner)
 
         local txtDealDes = display.newText( {
-            text = "DEAL DESTACADO", 
+            text = Globals.language.buildHighlight, 
             x = 110, y = 15,
             width = 240, height =60,
             font = "Lato-Italic", fontSize = 16, align = "left"
@@ -592,7 +594,7 @@ function DealMain:new()
         
         local lbStatus = ""
         if item.assigned == 0 then
-            lbStatus = "DESCARGAR"
+            lbStatus = Globals.language.buildDownloads
             imgBtnDown:setFillColor( 68/255, 177/255, 13/255 )
             imgBtnDown:addEventListener( "tap", downloadDeal )
             
@@ -607,11 +609,11 @@ function DealMain:new()
             container:insert(imgBtnShareB)
         else
             if item.status == "1" then
-                lbStatus = "DESCARGADO"
+                lbStatus = Globals.language.buildDownloads
             elseif item.status == "2" then
-                lbStatus = "REDIMIDO"
+                lbStatus = Globals.language.buildRedeemed
             elseif item.status == "3" then
-                lbStatus = "COMPARTIDO"
+                lbStatus = Globals.language.buildShared
             end
         end
         
@@ -628,7 +630,7 @@ function DealMain:new()
         container:insert(iconReady)
 
         local txtStock = display.newText( {
-            text = item.stock.." Disponibles",     
+            text = item.stock.. Globals.language.buildAvailable,     
             x = 135, y = 75,
             width = 240, height =20,
             font = "Lato-Regular", fontSize = 16, align = "left"

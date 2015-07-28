@@ -52,10 +52,10 @@ local btnDownloadCoupon
 local fx = audio.loadStream( "fx/alert.wav" )
 
 
-local TEXTA1 = "* O activa tu bluetooth y solicita al comercio su dispositivo GO"
-local TEXTA2 = "* O solicita al comercio su dispositivo GO"
-local TEXTB1 = "* Activa tu bluetooth y acerca tu teléfono al dispositivo GO"
-local TEXTB2 = "* Acerca tu teléfono al dispositivo GO"
+local TEXTA1 = Globals.language.dealsTEXTA1
+local TEXTA2 = Globals.language.dealsTEXTA2
+local TEXTB1 = Globals.language.dealsTEXTB1
+local TEXTB2 = Globals.language.dealsTEXTB2
 
 
 --pantalla
@@ -118,9 +118,9 @@ function listenerBeaconIOS( event )
         else
             audio.play( fx )
             RestManager.redemptionDeal(itemObj.code)
-            txtTitleInfo.text = "Deal redimido"
-            txtInfo.text =  "No olvides consultar los otros Deals que "..itemObj.partner.." te ofrece."
-            txtBtn.text = "DEAL REDIMIDO"
+            txtTitleInfo.text = Globals.language.dealsTitleInfo
+            txtInfo.text =  Globals.language.dealsInfo.. itemObj.partner.. Globals.language.dealsInfo2
+            txtBtn.text = Globals.language.dealstxtBtn
             rctBtn:setFillColor( .72, .82, .93 )
             rctBtnB.alpha = 0
             rctBtn:removeEventListener( "tap", showRedimir )
@@ -226,7 +226,7 @@ function goBLE(event)
 					DBManager.setReden()
 					RestManager.redemptionDeal(itemObj.code)
 					
-					txtBtn.text = "DEAL REDIMIDO"
+					txtBtn.text = Globals.language.dealstxtBtn2
 					rctBtn:setFillColor( .72, .82, .93 )
                     rctBtnB.alpha = 0
 					rctBtn:removeEventListener( "tap", showRedimir )
@@ -275,7 +275,7 @@ function showRedimir( event )
 			grpRedem:insert(btnClose)
 		
 			local txtCode = display.newText({
-				text = "CODIGO PARA CANJEAR",
+				text = Globals.language.dealsTxtCode,
 				x = midW, y = midH - 270,
 				width = 480,
 				font = "Lato-Black", fontSize = 30, align = "center"
@@ -293,7 +293,7 @@ function showRedimir( event )
 			grpRedem:insert(txtCode)
 			
 			local txtInfoRedimir = display.newText({
-				text = "* Proporciona este código al comercio para hacer válido tu Deal",
+				text = Globals.language.dealsTxtInfoRedimir,
 				x = midW, y = midH - 160,
 				width = 400,
 				font = "Lato-Black", fontSize = 20, align = "left"
@@ -308,7 +308,7 @@ function showRedimir( event )
 			grpRedem:insert(rctRed)
 
 			txtRed = display.newText( {
-				text =  "CONTINUAR",
+				text =  Globals.language.dealsTxtRed,
 				x = midW, y = midH -70,
 				width = 270, height = 0,
 				font = "Lato-Regular", fontSize = 25, align = "center"
@@ -401,10 +401,10 @@ function DownloadCoupon( event )
 	transition.to( txtBtn, { alpha = 0, time = 200, transition = easing.outExpo } )
 	
 	timer.performWithDelay(200, function() 
-		txtTitleInfo.text = "Redime este Deal!"
-		txtInfo.text = "Deja presionado el botón mientras lo acercas a nuestro dispositivo GO> "..
-                            "disponible en todos los establecimientos afiliados. PREGUNTA POR EL!"
-		txtBtn.text = "REDIMIR DEAL"
+		txtTitleInfo.text = Globals.language.dealsTxtTitleInfoDow
+		txtInfo.text = Globals.language.dealsTxtInfoDow..
+                            Globals.language.dealsTxtInfoDow2
+		txtBtn.text = Globals.language.dealsTxtBtnDow
 			
 		transition.to( txtBtn, { alpha = 1, time = 200, delay = 200, transition = easing.outExpo } )
 		transition.to( txtInfo, { alpha = 1, time = 200, delay = 200, transition = easing.outExpo } )
@@ -460,9 +460,9 @@ function changeBtnShare()
 	rctBtn:removeEventListener( "tap", DownloadCoupon )
 	
 	timer.performWithDelay(200, function() 
-		txtTitleInfo.text = "Ha compartido este deals!"
-		txtInfo.text = "No olvides consultar los otros Deals que "..itemObj.partner.." te ofrece"
-		txtBtn.text = "DEAL COMPARTIDO"
+		txtTitleInfo.text = Globals.language.dealsTitleInfoShare
+		txtInfo.text = Globals.language.dealsInfo ..itemObj.partner.. Globals.language.dealsInfo2
+		txtBtn.text = Globals.language.dealstxtBtnShare
 		
 		rctBtn:setFillColor( .72, .82, .93 )
 		imgBtnShare.alpha = .2
@@ -543,7 +543,7 @@ function buildCoupon()
     svCoupon:insert( txtPartner )
     
 	local txtTotalDeals = display.newText( {
-        text = itemObj.total.." Deals",
+        text = itemObj.total.. Globals.language.dealsTxtTotalDeals,
         x = 355, y = lastY + 85,
         width = 180, height =25,
         font = "Lato-Bold", fontSize = 20, align = "left"
@@ -557,7 +557,7 @@ function buildCoupon()
     svCoupon:insert(iconReady)
     
     local txtStock = display.newText( {
-        text = itemObj.stock.." Disponibles",
+        text = itemObj.stock.. Globals.language.buildAvailable,
         x = 383, y = lastY + 110,
         width = 180, height =25,
         font = "Lato-Bold", fontSize = 20, align = "left"
@@ -582,7 +582,7 @@ function buildCoupon()
     svCoupon:insert(imgBtnShareB)
 
 	local txtBtnComer = display.newText( {
-		text =  "COMPARTIR DEAL",
+		text =  Globals.language.dealsTxtBtnComer,
 		x = 340, y = lastY + 175, width = 210,
 		font = "Lato-Bold", fontSize = 14, align = "center"
 	})
@@ -625,7 +625,7 @@ function buildCoupon()
     svCoupon:insert(rctBtnComerB)
 
 	local txtBtnComer = display.newText( {
-		text =  "IR A COMERCIO",
+		text =  Globals.language.dealsTxtBtnComer2,
 		x = 130, y = lastY + 360,
 		width = 210, height = 0,
 		font = "Lato-Bold", fontSize = 18, align = "center"
@@ -648,7 +648,7 @@ function buildCoupon()
     svCoupon:insert(rctBtnB)
 
 	txtBtn = display.newText( {
-		text =  "DESCARGAR DEAL",
+		text =  Globals.language.dealsTxtBtnDowCre,
 		x = 350, y = lastY + 360,
 		width = 210, height = 0,
 		font = "Lato-Bold", fontSize = 18, align = "center"
@@ -657,7 +657,7 @@ function buildCoupon()
 	svCoupon:insert( txtBtn )
     
 	txtTitleInfo = display.newText( {
-		text = "¿Te interesa este Deal?",
+		text = Globals.language.dealsTxtTitleInfoInterest,
 		x = 240, y = lastY + 420,
 		width = 400, height = 0,
 		font = "Lato-Bold", fontSize = 16, align = "left"
@@ -666,8 +666,8 @@ function buildCoupon()
 	svCoupon:insert( txtTitleInfo )
 
 	txtInfo = display.newText( {
-		text =  "No lo pienses más y descárgalo, "..
-				"se guardará en tu cartera para que lo uses en tu próxima visita.",
+		text =  Globals.language.dealsTxtInfoWallet ..
+				Globals.language.dealsTxtInfoWallet2,
 		x = 240, y = lastY + 465,
 		width = 400, height = 60,
 		font = "Lato-Regular", fontSize = 16, align = "left"
@@ -676,7 +676,7 @@ function buildCoupon()
 	svCoupon:insert( txtInfo )
     
     local txtValidity = display.newText( {
-        text = "Vigencia: ",
+        text = Globals.language.dealsTxtValidity,
         x = 240, y = lastY + 510,
         width = 400, height = 20 ,
         font = "Lato-Bold", fontSize = 16, align = "left"
@@ -695,7 +695,7 @@ function buildCoupon()
     
     -- Detail Clauses
     local txtAdditionalInformation = display.newText({
-		text = "Informacion Adicional:",
+		text = Globals.language.dealsTxtAdditionalInformation,
 		--x = 230, y =  560,
 		x = 240, y =  lastY + 565,
 		height = 20, width = 400,
@@ -723,29 +723,29 @@ function buildCoupon()
     
 
 	if itemObj.assigned == 1 or itemObj.assigned == '1' then 
-		txtTitleInfo.text = "Redime este Deal!"
-		txtInfo.text =  "Deja presionado el boton mientras lo acercas a nuestro dispositivo GO> "..
-						"disponible en todos los establecimientos afiliados. PREGUNTA POR EL!"
-		txtBtn.text = "REDIMIR DEAL"
+		txtTitleInfo.text = Globals.language.dealsTxtTitleInfoDow
+		txtInfo.text =  Globals.language.dealsTxtInfoDow ..
+						Globals.language.dealsTxtInfoDow2
+		txtBtn.text = Globals.language.dealsTxtBtnDow
 		rctBtn:addEventListener( "tap", showRedimir )
 	elseif itemObj.assigned == 3 or itemObj.assigned == '3' then
-		txtTitleInfo.text = "Deal compartido"
-		txtInfo.text =  "No olvides consultar los otros Deals que "..itemObj.partner.." te ofrece."
-		txtBtn.text = "DEAL COMPARTIDO"
+		txtTitleInfo.text = Globals.language.dealsTxtTitleInfoDS
+		txtInfo.text =  Globals.language.dealsTxtInfoDS ..itemObj.partner.. Globals.language.dealsTxtInfoDS2
+		txtBtn.text = Globals.language.dealstxtBtnShare
 		rctBtn:setFillColor( .72, .82, .93 )
         rctBtnB.alpha = 0
 	elseif itemObj.stock == '0' then
-		txtTitleInfo.text = "Lo sentimos."
-		txtInfo.text =  "Este Deal se ha agotado, pero no te preocupes "..itemObj.partner..
-						" y el equipo de GoDeals tienen mas promociones para ti!"
-		txtBtn.text = "AGOTADO"
+		txtTitleInfo.text = Globals.language.dealsTxtTitleInfoTired
+		txtInfo.text =  Globals.language.dealsTxtInfoTired ..itemObj.partner..
+						Globals.language.dealsTxtBtnTired2
+		txtBtn.text = Globals.language.dealsTxtBtnTired
 		rctBtn:setFillColor( .8, .6, .6 )
         rctBtnB.alpha = 0
 		txtStock:setFillColor( .8, .5, .5 )
     elseif itemObj.assigned == 2 or itemObj.assigned == '2' then
-		txtTitleInfo.text = "Deal redimido"
-		txtInfo.text =  "No olvides consultar los otros Deals que "..itemObj.partner.." te ofrece."
-		txtBtn.text = "DEAL REDIMIDO"
+		txtTitleInfo.text = Globals.language.dealsTitleInfo
+		txtInfo.text =  Globals.language.dealsInfo ..itemObj.partner.. Globals.language.dealsInfo2
+		txtBtn.text = Globals.language.dealstxtBtn
 		rctBtn:setFillColor( .72, .82, .93 )
         rctBtnB.alpha = 0
 	else

@@ -163,7 +163,9 @@ end
 	typeF = filter
  
 	if filter == "EVENTOS" then
-		filterName = {"TODOS","CONCIERTOS","DEPORTIVOS","CULTURALES","ANIVERSARIOS","COMPRAS","OTROS"}
+		--filterName = {"TODOS","CONCIERTOS","DEPORTIVOS","CULTURALES","ANIVERSARIOS","COMPRAS","OTROS"}
+		filterName = {Globals.language.FilterNameEvent1,Globals.language.FilterNameEvent2,Globals.language.FilterNameEvent3,
+		Globals.language.FilterNameEvent4,Globals.language.FilterNameEvent5,Globals.language.FilterNameEvent6,Globals.language.FilterNameEvent7}
 		
 		btnModal = display.newImage( "img/bgk/fondo_deals.png" )
 		btnModal.width = 440
@@ -171,7 +173,10 @@ end
 		btnModal.height = intH - intH / 4.2
 		btnModal:translate( intW / 2 + 10, intH / 2)
 	else
-		filterName = {"TODOS","RESTAURANTES","BARES","ANTROS","TURISMO","TECNOLOGIA","SERVICIOS","COMPRAS","OTROS"}
+		--filterName = {"TODOS","RESTAURANTES","BARES","ANTROS","TURISMO","TECNOLOGIA","SERVICIOS","COMPRAS","OTROS"}
+		filterName = {Globals.language.FilterNameDeals1,Globals.language.FilterNameDeals2,Globals.language.FilterNameDeals3,
+		Globals.language.FilterNameDeals4,Globals.language.FilterNameDeals5,Globals.language.FilterNameDeals6,
+		Globals.language.FilterNameDeals7,Globals.language.FilterNameDeals8,Globals.language.FilterNameDeals9}
 		
 		btnModal = display.newImage( "img/bgk/fondo_deals.png" )
 		btnModal.width = 440

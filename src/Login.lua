@@ -17,6 +17,15 @@ local DBManager = require('src.resources.DBManager')
 local crypto = require( "crypto" )
 local scene = storyboard.newScene()
 
+local leng = system.getPreference( "locale", "language" )
+Globals.language = require('src.resources.Language')
+leng = "es"
+if leng == "es" then
+	Globals.language = Globals.language.es
+else
+	Globals.language = Globals.language.en
+end
+
 -- Variables
 local intW = display.contentWidth
 local intH = display.contentHeight
@@ -145,7 +154,7 @@ end
 function networkConnectionL()
     local netConn = require('socket').connect('www.google.com', 80)
     if netConn == nil then
-        native.showAlert( "Go Deals", "No se detecto conexión a internet.", { "OK"})
+        native.showAlert( "Go Deals", Globals.language.loginNoNetworkConnection, { "OK"})
         return false
     end
     netConn:close()
@@ -155,9 +164,9 @@ end
 function doCreate()
 
     if txtCreateEmail.text == '' or txtCreatePass.text == '' or txtCreateRePass.text == '' then
-        native.showAlert( "Go Deals", "El email y password son necesarios.", { "OK"})
+        native.showAlert( "Go Deals", Globals.language.loginCreateAlert1, { "OK"})
     elseif not (txtCreatePass.text == txtCreateRePass.text) then
-        native.showAlert( "Go Deals", "Los paswords no coinciden.", { "OK"})
+        native.showAlert( "Go Deals", Globals.language.loginCreateAlert2, { "OK"})
     elseif networkConnectionL() then
        -- showLoadLogin()
         backTxtPositions()
@@ -168,7 +177,7 @@ end
 
 function doSignIn()
     if txtSignEmail.text == '' or txtSignPass.text == '' then
-        native.showAlert( "Go Deals", "El email y password son necesarios.", { "OK"})
+        native.showAlert( "Go Deals", Globals.language.loginSignInAlert, { "OK"})
     elseif networkConnectionL() then
        -- showLoadLogin()
         backTxtPositions()
@@ -219,6 +228,7 @@ end
 ---------------------------------------------------------------------------------
 -- Called when the scene's view does not exist:
 function scene:createScene( event )
+
     -- Agregamos el home
 	screen = self.view
     
@@ -266,7 +276,7 @@ function scene:createScene( event )
 	groupSign:insert(txtSignPass)
     
     local txtReturn1 = display.newText( {
-        text = "Regresar",
+        text = Globals.language.loginTxtReturn1,
         x = midW - 122, y = midH + 130,
         font = "Lato-Bold",  fontSize = 22, align = "center"
     })
@@ -274,7 +284,7 @@ function scene:createScene( event )
     groupSign:insert(txtReturn1)
     
     local txtDoSignIn = display.newText( {
-        text = "Entrar",
+        text = Globals.language.loginTxtDoSignIn,
         x = midW + 128, y = midH + 130,
         font = "Lato-Bold",  fontSize = 22, align = "center"
     })
@@ -318,7 +328,7 @@ function scene:createScene( event )
     txtCreateRePass:addEventListener( "userInput", onTxtFocus )
     
     local txtReturn2 = display.newText( {
-        text = "Regresar",
+        text = Globals.language.loginTxtReturn2,
         x = midW - 122, y = midH + 170,
         font = "Lato-Bold",  fontSize = 22, align = "center"
     })
@@ -326,7 +336,7 @@ function scene:createScene( event )
     groupCreate:insert(txtReturn2)
     
     local txtDoCreate = display.newText( {
-        text = "Entrar",
+        text = Globals.language.loginTxtDoCreate,
         x = midW + 128, y = midH + 170,
         font = "Lato-Bold",  fontSize = 22, align = "center"
     })
@@ -343,7 +353,7 @@ function scene:createScene( event )
     btnFB:addEventListener( "tap", loginFaceBook )
     
     local txtCreate = display.newText( {
-        text = "Crear Cuenta",
+        text = Globals.language.loginTxtCreate,
         x = midW - 70, y = midH + 50,
         font = "Lato-Bold",  fontSize = 22, align = "center"
     })
@@ -351,7 +361,7 @@ function scene:createScene( event )
     groupBtn:insert(txtCreate)
     
     local txtSignIn = display.newText( {
-        text = "Entrar",
+        text = Globals.language.loginTxtSignIn,
         x = midW + 100, y = midH + 50,
         font = "Lato-Bold",  fontSize = 22, align = "center"
     })

@@ -69,7 +69,7 @@ function changeCodeC( event )
 		txtFieldReedirCode.text = ''
 	else
 		--native.showAlert( "Go Deals", 'Campo vacio. Ingrese un codigo de deals', { "OK" })
-		showTextErrorCode('*Campo vacio. Ingrese un codigo de regalo')
+		showTextErrorCode(Globals.language.codeTextErrorCode)
 	end
 	native.setKeyboardFocus(nil)
 end
@@ -103,7 +103,7 @@ function showDealsRedeem()
 	groupDownloadCode:insert(sprite)
         
 	local txt1 = display.newText( {
-		text = "Regalo envíado",
+		text = Globals.language.codeTxt1,
 		x = midW, y = midH + 60,
 		align = "center", width = 200,
 		font = "Lato-Bold", fontSize = 24
@@ -111,7 +111,7 @@ function showDealsRedeem()
 	groupDownloadCode:insert(txt1)
         
 	local txt2 = display.newText( {
-		text = "Consulta tu bandeja",
+		text = Globals.language.codeTxt2,
 		x = midW, y = midH + 95,
 		align = "center", width = 200,
 		font = "Lato-Bold", fontSize = 16
@@ -161,7 +161,7 @@ function scene:createScene( event )
     hWPL = 5 + header:buildWifiBle()
 	
 	local txtReedirCode = display.newText({
-		text = "Introduce el código de regalo",
+		text = Globals.language.codeTxtReedirCode,
 		x = 240, y = 600,
 		x = midW, y = lastY + 70,
 		width = 360,
@@ -199,7 +199,7 @@ function scene:createScene( event )
     codeScreen:insert(rctBtnBRC)
 
 	txtBtnRC = display.newText( {
-		text =  "OBTENER REGALO",
+		text =  Globals.language.codeTxtBtnRC,
 		x = 240, y = lastY + 260,
 		width = 210, height = 0,
 		font = "Lato-Bold", fontSize = 18, align = "center"

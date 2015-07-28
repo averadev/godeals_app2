@@ -11,6 +11,15 @@ local RestManager = require('src.resources.RestManager')
 local DBManager = require('src.resources.DBManager')
 local settings = DBManager.getSettings()
 
+local leng = system.getPreference( "locale", "language" )
+Globals.language = require('src.resources.Language')
+leng = "en"
+if leng == "es" then
+	Globals.language = Globals.language.es
+else
+	Globals.language = Globals.language.en
+end
+
 local txtCiudad = {}
 local textoCiudad = ""
 local menuScreenLeft = nil
@@ -193,7 +202,7 @@ function Header:new()
         groupDownload:insert(sprite)
         
         local txt1 = display.newText( {
-            text = "DEAL Descargado",
+            text = Globals.language.headerTxt1,
             x = midW, y = midH + 60,
 			align = "center", width = 200,
             font = "Lato-Bold", fontSize = 24
@@ -201,7 +210,7 @@ function Header:new()
         groupDownload:insert(txt1)
         
         local txt2 = display.newText( {
-            text = "Consulta tus descargas",
+            text = Globals.language.headerTxt2,
             x = midW, y = midH + 95,
 			align = "center", width = 200,
             font = "Lato-Bold", fontSize = 16
@@ -245,7 +254,7 @@ function Header:new()
         groupDownload:insert(sprite)
         
         local txt1 = display.newText( {
-            text = "DEAL Compartido",
+            text = Globals.language.headerTxt1Share,
             x = midW, y = midH + 60,
 			align = "center", width = 200,
             font = "Lato-Bold", fontSize = 24
@@ -253,7 +262,7 @@ function Header:new()
         groupDownload:insert(txt1)
         
         local txt2 = display.newText( {
-            text = "Se envio el Deal a tu amigo",
+            text = Globals.language.headerTxt2Share,
             x = midW, y = midH + 95,
 			align = "center", width = 200,
             font = "Lato-Bold", fontSize = 16
@@ -297,7 +306,7 @@ function Header:new()
         groupDownload:insert(sprite)
         
         local txt1 = display.newText( {
-            text = "DEAL Redimido",
+            text = Globals.language.headerTxt1Reedem,
             x = midW, y = midH + 60,
 			align = "center", width = 200,
             font = "Lato-Bold", fontSize = 24
@@ -305,7 +314,7 @@ function Header:new()
         groupDownload:insert(txt1)
         
         local txt2 = display.newText( {
-            text = "No olvides consultar otros Deals que tenemos para ti.",
+            text = Globals.language.headerTxt2Reedem,
             x = midW, y = midH + 95,
 			align = "center", width = 200,
             font = "Lato-Bold", fontSize = 16
@@ -400,11 +409,11 @@ function Header:new()
 	function saveBeacon( event )
 		-- Move
 		local dataTmp = {
-			{id = '1', message = 'Bienvenido, hoy tenemos una oferta para ti.', uuid = '1a4f5be7-6683-44a6-b559-b8bf6efd9ad7', 
+			{id = '1', message = Globals.language.headerSaveBeaconMSG1, uuid = '1a4f5be7-6683-44a6-b559-b8bf6efd9ad7', 
 				latitude = '0', longitude = '0', distanceMin = '.3', distanceMax = '0', partnerId = '2'},
-			{id = '2', message = 'Bienvenido, hoy tenemos una oferta para ti.', uuid = 'f7826da6-4fa2-4e98-8024-bc5b71e0893e', 
+			{id = '2', message = Globals.language.headerSaveBeaconMSG2, uuid = 'f7826da6-4fa2-4e98-8024-bc5b71e0893e', 
 				latitude = '0', longitude = '0', distanceMin = '.3', distanceMax = '0', partnerId = '2'},
-			{id = '3', message = 'Bienvenido, hoy tenemos una oferta para ti.', uuid = 'a1ea8136-0e1b-d4a1-b840-63f88c8da1ea', 
+			{id = '3', message = Globals.language.headerSaveBeaconMSG3, uuid = 'a1ea8136-0e1b-d4a1-b840-63f88c8da1ea', 
 				latitude = '0', longitude = '0', distanceMin = '.3', distanceMax = '0', partnerId = '2'}
 		}
 		DBManager.saveAds(dataTmp)
@@ -534,7 +543,7 @@ function Header:new()
 			loadingBottom:setSequence("play")
 			loadingBottom:play()
 
-			local title = display.newText( "Cargando, por favor espere...", 0, 30, "Chivo", 16)
+			local title = display.newText( Globals.language.headerGetLoadingTitle, 0, 30, "Chivo", 16)
 			title:setFillColor( .3, .3, .3 )
 			title.x = display.contentWidth / 2
 			title.y = (obj.height / 3) + 40
@@ -642,7 +651,7 @@ function Header:new()
         local txtTool2 = display.newText( {
             x = 142, y = 65,
 			align = "center", width = 95,
-            text = "CERCANOS", font = "Lato-Bold", fontSize = 10,
+            text = Globals.language.headerMap, font = "Lato-Bold", fontSize = 10,
         })
         txtTool2:setFillColor( 1 )
         grpTool:insert(txtTool2)
@@ -650,7 +659,7 @@ function Header:new()
         local txtTool3 = display.newText( {
             x = 237, y = 65,
 			align = "center", width = 95,
-            text = "MI BANDEJA", font = "Lato-Bold", fontSize = 10,
+            text = Globals.language.headerTray, font = "Lato-Bold", fontSize = 10,
         })
         txtTool3:setFillColor( 1 )
         grpTool:insert(txtTool3)
@@ -658,7 +667,7 @@ function Header:new()
         local txtTool4 = display.newText( {
             x = 332, y = 65,
 			align = "center", width = 95,
-            text = "MIS DESCARGAS", font = "Lato-Bold", fontSize = 10,
+            text = Globals.language.headerDownloads, font = "Lato-Bold", fontSize = 10,
         })
         txtTool4:setFillColor( 1 )
         grpTool:insert(txtTool4)
@@ -666,7 +675,7 @@ function Header:new()
         local txtTool5 = display.newText( {
             x = 425, y = 65,
 			align = "center", width = 95,
-            text = "BUSCADOR", font = "Lato-Bold", fontSize = 10,
+            text = Globals.language.headerSearcher, font = "Lato-Bold", fontSize = 10,
         })
         txtTool5:setFillColor( 1 )
         grpTool:insert(txtTool5)
@@ -696,7 +705,7 @@ function Header:new()
             local txtWifiBLE = display.newText( {
                 x = 220, y = 95,
                 align = "left", width = 400,
-                text = "Para obtener mejores beneficios active su Wifi y/o bluetooth", font = "Lato-Bold", fontSize = 14,
+                text = Globals.language.headerTxtWifiBLE, font = "Lato-Bold", fontSize = 14,
             })
             txtWifiBLE:setFillColor( 1 )
             self:insert(txtWifiBLE)
@@ -737,7 +746,7 @@ function Header:new()
         local txtReturn = display.newText( {
             x = 90, y = 85 + hWB,
 			width = 100, align = "center",
-            font = "Lato-Bold", fontSize = 14, text = "REGRESAR"
+            font = "Lato-Bold", fontSize = 14, text = Globals.language.headerTxtReturn
         })
         txtReturn:setFillColor( 0 )
         self:insert(txtReturn)

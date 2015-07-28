@@ -66,7 +66,7 @@ function showListFriends(idC)
     groupFriends:insert( bgBanner2 )
 	
 	local friendsTitle = display.newText( {
-		text = "COMPARTIR DEAL CON:",     
+		text = Globals.language.friendFriendsTitle,     
 		x = 210, y = midH - 215,
 		width = 300,
 		font = "Lato-Bold",  fontSize = 18
@@ -79,7 +79,7 @@ function showListFriends(idC)
 	groupFriends:insert(friendRefresh)
 	
 	local txtRefreshFriend = display.newText( {
-		text = "Actualizar Amigos",     
+		text = Globals.language.friendTxtRefreshFriend,     
 		x = 375, y = midH - 195, width = 150,
 		font = "Lato-Regular",  fontSize = 14, align = "center"
 	})
@@ -203,7 +203,7 @@ function printFriends( items )
     
     txtSendEmail = native.newTextField( 220, listY, 300, 50 )
     txtSendEmail.inputType = "email"
-	txtSendEmail.placeholder = "ENVIAR CORREO A UN AMIGO"
+	txtSendEmail.placeholder = Globals.language.friendTxtSendEmailPlacer
     txtSendEmail.hasBackground = false
 	txtSendEmail:setReturnKey(  "send"  )
 	txtSendEmail:addEventListener( "userInput", onTxtFriend )

@@ -251,7 +251,7 @@ function buildPartnerInfo(item)
 	srvPartnerD:insert(bgTitleDeal)
     
     local txtInfo6 = display.newText({
-		text = "DEALS disponibles",
+		text = Globals.language.partnerTxtInfo6,
 		x = midW,
 		y =  lastY + 20,
 		font = "Lato-Bold",

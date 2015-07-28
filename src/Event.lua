@@ -159,7 +159,7 @@ function buildEventInfo(item)
 	groupInfo:insert(bgGeneralInformacion)
     
     local txtGeneralInformacion = display.newText({
-		text = "Información Adicional:",
+		text = Globals.language.eventTxtGeneralInformacion,
 		x = 230, y =  lastY + 5,
 		height = 20, width = 400,
 		font = "Lato-Bold", fontSize = 16, align = "left"
@@ -185,7 +185,7 @@ function buildEventInfo(item)
     lastY = lastY + bgGeneralInformacion.height + 25
 	
 	local txtAdditionalInformation = display.newText({
-		text = "Consultar ubicación en el mapa",
+		text = Globals.language.eventTxtAdditionalInformation,
 		x = 230, y = lastY,
 		height = 40, width = 400,
 		font = "Chivo", fontSize = 22, align = "center"

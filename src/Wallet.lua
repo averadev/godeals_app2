@@ -56,7 +56,7 @@ function setWalletElements(obj)
 		end
 		if contDeals == 2 then
 			endLoading()
-			getNoContent(svContent, "En este momento no cuentas con Deals descargados")
+			getNoContent(svContent, Globals.language.walletGetNoContent)
 		end
 		
 	end
@@ -132,7 +132,7 @@ function buildWalletItems(screen)
 		svContent:insert(separadorEventos)
 
 		local textSeparadorEventos = display.newText( {
-			text = "ESTOS SON LOS DEALS DISPONIBLES EN TU CARTERA.",     
+			text = Globals.language.walletTextSeparadorEventos,     
 			x = 300, y = yMain, width = intW, height = 20,
 			font = "Lato-Regular", fontSize = 14, align = "left"
 		})
@@ -160,7 +160,7 @@ function buildWalletItems(screen)
 		svContent:insert(separadorRedimir)
 
 		local textSeparadorRedimir = display.newText( {
-			text = "ESTOS SON LOS DEALS REDIMIDOS.",     
+			text = Globals.language.walletTextSeparadorRedimir,     
 			x = 300, y = yMain, width = intW, height = 20,
 			font = "Lato-Regular", fontSize = 14, align = "left"
 		})

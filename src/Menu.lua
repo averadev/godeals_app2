@@ -1,3 +1,5 @@
+local Globals = require('src.resources.Globals')
+
 MenuLeft = {}
 MenuRight = {}
 
@@ -177,14 +179,14 @@ function MenuLeft:new()
 		selfL:insert(icoMenu3)
         
         local txtMenu1 = display.newText( {
-            text = "Tutorial",
+            text = Globals.language.menuTxtMenu1,
             x = 20, y = h + 440,
             width = 100, height = 30,
             font = "Lato-Bold",  fontSize = 14, align = "center"
         })
 		selfL:insert(txtMenu1)
         local txtMenu2 = display.newText( {
-            text = "Configuración",
+            text = Globals.language.menuTxtMenu2,
             x = 160, y = h + 440,
             width = 100, height = 30,
             font = "Lato-Bold",  fontSize = 14, align = "center"
@@ -192,7 +194,7 @@ function MenuLeft:new()
         txtMenu2:setFillColor( .5 )
 		selfL:insert(txtMenu2)
         local txtMenu3 = display.newText( {
-            text = "Cerrar Sesión",
+            text = Globals.language.menuTxtMenu3,
             x = 295, y = h + 440,
             width = 100, height = 30,
             font = "Lato-Bold",  fontSize = 14, align = "center"
@@ -214,7 +216,7 @@ function MenuLeft:new()
 		selfL:insert(lineBottomC)
         
         local txtMenu4 = display.newText( {
-            text = "Comercios Afiliados",
+            text = Globals.language.menuTxtMenu4,
             x = 160, y = h + 545, width = 330, 
             font = "Lato-Bold",  fontSize = 18, align = "left"
         })
@@ -231,7 +233,7 @@ function MenuLeft:new()
 		selfL:insert(lineBottomCC)
 		
 		local txtMenuCC = display.newText( {
-            text = "Captura de código de regalo",
+            text = Globals.language.menuTxtMenuCC,
             x = 160, y = h + 620, width = 330, 
             font = "Lato-Bold",  fontSize = 18, align = "left"
         })
@@ -255,7 +257,7 @@ function MenuLeft:new()
         
         titleLeft = display.newText( {    
             x = 150, y = 32, align = "left", width = 300,
-            text = "CAMBIAR CIUDAD",  font = "Lato-Bold", fontSize = 18,
+            text = Globals.language.menuTitleLeft,  font = "Lato-Bold", fontSize = 18,
         })
         titleLeft:setFillColor( 1 )
         grpCity:insert(titleLeft)

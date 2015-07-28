@@ -140,7 +140,7 @@ function scene:createScene( event )
 
     -- Agregamos textos
     local txtPartner0 = display.newText( {
-        text = "De:",     
+        text = Globals.language.MSGTxtPartner0,,     
         x = 260, y = 40,
         width = 340,
         font = "Lato-Bold", fontSize = 16, align = "left"
@@ -167,7 +167,7 @@ function scene:createScene( event )
     svMessage:insert(txtFecha)
 
     local txtTitle0 = display.newText( {
-        text = "Asunto: ",
+        text = Globals.language.MSGTxtTitle0,
         x = 260, y = 70,
         width = 340, height = 0,
         font = "Lato-Bold", fontSize = 16, align = "left"
@@ -222,7 +222,7 @@ function scene:createScene( event )
     groupInfo:insert(rctBtnComerB)
 
 	local txtBtnComer = display.newText( {
-		text =  "IR A COMERCIO",
+		text =  Globals.language.MSGxtBtnComer,
 		x = 330, y = lastY,
 		width = 210, height = 0,
 		font = "Lato-Bold", fontSize = 18, align = "center"

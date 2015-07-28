@@ -17,6 +17,13 @@ local storyboard = require( "storyboard" )
 local Globals = require('src.resources.Globals')
 local DBManager = require('src.resources.DBManager')
 local RestManager = require('src.resources.RestManager')
+--local Language = require('src.resources.Language')
+
+local lengHome = system.getPreference( "locale", "language" )
+lengHome = "en"
+
+print('holaaaaaaaaaaaaa')
+--print(Globals.language.titulo2)
 
 -- Grupos y Contenedores
 local scene = storyboard.newScene()
@@ -244,7 +251,11 @@ function buildItems(screen)
                     currentMonth = tonumber(v)
                     local title = MonthTitle:new()
                     groupEvent:insert(title)
-                    title:build(Globals.Months[currentMonth].." del "..k)
+					if lengHome == "es" then
+						title:build(Globals.Months[currentMonth].." del "..k)
+					else
+						title:build(Globals.Months_en[currentMonth].." of "..k)
+					end
                     title.y = lastY
                     lastY = lastY + 100
                 end
@@ -282,7 +293,12 @@ function buildItems(screen)
                     currentMonth = tonumber(v)
                     local title = MonthTitle:new()
                     groupEvent:insert(title)
-                    title:build(Globals.Months[currentMonth].." del "..k)
+					if lengHome == "es" then
+						title:build(Globals.Months[currentMonth].." del "..k)
+					else
+						title:build(Globals.Months_en[currentMonth].." of "..k)
+					end
+                   -- title:build(Globals.Months[currentMonth].." del "..k)
                     title.y = lastY
                     lastY = lastY + 70
                 end
@@ -305,7 +321,7 @@ function buildItems(screen)
 		scrViewEventos:insert(groupEvent)
 		
 		local txtNoFilterFound = display.newText( {
-			text = "Eventos con el filtro no disponible",     
+			text = Globals.language.homeNoFilterEvent,     
 			x = intW/2, y = intH/2.5,
 			width = intW,
 			font = "Lato-Regular",  fontSize = 30, align = "center"
@@ -321,7 +337,7 @@ function buildItems(screen)
 		scrViewDeals:insert(groupDeals)
 		
 		local txtNoFilterFound = display.newText( {
-			text = "Deals con el filtro no disponible",     
+			text = Globals.language.homeNoFilterDeals,     
 			x = intW/2, y = intH/2.5,
 			width = intW,
 			font = "Lato-Regular",  fontSize = 30, align = "center"
@@ -337,6 +353,13 @@ function getDate(strDate)
     local fecha
     for k, v, u in string.gmatch(strDate, "(%w+)-(%w+)-(%w+)") do
         fecha = u .. " de "..Globals.Months[tonumber(v)].." de " .. k  
+		if lengHome == "es" then
+			--title:build(Globals.Months[currentMonth].." del "..k)
+			fecha = u .. " de "..Globals.Months[tonumber(v)].." de " .. k
+		else
+			--title:build(Globals.Months_en[currentMonth].." of "..k)
+			fecha = u .. " "..Globals.Months_en[tonumber(v)]..", " .. k
+		end
     end
     return fecha
 end
@@ -400,7 +423,7 @@ function notConnection()
 	groupNoConection:insert( imgDisconnected )
 
 	local txtNoConection = display.newText( {
-		text = "¡conexión no disponible, intentelo de nuevo!",     
+		text = Globals.language.homeNoConection,     
 		x = 240, y = scrViewMain.height/2,
 		width = 480,
 		font = "Lato-Regular",  fontSize = 22, align = "center"
@@ -728,7 +751,7 @@ function scene:createScene( event )
 	
 	txtMenuInicio = display.newText( {    
         x = display.contentWidth * .5, y = 30,
-        text = "INICIO",  font = "Lato-Bold", fontSize = 22,
+        text = Globals.language.homeInicio,  font = "Lato-Bold", fontSize = 22,
 	})
 	txtMenuInicio:setFillColor( 0 )
 	groupMenu:insert(txtMenuInicio)
@@ -737,7 +760,7 @@ function scene:createScene( event )
 	
 	txtMenuEventos = display.newText( {
         x = display.contentWidth * 1.2, y = 30,
-        text = "EVENTOS", font = "Lato-Bold", fontSize = 22,
+        text = Globals.language.homeEvent, font = "Lato-Bold", fontSize = 22,
 	})
 	txtMenuEventos:setFillColor( 161/255, 161/255, 161/255 )
 	groupMenu:insert(txtMenuEventos)
@@ -746,7 +769,7 @@ function scene:createScene( event )
 	
 	txtMenuDeals = display.newText( {
         x = display.contentWidth * .85, y = 30,
-        text = "DEALS", font = "Lato-Bold", fontSize = 22,
+        text = Globals.language.homeDeals, font = "Lato-Bold", fontSize = 22,
 	})
 	txtMenuDeals:setFillColor( 161/255, 161/255, 161/255 )
 	groupMenu:insert(txtMenuDeals)

@@ -49,7 +49,7 @@ function setNotificationsElements(items)
 		loadNotificationsImage({posc = 1})
 	else
 		endLoading(svContent)
-		getNoContent(svContent, "En este momento no cuentas con notificaciones")
+		getNoContent(svContent, Globals.language.notiGetNoContent)
 	end
 end
 

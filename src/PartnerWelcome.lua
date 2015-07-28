@@ -125,7 +125,7 @@ function showAdd(item)
     lastY = 120
     -- Agregamos textos
     local txtPartner0 = display.newText( {
-        text = "¡Bienvenido a "..item.name.."!",     
+        text = Globals.language.partnerWTxtPartner0 ..item.name.."!",     
         x = 260, y = 55,
         width = 340,
         font = "Lato-Bold", fontSize = 16, align = "left"
@@ -169,7 +169,7 @@ function showAdd(item)
     groupAdd:insert(rctBtnComerB)
 
 	local txtBtnComer = display.newText( {
-		text =  "VER MAS",
+		text =  Globals.language.partnerWTxtBtnComer,
 		x = 330, y = lastY,
 		width = 210, height = 0,
 		font = "Lato-Bold", fontSize = 18, align = "center"

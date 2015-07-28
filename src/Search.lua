@@ -149,7 +149,7 @@ function buildSearchItems(screen)
 			groupSearch[poscSRV]:insert(separadorEventos)
 
 			local textSeparadorEventos = display.newText( {
-				text = "Eventos y actividades.",     
+				text = Globals.language.searchTextSeparadorEventos,     
 				x = 300, y = yMain + 30, width = intW, height = 80,
 				font = "Lato-Regular", fontSize = 19, align = "left"
 			})
@@ -185,7 +185,7 @@ function buildSearchItems(screen)
 			groupSearch[poscSRV]:insert(separadorEventos)
 
 			local textSeparadorEventos = display.newText( {
-				text = "Promociones para ti.",     
+				text = Globals.language.searchTextSeparadorDeals,     
 				x = 300, y = yMain + 27, width = intW, height = 80,
 				font = "Lato-Regular", fontSize = 19, align = "left"
 			})
@@ -220,7 +220,7 @@ function noSearchFind()
 	
 	if contSearch == 0 and scrViewSearch ~= nil then
 		
-		getNoContent(scrViewSearch, "No hay resultados, intente con otra palabra")
+		getNoContent(scrViewSearch, Globals.language.searchGetNoContent)
 		contSearch = 0
 	end
 end

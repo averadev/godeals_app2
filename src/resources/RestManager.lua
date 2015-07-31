@@ -7,6 +7,8 @@ local RestManager = {}
 	local DBManager = require('src.resources.DBManager')
     local Globals = require('src.resources.Globals')
 	local settings = DBManager.getSettings()
+	local leng = system.getPreference( "locale", "language" )
+	leng = "en"
 	
 	function urlencode(str)
           if (str) then
@@ -20,8 +22,7 @@ local RestManager = {}
 	
 	RestManager.getRecommended = function()
 		settings = DBManager.getSettings()
-		local url = settings.url .. "api/getRecommended/format/json/idApp/" .. settings.idApp .. "/city/" .. settings.city
-	   print(url)
+		local url = settings.url .. "api/getRecommended/format/json/idApp/" .. settings.idApp .. "/city/" .. settings.city .. "/language/" .. leng
 	   local function callback(event)
             if ( event.isError ) then
             else
@@ -41,7 +42,9 @@ local RestManager = {}
 	
 		settings = DBManager.getSettings()
 		
-		local url = settings.url .. "api/getMyDeals/format/json/idApp/" .. settings.idApp .. "/city/" .. settings.city
+		local url = settings.url .. "api/getMyDeals/format/json/idApp/" .. settings.idApp .. "/city/" .. settings.city .. "/language/" .. leng
+		
+		print(url)
 	   
 	   local function callback(event)
             if ( event.isError ) then
@@ -59,7 +62,7 @@ local RestManager = {}
 	
 	RestManager.getAllEvent = function()
 		settings = DBManager.getSettings()
-		local url = settings.url .. "api/getAllEvent/format/json/idApp/" .. settings.idApp .. "/city/" .. settings.city
+		local url = settings.url .. "api/getAllEvent/format/json/idApp/" .. settings.idApp .. "/city/" .. settings.city .. "/language/" .. leng
 		
 	   local function callback(event)
             if ( event.isError ) then
@@ -79,8 +82,7 @@ local RestManager = {}
 	
 	RestManager.getAllCoupon = function()
 		settings = DBManager.getSettings()
-		local url = settings.url .. "api/getAllDeal/format/json/idApp/" .. settings.idApp .. "/city/" .. settings.city
-        print(url)
+		local url = settings.url .. "api/getAllDeal/format/json/idApp/" .. settings.idApp .. "/city/" .. settings.city .. "/language/" .. leng
 	    local function callback(event)
             if ( event.isError ) then
             else
@@ -107,7 +109,6 @@ local RestManager = {}
 	RestManager.initApp = function(idBeacon, fecha)
 		settings = DBManager.getSettings()
 		local url = settings.url .. "api/initApp/format/json/idApp/" .. settings.idApp
-        print(url)
         -- Do request
         network.request( url, "GET", callback )
 	end
@@ -121,7 +122,7 @@ local RestManager = {}
 
 	RestManager.getAdPartner = function(idAd)
 		settings = DBManager.getSettings()
-		local url = settings.url .. "api/getAdPartner/format/json/idAd/" .. idAd
+		local url = settings.url .. "api/getAdPartner/format/json/idAd/" .. idAd .. "/language/" .. leng
 	   
 	   local function callback(event)
             if ( event.isError ) then
@@ -140,7 +141,7 @@ local RestManager = {}
 
 	RestManager.getPartner = function(idPartner)
 		settings = DBManager.getSettings()
-		local url = settings.url .. "api/getPartnertById/format/json/idPartner/" .. idPartner
+		local url = settings.url .. "api/getPartnertById/format/json/idPartner/" .. idPartner .. "/language/" .. leng
 	   
 	   local function callback(event)
             if ( event.isError ) then
@@ -159,7 +160,7 @@ local RestManager = {}
 
     RestManager.getPartnerList = function()
 		settings = DBManager.getSettings()
-        local url = settings.url .. "api/getPartnerList/format/json/idApp/" .. settings.idApp
+        local url = settings.url .. "api/getPartnerList/format/json/idApp/" .. settings.idApp .. "/language/" .. leng
 
         local function callback(event)
             if ( event.isError ) then
@@ -173,9 +174,9 @@ local RestManager = {}
         network.request( url, "GET", callback )
 	end
 
-    RestManager.getBeacons = function()
+    RestManager.getBeacons = function() --falta
 		settings = DBManager.getSettings()
-        local url = settings.url .. "api/getBeacons/format/json"
+        local url = settings.url .. "api/getBeacons/format/json/" .. "/language/" .. leng
 
         local function callback(event)
             if ( event.isError ) then
@@ -191,7 +192,7 @@ local RestManager = {}
 
     RestManager.getComerciosGPS = function()
 		settings = DBManager.getSettings()
-        local url = settings.url .. "api/getComerciosGPS/format/json/idApp/" .. settings.idApp
+        local url = settings.url .. "api/getComerciosGPS/format/json/idApp/" .. settings.idApp .. "/language/" .. leng
 
         local function callback(event)
             if ( event.isError ) then
@@ -207,7 +208,7 @@ local RestManager = {}
 	
 	RestManager.getDealsByPartner = function(idPartner,typeInfo)
 		settings = DBManager.getSettings()
-		local url = settings.url .. "api/getDealsByPartner/format/json/idApp/" .. settings.idApp .. "/idPartner/" .. idPartner .. "/city/" .. settings.city
+		local url = settings.url .. "api/getDealsByPartner/format/json/idApp/" .. settings.idApp .. "/idPartner/" .. idPartner .. "/city/" .. settings.city .. "/language/" .. leng
 	   
 	   local function callback(event)
             if ( event.isError ) then
@@ -255,8 +256,7 @@ local RestManager = {}
 	
 	RestManager.getCouponById = function(idCoupon)
 		settings = DBManager.getSettings()
-		local url = settings.url .. "api/getCouponById/format/json/idCoupon/" .. idCoupon
-	   print(url)
+		local url = settings.url .. "api/getCouponById/format/json/idCoupon/" .. idCoupon .. "/language/" .. leng
 	   local function callback(event)
             if ( event.isError ) then
             else
@@ -290,6 +290,7 @@ local RestManager = {}
         url = url.."/fbId/"..fbId
 		url = url.."/birthday/"..urlencode(birthday)
 		url = url.."/mac/"..mac
+		url = url.."/language/" .. leng
         
         local function callback(event)
             if ( event.isError ) then
@@ -318,6 +319,7 @@ local RestManager = {}
         url = url.."/idApp/"..settings.idApp
         url = url.."/email/"..urlencode(email)
         url = url.."/password/"..password
+		url = url.."/language/" .. leng
     
         local function callback(event)
             if ( event.isError ) then
@@ -348,6 +350,7 @@ local RestManager = {}
         url = url.."/idApp/"..settings.idApp
         url = url.."/email/"..urlencode(email)
         url = url.."/password/"..password
+		url = url.."/language/" .. leng
     
         local function callback(event)
             if ( event.isError ) then
@@ -373,6 +376,7 @@ local RestManager = {}
         url = url.."api/discountCoupon/format/json"
         url = url.."/idApp/"..settings.idApp
         url = url.."/idCoupon/"..idCoupon
+		url = url.."/language/" .. leng
     
         local function callback(event)
             if ( event.isError ) then
@@ -393,6 +397,7 @@ local RestManager = {}
         url = url.."api/discountCoupon/format/json"
         url = url.."/idApp/"..settings.idApp
         url = url.."/idCoupon/"..idCoupon
+		url = url.."/language/" .. leng
     
         local function callback(event)
             if ( event.isError ) then
@@ -419,7 +424,7 @@ local RestManager = {}
 		
 		local url = settings.url
         url = url.."api/getNotificationsUnRead/format/json"
-        url = url.."/idApp/"..settings.idApp
+        url = url.."/idApp/"..settings.idApp .. "/language/" .. leng
         
         local function callback(event)
             if ( event.isError ) then
@@ -447,6 +452,8 @@ local RestManager = {}
 		local url = settings.url
         url = url.."api/getNotifications/format/json"
         url = url.."/idApp/"..settings.idApp
+		url = url.."/language/" .. leng
+		
         
         local function callback(event)
             if ( event.isError ) then
@@ -490,6 +497,8 @@ local RestManager = {}
 		url = url.."/texto/"..text
         url = url.."/idApp/"..settings.idApp
 		url = url.."/city/"..settings.city
+		url = url.. "/language/" .. leng
+		
     
         local function callback(event)
             if ( event.isError ) then
@@ -518,6 +527,7 @@ local RestManager = {}
         url = url.."api/getSearchCoupon/format/json/city/" .. settings.city
 		url = url.."/texto/"..text
         url = url.."/idApp/"..settings.idApp
+		url = url.. "/language/" .. leng
     
         local function callback(event)
             if ( event.isError ) then
@@ -546,7 +556,6 @@ local RestManager = {}
         url = url.."api/getCouponDownload/format/json"
 		url = url.."/idApp/"..settings.idApp
 		url = url.."/idCoupon/"..idCoupon
-        print(url)
         local function callback(event)
             if ( event.isError ) then
             else
@@ -590,7 +599,6 @@ local RestManager = {}
 		
 		local url = settings.url
         url = url.."api/getCityById/format/json/city/" .. settings.city
-        print(url)
         local function callback(event)
             if ( event.isError ) then
             else
@@ -620,15 +628,14 @@ local RestManager = {}
 		end
 		
 		local url = settings.url
-        url = url.."api/getFilter/format/json/idApp/" .. settings.idApp .."/city/" .. settings.city .. "/idFilter/" .. idFilter .. "/type/" .. typeF
+        url = url.."api/getFilter/format/json/idApp/" .. settings.idApp .."/city/" .. settings.city .. "/idFilter/" .. idFilter .. "/type/" .. typeF .. "/language/" .. leng
         
         if typeF == "EVENTOS" and idFilter == 0 then
-			url = settings.url .. "api/getAllEvent/format/json/idApp/" .. settings.idApp .. "/city/" .. settings.city
+			url = settings.url .. "api/getAllEvent/format/json/idApp/" .. settings.idApp .. "/city/" .. settings.city .. "/language/" .. leng
 		elseif not (typeF == "EVENTOS") and idFilter == 6 then
-			url = settings.url .. "api/getAllDeal/format/json/idApp/" .. settings.idApp .. "/city/" .. settings.city
+			url = settings.url .. "api/getAllDeal/format/json/idApp/" .. settings.idApp .. "/city/" .. settings.city .. "/language/" .. leng
 		end
-    
-    
+		
         local function callback(event)
             if ( event.isError ) then
             else
@@ -655,8 +662,8 @@ local RestManager = {}
 	RestManager.getDealsRedimir = function()
 		settings = DBManager.getSettings()
 		
-		local url = settings.url .. "api/getDealsRedimir/format/json/idApp/" .. settings.idApp .. "/city/" .. settings.city
-	   print(url)
+		local url = settings.url .. "api/getDealsRedimir/format/json/idApp/" .. settings.idApp .. "/city/" .. settings.city 
+		url = url.. "/language/" .. leng
 	   local function callback(event)
             if ( event.isError ) then
             else
@@ -676,7 +683,7 @@ local RestManager = {}
 		settings = DBManager.getSettings()
 		
 		local url = settings.url .. "api/shareDealsByFace/format/json/idApp/" .. settings.idApp .. "/idFriend/" .. idFriend .. "/idCoupon/" .. idCoupon
-	    print(url)
+		url = url.. "/language/" .. leng
 		local function callback(event)
             if ( event.isError ) then
             else
@@ -698,7 +705,7 @@ local RestManager = {}
 		settings = DBManager.getSettings()
 		
 		local url = settings.url .. "api/shareDealsByEmail/format/json/idApp/" .. settings.idApp .. "/email/" .. urlencode(email) .. "/idCoupon/" .. idCoupon
-	    print(url)
+	    url = url.. "/language/" .. leng
 		local function callback(event)
             if ( event.isError ) then
             else
@@ -719,7 +726,7 @@ local RestManager = {}
 	RestManager.redeemCodePromoter = function(code)
 		settings = DBManager.getSettings()
 		
-		local url = settings.url .. "api/redeemCodePromoter/format/json/idApp/" .. settings.idApp .. "/code/" .. urlencode(code)
+		local url = settings.url .. "api/redeemCodePromoter/format/json/idApp/" .. settings.idApp  .. "/language/" .. leng .. "/code/" .. urlencode(code)
 		local function callback(event)
             if ( event.isError ) then
             else

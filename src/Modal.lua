@@ -16,6 +16,7 @@ local filterNameImg = nil
 local typeF = ""
 
 function CloseModal( event )
+	modalActive = ""
 	btnModal:removeSelf()
 	bgModal:removeSelf()
 	groupFilters:removeSelf()

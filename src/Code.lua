@@ -170,12 +170,14 @@ function scene:createScene( event )
 	txtReedirCode:setFillColor( 0 )
 	codeScreen:insert(txtReedirCode)
 	
+	lastY = lastY + 150
+	
 	local bgReedirCode = display.newImage("img/btn/txtEmail.png", true) 
     bgReedirCode.x = midW
-    bgReedirCode.y = midH - 100
+    bgReedirCode.y = lastY
     codeScreen:insert(bgReedirCode)
 	
-	txtFieldReedirCode = native.newTextField( midW, midH - 100, 380, 60 )
+	txtFieldReedirCode = native.newTextField( midW, lastY, 380, 60 )
     txtFieldReedirCode.method = "code"
     txtFieldReedirCode.inputType = "text"
     txtFieldReedirCode.hasBackground = false
@@ -183,13 +185,15 @@ function scene:createScene( event )
 	txtFieldReedirCode:setReturnKey(  "send"  )
 	codeScreen:insert(txtFieldReedirCode)
 	
-	rctBtnRC = display.newRoundedRect( 240, lastY + 260, 210, 55, 5 )
+	lastY = lastY + 150
+	
+	rctBtnRC = display.newRoundedRect( 240, lastY, 210, 55, 5 )
 	--rctBtn.idCoipon = itemObj.id
 	rctBtnRC:setFillColor( .2, .6, 0 )
 	codeScreen:insert(rctBtnRC)
 	rctBtnRC:addEventListener( 'tap', changeCodeC )
 	
-	rctBtnBRC = display.newRoundedRect( 240, lastY + 278, 210, 22, 5 )
+	rctBtnBRC = display.newRoundedRect( 240, lastY + 18, 210, 22, 5 )
     rctBtnBRC:setFillColor( {
         type = 'gradient',
         color1 = { .2, .6, 0 }, 
@@ -200,7 +204,7 @@ function scene:createScene( event )
 
 	txtBtnRC = display.newText( {
 		text =  Globals.language.codeTxtBtnRC,
-		x = 240, y = lastY + 260,
+		x = 240, y = lastY,
 		width = 210, height = 0,
 		font = "Lato-Bold", fontSize = 18, align = "center"
 	})
@@ -209,7 +213,7 @@ function scene:createScene( event )
 	
 	txtErrorReedirCode = display.newText({
 		text = "",
-		x = midW + 20, y = lastY + 190,
+		x = midW + 20, y = lastY - 80,
 		width = 400,
 		font = "Lato-Regular", fontSize = 18, align = "left"
 	})

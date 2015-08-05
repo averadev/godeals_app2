@@ -11,10 +11,10 @@ local RestManager = require('src.resources.RestManager')
 local DBManager = require('src.resources.DBManager')
 local settings = DBManager.getSettings()
 
-local leng = system.getPreference( "locale", "language" )
+--local leng = system.getPreference( "locale", "language" )
 Globals.language = require('src.resources.Language')
-leng = "en"
-if leng == "es" then
+--leng = "es"
+if settings.language == "es" then
 	Globals.language = Globals.language.es
 else
 	Globals.language = Globals.language.en
@@ -26,6 +26,9 @@ local menuScreenLeft = nil
 local menuScreenRight = nil
 local groupSearchTool = display.newGroup()
 local groupDownload
+modalActive = ""
+
+local btnBackFunction = false
 
 Header = {}
 
@@ -39,6 +42,8 @@ function Header:new()
     local imgSearch, btnClose, txtSearch
 	local h = display.topStatusBarContentHeight
     local fx = audio.loadStream( "fx/alert.wav" )
+
+	--local leng = system.getPreference( "locale", "language" )
     
     -- Obtener mapa
     function showMap(event)
@@ -94,6 +99,8 @@ function Header:new()
     
 	-- esconde la busqueda y el modal
     function hideSearch( event )
+	
+		modalActive = ""
 		
 		native.setKeyboardFocus(nil)
 		
@@ -109,6 +116,8 @@ function Header:new()
 	--esconde la busqueda
 	function hideSearch2( event )
 	
+		modalActive = ""
+		
 		native.setKeyboardFocus(nil)
 		
 		groupSearchTool:removeSelf()
@@ -121,6 +130,7 @@ function Header:new()
     
 	--muestra el formulario de busqueda
     function showSearch( event )
+		modalActive = 'Search'
 		createSearch()
 		createTxt("")
     end
@@ -372,6 +382,7 @@ function Header:new()
 	
 	--mostramos el menu izquierdo
 	function showMenuLeft( event )
+		modalActive = 'MenuLeft'
 		local screen = getScreen()
 		screen.alpha = .5
 		transition.to( screen, { x = 400, time = 400, transition = easing.outExpo } )
@@ -381,11 +392,13 @@ function Header:new()
 	
 	--esconde el menuIzquierdo
 	function hideMenuLeft( event )
+		modalActive = ""
 		local screen = getScreen()
 		screen.alpha = 1
 		transition.to( menuScreenLeft, { x = -480, time = 400, transition = easing.outExpo } )
 		transition.to( screen, { x = 0, time = 400, transition = easing.outExpo } )
 		screen = nil
+		HideChangeCity()
 		return true
 	end
 	
@@ -774,15 +787,75 @@ function Header:new()
 	function changeCityName(items)
 		textoCiudad = items.txtMin
 		txtCiudad[#txtCiudad].text = items.txtMin
+		RestManager.changeUserCity(items.id)
 		DBManager.updateCity(items.id)
-		removeItemsGroupHome()
+		--removeItemsGroupHome()
+		storyboard.gotoScene( "src.HomeWhite")
+		
 	end
 	
 	function changeTxtcity(item)
 		textoCiudad = item
 		txtCiudad[#txtCiudad].text = item
 	end
-    
+	
     return self
+end
+
+function changeLanguageName(items)
+	DBManager.updateLanguage(items.txtMin)
+	
+	local settings = DBManager.getSettings()
+	
+	Globals.language = require('src.resources.Language')
+	
+	if settings.language == "es" then
+		Globals.language = Globals.language.es
+	else
+		Globals.language = Globals.language.en
+	end
+	
+	RestManager.changeLanguageManager()
+	
+	storyboard.gotoScene( "src.HomeWhite")
+	
+	Globals.scene = nil
+	Globals.scene = {}
+	
+end
+
+-- Return button Android Devices
+local function onKeyEventBack( event )
+	local phase = event.phase
+	local keyName = event.keyName
+	local platformName = system.getInfo( "platformName" )
+	
+	if( "back" == keyName and phase == "up" ) then
+		--native.showAlert( "Go Deals", "hola" , { "OK"})
+		if ( platformName == "Android" ) then
+			--native.showAlert( "Go Deals", Globals.scene[#Globals.scene] , { "OK"})
+			--native.showAlert( "Go Deals", modalActive , { "OK"})
+			
+			if modalActive == "Search" then
+				hideSearch()
+			elseif modalActive == "MenuLeft" then
+				hideMenuLeft()
+			elseif modalActive == "Filter" then
+				CloseModal()
+			elseif Globals.scene[#Globals.scene] == "src.Home" then
+				return false
+			else
+				returnScene()
+			end
+			return true
+			
+		end
+	end
+	return false
+end
+
+if btnBackFunction == false then
+	btnBackFunction = true
+	Runtime:addEventListener( "key", onKeyEventBack )
 end
 

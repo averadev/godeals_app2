@@ -113,6 +113,14 @@ local dbManager = {}
 		closeConnection( )
 	end
 	
+	dbManager.updateLanguage = function(language)
+		openConnection( )
+        local query = ''
+        query = "UPDATE config SET language = '" .. language .."';"
+        db:exec( query )
+		closeConnection( )
+	end
+	
 	dbManager.updateTutorial = function(city)
 		openConnection( )
         local query = ''
@@ -294,6 +302,22 @@ local dbManager = {}
 					" fbId TEXT, idComer TEXT, url TEXT, city INTEGER, tutorial INTEGER, mac TEXT, reden INTEGER);"
             db:exec( query )
 		end
+		
+		local oldVersion = true
+		for row in db:nrows("PRAGMA table_info(config);") do
+			if row.name == 'language' then
+				oldVersion = false
+            end
+		end
+		
+		if oldVersion then
+			local query = "ALTER TABLE config ADD COLUMN language TEXT;"
+            db:exec( query )
+			local leng = system.getPreference( "locale", "language" )
+			leng = "es"
+			local query = "UPDATE config SET language = '" .. leng .. "';"
+			db:exec( query )
+		end
 
         -- Return if have connection
 		for row in db:nrows("SELECT idApp FROM config;") do
@@ -304,10 +328,13 @@ local dbManager = {}
                 return true
             end
 		end
+		
+		local leng = system.getPreference( "locale", "language" )
+		leng = "es"
         
         -- Populate config
-        --query = "INSERT INTO config VALUES (1, 0, '', '', '', '', 0, 'http://godeals.mx/admin/',1,1,'',0);"
-		query = "INSERT INTO config VALUES (1, 0, '', '', '', '', 0, 'http://godeals.mx/4beta/',1,1,'',0);"
+        --query = "INSERT INTO config VALUES (1, 0, '', '', '', '', 0, 'http://godeals.mx/admin/',1,1,'',0,'" .. leng .. "');"
+		query = "INSERT INTO config VALUES (1, 0, '', '', '', '', 0, 'http://godeals.mx/4beta/',1,1,'',0,'" .. leng .. "');"
 		
 		db:exec( query )
     

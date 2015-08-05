@@ -723,6 +723,9 @@ function buildCoupon()
     
 
 	if itemObj.assigned == 1 or itemObj.assigned == '1' then 
+		imgBtnShare.alpha = 1
+        imgBtnShareB.alpha = 1
+		imgBtnShare:addEventListener( 'tap', showFriends )
 		txtTitleInfo.text = Globals.language.dealsTxtTitleInfoDow
 		txtInfo.text =  Globals.language.dealsTxtInfoDow ..
 						Globals.language.dealsTxtInfoDow2
@@ -743,6 +746,9 @@ function buildCoupon()
         rctBtnB.alpha = 0
 		txtStock:setFillColor( .8, .5, .5 )
     elseif itemObj.assigned == 2 or itemObj.assigned == '2' then
+		imgBtnShare.alpha = 1
+        imgBtnShareB.alpha = 1
+		imgBtnShare:addEventListener( 'tap', showFriends )
 		txtTitleInfo.text = Globals.language.dealsTitleInfo
 		txtInfo.text =  Globals.language.dealsInfo ..itemObj.partner.. Globals.language.dealsInfo2
 		txtBtn.text = Globals.language.dealstxtBtn

@@ -72,11 +72,13 @@ Language.es = {
 	eventTxtAdditionalInformation = "Consultar ubicación en el mapa",
 	--menu
 	menuTxtMenu1 = "Tutorial",
-	menuTxtMenu2 = "Configuración",
+	--menuTxtMenu2 = "Configuración",
+	menuTxtMenu2 = "Codigo Regalo",
 	menuTxtMenu3 = "Cerrar Sesión",
 	menuTxtMenu4 = "Comercios Afiliados",
 	menuTxtMenuCC = "Captura de código de regalo",
 	menuTitleLeft = "CAMBIAR CIUDAD",
+	menuTitleLanguageLeft = "CAMBIAR IDIOMA",
 	--code
 	codeTextErrorCode = "*Campo vacio. Ingrese un codigo de regalo",
 	codeTxt1 = "Regalo envíado",
@@ -213,6 +215,7 @@ Language.en = {
 	menuTxtMenu4 = "Affiliate Partner",
 	menuTxtMenuCC = "Capture gift code",
 	menuTitleLeft = "CHANGE CITY",
+	menuTitleLanguageLeft = "CHANGE LANGUAGE",
 	--code
 	codeTextErrorCode = "* Empty field. Enter a code Gift",
 	codeTxt1 = "Sent out gift",
@@ -257,6 +260,22 @@ Language.en = {
 	FilterNameDeals7 = "SERVICES",
 	FilterNameDeals8 = "SHOPPING",
 	FilterNameDeals9 = "OTHER",
+	--[[FilterNameEvent1 = "TODOS",
+	FilterNameEvent2 = "CONCIERTOS",
+	FilterNameEvent3 = "DEPORTIVOS",
+	FilterNameEvent4 = "CULTURALES",
+	FilterNameEvent5 = "ANIVERSARIOS",
+	FilterNameEvent6 = "COMPRAS",
+	FilterNameEvent7 = "OTROS",
+	FilterNameDeals1 = "TODOS",
+	FilterNameDeals2 = "RESTAURANTES",
+	FilterNameDeals3 = "BARES",
+	FilterNameDeals4 = "ANTROS",
+	FilterNameDeals5 = "TURISMO",
+	FilterNameDeals6 = "TECNOLOGIA",
+	FilterNameDeals7 = "SERVICIOS",
+	FilterNameDeals8 = "COMPRAS",
+	FilterNameDeals9 = "OTROS",]]
 	--notifications 
 	notiGetNoContent = "At this point you do not have notifications",
 	--partner

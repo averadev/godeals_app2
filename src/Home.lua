@@ -17,13 +17,11 @@ local storyboard = require( "storyboard" )
 local Globals = require('src.resources.Globals')
 local DBManager = require('src.resources.DBManager')
 local RestManager = require('src.resources.RestManager')
---local Language = require('src.resources.Language')
 
-local lengHome = system.getPreference( "locale", "language" )
-lengHome = "en"
 
-print('holaaaaaaaaaaaaa')
---print(Globals.language.titulo2)
+local settings = DBManager.getSettings()
+
+lengHome = settings.language
 
 -- Grupos y Contenedores
 local scene = storyboard.newScene()
@@ -300,7 +298,7 @@ function buildItems(screen)
 					end
                    -- title:build(Globals.Months[currentMonth].." del "..k)
                     title.y = lastY
-                    lastY = lastY + 70
+                    lastY = lastY + 100
                 end
             end
             
@@ -310,7 +308,7 @@ function buildItems(screen)
             evento:build(true, elements[y], imageItems[y])
             evento.y = lastY
             
-            lastY = lastY + 120
+            lastY = lastY + 180
         end
 		
 	elseif screen == "noFilterEvent" then
@@ -396,6 +394,20 @@ function removeItemsGroupHome()
 	groupDeals:removeSelf()
 	groupDeals = display.newGroup()
 	scrViewDeals:insert(groupDeals)
+	
+	isSvLoaded[1] = false
+	isSvLoaded[2] = false
+	
+	--[[scrViewMain, scrViewEventos, scrViewDeals]]
+	
+	returnHome()
+	
+	transition.to( scrViewDeals, { x = 720, time = 400, transition = easing.outExpo } )
+	transition.to( scrViewMain, { x = 240, time = 400, transition = easing.outExpo } )
+	transition.to( scrViewEventos, { x = 720, time = 400, transition = easing.outExpo } )
+	transition.to( groupMenu, { x = 0, time = 400, transition = easing.outExpo } )
+	
+	showFilter(false)
 	
 	RestManager.getRecommended()
 end
@@ -637,6 +649,7 @@ function showFilter(boolShow)
 end
 
 function openModal( event )
+	modalActive = 'Filter'
 	Modal(btnModal.name)
 	return true
 end	

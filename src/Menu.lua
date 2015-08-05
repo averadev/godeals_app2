@@ -16,6 +16,11 @@ function MenuLeft:new()
 
 	local selfL = display.newGroup()
     local grpCity = display.newGroup()
+	local grpLanguage = display.newGroup()
+	
+	local rectCity = {}
+	
+	local rectLanguage = {}
 	
 	selfL.x = -480
 	
@@ -38,6 +43,11 @@ function MenuLeft:new()
 		RestManager.getCity()
 		
 	end
+	
+	function HideChangeCity()
+		transition.to( grpCity, { y = intH - 123, time = 800, transition = easing.outExpo } )
+		transition.to( grpLanguage, { y = intH - 60, time = 800, transition = easing.outExpo } )
+	end
     
     local function changeCity( event )
         local t = event.target
@@ -45,12 +55,40 @@ function MenuLeft:new()
         transition.to( t, { alpha = .1, time = 200, transition = easing.outExpo, 
             onComplete = function()
                 transition.to( t, { alpha = 1, time = 200, transition = easing.outExpo })
-                transition.to( grpCity, { y = intH - 60, time = 800, transition = easing.outExpo } )
+                --transition.to( grpCity, { y = intH - 60, time = 800, transition = easing.outExpo } )
                 hideMenuLeft()
                 changeCityName(event.target)
             end 
         })
+		--rectCity[y]:setFillColor( .4 )
+		for y = 1, #rectCity, 1 do
+			rectCity[y]:setFillColor( .7 )
+		end
+		t:setFillColor( .4 )
+		return true
     end
+	
+	local function changeLanguage( event )
+		
+		local t = event.target
+        t.alpha = 1
+        transition.to( t, { alpha = .1, time = 200, transition = easing.outExpo, 
+            onComplete = function()
+                transition.to( t, { alpha = 1, time = 200, transition = easing.outExpo })
+                --transition.to( grpCity, { y = intH - 60, time = 800, transition = easing.outExpo } )
+                hideMenuLeft()
+                changeLanguageName(event.target)
+            end 
+        })
+		
+		for y = 1, #rectLanguage, 1 do
+			rectLanguage[y]:setFillColor( .7 )
+		end
+		t:setFillColor( .4 )
+		
+		return true
+		
+	end
     
     local function getPartners( event )
         local t = event.target
@@ -75,13 +113,34 @@ function MenuLeft:new()
 		return true
 	end
 
-    local function getCities( event )
-        if grpCity.y == intH - 60 then
-            transition.to( grpCity, { y = intH - 180, time = 800, transition = easing.outExpo } )
+    function getCities( event )
+	
+		
+		
+		transition.to( grpLanguage, { y = intH - 60, time = 800, transition = easing.outExpo } )
+        if grpCity.y == intH - 123 then
+            transition.to( grpCity, { y = intH - 240, time = 800, transition = easing.outExpo } )
         else
-            transition.to( grpCity, { y = intH - 60, time = 800, transition = easing.outExpo } )
+            transition.to( grpCity, { y = intH - 123, time = 800, transition = easing.outExpo } )
+			if grpLanguage.y - intH - 123  == -303 then
+				transition.to( grpCity, { y = intH - 240, time = 800, transition = easing.outExpo } )
+			end
         end
+		return true
     end
+	
+	function getLanguage( event )
+		 transition.to( grpCity, { y = intH - 123, time = 800, transition = easing.outExpo } )
+		if grpLanguage.y == intH - 60 then
+			transition.to( grpCity, { y = intH - 240, time = 800, transition = easing.outExpo } )
+            transition.to( grpLanguage, { y = intH - 180, time = 800, transition = easing.outExpo } )
+        else
+            transition.to( grpLanguage, { y = intH - 60, time = 800, transition = easing.outExpo } )
+			--transition.to( grpCity, { y = intH - 123, time = 800, transition = easing.outExpo } )
+        end
+		return true
+		
+	end
     
     local function cerrarSession( event )
         hideMenuLeft()
@@ -171,7 +230,7 @@ function MenuLeft:new()
 		selfL:insert(icoMenu1)
         local icoMenu2 = display.newImage( "img/btn/icoMenu2.png" )
         icoMenu2:translate( 160, h + 390 )
-        icoMenu2.alpha = .5
+		icoMenu2:addEventListener( "tap", ShowRedeemCode )
 		selfL:insert(icoMenu2)
         local icoMenu3 = display.newImage( "img/btn/icoMenu3.png" )
         icoMenu3:translate( 295, h + 390 )
@@ -223,7 +282,7 @@ function MenuLeft:new()
 		selfL:insert(txtMenu4)
 		
 		 -- Cambio de codigo
-        local bgChangeCode = display.newRect( display.contentCenterX - 80, h + 620, 400, 70 )
+        --[[local bgChangeCode = display.newRect( display.contentCenterX - 80, h + 620, 400, 70 )
 		bgChangeCode:setFillColor( .5 )
         bgChangeCode.alpha = .05
         bgChangeCode:addEventListener( "tap", ShowRedeemCode )
@@ -237,23 +296,23 @@ function MenuLeft:new()
             x = 160, y = h + 620, width = 330, 
             font = "Lato-Bold",  fontSize = 18, align = "left"
         })
-		selfL:insert(txtMenuCC)
+		selfL:insert(txtMenuCC)--]]
         
         
         -- Menu Ciudades
 		local lastY = 90
-		local rectCity = {}
         selfL:insert(grpCity)
-        grpCity.y = intH - 60
+        --grpCity.y = intH - 60
+		grpCity.y = intH - 123
 		
 		local MenuLeftCiudad = display.newRect( display.contentCenterX - 80, 30 , 400, 60 )
 		MenuLeftCiudad:setFillColor( 50/255, 150/255, 0 )
         MenuLeftCiudad:addEventListener( "tap", getCities )
 		grpCity:insert(MenuLeftCiudad)
         
-        local icoMenuCity = display.newImage( "img/btn/icoMenuCity.png" )
+        --[[local icoMenuCity = display.newImage( "img/btn/icoMenuCity.png" )
         icoMenuCity:translate( 320, 30)
-        grpCity:insert(icoMenuCity)
+        grpCity:insert(icoMenuCity)]]
         
         titleLeft = display.newText( {    
             x = 150, y = 32, align = "left", width = 300,
@@ -261,7 +320,6 @@ function MenuLeft:new()
         })
         titleLeft:setFillColor( 1 )
         grpCity:insert(titleLeft)
-		
 		
 		--creamos los botones del menu
 		for y = 1, #items, 1 do
@@ -271,6 +329,10 @@ function MenuLeft:new()
 			rectCity[y].id = items[y].idCity
 			rectCity[y]:addEventListener( "tap", changeCity )
 			grpCity:insert(rectCity[y])
+			
+			if tonumber(settings.city) == tonumber(items[y].idCity) then
+				rectCity[y]:setFillColor( .4 )
+			end
             
             txtCity = display.newText( {    
                 x = 150, y = MenuLeftCiudad.height + lastY - 60, align = "left", width = 300,
@@ -281,6 +343,58 @@ function MenuLeft:new()
 			
 			lineLeft[y] = display.newLine(-40, lastY + 30, 360, lastY + 30)
 			grpCity:insert(lineLeft[y])
+			lineLeft[y]:setStrokeColor( 0, 0, 0, 1 )
+			lineLeft[y].strokeWidth = 5
+			lineLeft[y]:toFront()
+			
+			lastY = lastY + 60
+		end
+		
+		local lastY = 90
+		selfL:insert(grpLanguage)
+		grpLanguage.y = intH - 60
+		
+		local MenuLeftLanguage = display.newRect( display.contentCenterX - 80, 30 , 400, 60 )
+		MenuLeftLanguage:setFillColor( 50/255, 150/255, 0 )
+        MenuLeftLanguage:addEventListener( "tap", getLanguage )
+		grpLanguage:insert(MenuLeftLanguage)
+        
+        titleLanguageLeft = display.newText( {    
+            x = 150, y = 32, align = "left", width = 300,
+            text = Globals.language.menuTitleLanguageLeft,  font = "Lato-Bold", fontSize = 18,
+        })
+        titleLanguageLeft:setFillColor( 1 )
+        grpLanguage:insert(titleLanguageLeft)
+		
+		local LanguageName = {'Español','English'}
+		local LanguageSub = {'es','en'}
+		
+		--rectLanguage
+		
+		for y = 1, #LanguageName, 1 do
+			rectLanguage[y] = display.newRect(  display.contentCenterX - 80, lastY, 400, 60 )
+			rectLanguage[y]:setFillColor( .7 )
+			rectLanguage[y].txtMin = LanguageSub[y]
+			--rectLanguage[y].id = items[y].idCity
+			rectLanguage[y]:addEventListener( "tap", changeLanguage )
+			grpLanguage:insert(rectLanguage[y])
+			
+			if settings.language == LanguageSub[y]  then
+				rectLanguage[y]:setFillColor( .4 )
+			end
+            
+            txtLanguage = display.newText( {    
+                x = 150, y = MenuLeftCiudad.height + lastY - 60, align = "left", width = 300,
+                text = " - " .. LanguageName[y],  font = "Lato-Bold", fontSize = 18,
+            })
+			txtLanguage:setFillColor( 0 )
+			grpLanguage:insert(txtLanguage)
+			
+			lineLeft[y] = display.newLine(-40, lastY + 30, 360, lastY + 30)
+			grpLanguage:insert(lineLeft[y])
+			lineLeft[y]:setStrokeColor( 0, 0, 0, 1 )
+			lineLeft[y].strokeWidth = 5
+			lineLeft[y]:toFront()
 			
 			lastY = lastY + 60
 		end

@@ -7,8 +7,7 @@ local RestManager = {}
 	local DBManager = require('src.resources.DBManager')
     local Globals = require('src.resources.Globals')
 	local settings = DBManager.getSettings()
-	local leng = system.getPreference( "locale", "language" )
-	leng = "en"
+	local leng = settings.language
 	
 	function urlencode(str)
           if (str) then
@@ -28,6 +27,7 @@ local RestManager = {}
             else
 				local data = json.decode(event.response)
                 if data.success then
+					print(data.items[1].name)
                     setElements(data.items)
 					loadImageLogos({posc = 1, screen = 'MainScreen'})
                 end
@@ -42,9 +42,7 @@ local RestManager = {}
 	
 		settings = DBManager.getSettings()
 		
-		local url = settings.url .. "api/getMyDeals/format/json/idApp/" .. settings.idApp .. "/city/" .. settings.city .. "/language/" .. leng
-		
-		print(url)
+		local url = settings.url .. "api/getMyDeals/format/json/idApp/" .. settings.idApp .. "/language/" .. leng
 	   
 	   local function callback(event)
             if ( event.isError ) then
@@ -62,7 +60,7 @@ local RestManager = {}
 	
 	RestManager.getAllEvent = function()
 		settings = DBManager.getSettings()
-		local url = settings.url .. "api/getAllEvent/format/json/idApp/" .. settings.idApp .. "/city/" .. settings.city .. "/language/" .. leng
+		local url = settings.url .. "api/getAllEvent/format/json/idApp/" .. settings.idApp  .. "/language/" .. leng
 		
 	   local function callback(event)
             if ( event.isError ) then
@@ -82,7 +80,7 @@ local RestManager = {}
 	
 	RestManager.getAllCoupon = function()
 		settings = DBManager.getSettings()
-		local url = settings.url .. "api/getAllDeal/format/json/idApp/" .. settings.idApp .. "/city/" .. settings.city .. "/language/" .. leng
+		local url = settings.url .. "api/getAllDeal/format/json/idApp/" .. settings.idApp .. "/language/" .. leng
 	    local function callback(event)
             if ( event.isError ) then
             else
@@ -208,7 +206,7 @@ local RestManager = {}
 	
 	RestManager.getDealsByPartner = function(idPartner,typeInfo)
 		settings = DBManager.getSettings()
-		local url = settings.url .. "api/getDealsByPartner/format/json/idApp/" .. settings.idApp .. "/idPartner/" .. idPartner .. "/city/" .. settings.city .. "/language/" .. leng
+		local url = settings.url .. "api/getDealsByPartner/format/json/idApp/" .. settings.idApp .. "/idPartner/" .. idPartner .. "/language/" .. leng
 	   
 	   local function callback(event)
             if ( event.isError ) then
@@ -496,7 +494,6 @@ local RestManager = {}
         url = url.."api/getSearchEvent/format/json"
 		url = url.."/texto/"..text
         url = url.."/idApp/"..settings.idApp
-		url = url.."/city/"..settings.city
 		url = url.. "/language/" .. leng
 		
     
@@ -524,7 +521,7 @@ local RestManager = {}
 		settings = DBManager.getSettings()
 		
 		local url = settings.url
-        url = url.."api/getSearchCoupon/format/json/city/" .. settings.city
+        url = url.."api/getSearchCoupon/format/json/"
 		url = url.."/texto/"..text
         url = url.."/idApp/"..settings.idApp
 		url = url.. "/language/" .. leng
@@ -628,12 +625,13 @@ local RestManager = {}
 		end
 		
 		local url = settings.url
-        url = url.."api/getFilter/format/json/idApp/" .. settings.idApp .."/city/" .. settings.city .. "/idFilter/" .. idFilter .. "/type/" .. typeF .. "/language/" .. leng
-        
-        if typeF == "EVENTOS" and idFilter == 0 then
-			url = settings.url .. "api/getAllEvent/format/json/idApp/" .. settings.idApp .. "/city/" .. settings.city .. "/language/" .. leng
-		elseif not (typeF == "EVENTOS") and idFilter == 6 then
-			url = settings.url .. "api/getAllDeal/format/json/idApp/" .. settings.idApp .. "/city/" .. settings.city .. "/language/" .. leng
+        url = url.."api/getFilter/format/json/idApp/" .. settings.idApp .. "/idFilter/" .. idFilter .. "/type/" .. typeF .. "/language/" .. leng
+		
+        if typeF == 1 and idFilter == 0 then
+			--url = settings.url .. "api/getAllEvent/format/json/idApp/" .. settings.idApp .. "/language/" .. leng
+			url = settings.url .. "api/getAllEvent/format/json/idApp/" .. settings.idApp  .. "/language/" .. leng
+		elseif not (typeF == 1) and idFilter == 6 then
+			url = settings.url .. "api/getAllDeal/format/json/idApp/" .. settings.idApp .. "/language/" .. leng
 		end
 		
         local function callback(event)
@@ -662,7 +660,7 @@ local RestManager = {}
 	RestManager.getDealsRedimir = function()
 		settings = DBManager.getSettings()
 		
-		local url = settings.url .. "api/getDealsRedimir/format/json/idApp/" .. settings.idApp .. "/city/" .. settings.city 
+		local url = settings.url .. "api/getDealsRedimir/format/json/idApp/" .. settings.idApp
 		url = url.. "/language/" .. leng
 	   local function callback(event)
             if ( event.isError ) then
@@ -743,5 +741,31 @@ local RestManager = {}
 		-- Do request
 		network.request( url, "GET", callback )
 	end
+	
+	--Cambia la ciudad del usuario
+	RestManager.changeUserCity = function(idCity)
+		settings = DBManager.getSettings()
+		
+		local url = settings.url .. "api/updateUserCity/format/json/idApp/" .. settings.idApp  .. "/cityId/"  .. idCity
+		local function callback(event)
+            if ( event.isError ) then
+            else
+				local data = json.decode(event.response)
+				if data.success == true then
+				else
+					--native.showAlert( "Go Deals", data.message, { "OK" })
+				end
+            end
+            return true
+		end
+		-- Do request
+		network.request( url, "GET", callback )
+	end
+	
+	RestManager.changeLanguageManager = function()
+		settings = DBManager.getSettings()
+		leng = settings.language
+	end
+	
 	
 return RestManager

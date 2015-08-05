@@ -52,19 +52,26 @@ function MenuLeft:new()
     local function changeCity( event )
         local t = event.target
         t.alpha = 1
-        transition.to( t, { alpha = .1, time = 200, transition = easing.outExpo, 
+        transition.to( t, { alpha = .9, time = 200, transition = easing.outExpo, 
             onComplete = function()
                 transition.to( t, { alpha = 1, time = 200, transition = easing.outExpo })
                 --transition.to( grpCity, { y = intH - 60, time = 800, transition = easing.outExpo } )
                 hideMenuLeft()
-                changeCityName(event.target)
+				if t.isTrue == 0 then
+					changeCityName(event.target)
+				end
+				
+				--rectCity[y]:setFillColor( .4 )
+				for y = 1, #rectCity, 1 do
+					rectCity[y]:setFillColor( .7 )
+					rectCity[y].isTrue = 0
+				end
+				t:setFillColor( .4 )
+				t.isTrue = 1
+                
             end 
         })
-		--rectCity[y]:setFillColor( .4 )
-		for y = 1, #rectCity, 1 do
-			rectCity[y]:setFillColor( .7 )
-		end
-		t:setFillColor( .4 )
+		
 		return true
     end
 	
@@ -72,19 +79,23 @@ function MenuLeft:new()
 		
 		local t = event.target
         t.alpha = 1
-        transition.to( t, { alpha = .1, time = 200, transition = easing.outExpo, 
+        transition.to( t, { alpha = .9, time = 200, transition = easing.outExpo, 
             onComplete = function()
                 transition.to( t, { alpha = 1, time = 200, transition = easing.outExpo })
                 --transition.to( grpCity, { y = intH - 60, time = 800, transition = easing.outExpo } )
                 hideMenuLeft()
-                changeLanguageName(event.target)
-            end 
+				if t.isTrue == 0 then
+					changeLanguageName(event.target)
+				end
+				for y = 1, #rectLanguage, 1 do
+					rectLanguage[y]:setFillColor( .7 )
+					rectLanguage[y].isTrue = 0
+				end
+				t:setFillColor( .4 )
+				t.isTrue = 1
+			end 
         })
 		
-		for y = 1, #rectLanguage, 1 do
-			rectLanguage[y]:setFillColor( .7 )
-		end
-		t:setFillColor( .4 )
 		
 		return true
 		
@@ -327,11 +338,13 @@ function MenuLeft:new()
 			rectCity[y]:setFillColor( .7 )
 			rectCity[y].txtMin = items[y].name
 			rectCity[y].id = items[y].idCity
+			rectCity[y].isTrue = 0
 			rectCity[y]:addEventListener( "tap", changeCity )
 			grpCity:insert(rectCity[y])
 			
 			if tonumber(settings.city) == tonumber(items[y].idCity) then
 				rectCity[y]:setFillColor( .4 )
+				rectCity[y].isTrue = 1
 			end
             
             txtCity = display.newText( {    
@@ -375,12 +388,14 @@ function MenuLeft:new()
 			rectLanguage[y] = display.newRect(  display.contentCenterX - 80, lastY, 400, 60 )
 			rectLanguage[y]:setFillColor( .7 )
 			rectLanguage[y].txtMin = LanguageSub[y]
+			rectLanguage[y].isTrue = 0
 			--rectLanguage[y].id = items[y].idCity
 			rectLanguage[y]:addEventListener( "tap", changeLanguage )
 			grpLanguage:insert(rectLanguage[y])
 			
 			if settings.language == LanguageSub[y]  then
 				rectLanguage[y]:setFillColor( .4 )
+				rectLanguage[y].isTrue = 1
 			end
             
             txtLanguage = display.newText( {    

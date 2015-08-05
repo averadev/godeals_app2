@@ -817,6 +817,8 @@ function changeLanguageName(items)
 	
 	RestManager.changeLanguageManager()
 	
+	RestManager.changeLanguageAds()
+	
 	storyboard.gotoScene( "src.HomeWhite")
 	
 	Globals.scene = nil

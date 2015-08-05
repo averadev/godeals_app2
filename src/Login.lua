@@ -17,10 +17,11 @@ local DBManager = require('src.resources.DBManager')
 local crypto = require( "crypto" )
 local scene = storyboard.newScene()
 
-local leng = system.getPreference( "locale", "language" )
+local setting = DBManager.getSettings()
+
 Globals.language = require('src.resources.Language')
-leng = "es"
-if leng == "es" then
+--leng = "es"
+if setting.language == "es" then
 	Globals.language = Globals.language.es
 else
 	Globals.language = Globals.language.en
@@ -38,8 +39,6 @@ local fbAppID = "750089858383563"
 local txtSignEmail, txtSignPass, txtCreateEmail, txtCreatePass, txtCreateRePass
 local imgLogo, groupBtn, groupSign, groupCreate, loadingGrp, loadingL
 local hBar = display.topStatusBarContentHeight
-
-local setting = DBManager.getSettings()
 
 ---------------------------------------------------------------------------------
 -- LISTENERS

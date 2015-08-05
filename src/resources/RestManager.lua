@@ -27,7 +27,6 @@ local RestManager = {}
             else
 				local data = json.decode(event.response)
                 if data.success then
-					print(data.items[1].name)
                     setElements(data.items)
 					loadImageLogos({posc = 1, screen = 'MainScreen'})
                 end
@@ -175,7 +174,7 @@ local RestManager = {}
     RestManager.getBeacons = function() --falta
 		settings = DBManager.getSettings()
         local url = settings.url .. "api/getBeacons/format/json/" .. "/language/" .. leng
-
+		
         local function callback(event)
             if ( event.isError ) then
             else
@@ -765,6 +764,22 @@ local RestManager = {}
 	RestManager.changeLanguageManager = function()
 		settings = DBManager.getSettings()
 		leng = settings.language
+	end
+	
+	RestManager.changeLanguageAds = function()
+		settings = DBManager.getSettings()
+        local url = settings.url .. "api/getBeacons/format/json/" .. "/language/" .. leng
+		
+        local function callback(event)
+            if ( event.isError ) then
+            else
+                local data = json.decode(event.response)
+                DBManager.updateBeaconsMSG(data.items)
+            end
+            return true
+        end
+        -- Do request
+        network.request( url, "GET", callback )
 	end
 	
 	

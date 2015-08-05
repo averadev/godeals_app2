@@ -220,6 +220,28 @@ local dbManager = {}
 		closeConnection( )
 		return 1
 	end
+	
+	dbManager.updateBeaconsMSG = function(items)
+	
+		openConnection( )
+		
+		for row in db:nrows("SELECT id FROM ads;") do
+            for z = 1, #items, 1 do 
+                if items[z] then
+                    if tonumber(items[z].id) == tonumber(row.id) then
+                        --items[z] = nil;
+						--print(items[z].message)
+						local query = "UPDATE ads SET message = '" .. items[z].message .. "' where id = '" .. items[z].id .."';"
+						db:exec( query )
+                    end
+                end
+            end
+		end
+		
+		closeConnection( )
+		return 1
+		
+	end	
 
     dbManager.isNotification = function()
 		openConnection( )

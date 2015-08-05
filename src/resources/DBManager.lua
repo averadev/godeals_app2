@@ -336,7 +336,7 @@ local dbManager = {}
 			local query = "ALTER TABLE config ADD COLUMN language TEXT;"
             db:exec( query )
 			local leng = system.getPreference( "locale", "language" )
-			leng = "es"
+			--leng = "es"
 			local query = "UPDATE config SET language = '" .. leng .. "';"
 			db:exec( query )
 		end

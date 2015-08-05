@@ -352,7 +352,7 @@ local dbManager = {}
 		end
 		
 		local leng = system.getPreference( "locale", "language" )
-		leng = "es"
+		--leng = "es"
         
         -- Populate config
         --query = "INSERT INTO config VALUES (1, 0, '', '', '', '', 0, 'http://godeals.mx/admin/',1,1,'',0,'" .. leng .. "');"

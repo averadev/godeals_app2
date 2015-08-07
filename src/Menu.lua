@@ -93,6 +93,7 @@ function MenuLeft:new()
 				end
 				t:setFillColor( .4 )
 				t.isTrue = 1
+				deleteMenuLeft()
 			end 
         })
 		
@@ -115,7 +116,7 @@ function MenuLeft:new()
 	local function ShowRedeemCode( event )
 		local t = event.target
         t.alpha = .5
-        transition.to( t, { alpha = .05, time = 200, transition = easing.outExpo, 
+        transition.to( t, { alpha = 1, time = 200, transition = easing.outExpo, 
             onComplete = function()
                 hideMenuLeft()
 				showCode()
@@ -261,7 +262,7 @@ function MenuLeft:new()
             width = 100, height = 30,
             font = "Lato-Bold",  fontSize = 14, align = "center"
         })
-        txtMenu2:setFillColor( .5 )
+       -- txtMenu2:setFillColor( .5 )
 		selfL:insert(txtMenu2)
         local txtMenu3 = display.newText( {
             text = Globals.language.menuTxtMenu3,

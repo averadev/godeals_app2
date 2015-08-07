@@ -17,6 +17,7 @@ local RestManager = require('src.resources.RestManager')
 local DBManager = require('src.resources.DBManager')
 local Sprites = require('src.resources.Sprites')
 local widget = require( "widget" )
+local notifications = require( "plugin.notifications" )
 local scene = storyboard.newScene()
 
 -- Variables
@@ -26,7 +27,7 @@ local midW = display.contentCenterX
 local midH = display.contentCenterY
 
 local h = display.topStatusBarContentHeight
-local lastY = 200
+local lastY = 150
 
 --[[local toolbar, menu
 local groupMenu, groupEvent, groupMenuEventText, grpRedem
@@ -63,15 +64,15 @@ end
 
 --redime el codigo
 function changeCodeC( event )
-	--RestManager.redeemCodePromoter('456')
-	if txtFieldReedirCode.text ~= '' or txtFieldReedirCode.text ~= " " then
+	RestManager.redeemCodePromoter('awdwd')
+	--[[if txtFieldReedirCode.text ~= '' or txtFieldReedirCode.text ~= " " then
 		RestManager.redeemCodePromoter(txtFieldReedirCode.text)
 		txtFieldReedirCode.text = ''
 	else
 		--native.showAlert( "Go Deals", 'Campo vacio. Ingrese un codigo de deals', { "OK" })
 		showTextErrorCode(Globals.language.codeTextErrorCode)
 	end
-	native.setKeyboardFocus(nil)
+	native.setKeyboardFocus(nil)]]
 end
 	
 -- Descargar Deal
@@ -122,6 +123,8 @@ function showDealsRedeem()
 	sprite:play()
         
 	transition.to( groupDownloadCode, { alpha = 0, time = 400, delay = 2000, transition = easing.outExpo } )
+	
+	RestManager.getNotificationsUnRead()
         
 	return true
 end
@@ -185,7 +188,19 @@ function scene:createScene( event )
 	txtFieldReedirCode:setReturnKey(  "send"  )
 	codeScreen:insert(txtFieldReedirCode)
 	
-	lastY = lastY + 150
+	lastY = lastY + 60
+	
+	txtErrorReedirCode = display.newText({
+		text = "",
+		x = midW + 20, y = lastY,
+		width = 400,
+		font = "Lato-Regular", fontSize = 18, align = "left"
+	})
+	txtErrorReedirCode:setFillColor( 0 )
+	txtErrorReedirCode:setFillColor( 1, 0, 0 )
+	codeScreen:insert(txtErrorReedirCode)
+	
+	lastY = lastY + 70
 	
 	rctBtnRC = display.newRoundedRect( 240, lastY, 210, 55, 5 )
 	--rctBtn.idCoipon = itemObj.id
@@ -211,18 +226,6 @@ function scene:createScene( event )
 	txtBtnRC:setFillColor( 1 )
 	codeScreen:insert(txtBtnRC)
 	
-	txtErrorReedirCode = display.newText({
-		text = "",
-		x = midW + 20, y = lastY - 80,
-		width = 400,
-		font = "Lato-Regular", fontSize = 18, align = "left"
-	})
-	txtErrorReedirCode:setFillColor( 0 )
-	txtErrorReedirCode:setFillColor( 1, 0, 0 )
-	codeScreen:insert(txtErrorReedirCode)
-
-	
-    
 end
 
 -- Called immediately after scene has moved onscreen:
@@ -233,6 +236,7 @@ end
 
 -- Remove Listener
 function scene:exitScene( event )
+	native.setKeyboardFocus(nil)
 end
 
 scene:addEventListener("createScene", scene )

@@ -4,6 +4,7 @@ local intH = display.contentHeight
 local midW = display.contentWidth / 2
 local midH = display.contentHeight / 2
 local h = display.topStatusBarContentHeight
+local DBManager = require('src.resources.DBManager')
 
 local btnCirCle = {}
 
@@ -13,6 +14,9 @@ local groupTutorial = {}
 
 local txtTutorial = {"img/bgk/app_tutorial1.png", "img/bgk/app_tutorial2.png", "img/bgk/app_tutorial3.png",
                      "img/bgk/app_tutorial4.png", "img/bgk/app_tutorial5.png", "img/bgk/app_tutorial6.png"}
+					 
+local txtTutorial_en = {"img/bgk/app_tutorial1_en.png", "img/bgk/app_tutorial2_en.png", "img/bgk/app_tutorial3_en.png",
+                     "img/bgk/app_tutorial4_en.png", "img/bgk/app_tutorial5_en.png", "img/bgk/app_tutorial6_en.png"}
 
 local bgTutorial = nil
 
@@ -81,7 +85,16 @@ function createTutorial(self)
 		groupTutorial[y].alpha = 0
 		self:insert(groupTutorial[y])
 		
-		local imgTutorial = display.newImage( txtTutorial[y] )
+		local settings = DBManager.getSettings()
+		
+		local imgTutorial
+		
+		if settings.language == 'es' then
+			imgTutorial = display.newImage( txtTutorial[y] )
+		else
+			imgTutorial = display.newImage( txtTutorial_en[y] )
+		end
+		
 		imgTutorial.x = midW
 		imgTutorial.y = midH
 		imgH = imgTutorial.contentHeight

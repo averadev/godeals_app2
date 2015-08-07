@@ -345,7 +345,14 @@ function scene:createScene( event )
     groupCreate.x = 480
         
     -- Buttons
-    local btnFB = display.newImage("img/btn/facebook_login.png", true) 
+    local btnFB
+	
+	if setting.language == "es" then
+		btnFB = display.newImage("img/btn/facebook_login.png", true)
+	else
+		btnFB = display.newImage("img/btn/facebook_login_en.png", true)
+	end
+	
 	btnFB.x = midW
 	btnFB.y = midH - 40
 	groupBtn:insert(btnFB)

@@ -433,6 +433,7 @@ function Header:new()
 	end
 	
 	function createNotBubble(totalBubble)
+	
         local tTxt = #Globals.txtBubble + 1
 	
 		Globals.notBubble[tTxt] = display.newCircle( 270, 20, 10 )
@@ -447,14 +448,27 @@ function Header:new()
         Globals.txtBubble[tTxt]:setFillColor( 1 )
         grpTool:insert(Globals.txtBubble[tTxt])
 		
-		if #Globals.txtBubble > 0 then
-			Globals.txtBubble[tTxt].text = Globals.txtBubble[1].text
+		for i=1, tTxt, 1 do
+		
+			Globals.txtBubble[i] = display.newText( {
+				x = 272, y = 20,
+				text = totalBubble, font = "Lato-Regular", fontSize = 12,
+			})
+			Globals.txtBubble[i]:setFillColor( 1 )
+			grpTool:insert(Globals.txtBubble[i])
+			
+			if #Globals.txtBubble > 0 then
+				Globals.txtBubble[i].text = Globals.txtBubble[1].text
+			end
+		
+			if Globals.txtBubble[1].text == nil then
+				Globals.notBubble[i]:removeSelf()
+				Globals.txtBubble[i]:removeSelf()
+			end
+			
 		end
 		
-		if Globals.txtBubble[1].text == nil then
-			Globals.notBubble[tTxt]:removeSelf()
-			Globals.txtBubble[tTxt]:removeSelf()
-		end
+		
 	end
 	
 	function onTxtFocusSearch(event)
@@ -638,21 +652,46 @@ function Header:new()
         line4.alpha = .1
 		grpTool:insert(line4)
         local bgToolB = display.newRect( 237, 40, 95, 80 )
-        bgToolB:setFillColor( .15 )
+        --bgToolB:setFillColor( .15 )
+		bgToolB:setFillColor( .1 )
+		bgToolB.alpha = .1
         grpTool:insert(bgToolB)
         local bgToolD = display.newRect( 332, 40, 95, 80 )
-        bgToolD:setFillColor( 50/255, 150/255, 0 )
+        --bgToolD:setFillColor( 50/255, 150/255, 0 )
+		bgToolD:setFillColor( .1 )
+		bgToolD.alpha = .1
         grpTool:insert(bgToolD)
+		
+		local iconTool2, iconTool3, iconTool4
+		
+		--cambiamos el icono para mostrar que pantalla esta selecionado
+		if storyboard.getCurrentSceneName() == "src.Mapa" then
+			iconTool2 = display.newImage( "img/btn/iconTool2Focus.png" )
+		else
+			iconTool2 = display.newImage( "img/btn/iconTool2.png" )
+		end
+			
+		if storyboard.getCurrentSceneName() == "src.Notifications" then
+			iconTool3 = display.newImage( "img/btn/iconTool3Focus.png" )
+		else
+			iconTool3 = display.newImage( "img/btn/iconTool3.png" )
+		end
+		
+		if storyboard.getCurrentSceneName() == "src.Wallet" then
+			iconTool4 = display.newImage( "img/btn/iconTool4Focus.png" )
+		else
+			iconTool4 = display.newImage( "img/btn/iconTool4.png" )
+		end
         
-        local iconTool2 = display.newImage( "img/btn/iconTool2.png" )
+        --icon2
         iconTool2:translate( 142, 35 )
 		iconTool2:addEventListener("tap",showMap)
         grpTool:insert(iconTool2)
-        local iconTool3 = display.newImage( "img/btn/iconTool3.png" )
+        --icon 3
         iconTool3:translate( 237, 35 )
 		iconTool3:addEventListener("tap",showNotifications)
         grpTool:insert(iconTool3)
-        local iconTool4 = display.newImage( "img/btn/iconTool4.png" )
+		--icon4
         iconTool4:translate( 332, 35 )
 		iconTool4:addEventListener("tap",showWallet)
         grpTool:insert(iconTool4)
@@ -660,6 +699,8 @@ function Header:new()
         iconTool5:translate( 425, 37 )
 		iconTool5:addEventListener("tap",showSearch)
         self:insert(iconTool5)
+		
+		print(storyboard.getCurrentSceneName())
         
         local txtTool2 = display.newText( {
             x = 142, y = 65,
@@ -705,6 +746,12 @@ function Header:new()
 		--verificamos notificaciones
 		RestManager.getNotificationsUnRead()
     end
+	
+	function deleteMenuLeft()
+		menuScreenLeft:removeSelf()
+		menuScreenLeft = MenuLeft:new()
+		menuScreenLeft:builScreenLeft()
+	end
     
     -- Creamos la pantalla del menu
     function self:buildWifiBle()

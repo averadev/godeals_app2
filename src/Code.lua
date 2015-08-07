@@ -64,15 +64,15 @@ end
 
 --redime el codigo
 function changeCodeC( event )
-	RestManager.redeemCodePromoter('awdwd')
-	--[[if txtFieldReedirCode.text ~= '' or txtFieldReedirCode.text ~= " " then
+	--RestManager.redeemCodePromoter('awdwd')
+	if txtFieldReedirCode.text ~= '' or txtFieldReedirCode.text ~= " " then
 		RestManager.redeemCodePromoter(txtFieldReedirCode.text)
 		txtFieldReedirCode.text = ''
 	else
 		--native.showAlert( "Go Deals", 'Campo vacio. Ingrese un codigo de deals', { "OK" })
 		showTextErrorCode(Globals.language.codeTextErrorCode)
 	end
-	native.setKeyboardFocus(nil)]]
+	native.setKeyboardFocus(nil)
 end
 	
 -- Descargar Deal

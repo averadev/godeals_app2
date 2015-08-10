@@ -20,6 +20,10 @@ local RestManager = {}
     end
 	
 	RestManager.getRecommended = function()
+	
+		--print(urlencode('la013282@gmail.com'))
+		password = crypto.digest(crypto.md5, '123')
+		print(password)
 		settings = DBManager.getSettings()
 		local url = settings.url .. "api/getRecommended/format/json/idApp/" .. settings.idApp .. "/city/" .. settings.city .. "/language/" .. leng
 	   local function callback(event)
@@ -286,8 +290,18 @@ local RestManager = {}
         url = url.."/name/"..urlencode(name)
         url = url.."/fbId/"..fbId
 		url = url.."/birthday/"..urlencode(birthday)
-		url = url.."/mac/"..mac
+		--url = url.."/mac/"..mac
+		--url = url.."/idDevice/" .. idDeviceIOS
 		url = url.."/language/" .. leng
+		
+		local platformName = system.getInfo( "platformName" )
+		local idDeviceIOS = ""
+		if platformName == "iPhone OS" then
+			idDeviceIOS = system.getInfo( "deviceID" )
+			url = url.."/idDevice/" .. idDeviceIOS
+		else
+			url = url.."/mac/".. mac
+		end
         
         local function callback(event)
             if ( event.isError ) then
@@ -307,7 +321,12 @@ local RestManager = {}
         network.request( url, "GET", callback ) 
     end
 	
-	RestManager.validateUser = function(email, password)
+	RestManager.validateUser = function(email, password, mac)
+	
+		--native.showAlert( "Go Deals", mac, { "OK"})
+		
+		print(mac .. 'aaaaa')
+	
         local settings = DBManager.getSettings()
         -- Set url
         password = crypto.digest(crypto.md5, password)
@@ -316,7 +335,20 @@ local RestManager = {}
         url = url.."/idApp/"..settings.idApp
         url = url.."/email/"..urlencode(email)
         url = url.."/password/"..password
+		--url = url.."/mac/".. mac
+		--url = url.."/idDevice/" .. idDeviceIOS
 		url = url.."/language/" .. leng
+		
+		local platformName = system.getInfo( "platformName" )
+		local idDeviceIOS = ""
+		if platformName == "iPhone OS" then
+			idDeviceIOS = system.getInfo( "deviceID" )
+			url = url.."/idDevice/" .. idDeviceIOS
+		else
+			url = url.."/mac/".. mac
+		end
+		
+		
     
         local function callback(event)
             if ( event.isError ) then

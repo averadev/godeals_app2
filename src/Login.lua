@@ -170,7 +170,13 @@ function doCreate()
        -- showLoadLogin()
         backTxtPositions()
 		
-        RestManager.createUser(txtCreateEmail.text, txtCreatePass.text, '', '', '')
+		local mac = ""
+		if getBeacon then
+			local macAd = getBeacon.getMacAddress()
+			mac = crypto.digest( crypto.md5, macAd )
+		end
+		
+        RestManager.createUser(txtCreateEmail.text, txtCreatePass.text, '', '', '', mac)
     end
 end
 
@@ -180,7 +186,12 @@ function doSignIn()
     elseif networkConnectionL() then
        -- showLoadLogin()
         backTxtPositions()
-        RestManager.validateUser(txtSignEmail.text, txtSignPass.text)
+		local mac = ""
+		if getBeacon then
+			local macAd = getBeacon.getMacAddress()
+			mac = crypto.digest( crypto.md5, macAd )
+		end
+        RestManager.validateUser(txtSignEmail.text, txtSignPass.text, mac)
     end 
 end
 

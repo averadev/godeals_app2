@@ -339,6 +339,7 @@ local dbManager = {}
 			--leng = "es"
 			local query = "UPDATE config SET language = '" .. leng .. "';"
 			db:exec( query )
+			oldVersion = false
 		end
 
         -- Return if have connection

@@ -322,9 +322,9 @@ function MenuLeft:new()
         MenuLeftCiudad:addEventListener( "tap", getCities )
 		grpCity:insert(MenuLeftCiudad)
         
-        --[[local icoMenuCity = display.newImage( "img/btn/icoMenuCity.png" )
+        local icoMenuCity = display.newImage( "img/btn/CAMBIAR-CIUDAD.png" )
         icoMenuCity:translate( 320, 30)
-        grpCity:insert(icoMenuCity)]]
+        grpCity:insert(icoMenuCity)
         
         titleLeft = display.newText( {    
             x = 150, y = 32, align = "left", width = 300,
@@ -372,6 +372,10 @@ function MenuLeft:new()
 		MenuLeftLanguage:setFillColor( 50/255, 150/255, 0 )
         MenuLeftLanguage:addEventListener( "tap", getLanguage )
 		grpLanguage:insert(MenuLeftLanguage)
+		
+		local icoMenuLanguage = display.newImage( "img/btn/IDIOMA.png" )
+        icoMenuLanguage:translate( 320, 30)
+        grpLanguage:insert(icoMenuLanguage)
         
         titleLanguageLeft = display.newText( {    
             x = 150, y = 32, align = "left", width = 300,

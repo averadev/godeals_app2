@@ -156,6 +156,8 @@ function scene:createScene( event )
     })
     txtPartner:setFillColor( 0 )
     svMessage:insert(txtPartner)
+	
+	print(itemObj.fechaFormat)
 
     local txtFecha = display.newText( {
         text = itemObj.fechaFormat,     

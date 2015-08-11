@@ -74,6 +74,41 @@ function setFilterDeals(items)
 	Globals.filterDeals = items
 end
 
+--funcion que entra cuando no se encuentran deals cupones
+function getNoItemsHome(src)
+
+	local imgNoItemsHome = display.newImage( "img/btn/noData.png" )
+	imgNoItemsHome.x = display.contentWidth / 2
+	imgNoItemsHome.y = intH/3.7
+		
+	local txtNoItemsHome = display.newText( {
+		--text = Globals.language.homeNoFilterEvent, 
+		text = "No items",		
+		x = intW/2, y = intH/2.5,
+		width = intW,
+		font = "Lato-Regular",  fontSize = 16, align = "center"
+	})
+	txtNoItemsHome:setFillColor( 0 )
+	
+	if src == "home" then
+		groupInicio:insert(txtNoItemsHome)
+		groupInicio:insert(imgNoItemsHome) 
+		txtNoItemsHome.text = Globals.language.homeNoItemsHome
+	elseif src == "deals" then
+		groupDeals:insert(txtNoItemsHome)
+		groupDeals:insert(imgNoItemsHome) 
+		txtNoItemsHome.text = Globals.language.homeNoItemsDeals
+	elseif src == "events" then
+		groupEvent:insert(txtNoItemsHome)
+		groupEvent:insert(imgNoItemsHome) 
+		txtNoItemsHome.text = Globals.language.homeNoItemsEvents
+	end
+	
+	
+	endLoading()
+	
+end
+
 ---------------------------------------------------------------------------------
 -- FUNCIONES
 ---------------------------------------------------------------------------------

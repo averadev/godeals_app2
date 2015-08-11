@@ -20,19 +20,18 @@ local RestManager = {}
     end
 	
 	RestManager.getRecommended = function()
-	
-		--print(urlencode('la013282@gmail.com'))
-		password = crypto.digest(crypto.md5, '123')
-		print(password)
+		
 		settings = DBManager.getSettings()
 		local url = settings.url .. "api/getRecommended/format/json/idApp/" .. settings.idApp .. "/city/" .. settings.city .. "/language/" .. leng
 	   local function callback(event)
             if ( event.isError ) then
             else
 				local data = json.decode(event.response)
-                if data.success then
+                if data.success and #data.items > 0 then
                     setElements(data.items)
 					loadImageLogos({posc = 1, screen = 'MainScreen'})
+				else
+					getNoItemsHome('home')
                 end
             end
             return true
@@ -69,10 +68,14 @@ local RestManager = {}
             if ( event.isError ) then
             else
 				local data = json.decode(event.response)
-                if data.success and #data.items > 0 then
-                    setElements(data.items)
-					setFilterEvent(data.filter)
-					loadImage({posc = 1, screen = 'EventPanel'})
+                if data.success then
+					if #data.items > 0 then
+						setElements(data.items)
+						setFilterEvent(data.filter)
+						loadImage({posc = 1, screen = 'EventPanel'})
+					else
+						getNoItemsHome('events')
+					end
                 end
             end
             return true
@@ -89,9 +92,13 @@ local RestManager = {}
             else
 				local data = json.decode(event.response)
                 if data.success then
-                    setElements(data.items)
-					setFilterDeals(data.filter)
-					loadImage({posc = 1, screen = 'DealPanel'})
+					if #data.items > 0 then
+						setElements(data.items)
+						setFilterDeals(data.filter)
+						loadImage({posc = 1, screen = 'DealPanel'})
+					else
+						getNoItemsHome('deals')
+					end
                 end
             end
             return true
@@ -281,6 +288,8 @@ local RestManager = {}
         --local settings = DBManager.getSettings()
         -- Set url
 		
+		print(mac)
+		
 		settings = DBManager.getSettings()
         password = crypto.digest(crypto.md5, password)
         local url = settings.url
@@ -300,8 +309,10 @@ local RestManager = {}
 			idDeviceIOS = system.getInfo( "deviceID" )
 			url = url.."/idDevice/" .. idDeviceIOS
 		else
-			url = url.."/mac/".. mac
+			url = url.."/mac/"..mac
 		end
+		
+		print(url)
         
         local function callback(event)
             if ( event.isError ) then

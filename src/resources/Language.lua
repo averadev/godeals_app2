@@ -25,6 +25,9 @@ Language.es = {
 	homeNoFilterEvent = "Eventos con el filtro no disponible",
 	homeNoFilterDeals = "Deals con el filtro no disponible",
 	homeNoConection = "¡conexión no disponible, intentelo de nuevo!",
+	homeNoItemsHome = "En estos momentos no hay Deals disponibles",
+	homeNoItemsDeals = "En estos momentos no hay Deals disponibles",
+	homeNoItemsEvents = "En estos momentos no hay Eventos disponibles",
 	--buildRow
 	buildMSGOf = "De: ",
 	buildMSGSubject = "Asunto: ",
@@ -165,6 +168,9 @@ Language.en = {
 	homeNoFilterEvent = "No upcoming events available",
 	homeNoFilterDeals = "No deals available ",
 	homeNoConection = "¡Connection has failed, please try again later!",
+	homeNoItemsHome = "There are no Deals available at the moment",
+	homeNoItemsDeals = "There are no Deals available at the moment",
+	homeNoItemsEvents = "There are no Events available at this moment",
 	--buildRow
 	buildMSGOf = "From: ",
 	buildMSGSubject = "Subject",

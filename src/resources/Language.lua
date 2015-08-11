@@ -215,8 +215,8 @@ Language.en = {
 	dealsTxtBtnTired= "RUN OUT",
 	--event
 	eventTxtGeneralInformacion = "Additional information: ",
-	eventTxtAdditionalInformation = "Check location on map",
-	--
+	--eventTxtAdditionalInformation = "Check location on map",
+	eventTxtAdditionalInformation = "View on map",
 	--menu
 	menuTxtMenu1 = "Tutorial",
 	menuTxtMenu2 = "Gift code",

@@ -288,7 +288,14 @@ local RestManager = {}
         --local settings = DBManager.getSettings()
         -- Set url
 		
-		print(mac)
+		if birthday == "" then
+			birthday = " "
+		end
+		
+		if fbId == "" then
+			fbId = " "
+			fbId = urlencode(fbId)
+		end
 		
 		settings = DBManager.getSettings()
         password = crypto.digest(crypto.md5, password)
@@ -312,7 +319,7 @@ local RestManager = {}
 			url = url.."/mac/"..mac
 		end
 		
-		print(url)
+		--print(url)
         
         local function callback(event)
             if ( event.isError ) then

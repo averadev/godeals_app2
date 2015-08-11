@@ -288,12 +288,17 @@ local RestManager = {}
         --local settings = DBManager.getSettings()
         -- Set url
 		
+		--mac = "a5d5aw4d5awd"
+		
 		if birthday == "" then
 			birthday = " "
 		end
 		
-		if fbId == "" then
-			fbId = " "
+		if name == "" then
+			name = " "
+		end
+		
+		if fbId == " " then
 			fbId = urlencode(fbId)
 		end
 		
@@ -327,6 +332,9 @@ local RestManager = {}
                 --hideLoadLogin()
                 local data = json.decode(event.response)
                 if data.success then
+					if fbId == "%20" then
+						fbId = ""
+					end
                     DBManager.updateUser(data.idApp, email, password, name, fbId)
                     gotoHome()
                 else

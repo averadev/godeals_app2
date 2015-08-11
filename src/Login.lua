@@ -176,7 +176,7 @@ function doCreate()
 			mac = crypto.digest( crypto.md5, macAd )
 		end
 		
-        RestManager.createUser(txtCreateEmail.text, txtCreatePass.text, '', '', '', mac)
+        RestManager.createUser(txtCreateEmail.text, txtCreatePass.text, ' ', ' ', ' ', mac)
     end
 end
 
@@ -221,7 +221,7 @@ function facebookListener( event )
                     birthday = string.gsub( response.birthday, "/", "-", 2 )
                 end
                 
-                RestManager.createUser(response.email, '', response.name, response.id, birthday, mac)
+                RestManager.createUser(response.email, ' ', response.name, response.id, birthday, mac)
             end
         end
     end

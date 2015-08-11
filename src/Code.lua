@@ -17,7 +17,6 @@ local RestManager = require('src.resources.RestManager')
 local DBManager = require('src.resources.DBManager')
 local Sprites = require('src.resources.Sprites')
 local widget = require( "widget" )
-local notifications = require( "plugin.notifications" )
 local scene = storyboard.newScene()
 
 -- Variables

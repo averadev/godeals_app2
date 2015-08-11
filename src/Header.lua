@@ -496,7 +496,7 @@ function Header:new()
 		print(#Globals.scene)
 	
         -- Obtenemos escena anterior y eliminamos del arreglo
-        if #Globals.scene > 1 then
+        if #Globals.scene > 2 then
 			
             local previousScene = Globals.scene[#Globals.scene - 1]
 			local currentScene = Globals.scene[#Globals.scene]

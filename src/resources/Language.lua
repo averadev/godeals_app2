@@ -31,7 +31,8 @@ Language.es = {
 	--buildRow
 	buildMSGOf = "De: ",
 	buildMSGSubject = "Asunto: ",
-	buildDownloads = "DESCARGADO",
+	buildDownloads = "DESCARGAR",
+	buildDownloadeds = "DESCARGADO",
 	buildRedeemed = "REDIMIDO",
 	buildShared = "COMPARTIDO",
 	buildAvailable = " Disponibles",
@@ -174,7 +175,8 @@ Language.en = {
 	--buildRow
 	buildMSGOf = "From: ",
 	buildMSGSubject = "Subject",
-	buildDownloads = "DOWNLOADED",
+	buildDownloads = "DOWNLOAD",
+	buildDownloadeds = "DOWNLOADED",
 	buildRedeemed = "REDEEMED", --
 	buildShared = "SHARED",	--
 	buildAvailable = " Available",

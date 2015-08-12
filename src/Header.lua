@@ -651,7 +651,7 @@ function Header:new()
         local line4 = display.newRect( 380, 40, 1, 80)
         line4.alpha = .1
 		grpTool:insert(line4)
-        local bgToolB = display.newRect( 237, 40, 95, 80 )
+        --[[local bgToolB = display.newRect( 237, 40, 95, 80 )
         --bgToolB:setFillColor( .15 )
 		bgToolB:setFillColor( .1 )
 		bgToolB.alpha = .1
@@ -660,24 +660,43 @@ function Header:new()
         --bgToolD:setFillColor( 50/255, 150/255, 0 )
 		bgToolD:setFillColor( .1 )
 		bgToolD.alpha = .1
-        grpTool:insert(bgToolD)
+        grpTool:insert(bgToolD)]]
 		
 		local iconTool2, iconTool3, iconTool4
 		
 		--cambiamos el icono para mostrar que pantalla esta selecionado
 		if storyboard.getCurrentSceneName() == "src.Mapa" then
+			local bgToolTapBack = display.newRect( 142, 40, 95, 80 )
+			bgToolTapBack:setFillColor( 0 )
+			grpTool:insert(bgToolTapBack)
+			local bgToolTapFront = display.newRect( 142, 41, 87, 79 )
+			bgToolTapFront:setFillColor( .05 )
+			grpTool:insert(bgToolTapFront)
 			iconTool2 = display.newImage( "img/btn/iconTool2Focus.png" )
 		else
 			iconTool2 = display.newImage( "img/btn/iconTool2.png" )
 		end
 			
 		if storyboard.getCurrentSceneName() == "src.Notifications" then
+			local bgToolTapBack = display.newRect( 237, 40, 95, 80 )
+			bgToolTapBack:setFillColor( 0 )
+			grpTool:insert(bgToolTapBack)
+			local bgToolTapFront = display.newRect( 237, 41, 87, 79 )
+			bgToolTapFront:setFillColor( .05 )
+			grpTool:insert(bgToolTapFront)
 			iconTool3 = display.newImage( "img/btn/iconTool3Focus.png" )
 		else
 			iconTool3 = display.newImage( "img/btn/iconTool3.png" )
 		end
 		
 		if storyboard.getCurrentSceneName() == "src.Wallet" then
+			local bgToolTapBack = display.newRect( 333, 40, 95, 80 )
+			bgToolTapBack:setFillColor( 0 )
+			grpTool:insert(bgToolTapBack)
+		
+			local bgToolTapFront = display.newRect( 333, 41, 87, 79 )
+			bgToolTapFront:setFillColor( .05 )
+			grpTool:insert(bgToolTapFront)
 			iconTool4 = display.newImage( "img/btn/iconTool4Focus.png" )
 		else
 			iconTool4 = display.newImage( "img/btn/iconTool4.png" )
@@ -699,8 +718,6 @@ function Header:new()
         iconTool5:translate( 425, 37 )
 		iconTool5:addEventListener("tap",showSearch)
         self:insert(iconTool5)
-		
-		print(storyboard.getCurrentSceneName())
         
         local txtTool2 = display.newText( {
             x = 142, y = 65,

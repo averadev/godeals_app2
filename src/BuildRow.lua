@@ -436,8 +436,9 @@ function Deal:new()
                 imgBtnDown.grad = imgBtnShareB
                 container:insert(imgBtnShareB)
             else
+				print('asdasdasdsd')
                 if item.status == "1" then
-                    lbStatus = Globals.language.buildDownloads
+                    lbStatus = Globals.language.buildDownloadeds
                 elseif item.status == "2" then
                     lbStatus = Globals.language.buildRedeemed
                 elseif item.status == "3" then
@@ -609,7 +610,7 @@ function DealMain:new()
             container:insert(imgBtnShareB)
         else
             if item.status == "1" then
-                lbStatus = Globals.language.buildDownloads
+                lbStatus = Globals.language.buildDownloadeds
             elseif item.status == "2" then
                 lbStatus = Globals.language.buildRedeemed
             elseif item.status == "3" then

@@ -8,6 +8,7 @@ display.setStatusBar( display.DarkStatusBar )
 
 local storyboard = require "storyboard"
 local DBManager = require('src.resources.DBManager')
+local Globals = require('src.resources.Globals')
 
 local redimirObj;
 local platformName = system.getInfo( "platformName" )
@@ -15,6 +16,7 @@ if platformName == "iPhone OS" then
 	redimirObj = require( "plugin.redimir" )
 end
 local isUser = DBManager.setupSquema()
+local OneSignal = require("plugin.OneSignal")
 
 -------- BEGIN Verify is Beacon for Android --------
 local partnerId = 0
@@ -79,8 +81,51 @@ end
 
 if partnerId == 0 then
     if isUser then
-        storyboard.gotoScene("src.Home")
+		storyboard.gotoScene("src.Home")
     else
         storyboard.gotoScene("src.Login")
     end
 end
+
+--se diapara cuando llega una notificacion
+-- This function gets called when the user opens a notification or one is received when the app is open and active.
+-- Change the code below to fit your app's needs.
+function DidReceiveRemoteNotification(message, additionalData, isActive)
+	--detecta si la app esta activa
+	if isActive then
+		system.vibrate()
+		local RestManager = require('src.resources.RestManager')
+		RestManager.getNotificationsUnRead()
+		require('src.Header')
+		alertNewNotifications()
+		system.vibrate()
+		
+	else
+		if (additionalData) then
+			if additionalData.type == "1" then
+				local RestManager = require('src.resources.RestManager')
+				
+				storyboard.gotoScene( "src.Message", {
+					params = { item = additionalData.id }
+				})
+				RestManager.notificationRead(additionalData.id)
+				RestManager.getNotificationsUnRead()
+				--storyboard.removeScene( "src.Home" )
+			end
+		end
+	end
+end
+
+--iniciamos el plugin oneSignal
+-- Uncomment SetLogLevel to debug issues.
+-- OneSignal.SetLogLevel(4, 4)
+OneSignal.Init("9b847680-41de-11e5-8ecb-63a70d804e87", 386747265171, DidReceiveRemoteNotification)
+
+
+function IdsAvailable(playerID, pushToken)
+  --print("PLAYER_ID:" .. playerID)
+	Globals.playerIdToken = playerID
+end
+
+OneSignal.IdsAvailableCallback(IdsAvailable)
+

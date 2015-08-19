@@ -27,14 +27,19 @@ local menuScreenRight = nil
 local groupSearchTool = display.newGroup()
 local groupDownload
 modalActive = ""
+local groupNoBubble
+local notBubble = nil
+local txtNoBubble
 
 local btnBackFunction = false
 
 Header = {}
 
+local grpLoading
+
 function Header:new()
     -- Variables
-	local grpLoading
+	
     local isWifiBle = true
     local self = display.newGroup()
     local grpTool = display.newGroup()
@@ -51,6 +56,7 @@ function Header:new()
             Globals.noCallbackGlobal = Globals.noCallbackGlobal + 1
 			storyboard.removeScene( "src.Mapa" )
             storyboard.gotoScene( "src.Mapa", { time = 400, effect = "slideLeft", params = { itemObj = nil } })
+			moveNoBubbleLeft()
         end
     end
     
@@ -59,24 +65,28 @@ function Header:new()
         if storyboard.getCurrentSceneName() ~= "src.Home" then
             Globals.noCallbackGlobal = Globals.noCallbackGlobal + 1
             storyboard.gotoScene( "src.Home", { time = 400, effect = "slideLeft" })
+			moveNoBubbleLeft()
         end
     end
     
     -- Obtener cupones descargados
     function showWallet(event)
-       if storyboard.getCurrentSceneName() ~= "src.Wallet" then
+		if storyboard.getCurrentSceneName() ~= "src.Wallet" then
             Globals.noCallbackGlobal = Globals.noCallbackGlobal + 1
 			storyboard.removeScene( "src.Wallet" )
             storyboard.gotoScene( "src.Wallet", { time = 400, effect = "slideLeft" })
+			moveNoBubbleLeft()
         end
     end
     
     -- Obtener cupones descargados
     function showNotifications(event)
-        if storyboard.getCurrentSceneName() ~= "src.Notifications" then
+       if storyboard.getCurrentSceneName() ~= "src.Notifications" then
             Globals.noCallbackGlobal = Globals.noCallbackGlobal + 1
 			storyboard.removeScene( "src.Notifications" )
             storyboard.gotoScene( "src.Notifications", { time = 400, effect = "slideLeft" })
+			moveNoBubbleLeft()
+			
         end
     end
     
@@ -86,6 +96,7 @@ function Header:new()
             Globals.noCallbackGlobal = Globals.noCallbackGlobal + 1
 			storyboard.removeScene( "src.PartnerList" )
             storyboard.gotoScene( "src.PartnerList", { time = 400, effect = "slideLeft" })
+			moveNoBubbleLeft()
         end
     end
 	
@@ -94,7 +105,62 @@ function Header:new()
 			Globals.noCallbackGlobal = Globals.noCallbackGlobal + 1
 			storyboard.removeScene( "src.Code" )
 			storyboard.gotoScene( "src.Code", { time = 400, effect = "slideLeft" })
+			moveNoBubbleLeft()
 		end
+	end
+	
+	function moveNoBubbleLeft()
+		if notBubble then
+			transition.to( groupNoBubble, { x = -280, time = 400, transition = easing.outExpo, onComplete=function()
+					groupNoBubble.x = 0
+				end
+			})
+		end
+	end
+	
+	function moveNoBubbleRight()
+		if notBubble then
+			transition.to( groupNoBubble, { x = 500, time = 400, transition = easing.outExpo, onComplete=function()
+					groupNoBubble.x = 0
+				end
+			})
+		end
+	end
+	
+	function alertNewNotifications()
+		if not notBubble then
+			groupNoBubble = display.newGroup();
+			groupNoBubble.y = h
+		end
+			local iconToolNewNoti = display.newImage( "img/btn/iconTool3Focus.png" )
+			iconToolNewNoti:translate( 237, 35 )
+			groupNoBubble:insert(iconToolNewNoti)
+			iconToolNewNoti:toBack()
+			
+			local interation = 1
+			
+			iconToolNewNoti.alpha = 1
+			
+			timeMarker = timer.performWithDelay( 200, function(event)
+				
+				if interation%2 == 1 then
+					iconToolNewNoti.alpha = 0
+				else
+					iconToolNewNoti.alpha = 1
+				end
+				
+				if interation == 7 then
+					iconToolNewNoti:removeSelf()
+					if not notBubble then
+						groupNoBubble:removeSelf()
+					end
+				end
+				
+				interation = interation + 1
+				
+			end, 7 )
+			
+		
 	end
     
 	-- esconde la busqueda y el modal
@@ -383,6 +449,7 @@ function Header:new()
 	--mostramos el menu izquierdo
 	function showMenuLeft( event )
 		modalActive = 'MenuLeft'
+		if notBubble then groupNoBubble.x = 500 end
 		local screen = getScreen()
 		screen.alpha = .5
 		transition.to( screen, { x = 400, time = 400, transition = easing.outExpo } )
@@ -393,10 +460,14 @@ function Header:new()
 	--esconde el menuIzquierdo
 	function hideMenuLeft( event )
 		modalActive = ""
+		
 		local screen = getScreen()
 		screen.alpha = 1
 		transition.to( menuScreenLeft, { x = -480, time = 400, transition = easing.outExpo } )
 		transition.to( screen, { x = 0, time = 400, transition = easing.outExpo } )
+		if notBubble then 
+			transition.to( groupNoBubble, { x = 0, time = 400, transition = easing.outExpo } )
+		end
 		screen = nil
 		HideChangeCity()
 		return true
@@ -434,7 +505,43 @@ function Header:new()
 	
 	function createNotBubble(totalBubble)
 	
-        local tTxt = #Globals.txtBubble + 1
+		if totalBubble > 0 then
+		
+			if not notBubble then
+			
+				groupNoBubble = display.newGroup()
+				groupNoBubble.y = h
+				--groupNoBubble:insert(getScreen())
+			
+				notBubble = display.newCircle( 270, 17, 10 )
+				notBubble:setFillColor(.1,.5,.1)
+				notBubble.strokeWidth = 2
+				notBubble:setStrokeColor(.8)
+				groupNoBubble:insert(notBubble)
+			
+				txtNoBubble = display.newText( {
+					x = 271, y = 17,
+					text = totalBubble, font = "Lato-Regular", fontSize = 12,
+				})
+				txtNoBubble:setFillColor( 1 )
+				--txtNoBubble:toFront()
+				groupNoBubble:insert(txtNoBubble)
+			
+			else
+				txtNoBubble.text = totalBubble
+			end
+		else
+		
+			if notBubble then
+				groupNoBubble:removeSelf()
+				groupNoBubble = nil
+				notBubble = nil
+				txtNoBubble = nil
+			end
+		
+		end
+	
+        --[[local tTxt = #Globals.txtBubble + 1
 	
 		Globals.notBubble[tTxt] = display.newCircle( 270, 20, 10 )
         Globals.notBubble[tTxt]:setFillColor(.1,.5,.1)
@@ -447,26 +554,33 @@ function Header:new()
         })
         Globals.txtBubble[tTxt]:setFillColor( 1 )
         grpTool:insert(Globals.txtBubble[tTxt])
+		Globals.notBubble[tTxt]:toFront()
 		
 		for i=1, tTxt, 1 do
 		
-			Globals.txtBubble[i] = display.newText( {
-				x = 272, y = 20,
-				text = totalBubble, font = "Lato-Regular", fontSize = 12,
-			})
-			Globals.txtBubble[i]:setFillColor( 1 )
-			grpTool:insert(Globals.txtBubble[i])
-			
-			if #Globals.txtBubble > 0 then
-				Globals.txtBubble[i].text = Globals.txtBubble[1].text
-			end
+			print('adiosnadjndajdnajjad')
 		
-			if Globals.txtBubble[1].text == nil then
-				Globals.notBubble[i]:removeSelf()
-				Globals.txtBubble[i]:removeSelf()
+			if Globals.txtBubble[i] then
+		
+				Globals.txtBubble[i] = display.newText( {
+					x = 272, y = 20,
+					text = totalBubble, font = "Lato-Regular", fontSize = 12,
+				})
+				Globals.txtBubble[i]:setFillColor( 1 )
+				grpTool:insert(Globals.txtBubble[i])
+			
+				if #Globals.txtBubble > 0 then
+					Globals.txtBubble[i].text = Globals.txtBubble[1].text
+				end
+		
+				if Globals.txtBubble[1].text == nil then
+					Globals.notBubble[i]:removeSelf()
+					Globals.txtBubble[i]:removeSelf()
+				end
+			
 			end
 			
-		end
+		end]]
 		
 		
 	end
@@ -520,12 +634,14 @@ function Header:new()
             end
 			
             storyboard.gotoScene( previousScene, { time = 400, effect = "slideRight" })
+			moveNoBubbleRight()
 			
 			showModalSearch()
 		else
 			Globals.scene = nil
 			Globals.scene = {}
 			storyboard.gotoScene( "src.Home", { time = 400, effect = "slideRight" })
+			moveNoBubbleRight()
         end
 		
     end
@@ -549,6 +665,7 @@ function Header:new()
 	end
 	
 	function endLoading()
+		print('wadkjawndwjadnawjdawjd awjd akjd')
 		if grpLoading then
 			grpLoading:removeSelf()
 			grpLoading = nil
@@ -585,6 +702,7 @@ function Header:new()
 		Globals.scene = nil
 		Globals.scene = {}
 		storyboard.gotoScene( "src.Home", { time = 400, effect = "slideRight" })
+		moveNoBubbleRight()
 	end
     
     -- Envia elemento a la cartera
@@ -594,7 +712,14 @@ function Header:new()
 	
 	--cierra la sesion
 	function logout()
-		DBManager.clearUser()
+		--DBManager.clearUser()
+		RestManager.updatePlayerId()
+		if notBubble then
+			groupNoBubble:removeSelf()
+			groupNoBubble = nil
+			notBubble = nil
+			txtNoBubble = nil
+		end
 		storyboard.gotoScene( "src.Login", {
 			time = 400,
 			effect = "crossFade"

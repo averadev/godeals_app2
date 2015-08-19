@@ -164,7 +164,7 @@ function Message:new()
 			storyboard.gotoScene( "src.Message", {
                 time = 400,
                 effect = "crossFade",
-                params = { item = event.target.item }
+                params = { item = event.target.item.id }
             })
 		end
     end

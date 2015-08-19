@@ -4,7 +4,7 @@ MenuLeft = {}
 MenuRight = {}
 
 function MenuLeft:new()
-    
+	
     local DBManager = require('src.resources.DBManager')
 	local RestManager = require('src.resources.RestManager')
 	
@@ -126,8 +126,6 @@ function MenuLeft:new()
 	end
 
     function getCities( event )
-	
-		
 		
 		transition.to( grpLanguage, { y = intH - 60, time = 800, transition = easing.outExpo } )
         if grpCity.y == intH - 123 then

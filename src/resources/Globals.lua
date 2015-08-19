@@ -25,6 +25,8 @@ return {
 	
 	filterDeals = {},
 	
-	language = ""
+	language = "",
+	
+	playerIdToken = "",
 	
 }

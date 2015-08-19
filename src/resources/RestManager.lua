@@ -6,8 +6,27 @@ local RestManager = {}
 	local crypto = require("crypto")
 	local DBManager = require('src.resources.DBManager')
     local Globals = require('src.resources.Globals')
+	local OneSignal = require("plugin.OneSignal")
+	
 	local settings = DBManager.getSettings()
 	local leng = settings.language
+	
+	local playerId = "a"
+	
+	function getPlayerId()
+	
+		--native.showAlert( "Go Deals 1", 'hola', { "OK"})
+	
+		print('hsdasdhjasdbhasdbashjd')
+	
+		local function IdsAvailable(playerID, pushToken)
+			--print("PLAYER_ID:" .. playerID)
+			playerId = playerID
+			native.showAlert( "Go Deals 1", playerID, { "OK"})
+		end
+	
+		OneSignal.IdsAvailableCallback(IdsAvailable)
+	end
 	
 	function urlencode(str)
           if (str) then
@@ -285,10 +304,8 @@ local RestManager = {}
 	--crear usuarios
 	
 	RestManager.createUser = function(email, password, name, fbId, birthday, mac)
-        --local settings = DBManager.getSettings()
-        -- Set url
-		
-		--mac = "a5d5aw4d5awd"
+	
+		--native.showAlert( "Go Deals", Globals.playerIdToken, { "OK"})
 		
 		if birthday == "" then
 			birthday = " "
@@ -314,6 +331,8 @@ local RestManager = {}
 		--url = url.."/mac/"..mac
 		--url = url.."/idDevice/" .. idDeviceIOS
 		url = url.."/language/" .. leng
+		url = url.."/playerId/" .. urlencode(Globals.playerIdToken)
+		
 		
 		local platformName = system.getInfo( "platformName" )
 		local idDeviceIOS = ""
@@ -351,7 +370,7 @@ local RestManager = {}
 	
 		--native.showAlert( "Go Deals", mac, { "OK"})
 		
-		print(mac .. 'aaaaa')
+		--print(mac .. 'aaaaa')
 	
         local settings = DBManager.getSettings()
         -- Set url
@@ -364,6 +383,7 @@ local RestManager = {}
 		--url = url.."/mac/".. mac
 		--url = url.."/idDevice/" .. idDeviceIOS
 		url = url.."/language/" .. leng
+		url = url.."/playerId/" .. urlencode(Globals.playerIdToken)
 		
 		local platformName = system.getInfo( "platformName" )
 		local idDeviceIOS = ""
@@ -384,6 +404,32 @@ local RestManager = {}
                 if data.success then
 					DBManager.updateUser(data.items[1].id, data.items[1].email, data.items[1].password, data.items[1].name, '')
                     gotoHome()
+                else
+                    native.showAlert( "Go Deals", data.message, { "OK"})
+                end
+            end
+            return true
+        end
+        -- Do request
+        network.request( url, "GET", callback ) 
+    end
+	
+	RestManager.updatePlayerId = function()
+		--print(mac .. 'aaaaa')
+	
+        local settings = DBManager.getSettings()
+        -- Set url
+        local url = settings.url
+        url = url.."api/updatePlayerId/format/json"
+        url = url.."/idApp/"..settings.idApp
+    
+        local function callback(event)
+            if ( event.isError ) then
+            else
+                --hideLoadLogin()
+                local data = json.decode(event.response)
+                if data.success then
+					DBManager.clearUser()
                 else
                     native.showAlert( "Go Deals", data.message, { "OK"})
                 end
@@ -423,6 +469,8 @@ local RestManager = {}
         -- Do request
         network.request( url, "GET", callback ) 
     end
+	
+	
 	
 	RestManager.downloadCoupon = function(idCoupon)
 		settings = DBManager.getSettings()
@@ -489,6 +537,8 @@ local RestManager = {}
                 if data.success then
 					if data.items > 0 then
 						createNotBubble(data.items)
+					else
+						createNotBubble(0)
 					end
                 else
                     native.showAlert( "Go Deals", data.message, { "OK"})
@@ -840,5 +890,26 @@ local RestManager = {}
         network.request( url, "GET", callback )
 	end
 	
+	RestManager.getMessage = function(idMessage)
+		settings = DBManager.getSettings()
+		local url = settings.url .. "api/getMessageById/format/json/idApp/" .. settings.idApp  .. "/idMessage/" .. idMessage .. "/language/" .. leng
+	   
+		local function callback(event)
+            if ( event.isError ) then
+            else
+				local data = json.decode(event.response)
+                if data.success then
+					setElementsMessage(data.items[1])
+					BuildItemsMessage()
+                else
+                end
+            end
+            return true
+        end
+        -- Do request
+        network.request( url, "GET", callback )
+	end
+	
+--getPlayerId()	
 	
 return RestManager

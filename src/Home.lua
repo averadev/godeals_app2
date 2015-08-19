@@ -763,6 +763,8 @@ function scene:createScene( event )
 	homeScreen:insert(scrViewMain)
 	scrViewMain.name = "scrViewMain"
 	
+	endLoading()
+	
 	scrViewEventos = widget.newScrollView
 	{
 		top = h + 125 + hWB,

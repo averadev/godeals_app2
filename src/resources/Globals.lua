@@ -29,4 +29,6 @@ return {
 	
 	playerIdToken = "",
 	
+	mapItemObj = nil,
+	
 }

@@ -94,6 +94,8 @@ function scene:createScene( event )
     local mh = intH - (lastY + hWBMap)
     myMap = native.newMapView( midW, (lastY + hWBMap) + (mh / 2) - 4, intW, mh )
     if itemObj then
+		Globals.mapItemObj = {}
+		Globals.mapItemObj = itemObj
         local mh = intH - lastY
         myMap:setCenter( tonumber(itemObj.latitude), tonumber(itemObj.longitude), 0.02, 0.02 )
         homeScreen:insert(myMap)
@@ -111,6 +113,7 @@ function scene:createScene( event )
             end
         end, 1 )
     else
+		Globals.mapItemObj = nil
         homeScreen:insert(myMap)
         timeMarker = timer.performWithDelay( 2000, function()
             if myMap then

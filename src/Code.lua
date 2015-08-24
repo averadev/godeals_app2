@@ -63,6 +63,7 @@ end
 
 --redime el codigo
 function changeCodeC( event )
+	txtErrorReedirCode.text = ""
 	--RestManager.redeemCodePromoter('awdwd')
 	if txtFieldReedirCode.text ~= '' or txtFieldReedirCode.text ~= " " then
 		RestManager.redeemCodePromoter(txtFieldReedirCode.text)
@@ -235,6 +236,9 @@ end
 
 -- Remove Listener
 function scene:exitScene( event )
+	if txtErrorReedirCode then
+		txtErrorReedirCode.text = ""
+	end
 	native.setKeyboardFocus(nil)
 end
 

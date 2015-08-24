@@ -635,7 +635,7 @@ function Header:new()
 			
 			if previousScene == 'src.Mapa' then
 				storyboard.removeScene( "src.Mapa" )
-				storyboard.gotoScene( "src.Mapa", { time = 400, effect = "slideLeft", params = { itemObj = Globals.mapItemObj } })
+				storyboard.gotoScene( "src.Mapa", { time = 400, effect = "slideRight", params = { itemObj = Globals.mapItemObj } })
 			else
 				storyboard.gotoScene( previousScene, { time = 400, effect = "slideRight" })
 			end

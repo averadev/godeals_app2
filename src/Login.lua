@@ -9,7 +9,7 @@
 ---------------------------------------------------------------------------------
 local json = require("json")
 local widget = require( "widget" )
-local facebook = require( "facebook" )
+local facebook = require( "plugin.facebook.v4" )
 local Globals = require('src.resources.Globals')
 local RestManager = require('src.resources.RestManager')
 local storyboard = require( "storyboard" )
@@ -33,7 +33,7 @@ local intH = display.contentHeight
 local midW = display.contentCenterX
 local midH = display.contentCenterY
 local currentShow = 0
-local fbCommand = 0
+local isWaiting = true
 local GET_USER_INFO = 1
 local fbAppID = "750089858383563" 
 local txtSignEmail, txtSignPass, txtCreateEmail, txtCreatePass, txtCreateRePass
@@ -196,7 +196,10 @@ function doSignIn()
 end
 
 function facebookListener( event )
+    print("type: "..event.type)
+    isWaiting = false
     if ( "session" == event.type ) then
+        print(" phase: "..event.phase)
         if ( "login" == event.phase ) then
             local params = { fields = "birthday,email,name,id" }
             facebook.request( "me", "GET", params )
@@ -204,7 +207,7 @@ function facebookListener( event )
     elseif ( "request" == event.type ) then
         if ( not event.isError ) then
             local response = json.decode( event.response )
-            --printTable( response, "User Info", 3 )
+            printTable( response, "User Info", 3 )
             
             if not (response.email == nil) then 
                 -- Mac Addresss
@@ -226,10 +229,16 @@ function facebookListener( event )
         end
     end
 end
+function verifyLogin()
+    if ( isWaiting ) then
+        facebook.login( {"public_profile", "email", "user_birthday", "user_friends"} )
+    end
+end
 function loginFaceBook()
     if networkConnectionL() then
-        fbCommand = 1
-        facebook.login( fbAppID, facebookListener, {"public_profile", "email", "user_birthday", "user_friends"} )
+        isWaiting = true
+        facebook.login( {"public_profile", "email", "user_birthday", "user_friends"} )
+        timer.performWithDelay(700, verifyLogin, 1)
     end
 end
 
@@ -395,6 +404,7 @@ end
 -- Called immediately after scene has moved onscreen:
 function scene:enterScene( event )
     facebook.logout()
+    facebook.setFBConnectListener( facebookListener )
 end
 
 -- Remove Listener

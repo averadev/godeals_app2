@@ -77,7 +77,7 @@ Language.es = {
 	--menu
 	menuTxtMenu1 = "Tutorial",
 	--menuTxtMenu2 = "Configuración",
-	menuTxtMenu2 = "Codigo Regalo",
+	menuTxtMenu2 = "Código Regalo",
 	menuTxtMenu3 = "Cerrar Sesión",
 	menuTxtMenu4 = "Comercios Afiliados",
 	menuTxtMenuCC = "Captura de código de regalo",

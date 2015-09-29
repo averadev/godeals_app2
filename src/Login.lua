@@ -9,7 +9,7 @@
 ---------------------------------------------------------------------------------
 local json = require("json")
 local widget = require( "widget" )
-local facebook = require( "facebook" )
+local facebook = require( "plugin.facebook.v4" )
 local Globals = require('src.resources.Globals')
 local RestManager = require('src.resources.RestManager')
 local storyboard = require( "storyboard" )
@@ -17,10 +17,11 @@ local DBManager = require('src.resources.DBManager')
 local crypto = require( "crypto" )
 local scene = storyboard.newScene()
 
-local leng = system.getPreference( "locale", "language" )
+local setting = DBManager.getSettings()
+
 Globals.language = require('src.resources.Language')
-leng = "es"
-if leng == "es" then
+--leng = "es"
+if setting.language == "es" then
 	Globals.language = Globals.language.es
 else
 	Globals.language = Globals.language.en
@@ -32,14 +33,12 @@ local intH = display.contentHeight
 local midW = display.contentCenterX
 local midH = display.contentCenterY
 local currentShow = 0
-local fbCommand = 0
+local isWaiting = true
 local GET_USER_INFO = 1
 local fbAppID = "750089858383563" 
 local txtSignEmail, txtSignPass, txtCreateEmail, txtCreatePass, txtCreateRePass
 local imgLogo, groupBtn, groupSign, groupCreate, loadingGrp, loadingL
 local hBar = display.topStatusBarContentHeight
-
-local setting = DBManager.getSettings()
 
 ---------------------------------------------------------------------------------
 -- LISTENERS
@@ -171,7 +170,13 @@ function doCreate()
        -- showLoadLogin()
         backTxtPositions()
 		
-        RestManager.createUser(txtCreateEmail.text, txtCreatePass.text, '', '', '')
+		local mac = ""
+		if getBeacon then
+			local macAd = getBeacon.getMacAddress()
+			mac = crypto.digest( crypto.md5, macAd )
+		end
+		
+        RestManager.createUser(txtCreateEmail.text, txtCreatePass.text, ' ', ' ', ' ', mac)
     end
 end
 
@@ -181,12 +186,20 @@ function doSignIn()
     elseif networkConnectionL() then
        -- showLoadLogin()
         backTxtPositions()
-        RestManager.validateUser(txtSignEmail.text, txtSignPass.text)
+		local mac = ""
+		if getBeacon then
+			local macAd = getBeacon.getMacAddress()
+			mac = crypto.digest( crypto.md5, macAd )
+		end
+        RestManager.validateUser(txtSignEmail.text, txtSignPass.text, mac)
     end 
 end
 
 function facebookListener( event )
+    print("type: "..event.type)
+    isWaiting = false
     if ( "session" == event.type ) then
+        print(" phase: "..event.phase)
         if ( "login" == event.phase ) then
             local params = { fields = "birthday,email,name,id" }
             facebook.request( "me", "GET", params )
@@ -194,7 +207,7 @@ function facebookListener( event )
     elseif ( "request" == event.type ) then
         if ( not event.isError ) then
             local response = json.decode( event.response )
-            --printTable( response, "User Info", 3 )
+            printTable( response, "User Info", 3 )
             
             if not (response.email == nil) then 
                 -- Mac Addresss
@@ -211,15 +224,21 @@ function facebookListener( event )
                     birthday = string.gsub( response.birthday, "/", "-", 2 )
                 end
                 
-                RestManager.createUser(response.email, '', response.name, response.id, birthday, mac)
+                RestManager.createUser(response.email, ' ', response.name, response.id, birthday, mac)
             end
         end
     end
 end
+function verifyLogin()
+    if ( isWaiting ) then
+        facebook.login( {"public_profile", "email", "user_birthday", "user_friends"} )
+    end
+end
 function loginFaceBook()
     if networkConnectionL() then
-        fbCommand = 1
-        facebook.login( fbAppID, facebookListener, {"public_profile", "email", "user_birthday", "user_friends"} )
+        isWaiting = true
+        facebook.login( {"public_profile", "email", "user_birthday", "user_friends"} )
+        timer.performWithDelay(700, verifyLogin, 1)
     end
 end
 
@@ -346,7 +365,14 @@ function scene:createScene( event )
     groupCreate.x = 480
         
     -- Buttons
-    local btnFB = display.newImage("img/btn/facebook_login.png", true) 
+    local btnFB
+	
+	if setting.language == "es" then
+		btnFB = display.newImage("img/btn/facebook_login.png", true)
+	else
+		btnFB = display.newImage("img/btn/facebook_login_en.png", true)
+	end
+	
 	btnFB.x = midW
 	btnFB.y = midH - 40
 	groupBtn:insert(btnFB)
@@ -378,6 +404,7 @@ end
 -- Called immediately after scene has moved onscreen:
 function scene:enterScene( event )
     facebook.logout()
+    facebook.setFBConnectListener( facebookListener )
 end
 
 -- Remove Listener

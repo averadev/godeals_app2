@@ -26,7 +26,7 @@ local midW = display.contentCenterX
 local midH = display.contentCenterY
 
 local h = display.topStatusBarContentHeight
-local lastY = 200
+local lastY = 150
 
 --[[local toolbar, menu
 local groupMenu, groupEvent, groupMenuEventText, grpRedem
@@ -63,7 +63,8 @@ end
 
 --redime el codigo
 function changeCodeC( event )
-	--RestManager.redeemCodePromoter('456')
+	txtErrorReedirCode.text = ""
+	--RestManager.redeemCodePromoter('awdwd')
 	if txtFieldReedirCode.text ~= '' or txtFieldReedirCode.text ~= " " then
 		RestManager.redeemCodePromoter(txtFieldReedirCode.text)
 		txtFieldReedirCode.text = ''
@@ -122,6 +123,8 @@ function showDealsRedeem()
 	sprite:play()
         
 	transition.to( groupDownloadCode, { alpha = 0, time = 400, delay = 2000, transition = easing.outExpo } )
+	
+	RestManager.getNotificationsUnRead()
         
 	return true
 end
@@ -170,12 +173,14 @@ function scene:createScene( event )
 	txtReedirCode:setFillColor( 0 )
 	codeScreen:insert(txtReedirCode)
 	
+	lastY = lastY + 150
+	
 	local bgReedirCode = display.newImage("img/btn/txtEmail.png", true) 
     bgReedirCode.x = midW
-    bgReedirCode.y = midH - 100
+    bgReedirCode.y = lastY
     codeScreen:insert(bgReedirCode)
 	
-	txtFieldReedirCode = native.newTextField( midW, midH - 100, 380, 60 )
+	txtFieldReedirCode = native.newTextField( midW, lastY, 380, 60 )
     txtFieldReedirCode.method = "code"
     txtFieldReedirCode.inputType = "text"
     txtFieldReedirCode.hasBackground = false
@@ -183,13 +188,27 @@ function scene:createScene( event )
 	txtFieldReedirCode:setReturnKey(  "send"  )
 	codeScreen:insert(txtFieldReedirCode)
 	
-	rctBtnRC = display.newRoundedRect( 240, lastY + 260, 210, 55, 5 )
+	lastY = lastY + 60
+	
+	txtErrorReedirCode = display.newText({
+		text = "",
+		x = midW + 20, y = lastY,
+		width = 400,
+		font = "Lato-Regular", fontSize = 18, align = "left"
+	})
+	txtErrorReedirCode:setFillColor( 0 )
+	txtErrorReedirCode:setFillColor( 1, 0, 0 )
+	codeScreen:insert(txtErrorReedirCode)
+	
+	lastY = lastY + 70
+	
+	rctBtnRC = display.newRoundedRect( 240, lastY, 210, 55, 5 )
 	--rctBtn.idCoipon = itemObj.id
 	rctBtnRC:setFillColor( .2, .6, 0 )
 	codeScreen:insert(rctBtnRC)
 	rctBtnRC:addEventListener( 'tap', changeCodeC )
 	
-	rctBtnBRC = display.newRoundedRect( 240, lastY + 278, 210, 22, 5 )
+	rctBtnBRC = display.newRoundedRect( 240, lastY + 18, 210, 22, 5 )
     rctBtnBRC:setFillColor( {
         type = 'gradient',
         color1 = { .2, .6, 0 }, 
@@ -200,25 +219,13 @@ function scene:createScene( event )
 
 	txtBtnRC = display.newText( {
 		text =  Globals.language.codeTxtBtnRC,
-		x = 240, y = lastY + 260,
+		x = 240, y = lastY,
 		width = 210, height = 0,
 		font = "Lato-Bold", fontSize = 18, align = "center"
 	})
 	txtBtnRC:setFillColor( 1 )
 	codeScreen:insert(txtBtnRC)
 	
-	txtErrorReedirCode = display.newText({
-		text = "",
-		x = midW + 20, y = lastY + 190,
-		width = 400,
-		font = "Lato-Regular", fontSize = 18, align = "left"
-	})
-	txtErrorReedirCode:setFillColor( 0 )
-	txtErrorReedirCode:setFillColor( 1, 0, 0 )
-	codeScreen:insert(txtErrorReedirCode)
-
-	
-    
 end
 
 -- Called immediately after scene has moved onscreen:
@@ -229,6 +236,10 @@ end
 
 -- Remove Listener
 function scene:exitScene( event )
+	if txtErrorReedirCode then
+		txtErrorReedirCode.text = ""
+	end
+	native.setKeyboardFocus(nil)
 end
 
 scene:addEventListener("createScene", scene )

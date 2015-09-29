@@ -25,6 +25,10 @@ return {
 	
 	filterDeals = {},
 	
-	language = ""
+	language = "",
+	
+	playerIdToken = "",
+	
+	mapItemObj = nil,
 	
 }

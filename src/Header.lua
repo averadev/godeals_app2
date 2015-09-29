@@ -11,10 +11,10 @@ local RestManager = require('src.resources.RestManager')
 local DBManager = require('src.resources.DBManager')
 local settings = DBManager.getSettings()
 
-local leng = system.getPreference( "locale", "language" )
+--local leng = system.getPreference( "locale", "language" )
 Globals.language = require('src.resources.Language')
-leng = "en"
-if leng == "es" then
+--leng = "es"
+if settings.language == "es" then
 	Globals.language = Globals.language.es
 else
 	Globals.language = Globals.language.en
@@ -26,12 +26,20 @@ local menuScreenLeft = nil
 local menuScreenRight = nil
 local groupSearchTool = display.newGroup()
 local groupDownload
+modalActive = ""
+local groupNoBubble
+local notBubble = nil
+local txtNoBubble
+
+local btnBackFunction = false
 
 Header = {}
 
+local grpLoading
+
 function Header:new()
     -- Variables
-	local grpLoading
+	
     local isWifiBle = true
     local self = display.newGroup()
     local grpTool = display.newGroup()
@@ -39,6 +47,8 @@ function Header:new()
     local imgSearch, btnClose, txtSearch
 	local h = display.topStatusBarContentHeight
     local fx = audio.loadStream( "fx/alert.wav" )
+
+	--local leng = system.getPreference( "locale", "language" )
     
     -- Obtener mapa
     function showMap(event)
@@ -46,6 +56,7 @@ function Header:new()
             Globals.noCallbackGlobal = Globals.noCallbackGlobal + 1
 			storyboard.removeScene( "src.Mapa" )
             storyboard.gotoScene( "src.Mapa", { time = 400, effect = "slideLeft", params = { itemObj = nil } })
+			moveNoBubbleLeft()
         end
     end
     
@@ -54,24 +65,28 @@ function Header:new()
         if storyboard.getCurrentSceneName() ~= "src.Home" then
             Globals.noCallbackGlobal = Globals.noCallbackGlobal + 1
             storyboard.gotoScene( "src.Home", { time = 400, effect = "slideLeft" })
+			moveNoBubbleLeft()
         end
     end
     
     -- Obtener cupones descargados
     function showWallet(event)
-       if storyboard.getCurrentSceneName() ~= "src.Wallet" then
+		if storyboard.getCurrentSceneName() ~= "src.Wallet" then
             Globals.noCallbackGlobal = Globals.noCallbackGlobal + 1
 			storyboard.removeScene( "src.Wallet" )
             storyboard.gotoScene( "src.Wallet", { time = 400, effect = "slideLeft" })
+			moveNoBubbleLeft()
         end
     end
     
     -- Obtener cupones descargados
     function showNotifications(event)
-        if storyboard.getCurrentSceneName() ~= "src.Notifications" then
+       if storyboard.getCurrentSceneName() ~= "src.Notifications" then
             Globals.noCallbackGlobal = Globals.noCallbackGlobal + 1
 			storyboard.removeScene( "src.Notifications" )
             storyboard.gotoScene( "src.Notifications", { time = 400, effect = "slideLeft" })
+			moveNoBubbleLeft()
+			
         end
     end
     
@@ -81,6 +96,7 @@ function Header:new()
             Globals.noCallbackGlobal = Globals.noCallbackGlobal + 1
 			storyboard.removeScene( "src.PartnerList" )
             storyboard.gotoScene( "src.PartnerList", { time = 400, effect = "slideLeft" })
+			moveNoBubbleLeft()
         end
     end
 	
@@ -89,11 +105,68 @@ function Header:new()
 			Globals.noCallbackGlobal = Globals.noCallbackGlobal + 1
 			storyboard.removeScene( "src.Code" )
 			storyboard.gotoScene( "src.Code", { time = 400, effect = "slideLeft" })
+			moveNoBubbleLeft()
 		end
+	end
+	
+	function moveNoBubbleLeft()
+		if notBubble then
+			transition.to( groupNoBubble, { x = -280, time = 400, transition = easing.outExpo, onComplete=function()
+					groupNoBubble.x = 0
+				end
+			})
+		end
+	end
+	
+	function moveNoBubbleRight()
+		if notBubble then
+			transition.to( groupNoBubble, { x = 500, time = 400, transition = easing.outExpo, onComplete=function()
+					groupNoBubble.x = 0
+				end
+			})
+		end
+	end
+	
+	function alertNewNotifications()
+		if not notBubble then
+			groupNoBubble = display.newGroup();
+			groupNoBubble.y = h
+		end
+			local iconToolNewNoti = display.newImage( "img/btn/iconTool3Focus.png" )
+			iconToolNewNoti:translate( 237, 35 )
+			groupNoBubble:insert(iconToolNewNoti)
+			iconToolNewNoti:toBack()
+			
+			local interation = 1
+			
+			iconToolNewNoti.alpha = 1
+			
+			timeMarker = timer.performWithDelay( 200, function(event)
+				
+				if interation%2 == 1 then
+					iconToolNewNoti.alpha = 0
+				else
+					iconToolNewNoti.alpha = 1
+				end
+				
+				if interation == 7 then
+					iconToolNewNoti:removeSelf()
+					if not notBubble then
+						groupNoBubble:removeSelf()
+					end
+				end
+				
+				interation = interation + 1
+				
+			end, 7 )
+			
+		
 	end
     
 	-- esconde la busqueda y el modal
     function hideSearch( event )
+	
+		modalActive = ""
 		
 		native.setKeyboardFocus(nil)
 		
@@ -109,6 +182,8 @@ function Header:new()
 	--esconde la busqueda
 	function hideSearch2( event )
 	
+		modalActive = ""
+		
 		native.setKeyboardFocus(nil)
 		
 		groupSearchTool:removeSelf()
@@ -121,6 +196,7 @@ function Header:new()
     
 	--muestra el formulario de busqueda
     function showSearch( event )
+		modalActive = 'Search'
 		createSearch()
 		createTxt("")
     end
@@ -372,6 +448,8 @@ function Header:new()
 	
 	--mostramos el menu izquierdo
 	function showMenuLeft( event )
+		modalActive = 'MenuLeft'
+		if notBubble then groupNoBubble.x = 500 end
 		local screen = getScreen()
 		screen.alpha = .5
 		transition.to( screen, { x = 400, time = 400, transition = easing.outExpo } )
@@ -381,11 +459,17 @@ function Header:new()
 	
 	--esconde el menuIzquierdo
 	function hideMenuLeft( event )
+		modalActive = ""
+		
 		local screen = getScreen()
 		screen.alpha = 1
 		transition.to( menuScreenLeft, { x = -480, time = 400, transition = easing.outExpo } )
 		transition.to( screen, { x = 0, time = 400, transition = easing.outExpo } )
+		if notBubble then 
+			transition.to( groupNoBubble, { x = 0, time = 400, transition = easing.outExpo } )
+		end
 		screen = nil
+		HideChangeCity()
 		return true
 	end
 	
@@ -420,7 +504,44 @@ function Header:new()
 	end
 	
 	function createNotBubble(totalBubble)
-        local tTxt = #Globals.txtBubble + 1
+	
+		if totalBubble > 0 then
+		
+			if not notBubble then
+			
+				groupNoBubble = display.newGroup()
+				groupNoBubble.y = h
+				--groupNoBubble:insert(getScreen())
+			
+				notBubble = display.newCircle( 270, 17, 10 )
+				notBubble:setFillColor(.1,.5,.1)
+				notBubble.strokeWidth = 2
+				notBubble:setStrokeColor(.8)
+				groupNoBubble:insert(notBubble)
+			
+				txtNoBubble = display.newText( {
+					x = 271, y = 17,
+					text = totalBubble, font = "Lato-Regular", fontSize = 12,
+				})
+				txtNoBubble:setFillColor( 1 )
+				--txtNoBubble:toFront()
+				groupNoBubble:insert(txtNoBubble)
+			
+			else
+				txtNoBubble.text = totalBubble
+			end
+		else
+		
+			if notBubble then
+				groupNoBubble:removeSelf()
+				groupNoBubble = nil
+				notBubble = nil
+				txtNoBubble = nil
+			end
+		
+		end
+	
+        --[[local tTxt = #Globals.txtBubble + 1
 	
 		Globals.notBubble[tTxt] = display.newCircle( 270, 20, 10 )
         Globals.notBubble[tTxt]:setFillColor(.1,.5,.1)
@@ -433,15 +554,35 @@ function Header:new()
         })
         Globals.txtBubble[tTxt]:setFillColor( 1 )
         grpTool:insert(Globals.txtBubble[tTxt])
+		Globals.notBubble[tTxt]:toFront()
 		
-		if #Globals.txtBubble > 0 then
-			Globals.txtBubble[tTxt].text = Globals.txtBubble[1].text
-		end
+		for i=1, tTxt, 1 do
 		
-		if Globals.txtBubble[1].text == nil then
-			Globals.notBubble[tTxt]:removeSelf()
-			Globals.txtBubble[tTxt]:removeSelf()
-		end
+			print('adiosnadjndajdnajjad')
+		
+			if Globals.txtBubble[i] then
+		
+				Globals.txtBubble[i] = display.newText( {
+					x = 272, y = 20,
+					text = totalBubble, font = "Lato-Regular", fontSize = 12,
+				})
+				Globals.txtBubble[i]:setFillColor( 1 )
+				grpTool:insert(Globals.txtBubble[i])
+			
+				if #Globals.txtBubble > 0 then
+					Globals.txtBubble[i].text = Globals.txtBubble[1].text
+				end
+		
+				if Globals.txtBubble[1].text == nil then
+					Globals.notBubble[i]:removeSelf()
+					Globals.txtBubble[i]:removeSelf()
+				end
+			
+			end
+			
+		end]]
+		
+		
 	end
 	
 	function onTxtFocusSearch(event)
@@ -469,7 +610,7 @@ function Header:new()
 		print(#Globals.scene)
 	
         -- Obtenemos escena anterior y eliminamos del arreglo
-        if #Globals.scene > 1 then
+        if #Globals.scene > 2 then
 			
             local previousScene = Globals.scene[#Globals.scene - 1]
 			local currentScene = Globals.scene[#Globals.scene]
@@ -492,13 +633,21 @@ function Header:new()
                 txtCiudad[#txtCiudad].text = textoCiudad
             end
 			
-            storyboard.gotoScene( previousScene, { time = 400, effect = "slideRight" })
+			if previousScene == 'src.Mapa' then
+				storyboard.removeScene( "src.Mapa" )
+				storyboard.gotoScene( "src.Mapa", { time = 400, effect = "slideRight", params = { itemObj = Globals.mapItemObj } })
+			else
+				storyboard.gotoScene( previousScene, { time = 400, effect = "slideRight" })
+			end
+            
+			moveNoBubbleRight()
 			
 			showModalSearch()
 		else
 			Globals.scene = nil
 			Globals.scene = {}
 			storyboard.gotoScene( "src.Home", { time = 400, effect = "slideRight" })
+			moveNoBubbleRight()
         end
 		
     end
@@ -522,6 +671,7 @@ function Header:new()
 	end
 	
 	function endLoading()
+		print('wadkjawndwjadnawjdawjd awjd akjd')
 		if grpLoading then
 			grpLoading:removeSelf()
 			grpLoading = nil
@@ -558,6 +708,7 @@ function Header:new()
 		Globals.scene = nil
 		Globals.scene = {}
 		storyboard.gotoScene( "src.Home", { time = 400, effect = "slideRight" })
+		moveNoBubbleRight()
 	end
     
     -- Envia elemento a la cartera
@@ -567,7 +718,14 @@ function Header:new()
 	
 	--cierra la sesion
 	function logout()
-		DBManager.clearUser()
+		--DBManager.clearUser()
+		RestManager.updatePlayerId()
+		if notBubble then
+			groupNoBubble:removeSelf()
+			groupNoBubble = nil
+			notBubble = nil
+			txtNoBubble = nil
+		end
 		storyboard.gotoScene( "src.Login", {
 			time = 400,
 			effect = "crossFade"
@@ -624,22 +782,66 @@ function Header:new()
         local line4 = display.newRect( 380, 40, 1, 80)
         line4.alpha = .1
 		grpTool:insert(line4)
-        local bgToolB = display.newRect( 237, 40, 95, 80 )
-        bgToolB:setFillColor( .15 )
+        --[[local bgToolB = display.newRect( 237, 40, 95, 80 )
+        --bgToolB:setFillColor( .15 )
+		bgToolB:setFillColor( .1 )
+		bgToolB.alpha = .1
         grpTool:insert(bgToolB)
         local bgToolD = display.newRect( 332, 40, 95, 80 )
-        bgToolD:setFillColor( 50/255, 150/255, 0 )
-        grpTool:insert(bgToolD)
+        --bgToolD:setFillColor( 50/255, 150/255, 0 )
+		bgToolD:setFillColor( .1 )
+		bgToolD.alpha = .1
+        grpTool:insert(bgToolD)]]
+		
+		local iconTool2, iconTool3, iconTool4
+		
+		--cambiamos el icono para mostrar que pantalla esta selecionado
+		if storyboard.getCurrentSceneName() == "src.Mapa" then
+			local bgToolTapBack = display.newRect( 142, 40, 95, 80 )
+			bgToolTapBack:setFillColor( 0 )
+			grpTool:insert(bgToolTapBack)
+			local bgToolTapFront = display.newRect( 142, 41, 87, 79 )
+			bgToolTapFront:setFillColor( .05 )
+			grpTool:insert(bgToolTapFront)
+			iconTool2 = display.newImage( "img/btn/iconTool2Focus.png" )
+		else
+			iconTool2 = display.newImage( "img/btn/iconTool2.png" )
+		end
+			
+		if storyboard.getCurrentSceneName() == "src.Notifications" then
+			local bgToolTapBack = display.newRect( 237, 40, 95, 80 )
+			bgToolTapBack:setFillColor( 0 )
+			grpTool:insert(bgToolTapBack)
+			local bgToolTapFront = display.newRect( 237, 41, 87, 79 )
+			bgToolTapFront:setFillColor( .05 )
+			grpTool:insert(bgToolTapFront)
+			iconTool3 = display.newImage( "img/btn/iconTool3Focus.png" )
+		else
+			iconTool3 = display.newImage( "img/btn/iconTool3.png" )
+		end
+		
+		if storyboard.getCurrentSceneName() == "src.Wallet" then
+			local bgToolTapBack = display.newRect( 333, 40, 95, 80 )
+			bgToolTapBack:setFillColor( 0 )
+			grpTool:insert(bgToolTapBack)
+		
+			local bgToolTapFront = display.newRect( 333, 41, 87, 79 )
+			bgToolTapFront:setFillColor( .05 )
+			grpTool:insert(bgToolTapFront)
+			iconTool4 = display.newImage( "img/btn/iconTool4Focus.png" )
+		else
+			iconTool4 = display.newImage( "img/btn/iconTool4.png" )
+		end
         
-        local iconTool2 = display.newImage( "img/btn/iconTool2.png" )
+        --icon2
         iconTool2:translate( 142, 35 )
 		iconTool2:addEventListener("tap",showMap)
         grpTool:insert(iconTool2)
-        local iconTool3 = display.newImage( "img/btn/iconTool3.png" )
+        --icon 3
         iconTool3:translate( 237, 35 )
 		iconTool3:addEventListener("tap",showNotifications)
         grpTool:insert(iconTool3)
-        local iconTool4 = display.newImage( "img/btn/iconTool4.png" )
+		--icon4
         iconTool4:translate( 332, 35 )
 		iconTool4:addEventListener("tap",showWallet)
         grpTool:insert(iconTool4)
@@ -692,6 +894,12 @@ function Header:new()
 		--verificamos notificaciones
 		RestManager.getNotificationsUnRead()
     end
+	
+	function deleteMenuLeft()
+		menuScreenLeft:removeSelf()
+		menuScreenLeft = MenuLeft:new()
+		menuScreenLeft:builScreenLeft()
+	end
     
     -- Creamos la pantalla del menu
     function self:buildWifiBle()
@@ -774,15 +982,77 @@ function Header:new()
 	function changeCityName(items)
 		textoCiudad = items.txtMin
 		txtCiudad[#txtCiudad].text = items.txtMin
+		RestManager.changeUserCity(items.id)
 		DBManager.updateCity(items.id)
-		removeItemsGroupHome()
+		--removeItemsGroupHome()
+		storyboard.gotoScene( "src.HomeWhite")
+		
 	end
 	
 	function changeTxtcity(item)
 		textoCiudad = item
 		txtCiudad[#txtCiudad].text = item
 	end
-    
+	
     return self
+end
+
+function changeLanguageName(items)
+	DBManager.updateLanguage(items.txtMin)
+	
+	local settings = DBManager.getSettings()
+	
+	Globals.language = require('src.resources.Language')
+	
+	if settings.language == "es" then
+		Globals.language = Globals.language.es
+	else
+		Globals.language = Globals.language.en
+	end
+	
+	RestManager.changeLanguageManager()
+	
+	RestManager.changeLanguageAds()
+	
+	storyboard.gotoScene( "src.HomeWhite")
+	
+	Globals.scene = nil
+	Globals.scene = {}
+	
+end
+
+-- Return button Android Devices
+local function onKeyEventBack( event )
+	local phase = event.phase
+	local keyName = event.keyName
+	local platformName = system.getInfo( "platformName" )
+	
+	if( "back" == keyName and phase == "up" ) then
+		--native.showAlert( "Go Deals", "hola" , { "OK"})
+		if ( platformName == "Android" ) then
+			--native.showAlert( "Go Deals", Globals.scene[#Globals.scene] , { "OK"})
+			--native.showAlert( "Go Deals", modalActive , { "OK"})
+			
+			if modalActive == "Search" then
+				hideSearch()
+			elseif modalActive == "MenuLeft" then
+				hideMenuLeft()
+			elseif modalActive == "Filter" then
+				CloseModal()
+			elseif Globals.scene[#Globals.scene] == "src.Home" then
+				return false
+			else
+				returnScene()
+			end
+			return true
+			
+		end
+	end
+	return false
+end
+
+if btnBackFunction == false then
+	btnBackFunction = true
+	Runtime:addEventListener( "key", onKeyEventBack )
 end
 

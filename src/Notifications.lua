@@ -90,6 +90,7 @@ function markRead( event )
 		end
 		noLeido[event.target.posci]:removeSelf()
 		RestManager.notificationRead( elements[event.target.posci].idNotification )
+		RestManager.getNotificationsUnRead()
 	end
 
 end

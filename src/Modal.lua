@@ -12,9 +12,11 @@ local btnModal, bgModal
 local btnFilter = {}
 local txtFilter = {}
 local filterName = nil
+local filterNameImg = nil
 local typeF = ""
 
 function CloseModal( event )
+	modalActive = ""
 	btnModal:removeSelf()
 	bgModal:removeSelf()
 	groupFilters:removeSelf()
@@ -28,7 +30,6 @@ function closeModalTouch( event )
 end
 
 function Showfilter( event )
-	print(event.target.id)
 	RestManager.getFilter(event.target.id,typeF)
 	CloseModal()
 	return true
@@ -113,13 +114,13 @@ function createFilters(filter)
 			filterTitle:setFillColor( 1 )
 			groupFilters:insert(filterTitle)
 			
-			btnFilter[y] = display.newImage( urlImage ..  filterName[y] ..".png" )
+			btnFilter[y] = display.newImage( urlImage ..  filterNameImg[y] ..".png" )
 			btnFilter[y] :translate( poscX, poscY)
 			btnFilter[y] .width = intH * .14
 			btnFilter[y] .height = intH * .14
 			btnFilter[y] .isVisible = true
 			btnFilter[y].id = numFilter + y - 1
-			btnFilter[y].name = filterName[y]
+			btnFilter[y].name = filterNameImg[y]
 			groupFilters:insert(btnFilter[y] )
 			
 			if flagFilter == 0 then
@@ -163,7 +164,7 @@ end
 	typeF = filter
  
 	if filter == "EVENTOS" then
-		--filterName = {"TODOS","CONCIERTOS","DEPORTIVOS","CULTURALES","ANIVERSARIOS","COMPRAS","OTROS"}
+		filterNameImg = {"TODOS","CONCIERTOS","DEPORTIVOS","CULTURALES","ANIVERSARIOS","COMPRAS","OTROS"}
 		filterName = {Globals.language.FilterNameEvent1,Globals.language.FilterNameEvent2,Globals.language.FilterNameEvent3,
 		Globals.language.FilterNameEvent4,Globals.language.FilterNameEvent5,Globals.language.FilterNameEvent6,Globals.language.FilterNameEvent7}
 		
@@ -173,7 +174,7 @@ end
 		btnModal.height = intH - intH / 4.2
 		btnModal:translate( intW / 2 + 10, intH / 2)
 	else
-		--filterName = {"TODOS","RESTAURANTES","BARES","ANTROS","TURISMO","TECNOLOGIA","SERVICIOS","COMPRAS","OTROS"}
+		filterNameImg = {"TODOS","RESTAURANTES","BARES","ANTROS","TURISMO","TECNOLOGIA","SERVICIOS","COMPRAS","OTROS"}
 		filterName = {Globals.language.FilterNameDeals1,Globals.language.FilterNameDeals2,Globals.language.FilterNameDeals3,
 		Globals.language.FilterNameDeals4,Globals.language.FilterNameDeals5,Globals.language.FilterNameDeals6,
 		Globals.language.FilterNameDeals7,Globals.language.FilterNameDeals8,Globals.language.FilterNameDeals9}

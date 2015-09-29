@@ -107,7 +107,7 @@ function showListFriends(idC)
 	groupFriends:insert(btnAceptFB)
 	
 	local txtAceptF = display.newText( {
-		text = "COMPARTIR DEAL",     
+		text = Globals.language.friendTxtAceptF,     
 		x = 335, y = midH + 205,
 		width = 200,
 		font = "Lato-Bold",  fontSize = 14, align = "center"
@@ -130,7 +130,7 @@ function showListFriends(idC)
 	groupFriends:insert(btnCancelFB)
 	
 	local txtCancelF = display.newText( {
-		text = "CANCELAR",     
+		text = Globals.language.friendTxtCancelF,     
 		x = 145, y = midH + 205,
 		width = 200,
 		font = "Lato-Bold",  fontSize = 14, align = "center"

@@ -17,13 +17,11 @@ local storyboard = require( "storyboard" )
 local Globals = require('src.resources.Globals')
 local DBManager = require('src.resources.DBManager')
 local RestManager = require('src.resources.RestManager')
---local Language = require('src.resources.Language')
 
-local lengHome = system.getPreference( "locale", "language" )
-lengHome = "en"
 
-print('holaaaaaaaaaaaaa')
---print(Globals.language.titulo2)
+local settings = DBManager.getSettings()
+
+lengHome = settings.language
 
 -- Grupos y Contenedores
 local scene = storyboard.newScene()
@@ -74,6 +72,41 @@ end
 
 function setFilterDeals(items)
 	Globals.filterDeals = items
+end
+
+--funcion que entra cuando no se encuentran deals cupones
+function getNoItemsHome(src)
+
+	local imgNoItemsHome = display.newImage( "img/btn/noData.png" )
+	imgNoItemsHome.x = display.contentWidth / 2
+	imgNoItemsHome.y = intH/3.7
+		
+	local txtNoItemsHome = display.newText( {
+		--text = Globals.language.homeNoFilterEvent, 
+		text = "No items",		
+		x = intW/2, y = intH/2.5,
+		width = intW,
+		font = "Lato-Regular",  fontSize = 16, align = "center"
+	})
+	txtNoItemsHome:setFillColor( 0 )
+	
+	if src == "home" then
+		groupInicio:insert(txtNoItemsHome)
+		groupInicio:insert(imgNoItemsHome) 
+		txtNoItemsHome.text = Globals.language.homeNoItemsHome
+	elseif src == "deals" then
+		groupDeals:insert(txtNoItemsHome)
+		groupDeals:insert(imgNoItemsHome) 
+		txtNoItemsHome.text = Globals.language.homeNoItemsDeals
+	elseif src == "events" then
+		groupEvent:insert(txtNoItemsHome)
+		groupEvent:insert(imgNoItemsHome) 
+		txtNoItemsHome.text = Globals.language.homeNoItemsEvents
+	end
+	
+	
+	endLoading()
+	
 end
 
 ---------------------------------------------------------------------------------
@@ -300,7 +333,7 @@ function buildItems(screen)
 					end
                    -- title:build(Globals.Months[currentMonth].." del "..k)
                     title.y = lastY
-                    lastY = lastY + 70
+                    lastY = lastY + 100
                 end
             end
             
@@ -310,7 +343,7 @@ function buildItems(screen)
             evento:build(true, elements[y], imageItems[y])
             evento.y = lastY
             
-            lastY = lastY + 120
+            lastY = lastY + 180
         end
 		
 	elseif screen == "noFilterEvent" then
@@ -396,6 +429,20 @@ function removeItemsGroupHome()
 	groupDeals:removeSelf()
 	groupDeals = display.newGroup()
 	scrViewDeals:insert(groupDeals)
+	
+	isSvLoaded[1] = false
+	isSvLoaded[2] = false
+	
+	--[[scrViewMain, scrViewEventos, scrViewDeals]]
+	
+	returnHome()
+	
+	transition.to( scrViewDeals, { x = 720, time = 400, transition = easing.outExpo } )
+	transition.to( scrViewMain, { x = 240, time = 400, transition = easing.outExpo } )
+	transition.to( scrViewEventos, { x = 720, time = 400, transition = easing.outExpo } )
+	transition.to( groupMenu, { x = 0, time = 400, transition = easing.outExpo } )
+	
+	showFilter(false)
 	
 	RestManager.getRecommended()
 end
@@ -637,6 +684,7 @@ function showFilter(boolShow)
 end
 
 function openModal( event )
+	modalActive = 'Filter'
 	Modal(btnModal.name)
 	return true
 end	
@@ -714,6 +762,8 @@ function scene:createScene( event )
 	}
 	homeScreen:insert(scrViewMain)
 	scrViewMain.name = "scrViewMain"
+	
+	endLoading()
 	
 	scrViewEventos = widget.newScrollView
 	{

@@ -421,9 +421,9 @@ function changeButtonCoupon()
 	rctBtn:removeEventListener( "tap", DownloadCoupon )
 	rctBtn:addEventListener( "tap", showRedimir )
     rctBtnB.alpha = 0
-	imgBtnShare:removeEventListener( 'tap', showFriends )
-	imgBtnShare.alpha = .2
-    imgBtnShareB.alpha = 0
+	--imgBtnShare:removeEventListener( 'tap', showFriends )
+	--imgBtnShare.alpha = .2
+    --imgBtnShareB.alpha = 0
 end
 
 --obtenemos el grupo wallScreen de la escena actual
@@ -452,7 +452,7 @@ end
 --cambia el boton a deals compartido
 function changeBtnShare()
 
-	transition.to( txtTitleInfo, { alpha = 0, time = 200, transition = easing.outExpo } )
+	--[[transition.to( txtTitleInfo, { alpha = 0, time = 200, transition = easing.outExpo } )
 	transition.to( txtInfo, { alpha = 0, time = 200, transition = easing.outExpo } )
 	transition.to( txtBtn, { alpha = 0, time = 200, transition = easing.outExpo } )
 	
@@ -472,7 +472,7 @@ function changeBtnShare()
 		transition.to( txtBtn, { alpha = 1, time = 200, delay = 200, transition = easing.outExpo } )
 		transition.to( txtInfo, { alpha = 1, time = 200, delay = 200, transition = easing.outExpo } )
 		transition.to( txtTitleInfo, { alpha = 1, time = 200, delay = 200, transition = easing.outExpo } )
-	end, 1)
+	end, 1)]]
 
 end
 
@@ -723,6 +723,9 @@ function buildCoupon()
     
 
 	if itemObj.assigned == 1 or itemObj.assigned == '1' then 
+		imgBtnShare.alpha = 1
+        imgBtnShareB.alpha = 1
+		imgBtnShare:addEventListener( 'tap', showFriends )
 		txtTitleInfo.text = Globals.language.dealsTxtTitleInfoDow
 		txtInfo.text =  Globals.language.dealsTxtInfoDow ..
 						Globals.language.dealsTxtInfoDow2
@@ -743,6 +746,9 @@ function buildCoupon()
         rctBtnB.alpha = 0
 		txtStock:setFillColor( .8, .5, .5 )
     elseif itemObj.assigned == 2 or itemObj.assigned == '2' then
+		imgBtnShare.alpha = 1
+        imgBtnShareB.alpha = 1
+		imgBtnShare:addEventListener( 'tap', showFriends )
 		txtTitleInfo.text = Globals.language.dealsTitleInfo
 		txtInfo.text =  Globals.language.dealsInfo ..itemObj.partner.. Globals.language.dealsInfo2
 		txtBtn.text = Globals.language.dealstxtBtn

@@ -35,6 +35,10 @@ local callbackCurrent = 0
 local hWBE = 0
 local homeScreen = display.newGroup()
 
+function setElementsMessage(item)
+	itemObj = item
+end
+
 -- funciones
 function showPartner( event )
 	storyboard.removeScene( "src.Partner" )
@@ -95,28 +99,9 @@ function getScreenMe()
 	return homeScreen
 end
 
-function scene:createScene( event )
-	screen = self.view
-	screen:insert(homeScreen)
+function BuildItemsMessage()
 	
-	itemObj = event.params.item
-	
-	local bg = display.newRect( 0, h, display.contentWidth, display.contentHeight )
-	bg.anchorX = 0
-	bg.anchorY = 0
-	bg:setFillColor( 245/255, 245/255, 245/255 )
-	homeScreen:insert(bg)
-	
-	-- Build Component Header
-	local header = Header:new()
-    homeScreen:insert(header)
-    header.y = h
-    header:buildToolbar()
-    header:buildNavBar(itemObj.name)
-    hWBE = 5 + header:buildWifiBle()
-    settings = DBManager.getSettings()
-    
-    svMessage = widget.newScrollView
+	svMessage = widget.newScrollView
 	{
 		top = h + 125 + hWBE,
 		left = 0,
@@ -156,6 +141,8 @@ function scene:createScene( event )
     })
     txtPartner:setFillColor( 0 )
     svMessage:insert(txtPartner)
+	
+	print(itemObj.fechaFormat)
 
     local txtFecha = display.newText( {
         text = itemObj.fechaFormat,     
@@ -235,6 +222,153 @@ function scene:createScene( event )
     Globals.noCallbackGlobal = Globals.noCallbackGlobal + 1
 	callbackCurrent = Globals.noCallbackGlobal
     loadImageMessage(itemObj)
+	
+end
+
+function scene:createScene( event )
+	screen = self.view
+	screen:insert(homeScreen)
+	
+	idMessage = event.params.item
+	
+	local bg = display.newRect( 0, h, display.contentWidth, display.contentHeight )
+	bg.anchorX = 0
+	bg.anchorY = 0
+	bg:setFillColor( 245/255, 245/255, 245/255 )
+	homeScreen:insert(bg)
+	
+	-- Build Component Header
+	local header = Header:new()
+    homeScreen:insert(header)
+    header.y = h
+    header:buildToolbar()
+    header:buildNavBar(Mensaje)
+    hWBE = 5 + header:buildWifiBle()
+    settings = DBManager.getSettings()
+	
+	RestManager.getMessage(idMessage)
+    
+    --[[svMessage = widget.newScrollView
+	{
+		top = h + 125 + hWBE,
+		left = 0,
+		width = intW,
+		height = intH - (h + 125 + hWBE),
+		listener = scrollListenerContent1,
+		horizontalScrollDisabled = true,
+        verticalScrollDisabled = false,
+		backgroundColor = { .96 }
+	}
+	homeScreen:insert(svMessage)
+    
+    bgMessage = display.newRect( midW, 20, 460, 200 )
+    bgMessage.anchorY = 0
+	svMessage:insert(bgMessage)
+    
+    -- Agregamos imagen
+    local iconMessage = display.newImage( itemObj.image, system.TemporaryDirectory )
+    iconMessage:translate( 50, 55)
+    svMessage:insert( iconMessage )
+
+    -- Agregamos textos
+    local txtPartner0 = display.newText( {
+        text = Globals.language.MSGTxtPartner0,     
+        x = 260, y = 40,
+        width = 340,
+        font = "Lato-Bold", fontSize = 16, align = "left"
+    })
+    txtPartner0:setFillColor( 0 )
+    svMessage:insert(txtPartner0)
+
+    local txtPartner = display.newText( {
+        text = itemObj.partner,     
+        x = 270, y = 40,
+        width = 300,
+        font = "Lato-Bold", fontSize = 18, align = "left"
+    })
+    txtPartner:setFillColor( 0 )
+    svMessage:insert(txtPartner)
+	
+	print(itemObj.fechaFormat)
+
+    local txtFecha = display.newText( {
+        text = itemObj.fechaFormat,     
+        x = 440, y = 35,
+        width = 100,
+        font = "Lato-Bold", fontSize = 12, align = "left"
+    })
+    txtFecha:setFillColor( 0 )
+    svMessage:insert(txtFecha)
+
+    local txtTitle0 = display.newText( {
+        text = Globals.language.MSGTxtTitle0,
+        x = 260, y = 70,
+        width = 340, height = 0,
+        font = "Lato-Bold", fontSize = 16, align = "left"
+    })
+    txtTitle0:setFillColor( 0 )
+    svMessage:insert(txtTitle0)
+
+    local txtTitle = display.newText( {
+        text = itemObj.name,
+        x = 290, y = 70,
+        width = 280, height = 0,
+        font = "Lato-Bold", fontSize = 18, align = "left"
+    })
+    txtTitle:setFillColor( 0 )
+    svMessage:insert(txtTitle)
+    
+	groupInfo = display.newGroup()
+    svMessage:insert(groupInfo)
+    lastY = 120
+    
+	local bgGeneralInformacion = display.newRect( midW, lastY, 440, 76 )
+	bgGeneralInformacion:setFillColor( 1 )
+	groupInfo:insert(bgGeneralInformacion)
+    
+    local txtInfo = display.newText({
+		text = itemObj.detail,
+		x = midW, y = lastY,
+		width = 420,
+		font = "Lato-Regular", fontSize = 16, align = "left"
+	})
+	txtInfo:setFillColor( 0 )
+    txtInfo.y = (txtInfo.height / 2) + lastY + 10
+	groupInfo:insert( txtInfo )
+    
+    bgGeneralInformacion.height = txtInfo.height + 40
+    bgGeneralInformacion.y = (txtInfo.height / 2) + lastY + 10
+    lastY = lastY + bgGeneralInformacion.height + 20
+	
+	-- Link Comercio
+    local rctBtnComer = display.newRoundedRect( 330, lastY, 210, 55, 5 )
+	rctBtnComer:setFillColor( .4 )
+	rctBtnComer:addEventListener( "tap", showPartner )
+	groupInfo:insert(rctBtnComer)
+    
+    local rctBtnComerB = display.newRoundedRect( 330, lastY + 15, 210, 22, 5 )
+    rctBtnComerB:setFillColor( {
+        type = 'gradient',
+        color1 = { .4 }, 
+        color2 = { .3 },
+        direction = "bottom"
+    } ) 
+    groupInfo:insert(rctBtnComerB)
+
+	local txtBtnComer = display.newText( {
+		text =  Globals.language.MSGxtBtnComer,
+		x = 330, y = lastY,
+		width = 210, height = 0,
+		font = "Lato-Bold", fontSize = 18, align = "center"
+	})
+	txtBtnComer:setFillColor( 1 )
+	groupInfo:insert( txtBtnComer )
+    
+    -- Load Image
+    bgMessage.height = rctBtnComer.y + 30
+    Globals.noCallbackGlobal = Globals.noCallbackGlobal + 1
+	callbackCurrent = Globals.noCallbackGlobal
+    loadImageMessage(itemObj)]]
     
 end
 

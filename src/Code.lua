@@ -26,6 +26,7 @@ local midW = display.contentCenterX
 local midH = display.contentCenterY
 
 local h = display.topStatusBarContentHeight
+local fxNotif = audio.loadStream( "fx/alert.wav" )
 local lastY = 150
 
 --[[local toolbar, menu
@@ -36,7 +37,7 @@ local h = display.topStatusBarContentHeight
 local lastYCoupon = 0
 local itemObj
 local currentSv
-local settings
+
 local rctBtn, rctBtnB
 local FlagCoupon = 0
 local imgBtnShare, imgBtnShareB
@@ -76,11 +77,11 @@ function changeCodeC( event )
 end
 	
 -- Descargar Deal
-function showDealsRedeem()
+function showDealsRedeem(itemCoupon)
         
 	-- Play Sound
 	timer.performWithDelay(500, function() 
-		audio.play( fx )
+		audio.play( fxNotif )
 	end, 1)
         
 	-- Creamos anuncio
@@ -122,9 +123,47 @@ function showDealsRedeem()
 	sprite:setSequence("play")
 	sprite:play()
         
-	transition.to( groupDownloadCode, { alpha = 0, time = 400, delay = 2000, transition = easing.outExpo } )
-	
-	RestManager.getNotificationsUnRead()
+	transition.to( groupDownloadCode, { alpha = 0, time = 400, delay = 2000, transition = easing.outExpo, 
+        onComplete = function()
+            if itemCoupon then
+                if itemCoupon[1] then
+                        
+                    -- Determinamos si la imagen existe
+                    local path = system.pathForFile( itemCoupon[1].image, system.TemporaryDirectory )
+                    local fhd = io.open( path )
+                    if fhd then
+                        fhd:close()
+                        storyboard.removeScene( "src.Coupon" )
+                        storyboard.gotoScene( "src.Coupon", {
+                            time = 400,
+                            effect = "crossFade",
+                            params = { item = itemCoupon[1] }
+                        })
+                    else
+                        -- Listener de la carga de la imagen del servidor
+                        local function loadImageListener( event )
+                            if ( event.isError ) then
+                            else
+                                event.target.alpha = 0
+                                storyboard.removeScene( "src.Coupon" )
+                                storyboard.gotoScene( "src.Coupon", {
+                                    time = 400,
+                                    effect = "crossFade",
+                                    params = { item = itemCoupon[1] }
+                                })
+                            end
+                        end
+
+                        -- Descargamos de la nube
+                        local settings = DBManager.getSettings()
+                        display.loadRemoteImage( settings.url.."assets/img/app/deal/"..itemCoupon[1].image, 
+                        "GET", loadImageListener, itemCoupon[1].image, system.TemporaryDirectory ) 
+                    end
+                end
+            end
+        end
+    })
+	--RestManager.getNotificationsUnRead()
         
 	return true
 end

@@ -187,6 +187,8 @@ function buildPartnerInfo(item)
     local bgPhone1 = display.newRoundedRect( midW, lastY, 440, 60, 10 )
     bgPhone1.anchorY = 0
 	bgPhone1:setFillColor( 1 )
+    bgPhone1.phone = item.phone
+	bgPhone1:addEventListener( "tap", callPhone )
 	srvPartnerD:insert(bgPhone1)
     
     local bgPhone2 = display.newRoundedRect( 410, lastY, 100, 60, 10 )
@@ -197,7 +199,6 @@ function buildPartnerInfo(item)
     local bgPhone3 = display.newRect( 370, lastY, 20, 60)
     bgPhone3.anchorY = 0
 	bgPhone3:setFillColor( .19, .6, 0 )
-	bgPhone3:addEventListener( "tap", callPhone )
 	srvPartnerD:insert(bgPhone3)
     
     local iconPhone = display.newImage( "img/btn/iconPhone.png" )

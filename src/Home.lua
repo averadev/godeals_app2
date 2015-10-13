@@ -243,8 +243,23 @@ function buildItems(screen)
             end
         end
         
+        local btnNexTab = display.newImage( "img/btn/btnNexTab.png" )
+        btnNexTab:translate( intW/2, yMain + 10)
+        btnNexTab.name = 'deals'
+        btnNexTab:addEventListener("tap", changeScrollTap)
+        groupInicio:insert( btnNexTab )
+        
+        local txtNoFilterFound = display.newText( {
+			text = Globals.language.homeMoreItems,     
+			x = 235, y = yMain + 8,
+			width = 400,
+			font = "Lato-Regular",  fontSize = 24, align = "left"
+		})
+		txtNoFilterFound:setFillColor( 1 )
+		groupInicio:insert(txtNoFilterFound)
+        
 		endLoading()
-		scrViewMain:setScrollHeight(yMain)
+		scrViewMain:setScrollHeight(yMain + 70)
         
     elseif screen == "DealPanel" then
 	

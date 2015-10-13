@@ -42,6 +42,7 @@ local RestManager = {}
 		
 		settings = DBManager.getSettings()
 		local url = settings.url .. "api/getRecommended/format/json/idApp/" .. settings.idApp .. "/city/" .. settings.city .. "/language/" .. leng
+    print(url)
 	   local function callback(event)
             if ( event.isError ) then
             else
@@ -837,7 +838,7 @@ local RestManager = {}
             else
 				local data = json.decode(event.response)
 				if data.success == true then
-					showDealsRedeem()
+					showDealsRedeem(data.itemCoupon)
 				else
 					--native.showAlert( "Go Deals", data.message, { "OK" })
 					showTextErrorCode(data.message)

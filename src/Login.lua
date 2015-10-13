@@ -391,9 +391,32 @@ function scene:createScene( event )
     
 end
 
+local locationCity = function( event )
+    -- Check for error (user may have turned off location services)
+    if ( event.errorCode ) then
+        print( "Location error: " .. tostring( event.errorMessage ) )
+    else
+        print("Latitude: "..event.latitude )
+        print("Longitude: "..event.longitude )
+        
+        if (event.latitude > 20.61 and  event.latitude < 20.68) and
+            (event.longitude > -87.13  and event.longitude -87.01) then
+            -- print("GPS: Playa")
+            DBManager.updateCity(2)
+        elseif (event.latitude >  21.104 and  event.latitude < 21.224) and
+            (event.longitude > -86.890  and event.longitude -86.773) then
+            -- print("GPS: Cancun")
+        else
+            -- print("GPS: Ninguno")
+        end
+    end
+end
+
 -- Called immediately after scene has moved onscreen:
 function scene:enterScene( event )
     facebook.logout()
+    -- Activate location listener
+    Runtime:addEventListener( "location", locationCity )
 end
 
 -- Remove Listener
@@ -425,6 +448,7 @@ scene:addEventListener("enterScene", scene )
 scene:addEventListener("exitScene", scene )
 
 function scene:exitScene( event )
+    Runtime:removeEventListener( "location", locationCity )
     Runtime:removeEventListener( "key", onKeyEvent )
 end
 

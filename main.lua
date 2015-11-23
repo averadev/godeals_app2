@@ -6,7 +6,7 @@
 local launchArgs = ...      -- at the top of your program code
 display.setStatusBar( display.DarkStatusBar )
 
-local storyboard = require "storyboard"
+local composer = require "composer"
 local DBManager = require('src.resources.DBManager')
 local Globals = require('src.resources.Globals')
 
@@ -32,12 +32,12 @@ local function isBeacon(args)
                     
                     if optsExtras.partnerId then
                         partnerId = optsExtras.partnerId
-                        storyboard.gotoScene("src.Partner", {params = { idPartner = partnerId }})
+                        composer.gotoScene("src.Partner", {params = { idPartner = partnerId }})
                     end
                     
                     if optsExtras.adId then
                         partnerId = optsExtras.adId
-                        storyboard.gotoScene("src.PartnerWelcome", {params = { idAd = partnerId }})
+                        composer.gotoScene("src.PartnerWelcome", {params = { idAd = partnerId }})
                     end
                     
                 end
@@ -60,10 +60,10 @@ local function onSystemEvent(event)
             native.setProperty( "applicationIconBadgeNumber", 0 )
             if notif.type == 1 then
                 partnerId = notif.partnerId
-                storyboard.gotoScene("src.Partner", {params = { idPartner = partnerId }})
+                composer.gotoScene("src.Partner", {params = { idPartner = partnerId }})
             elseif notif.type == 2 then
                 partnerId = notif.id
-                storyboard.gotoScene("src.PartnerWelcome", {params = { idAd = partnerId }})
+                composer.gotoScene("src.PartnerWelcome", {params = { idAd = partnerId }})
             end
         end
 	end
@@ -81,9 +81,9 @@ end
 
 if partnerId == 0 then
     if isUser then
-		storyboard.gotoScene("src.Home")
+		composer.gotoScene("src.Home")
     else
-        storyboard.gotoScene("src.Login")
+        composer.gotoScene("src.LoginSplash")
     end
 end
 
@@ -105,12 +105,12 @@ function DidReceiveRemoteNotification(message, additionalData, isActive)
 			if additionalData.type == "1" then
 				local RestManager = require('src.resources.RestManager')
 				
-				storyboard.gotoScene( "src.Message", {
+				composer.gotoScene( "src.Message", {
 					params = { item = additionalData.id }
 				})
 				RestManager.notificationRead(additionalData.id)
 				RestManager.getNotificationsUnRead()
-				--storyboard.removeScene( "src.Home" )
+				--composer.removeScene( "src.Home" )
 			end
 		end
 	end

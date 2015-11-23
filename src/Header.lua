@@ -726,7 +726,7 @@ function Header:new()
 			notBubble = nil
 			txtNoBubble = nil
 		end
-		storyboard.gotoScene( "src.Login", {
+		storyboard.gotoScene( "src.LoginSplash", {
 			time = 400,
 			effect = "crossFade"
     }	)

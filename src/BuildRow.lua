@@ -436,7 +436,6 @@ function Deal:new()
                 imgBtnDown.grad = imgBtnShareB
                 container:insert(imgBtnShareB)
             else
-				print('asdasdasdsd')
                 if item.status == "1" then
                     lbStatus = Globals.language.buildDownloadeds
                 elseif item.status == "2" then

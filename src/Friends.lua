@@ -1,6 +1,6 @@
 
 local json = require("json")
-local facebook = require( "facebook" )
+local facebook = require("plugin.facebook.v4")
 local RestManager = require('src.resources.RestManager')
 local DBManager = require('src.resources.DBManager')
 local Globals = require('src.resources.Globals')
@@ -288,7 +288,8 @@ end
 function getFBFriends(  )
     iconCheckFB.alpha = 0
     iconCheckFB.fbId = nil
-    facebook.login( fbAppID, FBListener, {"public_profile", "email", "user_birthday", "user_friends"} )
+    --facebook.login( fbAppID, FBListener, {"public_profile", "email", "user_birthday", "user_friends"} )
+    facebook.login( FBListener )
 end
 
 function FBListener( event )

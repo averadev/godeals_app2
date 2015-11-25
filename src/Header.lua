@@ -671,7 +671,6 @@ function Header:new()
 	end
 	
 	function endLoading()
-		print('wadkjawndwjadnawjdawjd awjd akjd')
 		if grpLoading then
 			grpLoading:removeSelf()
 			grpLoading = nil

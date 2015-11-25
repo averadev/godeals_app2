@@ -7,11 +7,11 @@
 ---------------------------------------------------------------------------------
 -- REQUIRE & VARIABLES
 ---------------------------------------------------------------------------------
-local composer = require( "composer" )
+local storyboard = require( "storyboard" )
 local Globals = require('src.resources.Globals')
 local DBManager = require('src.resources.DBManager')
 local RestManager = require('src.resources.RestManager')
-local scene = composer.newScene()
+local scene = storyboard.newScene()
 
 -- Variables
 local intW = display.contentWidth
@@ -58,11 +58,11 @@ function onTxtFocus(event)
 end
 
 function gotoHome()
-	composer.gotoScene( "src.Home", { time = 400, effect = "crossFade" })
+	storyboard.gotoScene( "src.Home", { time = 400, effect = "crossFade" })
 end
 
 function getReturnSplash(event)
-    composer.gotoScene( "src.LoginSplash", { time = 400, effect = "crossFade" })
+    storyboard.gotoScene( "src.LoginSplash", { time = 400, effect = "crossFade" })
 end 
 
 function showCreate()
@@ -137,7 +137,7 @@ end
 -- OVERRIDING SCENES METHODS
 --------------------------------------------------------------- ------------------
 -- Called when the scene's view does not exist:
-function scene:create( event )
+function scene:createScene( event )
 
     -- Agregamos el home
 	screen = self.view
@@ -298,11 +298,11 @@ function scene:create( event )
 end
 
 -- Called immediately after scene has moved onscreen:
-function scene:show( event )
+function scene:enterScene( event )
 end
 
 -- Remove Escene Objects
-function scene:hide( event )
+function scene:exitScene( event )
     if txtSignEmail then
         txtSignEmail:removeSelf()
         txtSignEmail = nil
@@ -325,9 +325,9 @@ function scene:hide( event )
     end
 end
 
-scene:addEventListener("create", scene )
-scene:addEventListener("show", scene )
-scene:addEventListener("hide", scene )
+scene:addEventListener("createScene", scene )
+scene:addEventListener("enterScene", scene )
+scene:addEventListener("exitScene", scene )
 
     
 return scene

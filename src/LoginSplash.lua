@@ -7,11 +7,13 @@
 ---------------------------------------------------------------------------------
 -- REQUIRE & VARIABLES
 ---------------------------------------------------------------------------------
-local composer = require( "composer" )
+local storyboard = require( "storyboard" )
 local Globals = require('src.resources.Globals')
 local DBManager = require('src.resources.DBManager')
+local RestManager = require('src.resources.RestManager')
 local facebook = require("plugin.facebook.v4")
-local scene = composer.newScene()
+local json = require("json")
+local scene = storyboard.newScene()
 
 -- Variables
 local intW = display.contentWidth
@@ -47,9 +49,14 @@ end
 ---------------------------------------------------------------------------------
 -- FUNCTIONS
 ---------------------------------------------------------------------------------
+function gotoHome()
+    storyboard.removeScene( "src.Home" )
+    storyboard.gotoScene( "src.Home", { time = 400, effect = "crossFade" })
+end
+
 function toLoginUserName(event)
-    composer.removeScene( "src.LoginUserName" )
-    composer.gotoScene( "src.LoginUserName", { time = 400, effect = "crossFade" })
+    storyboard.removeScene( "src.LoginUserName" )
+    storyboard.gotoScene( "src.LoginUserName", { time = 400, effect = "crossFade" })
 end
 
 function facebookListener( event )
@@ -62,50 +69,16 @@ function facebookListener( event )
 	print( "response: " .. tostring( event.response ) )
 
     if ( "session" == event.type ) then
-		statusMessage.textObject.text = event.phase
 		print( "Session Status: " .. event.phase )
 		
-		if event.phase ~= "login" then
-			-- Exit if login error
-			return
-		else
-			-- Run the desired command
-			processFBCommand()
-		end
+		local params = { fields = "birthday,email,name,id" }
+        facebook.request( "me", "GET", params )
 
     elseif ( "request" == event.type ) then
         local response = event.response
 		if ( not event.isError ) then
 	        response = json.decode( event.response )
-			print( "Facebook Command: " .. fbCommand )
-	        if response.name then
-				statusMessage.textObject.text = response.name
-				print( "name", response.name )
-			end
-        else
-			statusMessage.textObject.text = "Post failed"
-			printTable( event.response, "Post Failed Response", 3 )
-		end
-		
-	elseif ( "dialog" == event.type ) then
-		-- showDialog response
-		print( "dialog response:", event.response )
-		statusMessage.textObject.text = event.response
-    end
-    
-    
-     --[[
-    if ( "session" == event.type ) then
-        if ( "login" == event.phase ) then
-            print(" Its Login ")
-            --local params = { fields = "birthday,email,name,id" }
-            --facebook.request( "me", "GET", params )
-        end
-    elseif ( "request" == event.type ) then
-        if ( not event.isError ) then
-            local response = json.decode( event.response )
-            print(" --- idFB: "..response.id)
-           
+			print(" --- idFB: "..response.id)
             if not (response.email == nil) then 
                 -- Mac Addresss
                 local mac = ""
@@ -123,14 +96,17 @@ function facebookListener( event )
                 
                 RestManager.createUser(response.email, ' ', response.name, response.id, birthday, mac)
             end
-            
-        end
+        else
+			printTable( event.response, "Post Failed Response", 3 )
+		end
+		
+	elseif ( "dialog" == event.type ) then
+		-- showDialog response
+		print( "dialog response:", event.response )
     end
-    ]]--
 end
 
 function loginFB(event)
-    print( "loginFB" )
     facebook.login( facebookListener )
 end
 
@@ -280,7 +256,7 @@ end
 -- OVERRIDING SCENES METHODS
 --------------------------------------------------------------- ------------------
 -- Called when the scene's view does not exist:
-function scene:create( event )
+function scene:createScene( event )
 
     -- Agregamos el home
 	screen = self.view
@@ -480,17 +456,17 @@ function scene:create( event )
 end
 
 -- Called immediately after scene has moved onscreen:
-function scene:show( event )
+function scene:enterScene( event )
 end
 
 -- Remove Listener
-function scene:destroy( event )
+function scene:exitScene( event )
     screen:removeEventListener( "touch", touchScreen )
 end
 
-scene:addEventListener("create", scene )
-scene:addEventListener("show", scene )
-scene:addEventListener("destroy", scene )
+scene:addEventListener("createScene", scene )
+scene:addEventListener("enterScene", scene )
+scene:addEventListener("exitScene", scene )
 
     
 return scene

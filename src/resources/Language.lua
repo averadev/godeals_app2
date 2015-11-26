@@ -111,15 +111,17 @@ Language.es = {
     -- login2
     loginTitle1A = "CONSULTA LOS DEALS DISPONIBLES",
     loginTitle2A = "Y DESCARGA EL QUE TE INTERESE.",
-    loginTitle3A = "¡SON GRATIS PERO... LIMITADOS!",
+    loginTitle3A = "¡SON GRATIS PERO LIMITADOS!",
     loginTitle4B = "ADEMÁS ¡OBTÉN REGALOS ADICIONALES ENCONTRANDO LOS",
-    loginTitle5B = "CÓDIGOS DE REGALO EN LOS ANUNCIOS DE GODEALS QUE VEAS",
+    loginTitle5B = "CÓDIGOS DE REGALO EN LOS ANUNCIOS DE GO DEALS QUE VEAS",
     loginTitle6B = "A LO LARGO DE TU CIUDAD Y CON COMERCIOS AFILIADOS!",
     loginTitle4C = "¡Y CONSULTA LOS MEJORES EVENTOS DE TU CIUDAD",
     loginTitle5C = "PARA QUE SIEMPRE TENGAS ALGO NUEVO QUE HACER!",
     loginTitle6C = "",
     loginBtnFB = "CONECTARSE CON FACEBOOK",
     loginBtnEmail = "INGRESA CON USERNAME Ó EMAIL",
+    loginDescUsername = "Email / Usuario",
+    loginDescPasword = "Contraseña",
 	--mensaje
 	MSGTxtPartner0 = "De: ",
 	MSGTxtTitle0= "Asunto: ",
@@ -267,7 +269,7 @@ Language.en = {
     -- login2
     loginTitle1A = "CHECK OUT ALL AVAILABLE DEALS",
     loginTitle2A = "AND DOWNLOAD THE ONE YOU LIKE.",
-    loginTitle3A = "¡THEY ARE FREE BUT….LIMITED!",
+    loginTitle3A = "¡THEY ARE FREE BUT LIMITED!",
     loginTitle4B = "ALSO, GET ADDITIONAL GIFTS FINDING THE GIFT CODES IN",
     loginTitle5B = "THE ADVERTISING OF GO DEALS THAT YOU SEE ALONG YOUR",
     loginTitle6B = "CITY AND AFFILIATED ESTABLISHMENTS!",
@@ -276,6 +278,8 @@ Language.en = {
     loginTitle6C = "",
     loginBtnFB = "LOG IN WITH FACEBOOK",
     loginBtnEmail = "JOIN WITH YOUR USERNAME OR EMAIL",
+    loginDescUsername = "Email / Username",
+    loginDescPasword = "Password",
 	--mensaje
 	MSGTxtPartner0 = "From: ",
 	MSGTxtTitle0= "Subject: ",

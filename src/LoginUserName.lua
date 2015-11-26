@@ -58,10 +58,12 @@ function onTxtFocus(event)
 end
 
 function gotoHome()
+    storyboard.removeScene( "src.Home" )
 	storyboard.gotoScene( "src.Home", { time = 400, effect = "crossFade" })
 end
 
 function getReturnSplash(event)
+    storyboard.removeScene( "src.LoginSplash" )
     storyboard.gotoScene( "src.LoginSplash", { time = 400, effect = "crossFade" })
 end 
 
@@ -180,6 +182,7 @@ function scene:createScene( event )
     txtSignEmail.method = "signin"
     txtSignEmail.inputType = "email"
     txtSignEmail.hasBackground = false
+    txtSignEmail.placeholder = Globals.language.loginDescUsername
     txtSignEmail:addEventListener( "userInput", onTxtFocus )
 	groupSign:insert(txtSignEmail)
     txtSignPass = native.newTextField( midW + 25, midH + 45, 300, 45 )
@@ -187,6 +190,7 @@ function scene:createScene( event )
     txtSignPass.method = "signin"
     txtSignPass.isSecure = true
     txtSignPass.hasBackground = false
+    txtSignPass.placeholder = Globals.language.loginDescPasword
     txtSignPass:addEventListener( "userInput", onTxtFocus )
 	groupSign:insert(txtSignPass)
     
@@ -249,6 +253,7 @@ function scene:createScene( event )
     txtCreateEmail.method = "create"
     txtCreateEmail.inputType = "email"
     txtCreateEmail.hasBackground = false
+    txtCreateEmail.placeholder = Globals.language.loginDescUsername
 	groupCreate:insert(txtCreateEmail)
     txtCreateEmail:addEventListener( "userInput", onTxtFocus )
     txtCreatePass = native.newTextField( midW + 25, midH + 05, 300, 45 )
@@ -256,6 +261,7 @@ function scene:createScene( event )
     txtCreatePass.method = "create"
     txtCreatePass.isSecure = true
     txtCreatePass.hasBackground = false
+    txtCreatePass.placeholder = Globals.language.loginDescPasword
 	groupCreate:insert(txtCreatePass)
     txtCreatePass:addEventListener( "userInput", onTxtFocus )
     txtCreateRePass = native.newTextField( midW + 25, midH + 85, 300, 45 )
@@ -263,6 +269,7 @@ function scene:createScene( event )
     txtCreateRePass.method = "create"
     txtCreateRePass.isSecure = true
     txtCreateRePass.hasBackground = false
+    txtCreateRePass.placeholder = Globals.language.loginDescPasword
 	groupCreate:insert(txtCreateRePass)
     txtCreateRePass:addEventListener( "userInput", onTxtFocus )
     

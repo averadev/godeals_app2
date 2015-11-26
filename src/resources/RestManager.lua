@@ -17,8 +17,7 @@ local RestManager = {}
 	
 		--native.showAlert( "Go Deals 1", 'hola', { "OK"})
 	
-		print('hsdasdhjasdbhasdbashjd')
-	
+		
 		local function IdsAvailable(playerID, pushToken)
 			--print("PLAYER_ID:" .. playerID)
 			playerId = playerID
@@ -42,7 +41,7 @@ local RestManager = {}
 		
 		settings = DBManager.getSettings()
 		local url = settings.url .. "api/getRecommended/format/json/idApp/" .. settings.idApp .. "/city/" .. settings.city .. "/language/" .. leng
-    print(url)
+    
 	   local function callback(event)
             if ( event.isError ) then
             else
@@ -107,6 +106,7 @@ local RestManager = {}
 	RestManager.getAllCoupon = function()
 		settings = DBManager.getSettings()
 		local url = settings.url .. "api/getAllDeal/format/json/idApp/" .. settings.idApp .. "/language/" .. leng
+        
 	    local function callback(event)
             if ( event.isError ) then
             else
@@ -344,7 +344,6 @@ local RestManager = {}
 			url = url.."/mac/"..mac
 		end
 		
-		--print(url)
         
         local function callback(event)
             if ( event.isError ) then
@@ -683,7 +682,7 @@ local RestManager = {}
 		
 		local url = settings.url
         url = url.."api/getCity/format/json"
-    
+        
         local function callback(event)
             if ( event.isError ) then
             else

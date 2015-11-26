@@ -129,11 +129,11 @@ function MenuLeft:new()
 		
 		transition.to( grpLanguage, { y = intH - 60, time = 800, transition = easing.outExpo } )
         if grpCity.y == intH - 123 then
-            transition.to( grpCity, { y = intH - 240, time = 800, transition = easing.outExpo } )
+            transition.to( grpCity, { y = intH - (120 + (60 * event.target.count)), time = 800, transition = easing.outExpo } )
         else
             transition.to( grpCity, { y = intH - 123, time = 800, transition = easing.outExpo } )
 			if grpLanguage.y - intH - 123  == -303 then
-				transition.to( grpCity, { y = intH - 240, time = 800, transition = easing.outExpo } )
+				transition.to( grpCity, { y = intH - (120 + (60 * event.target.count)), time = 800, transition = easing.outExpo } )
 			end
         end
 		return true
@@ -317,6 +317,7 @@ function MenuLeft:new()
 		
 		local MenuLeftCiudad = display.newRect( display.contentCenterX - 80, 30 , 400, 60 )
 		MenuLeftCiudad:setFillColor( 50/255, 150/255, 0 )
+        MenuLeftCiudad.count = #items
         MenuLeftCiudad:addEventListener( "tap", getCities )
 		grpCity:insert(MenuLeftCiudad)
         

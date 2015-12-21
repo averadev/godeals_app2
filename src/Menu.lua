@@ -270,7 +270,6 @@ function MenuLeft:new()
         })
 		selfL:insert(txtMenu3)
         
-        
         -- Comercios afiliados
         local bgComercios = display.newRect( display.contentCenterX - 80, h + 545, 400, 70 )
 		bgComercios:setFillColor( .5 )
@@ -291,24 +290,6 @@ function MenuLeft:new()
         })
 		selfL:insert(txtMenu4)
 		
-		 -- Cambio de codigo
-        --[[local bgChangeCode = display.newRect( display.contentCenterX - 80, h + 620, 400, 70 )
-		bgChangeCode:setFillColor( .5 )
-        bgChangeCode.alpha = .05
-        bgChangeCode:addEventListener( "tap", ShowRedeemCode )
-		selfL:insert(bgChangeCode)
-		local lineBottomCC = display.newRect( 160, h + 655, 400, 1)
-        lineBottomCC:setFillColor( 50/255, 150/255, 0 )
-		selfL:insert(lineBottomCC)
-		
-		local txtMenuCC = display.newText( {
-            text = Globals.language.menuTxtMenuCC,
-            x = 160, y = h + 620, width = 330, 
-            font = "Lato-Bold",  fontSize = 18, align = "left"
-        })
-		selfL:insert(txtMenuCC)--]]
-        
-        
         -- Menu Ciudades
 		local lastY = 90
         selfL:insert(grpCity)

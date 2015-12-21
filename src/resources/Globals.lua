@@ -30,5 +30,7 @@ return {
 	playerIdToken = "",
 	
 	mapItemObj = nil,
+    
+    isReadOnly = false,
 	
 }

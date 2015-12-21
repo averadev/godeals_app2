@@ -41,7 +41,7 @@ local RestManager = {}
 		
 		settings = DBManager.getSettings()
 		local url = settings.url .. "api/getRecommended/format/json/idApp/" .. settings.idApp .. "/city/" .. settings.city .. "/language/" .. leng
-    
+        print(url)
 	   local function callback(event)
             if ( event.isError ) then
             else

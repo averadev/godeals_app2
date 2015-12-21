@@ -50,27 +50,27 @@ end
 -- FUNCTIONS
 ---------------------------------------------------------------------------------
 function gotoHome()
+    Globals.isReadOnly = false
     storyboard.removeScene( "src.Home" )
     storyboard.gotoScene( "src.Home", { time = 400, effect = "crossFade" })
 end
 
 function toLoginUserName(event)
+    Globals.isReadOnly = false
     storyboard.removeScene( "src.LoginUserName" )
     storyboard.gotoScene( "src.LoginUserName", { time = 400, effect = "crossFade" })
 end
 
+function toLoginFree()
+    Globals.isReadOnly = true
+    storyboard.removeScene( "src.Home" )
+    storyboard.gotoScene( "src.Home", { time = 400, effect = "crossFade" })
+end
+
 function facebookListener( event )
-    print( "Facebook Listener events:" )
-	
-    print( "event.name", event.name ) -- "fbconnect"
-    print( "event.type:", event.type ) -- type is either "session" or "request" or "dialog"
-	print( "isError: " .. tostring( event.isError ) )
-	print( "didComplete: " .. tostring( event.didComplete ) )
-	print( "response: " .. tostring( event.response ) )
+    Globals.isReadOnly = false
 
     if ( "session" == event.type ) then
-		print( "Session Status: " .. event.phase )
-		
 		local params = { fields = "birthday,email,name,id" }
         facebook.request( "me", "GET", params )
 
@@ -97,12 +97,8 @@ function facebookListener( event )
                 RestManager.createUser(response.email, ' ', response.name, response.id, birthday, mac)
             end
         else
-			printTable( event.response, "Post Failed Response", 3 )
+			-- printTable( event.response, "Post Failed Response", 3 )
 		end
-		
-	elseif ( "dialog" == event.type ) then
-		-- showDialog response
-		print( "dialog response:", event.response )
     end
 end
 
@@ -429,13 +425,8 @@ function scene:createScene( event )
 	lblBtn:setFillColor( 1 )
     screen:insert(lblBtn)
     
-    -- User - Email
-    local icoUser = display.newImage("img/btn/icoUser.png", true) 
-    icoUser.x = 80
-    icoUser.y = posYBg + 163
-    screen:insert(icoUser)
-    
-    local bgBtnUserName = display.newRect( midW, posYBg + 164, 350, 50 )
+    -- User / Email
+    local bgBtnUserName = display.newRect( 140, posYBg + 164, 160, 50 )
 	bgBtnUserName:setFillColor( 1 )
     bgBtnUserName.alpha = .01
     bgBtnUserName:addEventListener( "tap", toLoginUserName )
@@ -443,13 +434,34 @@ function scene:createScene( event )
     
     local lblBottom = display.newText( {
         text = Globals.language.loginBtnEmail,
-        x = 255, y = posYBg + 164,
+        x = 140, y = posYBg + 164,
         font = "Lato-Bold",  
-        width = 400,
-        fontSize = 16, align = "center"
+        width = 160,
+        fontSize = 14, align = "center"
     })
     lblBottom:setFillColor( .2 )
     screen:insert(lblBottom)
+    
+    local lineSep = display.newRect( midW, posYBg + 164, 2, 20 )
+	lineSep:setFillColor( .6 )
+	screen:insert(lineSep)
+    
+    -- Recorrido
+    local bgBtnFree = display.newRect( 340, posYBg + 164, 160, 50 )
+	bgBtnFree:setFillColor( 1 )
+    bgBtnFree.alpha = .01
+    bgBtnFree:addEventListener( "tap", toLoginFree )
+	screen:insert(bgBtnFree)
+    
+    local lblFree = display.newText( {
+        text = Globals.language.loginBtnFree,
+        x = 340, y = posYBg + 164,
+        font = "Lato-Bold",  
+        width = 160,
+        fontSize = 14, align = "center"
+    })
+    lblFree:setFillColor( .2 )
+    screen:insert(lblFree)
     
     -- Touch Listener
     screen:addEventListener( "touch", touchScreen )

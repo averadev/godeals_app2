@@ -120,6 +120,11 @@ Language.es = {
     loginTitle6C = "",
     loginBtnFB = "CONECTARSE CON FACEBOOK",
     loginBtnEmail = "INGRESA CON USERNAME Ó EMAIL",
+    loginBtnFree = "CONOCE MÁS DE LA APLICACIÓN",
+    loginFreeMessages = "AQUÍ PODRÁS ENCONTRAR MENSAJES Y REGALOS ESPECIALES PARA TÍ DE PARTE DE NUESTROS COMERCIOS AFILIADOS",
+    loginFreeDownloads = "CONSULTA AQUÍ TODOS LOS DEALS DESCARGADOS. ¡APURATE A OBTENERLOS! YÁ QUE SON LIMITADOS Y POR TIEMPO LIMITADO",
+    loginFreeGiftCode = "AQUÍ PODRÁS INTRODUCIR TODOS LOS CÓDIGOS DE REGALO QUE ENCUENTRES EN TU CIUDAD. ¡OBTÉN CON ELLOS DEALS ÚNICOS!",
+    loginFreeSign = "¡REGISTRATE AHORA!",
     loginDescUsername = "Email / Usuario",
     loginDescPasword = "Contraseña",
 	--mensaje
@@ -278,6 +283,11 @@ Language.en = {
     loginTitle6C = "",
     loginBtnFB = "LOG IN WITH FACEBOOK",
     loginBtnEmail = "JOIN WITH YOUR USERNAME OR EMAIL",
+    loginBtnFree = "EXPLORE BEFORE YOU SIGN UP",
+    loginFreeMessages = "HERE YOU WILL FIND ALL YOUR MESSAGES AND SPECIAL GIFTS FROM OUR AFFILIATED ESTABLISHMENTS JUST FOR YOU.",
+    loginFreeDownloads = "CHECK HERE FOR ALL DEALS DOWNLOADED ¡HURRY TO GET THEM! THEY ARE LIMITED AND FOR A LIMITED TIME.",
+    loginFreeGiftCode = "HERE YOU CAN ENTER ALL THE GIFT CODES YOU FIND AROUND YOUR CITY. ¡GET EXCLUSIVE DEALS WITH THEM!",
+    loginFreeSign = "SIGN IN NOW!",
     loginDescUsername = "Email / Username",
     loginDescPasword = "Password",
 	--mensaje

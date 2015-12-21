@@ -201,69 +201,103 @@ function scene:createScene( event )
     header:buildToolbar()
     header:buildNavBar("Codigo")
     hWPL = 5 + header:buildWifiBle()
-	
-	local txtReedirCode = display.newText({
-		text = Globals.language.codeTxtReedirCode,
-		x = 240, y = 600,
-		x = midW, y = lastY + 70,
-		width = 360,
-		font = "Lato-Regular", fontSize = 20, align = "left"
-	})
-	txtReedirCode:setFillColor( 0 )
-	codeScreen:insert(txtReedirCode)
-	
-	lastY = lastY + 150
-	
-	local bgReedirCode = display.newImage("img/btn/txtEmail.png", true) 
-    bgReedirCode.x = midW
-    bgReedirCode.y = lastY
-    codeScreen:insert(bgReedirCode)
-	
-	txtFieldReedirCode = native.newTextField( midW, lastY, 380, 60 )
-    txtFieldReedirCode.method = "code"
-    txtFieldReedirCode.inputType = "text"
-    txtFieldReedirCode.hasBackground = false
-    txtFieldReedirCode:addEventListener( "userInput", onTxtFocusCode )
-	txtFieldReedirCode:setReturnKey(  "send"  )
-	codeScreen:insert(txtFieldReedirCode)
-	
-	lastY = lastY + 60
-	
-	txtErrorReedirCode = display.newText({
-		text = "",
-		x = midW + 20, y = lastY,
-		width = 400,
-		font = "Lato-Regular", fontSize = 18, align = "left"
-	})
-	txtErrorReedirCode:setFillColor( 0 )
-	txtErrorReedirCode:setFillColor( 1, 0, 0 )
-	codeScreen:insert(txtErrorReedirCode)
-	
-	lastY = lastY + 70
-	
-	rctBtnRC = display.newRoundedRect( 240, lastY, 210, 55, 5 )
-	--rctBtn.idCoipon = itemObj.id
-	rctBtnRC:setFillColor( .2, .6, 0 )
-	codeScreen:insert(rctBtnRC)
-	rctBtnRC:addEventListener( 'tap', changeCodeC )
-	
-	rctBtnBRC = display.newRoundedRect( 240, lastY + 18, 210, 22, 5 )
-    rctBtnBRC:setFillColor( {
-        type = 'gradient',
-        color1 = { .2, .6, 0 }, 
-        color2 = { .1, .5, 0 },
-        direction = "bottom"
-    } ) 
-    codeScreen:insert(rctBtnBRC)
+    
+     -- Check is read only
+    if Globals.isReadOnly then
+        local iconReadOnly = display.newImage( "img/btn/lock.png" )
+		iconReadOnly:translate( 240, 250)
+        iconReadOnly.alpha = .5
+		codeScreen:insert(iconReadOnly)
 
-	txtBtnRC = display.newText( {
-		text =  Globals.language.codeTxtBtnRC,
-		x = 240, y = lastY,
-		width = 210, height = 0,
-		font = "Lato-Bold", fontSize = 18, align = "center"
-	})
-	txtBtnRC:setFillColor( 1 )
-	codeScreen:insert(txtBtnRC)
+		local lblReadOnly = display.newText( {
+			text = Globals.language.loginFreeGiftCode,     
+			x = 240, y = 370, width = 400,
+			font = "Lato-Regular", fontSize = 16, align = "center"
+		})
+		lblReadOnly:setFillColor( 85/255, 85/255, 85/255 )
+		codeScreen:insert(lblReadOnly)
+        
+        local rctFree = display.newRoundedRect( midW, 450, 270, 55, 5 )
+        rctFree:setFillColor( .2, .6 ,0 )
+		rctFree:addEventListener( "tap", logout )
+        codeScreen:insert(rctFree)
+        
+        local lblSign = display.newText( {
+			text = Globals.language.loginFreeSign,     
+			x = 240, y = 450, width = 400,
+			font = "Lato-Bold", fontSize = 16, align = "center"
+		})
+		lblSign:setFillColor( 1 )
+		codeScreen:insert(lblSign)
+        
+    else
+        
+        local txtReedirCode = display.newText({
+            text = Globals.language.codeTxtReedirCode,
+            x = 240, y = 600,
+            x = midW, y = lastY + 70,
+            width = 360,
+            font = "Lato-Regular", fontSize = 20, align = "left"
+        })
+        txtReedirCode:setFillColor( 0 )
+        codeScreen:insert(txtReedirCode)
+
+        lastY = lastY + 150
+
+        local bgReedirCode = display.newImage("img/btn/txtEmail.png", true) 
+        bgReedirCode.x = midW
+        bgReedirCode.y = lastY
+        codeScreen:insert(bgReedirCode)
+
+        txtFieldReedirCode = native.newTextField( midW, lastY, 380, 60 )
+        txtFieldReedirCode.method = "code"
+        txtFieldReedirCode.inputType = "text"
+        txtFieldReedirCode.hasBackground = false
+        txtFieldReedirCode:addEventListener( "userInput", onTxtFocusCode )
+        txtFieldReedirCode:setReturnKey(  "send"  )
+        codeScreen:insert(txtFieldReedirCode)
+
+        lastY = lastY + 60
+
+        txtErrorReedirCode = display.newText({
+            text = "",
+            x = midW + 20, y = lastY,
+            width = 400,
+            font = "Lato-Regular", fontSize = 18, align = "left"
+        })
+        txtErrorReedirCode:setFillColor( 0 )
+        txtErrorReedirCode:setFillColor( 1, 0, 0 )
+        codeScreen:insert(txtErrorReedirCode)
+
+        lastY = lastY + 70
+
+        rctBtnRC = display.newRoundedRect( 240, lastY, 210, 55, 5 )
+        --rctBtn.idCoipon = itemObj.id
+        rctBtnRC:setFillColor( .2, .6, 0 )
+        codeScreen:insert(rctBtnRC)
+        rctBtnRC:addEventListener( 'tap', changeCodeC )
+
+        rctBtnBRC = display.newRoundedRect( 240, lastY + 18, 210, 22, 5 )
+        rctBtnBRC:setFillColor( {
+            type = 'gradient',
+            color1 = { .2, .6, 0 }, 
+            color2 = { .1, .5, 0 },
+            direction = "bottom"
+        } ) 
+        codeScreen:insert(rctBtnBRC)
+
+        txtBtnRC = display.newText( {
+            text =  Globals.language.codeTxtBtnRC,
+            x = 240, y = lastY,
+            width = 210, height = 0,
+            font = "Lato-Bold", fontSize = 18, align = "center"
+        })
+        txtBtnRC:setFillColor( 1 )
+        codeScreen:insert(txtBtnRC)
+        
+    end
+	
+	
 	
 end
 

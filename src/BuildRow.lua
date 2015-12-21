@@ -405,6 +405,7 @@ function Deal:new()
         txtPartner:setFillColor( .3 )
         container:insert(txtPartner)
         
+        local imgBtnDown, imgBtnShareB
         if item.leido then 
             local txtInfo = display.newText( {
                 text = item.detail,     
@@ -415,7 +416,7 @@ function Deal:new()
             txtInfo:setFillColor( .3 )
             container:insert(txtInfo)
         else
-            local imgBtnDown = display.newRoundedRect( 165, 55, 120, 40, 5 )
+            imgBtnDown = display.newRoundedRect( 165, 55, 120, 40, 5 )
             imgBtnDown.id = item.id
             imgBtnDown:setFillColor( .75 )
             container:insert( imgBtnDown )
@@ -426,7 +427,7 @@ function Deal:new()
                 imgBtnDown:setFillColor( 68/255, 177/255, 13/255 )
                 imgBtnDown:addEventListener( "tap", downloadDeal )
 
-                local imgBtnShareB = display.newRoundedRect( 165, 65, 120, 20, 5 )
+                imgBtnShareB = display.newRoundedRect( 165, 65, 120, 20, 5 )
                 imgBtnShareB:setFillColor( {
                     type = 'gradient',
                     color1 = { 68/255, 177/255, 13/255 }, 
@@ -468,6 +469,14 @@ function Deal:new()
             else
                 txtStock:setFillColor( .3 )
             end
+            
+            -- ReadOnly by Free Login
+            if Globals.isReadOnly then
+                imgBtnDown:setFillColor( .7 )
+                imgBtnShareB.alpha = 0
+                imgBtnDown:removeEventListener( "tap", downloadDeal )
+            end
+            
             container:insert(txtStock)
         end
         
@@ -593,12 +602,13 @@ function DealMain:new()
         container:insert( imgBtnDown )
         
         local lbStatus = ""
+        local imgBtnShareB
         if item.assigned == 0 then
             lbStatus = Globals.language.buildDownloads
             imgBtnDown:setFillColor( 68/255, 177/255, 13/255 )
             imgBtnDown:addEventListener( "tap", downloadDeal )
             
-            local imgBtnShareB = display.newRoundedRect( 45, 45, 120, 20, 5 )
+            imgBtnShareB = display.newRoundedRect( 45, 45, 120, 20, 5 )
             imgBtnShareB:setFillColor( {
                 type = 'gradient',
                 color1 = { 68/255, 177/255, 13/255 }, 
@@ -649,7 +659,13 @@ function DealMain:new()
 			txtPartner.y = -10
             txtDealDes.y = 15
 		end
-			
+        
+        -- ReadOnly by Free Login
+        if Globals.isReadOnly then
+            imgBtnDown:setFillColor( .7 )
+            imgBtnShareB.alpha = 0
+            imgBtnDown:removeEventListener( "tap", downloadDeal )
+        end
         
     end
 

@@ -248,8 +248,39 @@ function scene:createScene( event )
 		backgroundColor = { 245/255, 245/255, 245/255 }
 	}
 	homeScreen:insert(svContent)
-	getLoading(svContent)
-	RestManager.getNotifications()
+    
+    -- Check is read only
+    if Globals.isReadOnly then
+        local iconReadOnly = display.newImage( "img/btn/lock.png" )
+		iconReadOnly:translate( 240, 120)
+        iconReadOnly.alpha = .5
+		svContent:insert(iconReadOnly)
+
+		local lblReadOnly = display.newText( {
+			text = Globals.language.loginFreeMessages,     
+			x = 240, y = 240, width = 400,
+			font = "Lato-Regular", fontSize = 16, align = "center"
+		})
+		lblReadOnly:setFillColor( 85/255, 85/255, 85/255 )
+		svContent:insert(lblReadOnly)
+        
+        local rctFree = display.newRoundedRect( midW, 320, 270, 55, 5 )
+        rctFree:setFillColor( .2, .6 ,0 )
+		rctFree:addEventListener( "tap", logout )
+        svContent:insert(rctFree)
+        
+        local lblSign = display.newText( {
+			text = Globals.language.loginFreeSign,     
+			x = 240, y = 320, width = 400,
+			font = "Lato-Bold", fontSize = 16, align = "center"
+		})
+		lblSign:setFillColor( 1 )
+		svContent:insert(lblSign)
+    else
+        getLoading(svContent)
+        RestManager.getNotifications()
+    end
+    
 end
 
 -- Called immediately after scene has moved onscreen:

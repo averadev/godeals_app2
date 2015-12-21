@@ -760,6 +760,17 @@ function buildCoupon()
         imgBtnShareB.alpha = 1
 		imgBtnShare:addEventListener( 'tap', showFriends )
 	end
+    
+    -- ReadOnly by Free Login
+    if Globals.isReadOnly then
+        rctBtn:setFillColor( .7 )
+        imgBtnShare:setFillColor( .7 )
+        rctBtnB.alpha = 0
+        imgBtnShareB.alpha = 0
+        imgBtnShare:removeEventListener( 'tap', showFriends )
+        rctBtn:removeEventListener( "tap", DownloadCoupon )
+        rctBtn:removeEventListener( "tap", showRedimir )
+    end
 	
     local spc = display.newRect( 0, lastY + 60, 1, 1 )
     spc:setFillColor( 0 )

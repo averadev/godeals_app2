@@ -60,7 +60,7 @@ settings = {
                 "Icon-Small@3x.png"
             },
             
-            CFBundleShortVersionString = "2.0",
+            CFBundleShortVersionString = "2.8",
             
 
             UIApplicationExitsOnSuspend = false,

@@ -162,7 +162,7 @@ function buildEventInfo(item)
 		text = Globals.language.eventTxtGeneralInformacion,
 		x = 230, y =  lastY + 5,
 		height = 20, width = 400,
-		font = "Lato-Bold", fontSize = 16, align = "left"
+		font = "Lato-Heavy", fontSize = 16, align = "left"
 	})
 	txtGeneralInformacion:setFillColor( 0 )
 	groupInfo:insert(txtGeneralInformacion)

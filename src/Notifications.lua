@@ -272,7 +272,7 @@ function scene:createScene( event )
         local lblSign = display.newText( {
 			text = Globals.language.loginFreeSign,     
 			x = 240, y = 320, width = 400,
-			font = "Lato-Bold", fontSize = 16, align = "center"
+			font = "Lato-Heavy", fontSize = 16, align = "center"
 		})
 		lblSign:setFillColor( 1 )
 		svContent:insert(lblSign)

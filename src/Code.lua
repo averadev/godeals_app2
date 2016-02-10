@@ -108,7 +108,7 @@ function showDealsRedeem(itemCoupon)
 		text = Globals.language.codeTxt1,
 		x = midW, y = midH + 60,
 		align = "center", width = 200,
-		font = "Lato-Bold", fontSize = 24
+		font = "Lato-Heavy", fontSize = 24
 	})
 	groupDownloadCode:insert(txt1)
         
@@ -116,7 +116,7 @@ function showDealsRedeem(itemCoupon)
 		text = Globals.language.codeTxt2,
 		x = midW, y = midH + 95,
 		align = "center", width = 200,
-		font = "Lato-Bold", fontSize = 16
+		font = "Lato-Heavy", fontSize = 16
 	})
 	groupDownloadCode:insert(txt2)
         
@@ -225,7 +225,7 @@ function scene:createScene( event )
         local lblSign = display.newText( {
 			text = Globals.language.loginFreeSign,     
 			x = 240, y = 450, width = 400,
-			font = "Lato-Bold", fontSize = 16, align = "center"
+			font = "Lato-Heavy", fontSize = 16, align = "center"
 		})
 		lblSign:setFillColor( 1 )
 		codeScreen:insert(lblSign)
@@ -290,7 +290,7 @@ function scene:createScene( event )
             text =  Globals.language.codeTxtBtnRC,
             x = 240, y = lastY,
             width = 210, height = 0,
-            font = "Lato-Bold", fontSize = 18, align = "center"
+            font = "Lato-Heavy", fontSize = 18, align = "center"
         })
         txtBtnRC:setFillColor( 1 )
         codeScreen:insert(txtBtnRC)

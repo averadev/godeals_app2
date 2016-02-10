@@ -287,7 +287,7 @@ function scene:createScene( event )
     local txtReturn1 = display.newText( {
         text = Globals.language.loginTxtReturn1,
         x = midW - 122, y = midH + 130,
-        font = "Lato-Bold",  fontSize = 22, align = "center"
+        font = "Lato-Heavy",  fontSize = 22, align = "center"
     })
     txtReturn1:addEventListener( "tap", getReturnButtons )
     groupSign:insert(txtReturn1)
@@ -295,7 +295,7 @@ function scene:createScene( event )
     local txtDoSignIn = display.newText( {
         text = Globals.language.loginTxtDoSignIn,
         x = midW + 128, y = midH + 130,
-        font = "Lato-Bold",  fontSize = 22, align = "center"
+        font = "Lato-Heavy",  fontSize = 22, align = "center"
     })
     txtDoSignIn:addEventListener( "tap", doSignIn )
     groupSign:insert(txtDoSignIn)
@@ -339,7 +339,7 @@ function scene:createScene( event )
     local txtReturn2 = display.newText( {
         text = Globals.language.loginTxtReturn2,
         x = midW - 122, y = midH + 170,
-        font = "Lato-Bold",  fontSize = 22, align = "center"
+        font = "Lato-Heavy",  fontSize = 22, align = "center"
     })
     txtReturn2:addEventListener( "tap", getReturnButtons )
     groupCreate:insert(txtReturn2)
@@ -347,7 +347,7 @@ function scene:createScene( event )
     local txtDoCreate = display.newText( {
         text = Globals.language.loginTxtDoCreate,
         x = midW + 128, y = midH + 170,
-        font = "Lato-Bold",  fontSize = 22, align = "center"
+        font = "Lato-Heavy",  fontSize = 22, align = "center"
     })
     txtDoCreate:addEventListener( "tap", doCreate )
     groupCreate:insert(txtDoCreate)
@@ -371,7 +371,7 @@ function scene:createScene( event )
     local txtCreate = display.newText( {
         text = Globals.language.loginTxtCreate,
         x = midW - 70, y = midH + 50,
-        font = "Lato-Bold",  fontSize = 22, align = "center"
+        font = "Lato-Heavy",  fontSize = 22, align = "center"
     })
     txtCreate:addEventListener( "tap", showCreate )
     groupBtn:insert(txtCreate)
@@ -379,7 +379,7 @@ function scene:createScene( event )
     local txtSignIn = display.newText( {
         text = Globals.language.loginTxtSignIn,
         x = midW + 100, y = midH + 50,
-        font = "Lato-Bold",  fontSize = 22, align = "center"
+        font = "Lato-Heavy",  fontSize = 22, align = "center"
     })
     txtSignIn:addEventListener( "tap", showSignIn )
     groupBtn:insert(txtSignIn)

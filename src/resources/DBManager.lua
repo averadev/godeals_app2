@@ -357,8 +357,8 @@ local dbManager = {}
         
         -- Populate config
         --query = "INSERT INTO config VALUES (1, 0, '', '', '', '', 0, 'http://godeals.mx/admin/',1,1,'',0,'" .. leng .. "');"
-        query = "INSERT INTO config VALUES (1, 0, '', '', '', '', 0, 'http://godeals.mx/admin/',1,1,'',0,'" .. leng .. "');"
-		
+        query = "INSERT INTO config VALUES (1, 0, '', '', '', '', 0, 'http://192.168.1.158/godeals/',1,1,'',0,'" .. leng .. "');"
+		--17, 7
 		db:exec( query )
     
 		closeConnection( )

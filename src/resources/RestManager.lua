@@ -106,7 +106,7 @@ local RestManager = {}
 	RestManager.getAllCoupon = function()
 		settings = DBManager.getSettings()
 		local url = settings.url .. "api/getAllDeal/format/json/idApp/" .. settings.idApp .. "/language/" .. leng
-        
+        print(url)
 	    local function callback(event)
             if ( event.isError ) then
             else
@@ -334,7 +334,6 @@ local RestManager = {}
 		url = url.."/language/" .. leng
 		url = url.."/playerId/" .. urlencode(Globals.playerIdToken)
 		
-		
 		local platformName = system.getInfo( "platformName" )
 		local idDeviceIOS = ""
 		if platformName == "iPhone OS" then
@@ -470,8 +469,6 @@ local RestManager = {}
         network.request( url, "GET", callback ) 
     end
 	
-	
-	
 	RestManager.downloadCoupon = function(idCoupon)
 		settings = DBManager.getSettings()
 		local settings = DBManager.getSettings()
@@ -481,6 +478,26 @@ local RestManager = {}
         url = url.."/idCoupon/"..idCoupon
 		url = url.."/language/" .. leng
     
+        local function callback(event)
+            if ( event.isError ) then
+            else
+                local data = json.decode(event.response)
+            end
+            return true
+        end
+        -- Do request
+        network.request( url, "GET", callback )
+	end
+	
+	RestManager.useCoupon = function(idCoupon)
+		settings = DBManager.getSettings()
+		local settings = DBManager.getSettings()
+        local url = settings.url
+        url = url.."api/useCoupon/format/json"
+        url = url.."/idApp/"..settings.idApp
+        url = url.."/idCoupon/"..idCoupon
+		url = url.."/language/" .. leng
+        
         local function callback(event)
             if ( event.isError ) then
             else
@@ -802,6 +819,7 @@ local RestManager = {}
             return true
 		end
 		-- Do request
+        print(url)
 		network.request( url, "GET", callback )
 	end
 	

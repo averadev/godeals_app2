@@ -128,7 +128,7 @@ function showAdd(item)
         text = Globals.language.partnerWTxtPartner0 ..item.name.."!",     
         x = 260, y = 55,
         width = 340,
-        font = "Lato-Bold", fontSize = 16, align = "left"
+        font = "Lato-Heavy", fontSize = 16, align = "left"
     })
     txtPartner0:setFillColor( 0 )
     svAdd:insert(txtPartner0)
@@ -172,7 +172,7 @@ function showAdd(item)
 		text =  Globals.language.partnerWTxtBtnComer,
 		x = 330, y = lastY,
 		width = 210, height = 0,
-		font = "Lato-Bold", fontSize = 18, align = "center"
+		font = "Lato-Heavy", fontSize = 18, align = "center"
 	})
 	txtBtnComer:setFillColor( 1 )
 	groupAdd:insert( txtBtnComer )

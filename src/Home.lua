@@ -816,7 +816,7 @@ function scene:createScene( event )
 	
 	txtMenuInicio = display.newText( {    
         x = display.contentWidth * .5, y = 30,
-        text = Globals.language.homeInicio,  font = "Lato-Bold", fontSize = 22,
+        text = Globals.language.homeInicio,  font = "Lato-Heavy", fontSize = 22,
 	})
 	txtMenuInicio:setFillColor( 0 )
 	groupMenu:insert(txtMenuInicio)
@@ -825,7 +825,7 @@ function scene:createScene( event )
 	
 	txtMenuEventos = display.newText( {
         x = display.contentWidth * 1.2, y = 30,
-        text = Globals.language.homeEvent, font = "Lato-Bold", fontSize = 22,
+        text = Globals.language.homeEvent, font = "Lato-Heavy", fontSize = 22,
 	})
 	txtMenuEventos:setFillColor( 161/255, 161/255, 161/255 )
 	groupMenu:insert(txtMenuEventos)
@@ -834,7 +834,7 @@ function scene:createScene( event )
 	
 	txtMenuDeals = display.newText( {
         x = display.contentWidth * .85, y = 30,
-        text = Globals.language.homeDeals, font = "Lato-Bold", fontSize = 22,
+        text = Globals.language.homeDeals, font = "Lato-Heavy", fontSize = 22,
 	})
 	txtMenuDeals:setFillColor( 161/255, 161/255, 161/255 )
 	groupMenu:insert(txtMenuDeals)

@@ -249,7 +249,7 @@ function Header:new()
             t:removeEventListener( "tap", downloadDeal )
             
             -- Descargar en la nube
-            RestManager.downloadCoupon(t.id)
+            --RestManager.downloadCoupon(t.id)
         end
         
         -- Play Sound
@@ -281,7 +281,7 @@ function Header:new()
             text = Globals.language.headerTxt1,
             x = midW, y = midH + 60,
 			align = "center", width = 200,
-            font = "Lato-Bold", fontSize = 24
+            font = "Lato-Heavy", fontSize = 24
         })
         groupDownload:insert(txt1)
         
@@ -289,7 +289,7 @@ function Header:new()
             text = Globals.language.headerTxt2,
             x = midW, y = midH + 95,
 			align = "center", width = 200,
-            font = "Lato-Bold", fontSize = 16
+            font = "Lato-Heavy", fontSize = 16
         })
         groupDownload:insert(txt2)
         
@@ -333,7 +333,7 @@ function Header:new()
             text = Globals.language.headerTxt1Share,
             x = midW, y = midH + 60,
 			align = "center", width = 200,
-            font = "Lato-Bold", fontSize = 24
+            font = "Lato-Heavy", fontSize = 24
         })
         groupDownload:insert(txt1)
         
@@ -341,7 +341,7 @@ function Header:new()
             text = Globals.language.headerTxt2Share,
             x = midW, y = midH + 95,
 			align = "center", width = 200,
-            font = "Lato-Bold", fontSize = 16
+            font = "Lato-Heavy", fontSize = 16
         })
         groupDownload:insert(txt2)
         
@@ -385,7 +385,7 @@ function Header:new()
             text = Globals.language.headerTxt1Reedem,
             x = midW, y = midH + 60,
 			align = "center", width = 200,
-            font = "Lato-Bold", fontSize = 24
+            font = "Lato-Heavy", fontSize = 24
         })
         groupDownload:insert(txt1)
         
@@ -393,7 +393,7 @@ function Header:new()
             text = Globals.language.headerTxt2Reedem,
             x = midW, y = midH + 95,
 			align = "center", width = 200,
-            font = "Lato-Bold", fontSize = 16
+            font = "Lato-Heavy", fontSize = 16
         })
         groupDownload:insert(txt2)
         
@@ -757,7 +757,7 @@ function Header:new()
         txtCiudad[poscCiu] = display.newText( {
             x = 47, y = 65,
 			align = "center", width = 95,
-            text = textoCiudad, font = "Lato-Bold", fontSize = 10,
+            text = textoCiudad, font = "Lato-Heavy", fontSize = 10,
         })
         txtCiudad[poscCiu]:setFillColor( 1 )
         self:insert(txtCiudad[poscCiu])
@@ -853,7 +853,7 @@ function Header:new()
         local txtTool2 = display.newText( {
             x = 142, y = 65,
 			align = "center", width = 95,
-            text = Globals.language.headerMap, font = "Lato-Bold", fontSize = 10,
+            text = Globals.language.headerMap, font = "Lato-Heavy", fontSize = 10,
         })
         txtTool2:setFillColor( 1 )
         grpTool:insert(txtTool2)
@@ -861,7 +861,7 @@ function Header:new()
         local txtTool3 = display.newText( {
             x = 237, y = 65,
 			align = "center", width = 95,
-            text = Globals.language.headerTray, font = "Lato-Bold", fontSize = 10,
+            text = Globals.language.headerTray, font = "Lato-Heavy", fontSize = 10,
         })
         txtTool3:setFillColor( 1 )
         grpTool:insert(txtTool3)
@@ -869,7 +869,7 @@ function Header:new()
         local txtTool4 = display.newText( {
             x = 332, y = 65,
 			align = "center", width = 95,
-            text = Globals.language.headerDownloads, font = "Lato-Bold", fontSize = 10,
+            text = Globals.language.headerDownloads, font = "Lato-Heavy", fontSize = 10,
         })
         txtTool4:setFillColor( 1 )
         grpTool:insert(txtTool4)
@@ -877,7 +877,7 @@ function Header:new()
         local txtTool5 = display.newText( {
             x = 425, y = 65,
 			align = "center", width = 95,
-            text = Globals.language.headerSearcher, font = "Lato-Bold", fontSize = 10,
+            text = Globals.language.headerSearcher, font = "Lato-Heavy", fontSize = 10,
         })
         txtTool5:setFillColor( 1 )
         grpTool:insert(txtTool5)
@@ -913,7 +913,7 @@ function Header:new()
             local txtWifiBLE = display.newText( {
                 x = 220, y = 95,
                 align = "left", width = 400,
-                text = Globals.language.headerTxtWifiBLE, font = "Lato-Bold", fontSize = 14,
+                text = Globals.language.headerTxtWifiBLE, font = "Lato-Heavy", fontSize = 14,
             })
             txtWifiBLE:setFillColor( 1 )
             self:insert(txtWifiBLE)
@@ -954,7 +954,7 @@ function Header:new()
         local txtReturn = display.newText( {
             x = 90, y = 85 + hWB,
 			width = 100, align = "center",
-            font = "Lato-Bold", fontSize = 14, text = Globals.language.headerTxtReturn
+            font = "Lato-Heavy", fontSize = 14, text = Globals.language.headerTxtReturn
         })
         txtReturn:setFillColor( 0 )
         self:insert(txtReturn)

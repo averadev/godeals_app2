@@ -128,7 +128,7 @@ function BuildItemsMessage()
         text = Globals.language.MSGTxtPartner0,     
         x = 260, y = 40,
         width = 340,
-        font = "Lato-Bold", fontSize = 16, align = "left"
+        font = "Lato-Heavy", fontSize = 16, align = "left"
     })
     txtPartner0:setFillColor( 0 )
     svMessage:insert(txtPartner0)
@@ -137,7 +137,7 @@ function BuildItemsMessage()
         text = itemObj.partner,     
         x = 270, y = 40,
         width = 300,
-        font = "Lato-Bold", fontSize = 18, align = "left"
+        font = "Lato-Heavy", fontSize = 18, align = "left"
     })
     txtPartner:setFillColor( 0 )
     svMessage:insert(txtPartner)
@@ -148,7 +148,7 @@ function BuildItemsMessage()
         text = itemObj.fechaFormat,     
         x = 440, y = 35,
         width = 100,
-        font = "Lato-Bold", fontSize = 12, align = "left"
+        font = "Lato-Heavy", fontSize = 12, align = "left"
     })
     txtFecha:setFillColor( 0 )
     svMessage:insert(txtFecha)
@@ -157,7 +157,7 @@ function BuildItemsMessage()
         text = Globals.language.MSGTxtTitle0,
         x = 260, y = 70,
         width = 340, height = 0,
-        font = "Lato-Bold", fontSize = 16, align = "left"
+        font = "Lato-Heavy", fontSize = 16, align = "left"
     })
     txtTitle0:setFillColor( 0 )
     svMessage:insert(txtTitle0)
@@ -166,7 +166,7 @@ function BuildItemsMessage()
         text = itemObj.name,
         x = 290, y = 70,
         width = 280, height = 0,
-        font = "Lato-Bold", fontSize = 18, align = "left"
+        font = "Lato-Heavy", fontSize = 18, align = "left"
     })
     txtTitle:setFillColor( 0 )
     svMessage:insert(txtTitle)
@@ -212,7 +212,7 @@ function BuildItemsMessage()
 		text =  Globals.language.MSGxtBtnComer,
 		x = 330, y = lastY,
 		width = 210, height = 0,
-		font = "Lato-Bold", fontSize = 18, align = "center"
+		font = "Lato-Heavy", fontSize = 18, align = "center"
 	})
 	txtBtnComer:setFillColor( 1 )
 	groupInfo:insert( txtBtnComer )

@@ -130,7 +130,7 @@ function buildPartnerInfo(item)
 		text = item.address,
 		x = 195,
 		y =  255,
-		font = "Lato-Bold",
+		font = "Lato-Heavy",
 		width = 320,
 		fontSize = 16,
 		align = "left"
@@ -167,7 +167,7 @@ function buildPartnerInfo(item)
 		text = item.info,
 		x = midW,
 		y =  lastY + 35,
-		font = "Lato-Bold",
+		font = "Lato-Heavy",
 		width = 410,
 		fontSize = 16,
 		align = "left"
@@ -255,7 +255,7 @@ function buildPartnerInfo(item)
 		text = Globals.language.partnerTxtInfo6,
 		x = midW,
 		y =  lastY + 20,
-		font = "Lato-Bold",
+		font = "Lato-Heavy",
 		width = 430,
 		fontSize = 16,
 		align = "left"

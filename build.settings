@@ -6,7 +6,7 @@ settings = {
 
     plugins =
     {
-        ["plugin.facebook.v4"] =
+        ["facebook"] =
 		{
 			publisherId = "com.coronalabs",
 		},
@@ -36,6 +36,50 @@ settings = {
 
     iphone = {
         plist = {
+            
+            -- Whitelist Facebook Servers for Network Requests
+            NSAppTransportSecurity = 
+            {
+                NSExceptionDomains = 
+                {
+                    ["fbcdn.net"] = 
+                    {
+                        NSIncludesSubdomains = true,
+                        NSExceptionRequiresForwardSecrecy = false,
+                    },
+                    ["facebook.com"] = 
+                    {
+                        NSIncludesSubdomains = true,
+                        NSExceptionRequiresForwardSecrecy = false,
+                    },
+                    ["akamaihd.net"] = 
+                    {
+                        NSIncludesSubdomains = true,
+                        NSExceptionRequiresForwardSecrecy = false,
+                    },
+                    ["godeals.mx"] = 
+                    {
+                        NSIncludesSubdomains = true,
+                        NSExceptionRequiresForwardSecrecy = false,
+                    },
+                },
+            },
+
+            -- Whitelist Facebook Apps
+            LSApplicationQueriesSchemes = 
+            {
+                "fb",
+                "fbapi20130214",
+                "fbapi20130410",
+                "fbapi20140410",
+                "fbapi20140116",
+                "fbapi20150313",
+                "fbapi20150629",
+                "fbauth",
+                "fbauth2",
+                "fb-messenger-api20140430",
+            },
+            
 		
 			UIStatusBarHidden = false,
 			UIPrerenderedIcon = true, -- set to false for "shine" overlay
@@ -62,20 +106,12 @@ settings = {
             
             CFBundleShortVersionString = "2.8",
             
-
             UIApplicationExitsOnSuspend = false,
             FacebookAppID = "750089858383563",  --replace XXXXXXXXXX with your Facebook App ID
             CFBundleURLTypes = {
                 {
                 CFBundleURLSchemes = { "fb750089858383563", }  --replace XXXXXXXXXX with your Facebook App ID
                 }
-            },
-
-            ["URL types"] = {
-                item = {
-                    ["URL Schemes"] =
-                        { ["Item 0"] = "fb750089858383563" },  --replace XXXXXXXXXX with your Facebook App ID
-                },
             },
         },
         UIAppFonts = {
@@ -85,6 +121,7 @@ settings = {
             "Lato-Regular.ttf",
             "Lato-Black.ttf",
             "Lato-Bold.ttf",
+            "Lato-Heavy.ttf",
             "Lato-Italic.ttf"
         },
     },

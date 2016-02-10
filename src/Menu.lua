@@ -212,7 +212,7 @@ function MenuLeft:new()
             text = settings.name,     
             x = 160, y = h + 300,
             width = 380, height = 30,
-            font = "Lato-Bold",  fontSize = 30, align = "center"
+            font = "Lato-Heavy",  fontSize = 30, align = "center"
         })
         textNombre:setFillColor( 1 )
         selfL:insert(textNombre)
@@ -251,14 +251,14 @@ function MenuLeft:new()
             text = Globals.language.menuTxtMenu1,
             x = 20, y = h + 440,
             width = 100, height = 30,
-            font = "Lato-Bold",  fontSize = 14, align = "center"
+            font = "Lato-Heavy",  fontSize = 14, align = "center"
         })
 		selfL:insert(txtMenu1)
         local txtMenu2 = display.newText( {
             text = Globals.language.menuTxtMenu2,
             x = 160, y = h + 440,
             width = 100, height = 30,
-            font = "Lato-Bold",  fontSize = 14, align = "center"
+            font = "Lato-Heavy",  fontSize = 14, align = "center"
         })
        -- txtMenu2:setFillColor( .5 )
 		selfL:insert(txtMenu2)
@@ -266,7 +266,7 @@ function MenuLeft:new()
             text = Globals.language.menuTxtMenu3,
             x = 295, y = h + 440,
             width = 100, height = 30,
-            font = "Lato-Bold",  fontSize = 14, align = "center"
+            font = "Lato-Heavy",  fontSize = 14, align = "center"
         })
 		selfL:insert(txtMenu3)
         
@@ -286,7 +286,7 @@ function MenuLeft:new()
         local txtMenu4 = display.newText( {
             text = Globals.language.menuTxtMenu4,
             x = 160, y = h + 545, width = 330, 
-            font = "Lato-Bold",  fontSize = 18, align = "left"
+            font = "Lato-Heavy",  fontSize = 18, align = "left"
         })
 		selfL:insert(txtMenu4)
 		
@@ -308,7 +308,7 @@ function MenuLeft:new()
         
         titleLeft = display.newText( {    
             x = 150, y = 32, align = "left", width = 300,
-            text = Globals.language.menuTitleLeft,  font = "Lato-Bold", fontSize = 18,
+            text = Globals.language.menuTitleLeft,  font = "Lato-Heavy", fontSize = 18,
         })
         titleLeft:setFillColor( 1 )
         grpCity:insert(titleLeft)
@@ -330,7 +330,7 @@ function MenuLeft:new()
             
             txtCity = display.newText( {    
                 x = 150, y = MenuLeftCiudad.height + lastY - 60, align = "left", width = 300,
-                text = " - " .. items[y].name,  font = "Lato-Bold", fontSize = 18,
+                text = " - " .. items[y].name,  font = "Lato-Heavy", fontSize = 18,
             })
 			txtCity:setFillColor( 0 )
 			grpCity:insert(txtCity)
@@ -359,7 +359,7 @@ function MenuLeft:new()
         
         titleLanguageLeft = display.newText( {    
             x = 150, y = 32, align = "left", width = 300,
-            text = Globals.language.menuTitleLanguageLeft,  font = "Lato-Bold", fontSize = 18,
+            text = Globals.language.menuTitleLanguageLeft,  font = "Lato-Heavy", fontSize = 18,
         })
         titleLanguageLeft:setFillColor( 1 )
         grpLanguage:insert(titleLanguageLeft)
@@ -385,7 +385,7 @@ function MenuLeft:new()
             
             txtLanguage = display.newText( {    
                 x = 150, y = MenuLeftCiudad.height + lastY - 60, align = "left", width = 300,
-                text = " - " .. LanguageName[y],  font = "Lato-Bold", fontSize = 18,
+                text = " - " .. LanguageName[y],  font = "Lato-Heavy", fontSize = 18,
             })
 			txtLanguage:setFillColor( 0 )
 			grpLanguage:insert(txtLanguage)

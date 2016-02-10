@@ -11,7 +11,7 @@ local storyboard = require( "storyboard" )
 local Globals = require('src.resources.Globals')
 local DBManager = require('src.resources.DBManager')
 local RestManager = require('src.resources.RestManager')
-local facebook = require("plugin.facebook.v4")
+local facebook = require( "facebook" )
 local json = require("json")
 local scene = storyboard.newScene()
 
@@ -67,43 +67,68 @@ function toLoginFree()
     storyboard.gotoScene( "src.Home", { time = 400, effect = "crossFade" })
 end
 
-function facebookListener( event )
-    Globals.isReadOnly = false
-
-    if ( "session" == event.type ) then
-		local params = { fields = "birthday,email,name,id" }
-        facebook.request( "me", "GET", params )
-
-    elseif ( "request" == event.type ) then
-        local response = event.response
-		if ( not event.isError ) then
-	        response = json.decode( event.response )
-			print(" --- idFB: "..response.id)
-            if not (response.email == nil) then 
-                -- Mac Addresss
-                local mac = ""
-                if getBeacon then
-                    local macAd = getBeacon.getMacAddress()
-                    mac = crypto.digest( crypto.md5, macAd )
-                end
-                
-                -- Birthday user
-				local birthday = ""
-                if not (response.birthday == nil) then
-                    --birthday = response.birthday
-                    birthday = string.gsub( response.birthday, "/", "-", 2 )
-                end
-                
-                RestManager.createUser(response.email, ' ', response.name, response.id, birthday, mac)
-            end
+function print_r ( t )  
+    local print_r_cache={}
+    local function sub_print_r(t,indent)
+        if (print_r_cache[tostring(t)]) then
+            print(indent.."*"..tostring(t))
         else
-			-- printTable( event.response, "Post Failed Response", 3 )
-		end
+            print_r_cache[tostring(t)]=true
+            if (type(t)=="table") then
+                for pos,val in pairs(t) do
+                    if (type(val)=="table") then
+                        print(indent.."["..pos.."] => "..tostring(t).." {")
+                        sub_print_r(val,indent..string.rep(" ",string.len(pos)+8))
+                        print(indent..string.rep(" ",string.len(pos)+6).."}")
+                    elseif (type(val)=="string") then
+                        print(indent.."["..pos..'] => "'..val..'"')
+                    else
+                        print(indent.."["..pos.."] => "..tostring(val))
+                    end
+                end
+            else
+                print(indent..tostring(t))
+            end
+        end
     end
+    if (type(t)=="table") then
+        print(tostring(t).." {")
+        sub_print_r(t,"  ")
+        print("}")
+    else
+        sub_print_r(t,"  ")
+    end
+    print()
 end
 
-function loginFB(event)
-    facebook.login( facebookListener )
+
+function facebookListener( event )
+    if ( "session" == event.type ) then
+        if ( "login" == event.phase ) then
+            local params = { fields = "birthday, email,name,id" }
+            facebook.request( "me", "GET", params )
+        end
+    elseif ( "request" == event.type ) then
+        local response = json.decode( event.response )
+        local email, birthday, mac = '-', '-', '-'
+        if response.email then
+            email = response.email
+        end
+        if response.birthday then
+            local t = {}
+            for mo, da, ye in string.gmatch( response.birthday, "(%w+)/(%w+)/(%w+)" ) do
+                t[1] = mo
+                t[2] = da
+                t[3] = ye
+            end
+            birthday = t[3] .. "-" .. t[1] .. "-" .. t[2] .. " " .. "00:00:00"
+            birthday = response.email
+        end
+        RestManager.createUser(email, ' ', response.name, response.id, birthday, mac)
+    end
+end
+function loginFB()
+    facebook.login( "750089858383563", facebookListener, {"public_profile", "email", "birthday"} )
 end
 
 -- Listener Touch Screen
@@ -338,7 +363,7 @@ function scene:createScene( event )
     lblTitle3 = display.newText( {
         text = Globals.language.loginTitle3A,
         x = midW, y = 100,
-        font = "Lato-Bold",  
+        font = "Lato-Heavy",  
         fontSize = 21, align = "center"
     })
     lblTitle3:setFillColor( 1 )
@@ -419,7 +444,7 @@ function scene:createScene( event )
     local lblBtn = display.newText( {
         text = Globals.language.loginBtnFB,
         x = midW, y = posYBg + 85,
-        font = "Lato-Bold",  
+        font = "Lato-Heavy",  
         fontSize = 20, align = "center"
     })
 	lblBtn:setFillColor( 1 )
@@ -435,7 +460,7 @@ function scene:createScene( event )
     local lblBottom = display.newText( {
         text = Globals.language.loginBtnEmail,
         x = 140, y = posYBg + 164,
-        font = "Lato-Bold",  
+        font = "Lato-Heavy",  
         width = 160,
         fontSize = 14, align = "center"
     })
@@ -456,7 +481,7 @@ function scene:createScene( event )
     local lblFree = display.newText( {
         text = Globals.language.loginBtnFree,
         x = 340, y = posYBg + 164,
-        font = "Lato-Bold",  
+        font = "Lato-Heavy",  
         width = 160,
         fontSize = 14, align = "center"
     })

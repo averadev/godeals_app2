@@ -1,6 +1,6 @@
 
 local json = require("json")
-local facebook = require("plugin.facebook.v4")
+--local facebook = require( "facebook" )
 local RestManager = require('src.resources.RestManager')
 local DBManager = require('src.resources.DBManager')
 local Globals = require('src.resources.Globals')
@@ -69,7 +69,7 @@ function showListFriends(idC)
 		text = Globals.language.friendFriendsTitle,     
 		x = 210, y = midH - 215,
 		width = 300,
-		font = "Lato-Bold",  fontSize = 18
+		font = "Lato-Heavy",  fontSize = 18
 	})
 	friendsTitle:setFillColor( 1 )
 	groupFriends:insert(friendsTitle)
@@ -110,7 +110,7 @@ function showListFriends(idC)
 		text = Globals.language.friendTxtAceptF,     
 		x = 335, y = midH + 205,
 		width = 200,
-		font = "Lato-Bold",  fontSize = 14, align = "center"
+		font = "Lato-Heavy",  fontSize = 14, align = "center"
 	})
 	txtAceptF:setFillColor( 1 )
 	groupFriends:insert(txtAceptF)
@@ -133,7 +133,7 @@ function showListFriends(idC)
 		text = Globals.language.friendTxtCancelF,     
 		x = 145, y = midH + 205,
 		width = 200,
-		font = "Lato-Bold",  fontSize = 14, align = "center"
+		font = "Lato-Heavy",  fontSize = 14, align = "center"
 	})
 	txtCancelF:setFillColor( 1 )
 	groupFriends:insert(txtCancelF)
@@ -177,7 +177,7 @@ function printFriends( items )
             text = items[i].name,     
             x = 250, y = listY,
             width = 270,
-            font = "Lato-Bold",  fontSize = 16, align = "left"
+            font = "Lato-Heavy",  fontSize = 16, align = "left"
         })
         txtId:setFillColor( .2 )
         grpFList:insert(txtId)
@@ -289,7 +289,7 @@ function getFBFriends(  )
     iconCheckFB.alpha = 0
     iconCheckFB.fbId = nil
     --facebook.login( fbAppID, FBListener, {"public_profile", "email", "user_birthday", "user_friends"} )
-    facebook.login( FBListener )
+    facebook.login( "750089858383563", FBListener )
 end
 
 function FBListener( event )

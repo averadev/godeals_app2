@@ -22,7 +22,7 @@ function MonthTitle:new()
             text = desc,     
             x = 245, y = 15,
             width = 470, height = 35,
-            font = "Lato-Bold", fontSize = 24, align = "left"
+            font = "Lato-Heavy", fontSize = 24, align = "left"
 		})
 		txtTitleDate:setFillColor( 0 )
 		container:insert(txtTitleDate)
@@ -99,7 +99,7 @@ function Event:new()
             text = item.name ,     
             x = 80, y = -45,
             width = 240, height = 0,
-            font = "Lato-Bold", fontSize = 19, align = "left"
+            font = "Lato-Heavy", fontSize = 19, align = "left"
         })
         txtTitle:setFillColor( 0 )
         container:insert(txtTitle)
@@ -108,7 +108,7 @@ function Event:new()
             text = getDate(item.iniDate),     
             x = 80, y = 5,
             width = 240, height =60,
-            font = "Lato-Bold", fontSize = 16, align = "left"
+            font = "Lato-Heavy", fontSize = 16, align = "left"
         })
         txtPartner:setFillColor( .3 )
         container:insert(txtPartner)
@@ -199,7 +199,7 @@ function Message:new()
             text = Globals.language.buildMSGOf,     
             x = 45, y = -25,
             width = 340,
-            font = "Lato-Bold", fontSize = 16, align = "left"
+            font = "Lato-Heavy", fontSize = 16, align = "left"
         })
         txtPartner0:setFillColor( 0 )
         container:insert(txtPartner0)
@@ -208,7 +208,7 @@ function Message:new()
             text = item.partner,     
             x = 55, y = -25,
             width = 300,
-            font = "Lato-Bold", fontSize = 18, align = "left"
+            font = "Lato-Heavy", fontSize = 18, align = "left"
         })
         txtPartner:setFillColor( 0 )
         container:insert(txtPartner)
@@ -217,7 +217,7 @@ function Message:new()
             text = item.fechaFormat,     
             x = 200, y = -30,
             width = 100,
-            font = "Lato-Bold", fontSize = 12, align = "left"
+            font = "Lato-Heavy", fontSize = 12, align = "left"
         })
         txtFecha:setFillColor( 0 )
         container:insert(txtFecha)
@@ -226,7 +226,7 @@ function Message:new()
             text = Globals.language.buildMSGSubject,
             x = 45, y = 0,
             width = 340, height = 0,
-            font = "Lato-Bold", fontSize = 16, align = "left"
+            font = "Lato-Heavy", fontSize = 16, align = "left"
         })
         txtTitle0:setFillColor( 0 )
         container:insert(txtTitle0)
@@ -235,7 +235,7 @@ function Message:new()
             text = item.name,
             x = 75, y = 0,
             width = 280, height = 0,
-            font = "Lato-Bold", fontSize = 18, align = "left"
+            font = "Lato-Heavy", fontSize = 18, align = "left"
         })
         txtTitle:setFillColor( 0 )
         container:insert(txtTitle)
@@ -300,7 +300,7 @@ function Partner:new()
         local txtName = display.newText( {
             text = item.name,
             x = 35, y = -15, width = 340,
-            font = "Lato-Bold", fontSize = 18, align = "left"
+            font = "Lato-Heavy", fontSize = 18, align = "left"
         })
         txtName:setFillColor( 0 )
         container:insert(txtName)
@@ -391,7 +391,7 @@ function Deal:new()
             text = item.name ,     
             x = 80, y = -45,
             width = 240, height = 0,
-            font = "Lato-Bold", fontSize = 19, align = "left"
+            font = "Lato-Heavy", fontSize = 19, align = "left"
         })
         txtTitle:setFillColor( 0 )
         container:insert(txtTitle)
@@ -400,7 +400,7 @@ function Deal:new()
             text = item.partner,     
             x = 80, y = 5,
             width = 240, height =60,
-            font = "Lato-Bold", fontSize = 16, align = "left"
+            font = "Lato-Heavy", fontSize = 16, align = "left"
         })
         txtPartner:setFillColor( .3 )
         container:insert(txtPartner)
@@ -416,44 +416,7 @@ function Deal:new()
             txtInfo:setFillColor( .3 )
             container:insert(txtInfo)
         else
-            imgBtnDown = display.newRoundedRect( 165, 55, 120, 40, 5 )
-            imgBtnDown.id = item.id
-            imgBtnDown:setFillColor( .75 )
-            container:insert( imgBtnDown )
-
-            local lbStatus = ""
-            if item.assigned == 0  then
-                lbStatus = Globals.language.buildDownloads
-                imgBtnDown:setFillColor( 68/255, 177/255, 13/255 )
-                imgBtnDown:addEventListener( "tap", downloadDeal )
-
-                imgBtnShareB = display.newRoundedRect( 165, 65, 120, 20, 5 )
-                imgBtnShareB:setFillColor( {
-                    type = 'gradient',
-                    color1 = { 68/255, 177/255, 13/255 }, 
-                    color2 = { 38/255, 147/255, 0 },
-                    direction = "bottom"
-                } ) 
-                imgBtnDown.grad = imgBtnShareB
-                container:insert(imgBtnShareB)
-            else
-                if item.status == "1" then
-                    lbStatus = Globals.language.buildDownloadeds
-                elseif item.status == "2" then
-                    lbStatus = Globals.language.buildRedeemed
-                elseif item.status == "3" then
-                    lbStatus = Globals.language.buildShared
-                end
-            end
-
-            local txtDescargar = display.newText( {
-                text = lbStatus,     
-                x = 165, y = 55, width = 120,
-                font = "Lato-Bold", fontSize = 14, align = "center"
-            })
-            txtDescargar:setFillColor( 1 )
-            container:insert(txtDescargar)
-        
+            
             local iconReady = display.newImage( "img/btn/iconReady.png" )
             iconReady:translate( -30, 60 )
             container:insert(iconReady)
@@ -468,13 +431,6 @@ function Deal:new()
                 txtStock:setFillColor( .8, .5, .5 )
             else
                 txtStock:setFillColor( .3 )
-            end
-            
-            -- ReadOnly by Free Login
-            if Globals.isReadOnly then
-                imgBtnDown:setFillColor( .7 )
-                imgBtnShareB.alpha = 0
-                imgBtnDown:removeEventListener( "tap", downloadDeal )
             end
             
             container:insert(txtStock)
@@ -571,69 +527,30 @@ function DealMain:new()
         -- Agregamos textos
         local txtTitle = display.newText( {
             text = item.name ,     
-            x = 110, y = -65,
+            x = 110, y = -55,
             width = 240, height = 0,
-            font = "Lato-Bold", fontSize = 19, align = "left"
+            font = "Lato-Heavy", fontSize = 19, align = "left"
         })
         txtTitle:setFillColor( 0 )
         container:insert(txtTitle)
 
         local txtPartner = display.newText( {
             text = item.partner,     
-            x = 110, y = -20,
+            x = 110, y = -10,
             width = 240, height =60,
-            font = "Lato-Bold", fontSize = 16, align = "left"
+            font = "Lato-Heavy", fontSize = 16, align = "left"
         })
         txtPartner:setFillColor( .3 )
         container:insert(txtPartner)
 
         local txtDealDes = display.newText( {
             text = Globals.language.buildHighlight, 
-            x = 110, y = 15,
+            x = 110, y = 65,
             width = 240, height =60,
             font = "Lato-Italic", fontSize = 16, align = "left"
         })
         txtDealDes:setFillColor( .3 )
         container:insert(txtDealDes)
-        
-        local imgBtnDown = display.newRoundedRect( 45, 35, 120, 40, 5 )
-        imgBtnDown.id = item.id
-        imgBtnDown:setFillColor( .75 )
-        container:insert( imgBtnDown )
-        
-        local lbStatus = ""
-        local imgBtnShareB
-        if item.assigned == 0 then
-            lbStatus = Globals.language.buildDownloads
-            imgBtnDown:setFillColor( 68/255, 177/255, 13/255 )
-            imgBtnDown:addEventListener( "tap", downloadDeal )
-            
-            imgBtnShareB = display.newRoundedRect( 45, 45, 120, 20, 5 )
-            imgBtnShareB:setFillColor( {
-                type = 'gradient',
-                color1 = { 68/255, 177/255, 13/255 }, 
-                color2 = { 38/255, 147/255, 0 },
-                direction = "bottom"
-            } ) 
-            imgBtnDown.grad = imgBtnShareB
-            container:insert(imgBtnShareB)
-        else
-            if item.status == "1" then
-                lbStatus = Globals.language.buildDownloadeds
-            elseif item.status == "2" then
-                lbStatus = Globals.language.buildRedeemed
-            elseif item.status == "3" then
-                lbStatus = Globals.language.buildShared
-            end
-        end
-        
-        local txtDescargar = display.newText( {
-            text = lbStatus,     
-            x = 45, y = 35, width = 120,
-            font = "Lato-Bold", fontSize = 14, align = "center"
-        })
-        txtDescargar:setFillColor( 1 )
-        container:insert(txtDescargar)
         
         local iconReady = display.newImage( "img/btn/iconReady.png" )
         iconReady:translate( 0, 75 )
@@ -655,17 +572,9 @@ function DealMain:new()
 		-- Fix Height
 		if txtTitle.height > 35 then
 			txtTitle.height = 60
-			txtTitle.y = -65
-			txtPartner.y = -10
-            txtDealDes.y = 15
+			txtTitle.y = -55
+			txtPartner.y = 0
 		end
-        
-        -- ReadOnly by Free Login
-        if Globals.isReadOnly then
-            imgBtnDown:setFillColor( .7 )
-            imgBtnShareB.alpha = 0
-            imgBtnDown:removeEventListener( "tap", downloadDeal )
-        end
         
     end
 

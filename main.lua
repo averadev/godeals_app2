@@ -10,11 +10,6 @@ local storyboard = require( "storyboard" )
 local DBManager = require('src.resources.DBManager')
 local Globals = require('src.resources.Globals')
 
-local redimirObj;
-local platformName = system.getInfo( "platformName" )
-if platformName == "iPhone OS" then
-	redimirObj = require( "plugin.redimir" )
-end
 local isUser = DBManager.setupSquema()
 local OneSignal = require("plugin.OneSignal")
 

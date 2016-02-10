@@ -19,11 +19,6 @@ local DBManager = require('src.resources.DBManager')
 local RestManager = require('src.resources.RestManager')
 local Sprites = require('src.resources.Sprites')
 
-local redimirObj;
-local platformName = system.getInfo( "platformName" )
-if platformName == "iPhone OS" then
-	redimirObj = require( "plugin.redimir" )
-end
 
 -- Variables
 local intW = display.contentWidth

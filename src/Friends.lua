@@ -1,6 +1,6 @@
 
 local json = require("json")
---local facebook = require( "facebook" )
+local facebook = require( "facebook" )
 local RestManager = require('src.resources.RestManager')
 local DBManager = require('src.resources.DBManager')
 local Globals = require('src.resources.Globals')

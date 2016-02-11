@@ -103,7 +103,6 @@ function DidReceiveRemoteNotification(message, additionalData, isActive)
 				storyboard.gotoScene( "src.Message", {
 					params = { item = additionalData.id }
 				})
-				RestManager.notificationRead(additionalData.id)
 				RestManager.getNotificationsUnRead()
 				--composer.removeScene( "src.Home" )
 			end

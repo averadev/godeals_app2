@@ -223,6 +223,11 @@ function BuildItemsMessage()
 	callbackCurrent = Globals.noCallbackGlobal
     loadImageMessage(itemObj)
 	
+	if itemObj.leido == 1 or itemObj.leido == "1" then
+		RestManager.notificationRead(itemObj.notificacionId)
+		RestManager.getNotificationsUnRead()
+	end
+	
 end
 
 function scene:createScene( event )

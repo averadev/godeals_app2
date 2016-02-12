@@ -889,7 +889,6 @@ function scene:createScene( event )
 			timer.cancel( event.source ) 
 			RestManager.initPlayerId()
 		end
-		Globals.playerIdToken = 88
 	end, -1)
 end
 	

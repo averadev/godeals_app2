@@ -163,7 +163,7 @@ function buildNotificationsItems(objScreen)
             if elements[y].leido == "1" then
                 noLeido[y] = display.newRect( 0, h, 2, 98 )
                 noLeido[y].x = 10
-                noLeido[y].y = yMain - 50
+                noLeido[y].y = yMain + 60
                 noLeido[y]:setFillColor( .18, .59, 0 )
                 svContent:insert(noLeido[y])
             end

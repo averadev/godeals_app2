@@ -84,7 +84,7 @@ settings = {
                 "Icon-Small@3x.png"
             },
             
-            CFBundleShortVersionString = "2.8",
+            CFBundleShortVersionString = "2.9",
             
             UIApplicationExitsOnSuspend = false,
             FacebookAppID = "750089858383563",  --replace XXXXXXXXXX with your Facebook App ID

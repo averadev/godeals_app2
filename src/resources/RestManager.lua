@@ -141,6 +141,14 @@ local RestManager = {}
         network.request( url, "GET", callback )
 	end
 
+	RestManager.initPlayerId= function()
+		settings = DBManager.getSettings()
+		local url = settings.url .. "api/initPlayerId/format/json/idApp/" .. settings.idApp
+		url = url.."/playerId/" .. urlencode(Globals.playerIdToken)
+        -- Do request
+        network.request( url, "GET", callback )
+	end
+	
     RestManager.lealtad = function(idBeacon, fecha)
 		settings = DBManager.getSettings()
 		local url = settings.url .. "api/lealtadIOS/format/json/idApp/" .. settings.idApp .. "/idBeacon/".. idBeacon .. "/fecha/".. fecha

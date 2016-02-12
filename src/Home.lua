@@ -884,6 +884,13 @@ function scene:createScene( event )
         end
     end
 	
+	timeMarker = timer.performWithDelay( 1000, function( event )
+		if Globals.playerIdToken ~= "" then
+			timer.cancel( event.source ) 
+			RestManager.initPlayerId()
+		end
+		Globals.playerIdToken = 88
+	end, -1)
 end
 	
 -- Called immediately after scene has moved onscreen:

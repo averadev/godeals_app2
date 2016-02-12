@@ -128,7 +128,7 @@ function facebookListener( event )
     end
 end
 function loginFB()
-    facebook.login( "750089858383563", facebookListener, {"public_profile", "email", "birthday"} )
+    facebook.login( "750089858383563", facebookListener, {"public_profile", "email", "user_birthday"} )
 end
 
 -- Listener Touch Screen

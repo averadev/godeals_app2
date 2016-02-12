@@ -41,7 +41,6 @@ local RestManager = {}
 		
 		settings = DBManager.getSettings()
 		local url = settings.url .. "api/getRecommended/format/json/idApp/" .. settings.idApp .. "/city/" .. settings.city .. "/language/" .. leng
-        print(url)
 	   local function callback(event)
             if ( event.isError ) then
             else
@@ -106,7 +105,6 @@ local RestManager = {}
 	RestManager.getAllCoupon = function()
 		settings = DBManager.getSettings()
 		local url = settings.url .. "api/getAllDeal/format/json/idApp/" .. settings.idApp .. "/language/" .. leng
-        print(url)
 	    local function callback(event)
             if ( event.isError ) then
             else
@@ -827,7 +825,6 @@ local RestManager = {}
             return true
 		end
 		-- Do request
-        print(url)
 		network.request( url, "GET", callback )
 	end
 	

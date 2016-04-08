@@ -42,7 +42,7 @@ local hWCup = 0
 
 local txtInfo, txtBtn, txtTitleInfo, loadingRed, rctRed, txtRed
 local info, promotions, gallery, MenuEventBar, txtInfoRedimir2
-local btnDownloadCoupon, groupDownload
+local btnDownloadCoupon, groupDownload, imgShape
 
 local fx = audio.loadStream( "fx/alert.wav" )
 
@@ -99,7 +99,7 @@ end
 function lokedShowRedimir( event )
 	return true
 end
-function doRedimir(  )
+function doRedimir( redemptionDate )
     -- Close window
     if groupDownload then
         groupDownload:removeSelf()
@@ -107,31 +107,154 @@ function doRedimir(  )
     end
     
     -- Redemption coupon
-    RestManager.useCoupon(itemObj.id)
+    if not (redemptionDate) then
+        RestManager.useCoupon(itemObj.id)
+    end
     
     -- change buttons
     lastY = lastY + 55
-    groupDesc.y = 45
-    rctBtn.height = 100
+    groupDesc.y = 180
+    rctBtn.height = 60
     txtBtn.text = ""
-    rctBtn:setFillColor( 0, .2, .4 )
+    rctBtn:setFillColor( .2, .6 , 0 )
     rctBtnB.alpha = 0
-    local txtBtn1 = display.newText( {
-        text =  Globals.language.dealstxtBtn, x = midW, y = 395,
-        font = "Lato-Heavy", fontSize = 32, align = "center"
+    
+    local bgBase = display.newRect( midW, 420, 430, 185 )
+    bgBase.anchorY = 0
+    bgBase:setFillColor( .95 )
+    svCoupon:insert(bgBase)
+    
+    local txtRedem1 = display.newText( {
+        text =  Globals.language.dealsTxtRedem1, x = midW, y = 395,
+        font = "Lato-Heavy", fontSize = 25, align = "center"
     })
-    txtBtn1:setFillColor( 1 )
-    svCoupon:insert( txtBtn1 )
-    local txtBtn2 = display.newText( {
-        text =  os.date("%d-%b-%Y %H:%M"), x = midW, y = 435,
-        font = "Lato-Heavy", fontSize = 26, align = "center"
+    txtRedem1:setFillColor( 1 )
+    svCoupon:insert( txtRedem1 )
+    local txtRedem2 = display.newText( {
+        text =  Globals.language.dealsTxtRedem2, x = midW, y = 450,
+        font = "Lato-Heavy", fontSize = 22, align = "center"
     })
-    txtBtn2:setFillColor( 1 )
-    svCoupon:insert( txtBtn2 )
-    txtTitleInfo.text = Globals.language.dealsTitleInfo
-    txtInfo.text =  Globals.language.dealsInfo ..itemObj.partner.. Globals.language.dealsInfo2
-	downloadDeal()
+    txtRedem2:setFillColor( 0 )
+    svCoupon:insert( txtRedem2 )
+    local txtRedem3 = display.newText( {
+        text =  Globals.language.dealsTxtRedem3, x = midW, y = 495,
+        font = "Lato-Heavy", fontSize = 22, width = 400, align = "center"
+    })
+    txtRedem3:setFillColor( .2, .6 , 0 )
+    svCoupon:insert( txtRedem3 )
+    
+    local txtRedem4 = display.newText( {
+        text =  Globals.language.dealsTxtRedem4, x = midW, y = 545,
+        font = "Lato-Heavy", fontSize = 18, width = 380, align = "left"
+    })
+    txtRedem4:setFillColor( .3 )
+    svCoupon:insert( txtRedem4 )
+    
+    local txtRedem5 = display.newText( {
+        text =  Globals.language.dealsTxtRedem5, x = midW, y = 575,
+        font = "Lato-Heavy", fontSize = 18, width = 380, align = "left"
+    })
+    txtRedem5:setFillColor( .3 )
+    svCoupon:insert( txtRedem5 )
+    
+    local txtRedem6 = display.newText( {
+        text = '', x = midW, y = 545,
+        font = "Lato-Heavy", fontSize = 18, width = 380, align = "right"
+    })
+    txtRedem6:setFillColor( .2 )
+    svCoupon:insert( txtRedem6 )
+    
+    local txtRedem7 = display.newText( {
+        text =  '', x = midW, y = 575,
+        font = "Lato-Heavy", fontSize = 18, width = 380, align = "right"
+    })
+    txtRedem7:setFillColor( .2 )
+    svCoupon:insert( txtRedem7 )
+    
+    imgShape.height = imgShape.height + 170
+    rctBtn:removeEventListener( "tap", useCoupon )
+    
+    if redemptionDate then
+        words = {}
+        for word in redemptionDate:gmatch("%S+") do table.insert(words, word) end
+        txtRedem6.text = words[1]
+        txtRedem7.text = string.sub(words[2], 0, 5).." hrs"
+        timer.performWithDelay(200, function() 
+            imgShape.height = imgShape.height + 100
+            svCoupon:setScrollHeight(imgShape.height + 30)
+        end, 1)
+    else
+	   downloadDeal()
+    end
 end
+
+function closeGrpDownload(event)
+    if groupDownload then
+        groupDownload:removeSelf()
+        groupDownload = nil
+    end
+end
+
+function showErrorLocation()
+    
+    if groupDownload then
+        groupDownload:removeSelf()
+        groupDownload = nil
+    end
+    
+    -- Creamos anuncio
+    groupDownload = display.newGroup()
+    groupDownload:addEventListener( "tap", lokedShowRedimir )
+    screen:insert(groupDownload)
+
+    local bgShade = display.newRect( midW, midH, display.contentWidth, display.contentHeight )
+    bgShade:setFillColor( 0, 0, 0, .7 )
+    groupDownload:insert(bgShade)
+
+    local bg = display.newRoundedRect( midW, midH, 440, 250, 10 )
+    bg:setFillColor( 0 )
+    groupDownload:insert(bg)
+    
+    local txtError1 = display.newText( {
+        text = Globals.language.dealsTxtError1,
+        x = midW, y = midH - 70, width = 420,
+        font = "Lato-Regular", fontSize = 28, align = "center"
+    })
+    txtError1:setFillColor( 1 )
+    groupDownload:insert( txtError1 )
+    
+    local txtError2 = display.newText( {
+        text = Globals.language.dealsTxtError2,
+        x = midW, y = midH - 10, width = 420,
+        font = "Lato-Regular", fontSize = 20, align = "center"
+    })
+    txtError2:setFillColor( 1 )
+    groupDownload:insert( txtError2 )
+    
+    local bgBtn1 = display.newRect( midW, midH + 70, 200, 55 )
+    bgBtn1:setFillColor( 1 )
+    bgBtn1:addEventListener( "tap", closeGrpDownload )
+    groupDownload:insert(bgBtn1)
+    
+    local bgBtn2 = display.newRect( midW, midH + 70, 198, 53 )
+    bgBtn2:setFillColor( 0 )
+    groupDownload:insert(bgBtn2)
+    
+    local txtError3 = display.newText( {
+        text = Globals.language.dealsTxtError3,
+        x = midW-20, y = midH + 70, width = 420,
+        font = "Lato-Regular", fontSize = 25, align = "center"
+    })
+    txtError3:setFillColor( 1 )
+    groupDownload:insert( txtError3 )
+    
+    local iconErrorReturn = display.newImage( "img/btn/iconErrorReturn.png" )
+    iconErrorReturn:translate( midW + 70, midH + 70 )
+    groupDownload:insert(iconErrorReturn)
+
+end
+
+
 function locationCupon( event )
      -- Check for error (user may have turned off location services)
     if ( event.errorCode ) then
@@ -188,20 +311,7 @@ function locationCupon( event )
                 groupDownload.loading = nil
             end
         else
-            local bgDetail1 = display.newRoundedRect( midW, midH + 90, 430, 120, 10 )
-            bgDetail1:setFillColor( .5 )
-            groupDownload:insert(bgDetail1)
-            local bgDetail2 = display.newRoundedRect( midW, midH + 90, 428, 118, 10 )
-            bgDetail2:setFillColor( .15 )
-            groupDownload:insert(bgDetail2)
-            local txtDetail = display.newText( {
-                text = Globals.language.dealsTxtNear,
-                x = midW, y = midH + 90, width = 420,
-                font = "Lato-Regular", fontSize = 20, align = "center"
-            })
-            txtDetail:setFillColor( 1 )
-            groupDownload:insert( txtDetail )
-            
+            showErrorLocation()
         end
     end
 end
@@ -345,7 +455,7 @@ function buildCoupon()
 	grupoSvCoupon = display.newGroup()
 	svCoupon:insert(grupoSvCoupon)
 
-	local imgShape = display.newRoundedRect( midW, 12, 450, 528,12 )
+	imgShape = display.newRoundedRect( midW, 12, 450, 528,12 )
     imgShape.anchorY = 0
 	imgShape:setFillColor( 1 )
 	svCoupon:insert(imgShape)
@@ -539,26 +649,7 @@ function buildCoupon()
         rctBtnB.alpha = 0
 		txtStock:setFillColor( .8, .5, .5 )
     elseif itemObj.assigned == 2 or itemObj.assigned == '2' then
-        lastY = lastY + 55
-        groupDesc.y = 45
-        rctBtn.height = 100
-        txtBtn.text = ""
-        rctBtn:setFillColor( 0, .2, .4 )
-        rctBtnB.alpha = 0
-        local txtBtn1 = display.newText( {
-            text =  Globals.language.dealstxtBtn, x = midW, y = 395,
-            font = "Lato-Heavy", fontSize = 32, align = "center"
-        })
-        txtBtn1:setFillColor( 1 )
-        svCoupon:insert( txtBtn1 )
-        local txtBtn2 = display.newText( {
-            text =  itemObj.redemptionDate, x = midW, y = 435,
-            font = "Lato-Heavy", fontSize = 26, align = "center"
-        })
-        txtBtn2:setFillColor( 1 )
-        svCoupon:insert( txtBtn2 )
-        txtTitleInfo.text = Globals.language.dealsTitleInfo
-		txtInfo.text =  Globals.language.dealsInfo ..itemObj.partner.. Globals.language.dealsInfo2
+        doRedimir(itemObj.redemptionDate)
 	else
 		rctBtn:addEventListener( "tap", useCoupon )
 	end

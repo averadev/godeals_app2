@@ -78,6 +78,15 @@ Language.es = {
     dealsTxtUse2 = "ESTE DEAL AHORA?",
     dealsTxtConfirm = "USAR AHORA",
     dealsTxtBtnPerfilComer = "PERFIL DEL COMERCIO",
+    dealsTxtError1 = "¡NO ESTAS EN EL COMERCIO!",
+    dealsTxtError2 = "Para canjear el DEAL, es necesario estar dentro de las instalaciones del comercio.",
+    dealsTxtError3 = "REGRESAR",
+    dealsTxtRedem1 = "¡DEAL USADO EXITOSAMENTE!",
+    dealsTxtRedem2 = "¿QUE SIGUE AHORA?",
+    dealsTxtRedem3 = "MUESTRA ESTA PANTALLA AL COMERCIO PARA RECIBIR TU DEAL",
+    dealsTxtRedem4 = "Este DEAL fue canjeado el día:",
+    dealsTxtRedem5 = "Hora de canje:",
+    
 	--event
 	eventTxtGeneralInformacion = "Información Adicional: ",
 	eventTxtAdditionalInformation = "Consultar ubicación en el mapa",

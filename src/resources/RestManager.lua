@@ -348,7 +348,7 @@ local RestManager = {}
 		else
 			url = url.."/mac/"..mac
 		end
-		
+		print(url)
         
         local function callback(event)
             if ( event.isError ) then
@@ -360,6 +360,9 @@ local RestManager = {}
 						fbId = ""
 					end
                     DBManager.updateUser(data.idApp, email, password, name, fbId)
+                    if data.cityId then
+						DBManager.updateCity(data.cityId)
+					end
                     gotoHome()
                 else
                     native.showAlert( "Go Deals", data.message, { "OK" })
